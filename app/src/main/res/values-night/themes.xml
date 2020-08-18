@@ -19,5 +19,6 @@
         <item name="colorOnSurface">@color/white</item>
 
         <item name="elevationOverlayEnabled">true</item>
+
     </style>
 </resources>

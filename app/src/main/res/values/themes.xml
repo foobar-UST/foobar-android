@@ -46,10 +46,10 @@
 
         <!-- Styles -->
 
-        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@android:color/white</item>
         <item name="android:navigationBarColor">@color/nav_bar</item>
         <item name="android:windowBackground">?android:colorBackground</item>
-        <item name="android:windowLightStatusBar" tools:ignore="NewApi">false</item>
+        <item name="android:windowLightStatusBar" tools:ignore="NewApi">true</item>
         <item name="android:windowLightNavigationBar" tools:ignore="NewApi">false</item>
     </style>
 </resources>
