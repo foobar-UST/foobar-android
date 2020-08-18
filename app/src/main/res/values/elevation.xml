@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="elevation_none">0dp</dimen>
+    <dimen name="elevation_small">1dp</dimen>
+    <dimen name="elevation_xsmall">2dp</dimen>
+    <dimen name="elevation_medium">6dp</dimen>
+    <dimen name="elevation_xmedium">8dp</dimen>
+    <dimen name="elevation_large">16dp</dimen>
+    <dimen name="elevation_xlarge">24dp</dimen>
+</resources>

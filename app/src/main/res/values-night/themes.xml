@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Foobar.DayNight" parent="Theme.Foobar.Dark"/>
+
+    <style name="Theme.Foobar.Dark" parent="Theme.Foobar">
+        <item name="colorPrimary">@color/falcon_400</item>
+        <item name="colorPrimaryVariant">@color/falcon_500</item>
+        <item name="colorSecondary">@color/mint_400</item>
+        <item name="colorSecondaryVariant">@color/mint_500</item>
+        <item name="colorError">@color/red_400</item>
+        
+        <item name="android:colorBackground">@color/black</item>
+        <item name="colorSurface">@color/grey</item>
+
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorOnError">@color/black</item>
+        <item name="colorOnBackground">@color/white</item>
+        <item name="colorOnSurface">@color/white</item>
+
+        <item name="elevationOverlayEnabled">true</item>
+    </style>
+</resources>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#ffffff</color>
+
+    <color name="black">#000000</color>
+    <color name="black_alpha_20">#33000000</color>
+    
+    <color name="grey">#121212</color>
+    
+    <color name="falcon_50">#EFECED</color>
+    <color name="falcon_100">#D6CED2</color>
+    <color name="falcon_200">#BBAEB4</color>
+    <color name="falcon_300">#9F8E96</color>
+    <color name="falcon_400">#8B7580</color>
+    <color name="falcon_500">#765D69</color>
+    <color name="falcon_600">#6E5561</color>
+    <color name="falcon_700">#634B56</color>
+    <color name="falcon_800">#59414C</color>
+    <color name="falcon_900">#46303B</color>
+    
+    <color name="mint_50">#F2F7F5</color>
+    <color name="mint_100">#DDEAE5</color>
+    <color name="mint_200">#C7DCD4</color>
+    <color name="mint_300">#B1CEC2</color>
+    <color name="mint_400">#A0C4B5</color>
+    <color name="mint_500">#8FB9A8</color>
+    <color name="mint_600">#87B2A0</color>
+    <color name="mint_700">#7CAA97</color>
+    <color name="mint_800">#72A28D</color>
+    <color name="mint_900">#60937D</color>
+
+    <color name="red_50">#F9EFEF</color>
+    <color name="red_100">#F1D6D7</color>
+    <color name="red_200">#E7BBBC</color>
+    <color name="red_300">#DDA0A1</color>
+    <color name="red_400">#D68B8D</color>
+    <color name="red_500">#CF7779</color>
+    <color name="red_600">#CA6F71</color>
+    <color name="red_700">#C36466</color>
+    <color name="red_800">#BD5A5C</color>
+    <color name="red_900">#B24749</color>
+
+    <color name="nav_bar">@color/black_alpha_20</color>
+
+</resources>

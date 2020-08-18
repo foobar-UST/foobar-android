@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="motionInterpolatorPersistent" format="float"/>
+    <attr name="motionInterpolatorIncoming" format="float"/>
+    <attr name="motionInterpolatorOutgoing" format="float"/>
+</resources>
