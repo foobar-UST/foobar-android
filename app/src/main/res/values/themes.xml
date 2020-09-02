@@ -1,10 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Theme.Foobar.SignIn.DayNight" parent="Theme.Foobar.SignIn"/>
+
+    <style name="Theme.Foobar.SignIn" parent="Theme.Foobar">
+        <item name="android:navigationBarColor">?android:attr/colorBackground</item>
+        <item name="android:windowLightStatusBar" tools:ignore="NewApi">false</item>
+        <item name="android:windowLightNavigationBar" tools:ignore="NewApi">true</item>
+    </style>
+
+    <style name="Theme.Foobar.Splash.DayNight" parent="Theme.Foobar.Splash"/>
+
+    <style name="Theme.Foobar.Splash" parent="Theme.Foobar">
+        <item name="android:statusBarColor">?attr/colorPrimary</item>
+        <item name="android:navigationBarColor">?attr/colorPrimary</item>
+        <item name="android:windowBackground">@drawable/splash_background</item>
+        <item name="android:windowLightStatusBar" tools:ignore="NewApi">false</item>
+        <item name="android:windowLightNavigationBar" tools:ignore="NewApi">false</item>
+    </style>
+
     <style name="Theme.Foobar.DayNight" parent="Theme.Foobar"/>
 
     <style name="Theme.Foobar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/falcon_500</item>
-        <item name="colorPrimaryVariant">@color/falcon_700</item>
+        <item name="colorPrimary">@color/maroon_500</item>
+        <item name="colorPrimaryVariant">@color/maroon_700</item>
         <item name="colorSecondary">@color/mint_500</item>
         <item name="colorSecondaryVariant">@color/mint_700</item>
         <item name="colorError">@color/red_500</item>
@@ -22,21 +41,19 @@
         <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.Foobar.MediumComponent</item>
         <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.Foobar.LargeComponent</item>
 
-        <!--
-        <item name="textAppearanceHeadline1"></item>
-        <item name="textAppearanceHeadline2"></item>
-        <item name="textAppearanceHeadline3"></item>
-        <item name="textAppearanceHeadline4"></item>
-        <item name="textAppearanceHeadline5"></item>
-        <item name="textAppearanceHeadline6"></item>
-        <item name="textAppearanceSubtitle1"></item>
-        <item name="textAppearanceSubtitle2"></item>
-        <item name="textAppearanceBody1"></item>
-        <item name="textAppearanceBody2"></item>
-        <item name="textAppearanceButton"></item>
-        <item name="textAppearanceCaption"></item>
-        <item name="textAppearanceOverline"></item>
-        -->
+        <item name="textAppearanceHeadline1">@style/TextAppearance.Foobar.Headline1</item>
+        <item name="textAppearanceHeadline2">@style/TextAppearance.Foobar.Headline2</item>
+        <item name="textAppearanceHeadline3">@style/TextAppearance.Foobar.Headline3</item>
+        <item name="textAppearanceHeadline4">@style/TextAppearance.Foobar.Headline4</item>
+        <item name="textAppearanceHeadline5">@style/TextAppearance.Foobar.Headline5</item>
+        <item name="textAppearanceHeadline6">@style/TextAppearance.Foobar.Headline6</item>
+        <item name="textAppearanceSubtitle1">@style/TextAppearance.Foobar.Subtitle1</item>
+        <item name="textAppearanceSubtitle2">@style/TextAppearance.Foobar.Subtitle2</item>
+        <item name="textAppearanceBody1">@style/TextAppearance.Foobar.Body1</item>
+        <item name="textAppearanceBody2">@style/TextAppearance.Foobar.Body2</item>
+        <item name="textAppearanceButton">@style/TextAppearance.Foobar.Button</item>
+        <item name="textAppearanceCaption">@style/TextAppearance.Foobar.Caption</item>
+        <item name="textAppearanceOverline">@style/TextAppearance.Foobar.Overline</item>
 
         <item name="motionInterpolatorPersistent">@android:interpolator/fast_out_slow_in</item>
         <item name="motionInterpolatorIncoming">@android:interpolator/decelerate_cubic</item>
@@ -46,10 +63,12 @@
 
         <!-- Styles -->
 
-        <item name="android:statusBarColor">@android:color/white</item>
-        <item name="android:navigationBarColor">@color/nav_bar</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">?attr/colorPrimarySurface</item>
         <item name="android:windowBackground">?android:colorBackground</item>
         <item name="android:windowLightStatusBar" tools:ignore="NewApi">true</item>
         <item name="android:windowLightNavigationBar" tools:ignore="NewApi">false</item>
+
     </style>
+
 </resources>

@@ -4,6 +4,8 @@ plugins {
     id(Plugins.KOTLIN_ANDROID_EXTENSIONS)
     id(Plugins.KOTLIN_KAPT)
     id(Plugins.HILT_ANDROID)
+    id(Plugins.GOOGLE_SERVICES)
+    id(Plugins.CHECK_DEPENDENCY_UPDATES) version "1.0.211"
 }
 
 android {
@@ -59,19 +61,19 @@ dependencies {
     implementation(Dependencies.ROOM_RUNTIME)
     implementation(Dependencies.ROOM_KTX)
     implementation(Dependencies.HILT)
-    implementation(Dependencies.HILT_WORK)
 
     // Firebase
-    implementation(Dependencies.FIREBASE_AUTH)
-    implementation(Dependencies.FIREBASE_FIRESTORE)
-    implementation(Dependencies.FIREBASE_FUNCTIONS)
-    implementation(Dependencies.FIREBASE_MESSAGING)
-    implementation(Dependencies.FIREBASE_STORAGE)
+    api(Dependencies.FIREBASE_AUTH)
+    api(Dependencies.FIREBASE_FIRESTORE)
+    //api(Dependencies.FIREBASE_FUNCTIONS)
+    api(Dependencies.FIREBASE_STORAGE)
+
+    // Play Services
+    implementation(Dependencies.PLAY_SERVICES_AUTH)
 
     // Annotation Processors
     kapt(Annotation.ROOM_COMPILER)
     kapt(Annotation.HILT_COMPILER)
 
     // Test
-    testImplementation(Dependencies.JUNIT)
 }

@@ -6,6 +6,9 @@ plugins {
     id(Plugins.KOTLIN_ANDROID_EXTENSIONS)
     id(Plugins.KOTLIN_KAPT)
     id(Plugins.HILT_ANDROID)
+    id(Plugins.NAVIGATION_SAFEARGS)
+    id(Plugins.CHECK_DEPENDENCY_UPDATES) version "1.0.211"
+    id(Plugins.FIREBASE_CRASHLYTICS)
 }
 
 android {
@@ -76,17 +79,39 @@ dependencies {
     implementation(Dependencies.HILT_VIEWMODEL)
     implementation(Dependencies.PAGING_RUNTIME)
 
+    // Firebase
+    implementation(Dependencies.FIREBASE_CRASHLYTICS)
+    implementation(Dependencies.FIREBASE_MESSAGING)
+    implementation(Dependencies.FIREBASE_ANALYTICS)
+
+
     // Dependencies
     implementation(Dependencies.MATERIAL)
     implementation(Dependencies.GLIDE)
+    implementation(Dependencies.SPINKIT)
 
     // Annotation Processors
     kapt(Annotation.HILT_COMPILER)
+    kapt(Annotation.ANDROIDX_HILT_COMPILER)
 
     // Debug
     debugImplementation(Dependencies.LEAK_CANARY)
 
+    // Unit Test
+    testImplementation(Dependencies.ARCH_CORE_TESTING)
+    testImplementation(Dependencies.COROUTINE_TEST)
+    testImplementation(Dependencies.JUNIT)
+    testImplementation(Dependencies.MOCKITO_CORE)
+
     // Android Test
-    androidTestImplementation(Dependencies.EXT_JUNIT)
-    androidTestImplementation(Dependencies.ESPRESSO_CORE)
+    //androidTestImplementation(Dependencies.TEST_CORE)
+    //androidTestImplementation(Dependencies.TEST_RUNNER)
+    //androidTestImplementation(Dependencies.TEST_RULES)
+    androidTestImplementation(Dependencies.TEST_EXT_JUNIT)
+    androidTestImplementation(Dependencies.TEST_ESPRESSO_CORE)
+    androidTestImplementation(Dependencies.HILT_TESTING)
+
+
+    // Android Test Annotation Processors
+    androidTestAnnotationProcessor(Annotation.HILT_COMPILER)
 }

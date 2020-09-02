@@ -4,13 +4,24 @@ Foobar++ is a group ordering and delivery application.
 
 ## Description
 
-Food ordering and delivery services such as foodpanda serve individual customers. Many restaurants do not deliver to the UST area. This project will create a mobile app that supports group orders to individual vendors.
+Food ordering and delivery services such as FoodPanda serve individual customers. Many restaurants do not deliver to the UST area. This project will create a mobile app that supports group orders to individual vendors.
 
-## Layers
+## Features
+-----------------------------------------
+Features | Implementation | Unit Tests | Instrumental Tests
+---------- | -------------- | --------- | ----------------
+Sign-in Screen | :heavy_check_mark: | :x: | :x:
+
+
+## Changelog
+See all the changes here [CHANGELOG.md](CHANGELOG.md).
+
+
+## Architecture
 
 * **App** -  A layer that interacts with the UI. Contains of UI-related elements such as Activities, Fragments, ViewModels. It depends on both data and domain module.
 
-* **Domain** - A layer that contains business logic. It will include all the usecases and abstractions of the applicaiton. It is a separated pure Java module.
+* **Domain** - A layer that contains business logic. It will include all the usecases and abstractions of the application. It is a separated pure Java module.
 
 * **Data** - A layer that implement the interface exposed by the domain layer and dispenses data to the app layer.
 
@@ -44,18 +55,10 @@ Food ordering and delivery services such as foodpanda serve individual customers
 
 * **Kotlin Coroutines** - Managing asynchronous tasks with simplified codes and reducing needs for callbacks.
 
+## Device Requirements
 
-## Firebase Libraries
-
-* **Authentication** - Save user data and handle login logics.
-
-* **Firestore** - NoSQL cloud database.
-
-* **Cloud Functions** - Run backend code in response to events triggered by Firebase features and HTTPS requests.
-
-* **Cloud Messaging** - Sends messages to multiple platforms.
-
-* **Cloud Storage** - Stores user-generated contents, such as photos and videos.
+* Android 5.0+ (API level 21).
+* Google Play Service installed.
 
 
 ## Usage
@@ -65,5 +68,11 @@ Food ordering and delivery services such as foodpanda serve individual customers
 git clone https://github.com/foobar-UST/foobar-android.git
 ```
 
-2. Open the project with Android Studio.
+2. Compile the project with Android Studio.
 
+3. Run the app on your devices or emulators.
+
+## Dependency Updates
+```console
+./gradlew checkDependencyUpdates
+```

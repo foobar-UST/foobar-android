@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.foobarust.android.signin.SignInViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:paddingBottomSystemWindowInsets="@{true}"
+        tools:paddingBottom="48dp">
+
+        <LinearLayout
+            android:id="@+id/signin_header_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/signin_header_height"
+            android:padding="@dimen/spacing_xlarge"
+            android:background="?attr/colorPrimarySurface"
+            android:orientation="vertical"
+            android:gravity="bottom"
+            app:paddingTopSystemWindowInsets="@{true}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <TextView
+                android:id="@+id/signin_verify_title_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_xmedium"
+                android:text="@string/signin_verify_title"
+                android:textColor="?attr/colorOnPrimary"
+                android:textStyle="bold"
+                android:textAppearance="?attr/textAppearanceHeadline4"/>
+
+            <TextView
+                android:id="@+id/signin_verify_description_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/signin_verify_description"
+                android:textColor="?attr/colorOnPrimarySurface"
+                android:textAppearance="?attr/textAppearanceSubtitle1"/>
+
+        </LinearLayout>
+
+        <com.github.ybq.android.spinkit.SpinKitView
+            style="@style/SpinKitView.Large.WanderingCubes"
+            android:id="@+id/sigin_verify_progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/spacing_xmedium"
+            app:SpinKit_Color="?attr/colorPrimary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/signin_header_layout"
+            app:layout_constraintBottom_toTopOf="@id/sigin_verify_no_email_text_view"/>
+
+        <TextView
+            android:id="@+id/sigin_verify_no_email_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_mxlarge"
+            android:text="@string/signin_verify_no_email"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="@color/material_on_surface_emphasis_medium"
+            app:clickableSpanEnd="@{@string/signin_verify_resend_email}"
+            app:clickableSpanEndClicked="@{() -> viewModel.requestAuthEmail()}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

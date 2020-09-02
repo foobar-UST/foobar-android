@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/overview_restaurant"
+        android:icon="@drawable/ic_restaurant"
+        android:enabled="true"
+        android:title="Restaurant"/>
+
+    <item
+        android:id="@+id/overview_order"
+        android:icon="@drawable/ic_add_box"
+        android:enabled="true"
+        android:title="Order"/>
+
+    <item
+        android:id="@+id/overview_explore"
+        android:icon="@drawable/ic_explore"
+        android:enabled="true"
+        android:title="Explore"/>
+
+    <item
+        android:id="@+id/overview_settings"
+        android:icon="@drawable/ic_account"
+        android:enabled="true"
+        android:title="Settings"/>
+</menu>

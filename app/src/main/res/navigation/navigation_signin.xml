@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_signin"
+    app:startDestination="@id/signInInputFragment">
+
+    <fragment
+        android:id="@+id/signInInputFragment"
+        android:name="com.foobarust.android.signin.SignInInputFragment"
+        android:label="SignInInputFragment"
+        tools:layout="@layout/fragment_signin_input">
+        <action
+            android:id="@+id/action_signInInputFragment_to_signInVerifyFragment"
+            app:destination="@id/signInVerifyFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/signInVerifyFragment"
+        android:name="com.foobarust.android.signin.SignInVerifyFragment"
+        android:label="SignInVerifyFragment"
+        tools:layout="@layout/fragment_signin_verify"/>
+
+    <activity
+        android:id="@+id/overviewActivity"
+        android:name="com.foobarust.android.overview.OverviewActivity"
+        android:label="OverviewActivity"
+        tools:layout="@layout/activity_overview"/>
+    <action
+        android:id="@+id/action_global_overviewActivity"
+        app:destination="@id/overviewActivity" />
+
+</navigation>

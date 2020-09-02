@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.foobarust.android.signin.SignInViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/signin_input_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:paddingBottomSystemWindowInsets="@{true}"
+        tools:paddingBottom="48dp">
+
+        <LinearLayout
+            android:id="@+id/signin_header_layout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:padding="@dimen/spacing_xlarge"
+            android:background="?attr/colorPrimarySurface"
+            android:orientation="vertical"
+            android:gravity="bottom"
+            app:paddingTopSystemWindowInsets="@{true}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_percent="0.6">
+
+            <TextView
+                android:id="@+id/signin_input_title_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_xmedium"
+                android:text="@string/signin_input_title"
+                android:textColor="?attr/colorOnPrimary"
+                android:textStyle="bold"
+                android:textAppearance="?attr/textAppearanceHeadline4"/>
+
+            <TextView
+                android:id="@+id/signin_input_description_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/signin_input_description"
+                android:textColor="?attr/colorOnPrimarySurface"
+                android:textAppearance="?attr/textAppearanceSubtitle1"/>
+
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:id="@+id/signin_input_username_text_input_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_mxlarge"
+            android:layout_marginEnd="@dimen/spacing_mxlarge"
+            android:paddingBottom="@dimen/spacing_medium"
+            android:hint="@string/signin_input_username_hint"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/signin_header_layout"
+            app:layout_constraintBottom_toTopOf="@id/signin_input_email_suffix_text_input_layout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/signin_input_username_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:maxLength="10"
+                android:textColor="@color/material_on_background_emphasis_medium"
+                tools:text="test"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:id="@+id/signin_input_email_suffix_text_input_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_mxlarge"
+            android:layout_marginEnd="@dimen/spacing_mxlarge"
+            android:paddingBottom="@dimen/spacing_medium"
+            android:hint="@string/signin_input_email_suffix_hint"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/signin_input_username_text_input_layout"
+            app:layout_constraintBottom_toTopOf="@id/signin_input_confirm_button">
+
+            <AutoCompleteTextView
+                android:id="@+id/signin_input_domains_auto_complete_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/material_on_background_emphasis_medium"
+                android:inputType="none"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/signin_input_confirm_button"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:text="@string/signin_input_confirm"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Foobar.Button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/signin_input_email_suffix_text_input_layout"
+            app:layout_constraintBottom_toTopOf="@id/signin_input_skip_signin_button"/>
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:id="@+id/signin_input_skip_signin_button"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:text="@string/signin_input_skip_sigin"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Foobar.Button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/signin_input_confirm_button"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

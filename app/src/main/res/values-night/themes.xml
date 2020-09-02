@@ -1,10 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Theme.Foobar.SignIn.DayNight" parent="Theme.Foobar.SignIn.Dark"/>
+
+    <style name="Theme.Foobar.SignIn.Dark" parent="Theme.Foobar.Dark">
+        <item name="android:navigationBarColor">?android:attr/colorBackground</item>
+        <item name="android:windowLightStatusBar" tools:ignore="NewApi">false</item>
+        <item name="android:windowLightNavigationBar" tools:ignore="NewApi">false</item>
+    </style>
+
+    <style name="Theme.Foobar.Splash.DayNight" parent="Theme.Foobar.Splash.Dark"/>
+
+    <style name="Theme.Foobar.Splash.Dark" parent="Theme.Foobar.Dark">
+        <item name="android:statusBarColor">?attr/colorSurface</item>
+        <item name="android:navigationBarColor">?attr/colorSurface</item>
+        <item name="android:windowBackground">@drawable/splash_background</item>
+        <item name="android:windowLightStatusBar" tools:ignore="NewApi">false</item>
+        <item name="android:windowLightNavigationBar" tools:ignore="NewApi">false</item>
+    </style>
+
     <style name="Theme.Foobar.DayNight" parent="Theme.Foobar.Dark"/>
 
     <style name="Theme.Foobar.Dark" parent="Theme.Foobar">
-        <item name="colorPrimary">@color/falcon_400</item>
-        <item name="colorPrimaryVariant">@color/falcon_500</item>
+        <item name="colorPrimary">@color/maroon_400</item>
+        <item name="colorPrimaryVariant">@color/maroon_500</item>
         <item name="colorSecondary">@color/mint_400</item>
         <item name="colorSecondaryVariant">@color/mint_500</item>
         <item name="colorError">@color/red_400</item>
@@ -20,5 +39,6 @@
 
         <item name="elevationOverlayEnabled">true</item>
 
+        <item name="android:windowLightStatusBar" tools:ignore="NewApi">false</item>
     </style>
 </resources>

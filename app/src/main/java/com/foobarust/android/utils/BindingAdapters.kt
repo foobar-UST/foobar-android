@@ -3,6 +3,11 @@ package com.foobarust.android.utils
 import android.content.Context
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -16,9 +21,9 @@ import androidx.core.view.updateLayoutParams
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
+import com.foobarust.android.R
 import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-
 import com.google.android.material.imageview.ShapeableImageView
 
 @BindingAdapter("srcCompat")
@@ -52,6 +57,13 @@ fun Spinner.bindPopupElevationOverlay(popupElevationOverlay: Float) {
     )
 }
 
+@BindingAdapter("linkMovementMethod")
+fun TextView.bindLinkMovementMethod(
+    enableLink: Boolean
+) {
+    if (enableLink) movementMethod = LinkMovementMethod.getInstance()
+}
+
 @BindingAdapter(
     "drawableStart",
     "drawableLeft",
@@ -75,6 +87,41 @@ fun TextView.bindDrawables(
         context.getDrawableOrNull(drawableEnd ?: drawableRight),
         context.getDrawableOrNull(drawableBottom)
     )
+}
+
+@BindingAdapter(
+    "clickableSpanEnd",
+    "clickableSpanEndClicked",
+    requireAll = false
+)
+fun TextView.bindClickableSpanEnd(
+    clickableSpanEnd: String? = null,
+    clickableSpanEndClicked: (() -> Unit)? = null
+) {
+    if (clickableSpanEnd == null) return
+
+    val spannableString = SpannableString("$text $clickableSpanEnd")
+    val clickableSpan = object : ClickableSpan() {
+        override fun onClick(view: View) {
+            clickableSpanEndClicked?.let { callback -> callback() }
+            view.invalidate()
+        }
+
+        override fun updateDrawState(textPaint: TextPaint) {
+            textPaint.color = context.themeColor(R.attr.colorPrimary)
+            textPaint.isFakeBoldText = true
+        }
+    }
+
+    spannableString.setSpan(
+        clickableSpan,
+        spannableString.length - clickableSpanEnd.length,
+        spannableString.length - 1,
+        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+    )
+
+    movementMethod = LinkMovementMethod.getInstance()
+    setText(spannableString, TextView.BufferType.SPANNABLE)
 }
 
 /*

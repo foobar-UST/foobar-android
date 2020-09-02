@@ -50,5 +50,8 @@ fun Context.themeInterpolator(@AttrRes attr: Int): Interpolator {
 }
 
 fun Context.getDrawableOrNull(@DrawableRes id: Int?): Drawable? {
-    return if (id == null || id == 0) null else AppCompatResources.getDrawable(this, id)
+    return if (id == null || id == 0)
+        null
+    else
+        AppCompatResources.getDrawable(this, id)
 }
