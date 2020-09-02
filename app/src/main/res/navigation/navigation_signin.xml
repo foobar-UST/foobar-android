@@ -24,7 +24,26 @@
         android:id="@+id/signInVerifyFragment"
         android:name="com.foobarust.android.signin.SignInVerifyFragment"
         android:label="SignInVerifyFragment"
-        tools:layout="@layout/fragment_signin_verify"/>
+        tools:layout="@layout/fragment_signin_verify">
+        <action
+            android:id="@+id/action_signInVerifyFragment_to_signInInputFragment"
+            app:destination="@id/signInInputFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"
+            app:popUpTo="@id/signInInputFragment"
+            app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_signInVerifyFragment_to_signInTutorialBottomSheet"
+            app:destination="@id/signInTutorialBottomSheet" />
+    </fragment>
+
+    <dialog
+        android:id="@+id/signInTutorialBottomSheet"
+        android:name="com.foobarust.android.signin.SignInTutorialBottomSheet"
+        android:label="SignInTutorialBottomSheet"
+        tools:layout="@layout/bottom_sheet_signin_tutorial"/>
 
     <activity
         android:id="@+id/overviewActivity"

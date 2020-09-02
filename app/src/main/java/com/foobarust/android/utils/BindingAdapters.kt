@@ -96,14 +96,20 @@ fun TextView.bindDrawables(
 )
 fun TextView.bindClickableSpanEnd(
     clickableSpanEnd: String? = null,
-    clickableSpanEndClicked: (() -> Unit)? = null
+    onTextViewClickableSpanListener: OnTextViewClickableSpanListener? = null
 ) {
     if (clickableSpanEnd == null) return
 
-    val spannableString = SpannableString("$text $clickableSpanEnd")
+    val joinedText = if (text.isNullOrBlank()) {
+        "$clickableSpanEnd"
+    } else {
+        "$text $clickableSpanEnd"
+    }
+    val spannableString = SpannableString(joinedText)
+
     val clickableSpan = object : ClickableSpan() {
         override fun onClick(view: View) {
-            clickableSpanEndClicked?.let { callback -> callback() }
+            onTextViewClickableSpanListener?.onClickableSpanEndClicked(view)
             view.invalidate()
         }
 
@@ -116,12 +122,16 @@ fun TextView.bindClickableSpanEnd(
     spannableString.setSpan(
         clickableSpan,
         spannableString.length - clickableSpanEnd.length,
-        spannableString.length - 1,
+        spannableString.length,
         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
     )
 
     movementMethod = LinkMovementMethod.getInstance()
     setText(spannableString, TextView.BufferType.SPANNABLE)
+}
+
+interface OnTextViewClickableSpanListener {
+    fun onClickableSpanEndClicked(view: View)
 }
 
 /*

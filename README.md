@@ -7,13 +7,15 @@ Foobar++ is a group ordering and delivery application.
 Food ordering and delivery services such as FoodPanda serve individual customers. Many restaurants do not deliver to the UST area. This project will create a mobile app that supports group orders to individual vendors.
 
 ## Features
------------------------------------------
+
 Features | Implementation | Unit Tests | Instrumental Tests
 ---------- | -------------- | --------- | ----------------
-Sign-in Screen | :heavy_check_mark: | :x: | :x:
+Sign-in Screen | :warning: | :x: | :x:
+Splash Screen | :heavy_check_mark: | :x: | :x:
 
 
 ## Changelog
+
 See all the changes here [CHANGELOG.md](CHANGELOG.md).
 
 
@@ -24,6 +26,7 @@ See all the changes here [CHANGELOG.md](CHANGELOG.md).
 * **Domain** - A layer that contains business logic. It will include all the usecases and abstractions of the application. It is a separated pure Java module.
 
 * **Data** - A layer that implement the interface exposed by the domain layer and dispenses data to the app layer.
+
 
 ## Libraries Used
 

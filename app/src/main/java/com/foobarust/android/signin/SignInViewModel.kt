@@ -4,12 +4,12 @@ import android.content.Context
 import android.os.CountDownTimer
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.R
 import com.foobarust.android.common.BaseViewModel
-import com.foobarust.android.signin.AuthState.*
-import com.foobarust.android.utils.SingleLiveEvent
+import com.foobarust.android.signin.SignInState.*
 import com.foobarust.domain.states.Resource.Error
 import com.foobarust.domain.states.Resource.Success
 import com.foobarust.domain.states.getSuccessDataOr
@@ -62,9 +62,10 @@ class SignInViewModel @ViewModelInject constructor(
     private val _resendAuthEmailTimerActive = ConflatedBroadcastChannel(false)
     private lateinit var resendAuthEmailTimer: CountDownTimer
 
-    private val _authState = SingleLiveEvent<AuthState>()
-    val authState: LiveData<AuthState>
-        get() = _authState
+    private val _signInState = MutableLiveData<SignInState>()
+    val signInState: LiveData<SignInState>
+        get() = _signInState
+
 
     fun requestAuthEmail() = viewModelScope.launch {
         // Collect one value and cancel the flow
@@ -86,11 +87,17 @@ class SignInViewModel @ViewModelInject constructor(
             // Navigate to VerifyFragment if the request is success, otherwise do nothing.
             when (result) {
                 is Success -> {
+                    // Condition 1: success email request
                     saveEmailToBeVerifiedUseCase(signInEmail)
-                    _authState.value = EMAIL_SENT
+                    _signInState.value = VERIFYING
                     showMessage(context.getString(R.string.signin_auth_email_sent))
                 }
-                is Error -> showMessage(result.message)
+                is Error -> {
+                    // Condition 3: failed email request
+                    // When there is something wrong with the request, navigate back to input screen
+                    _signInState.value = INPUT
+                    showMessage(result.message)
+                }
             }
 
             // Start timer to prevent abuse of email request
@@ -105,10 +112,16 @@ class SignInViewModel @ViewModelInject constructor(
                 authLink = emailLink
             )
 
+            showMessage(context.getString(R.string.signin_ongoing))
+
             signInWithAuthLinkUseCase(signInParams).collect {
                 when (it) {
                     is Success -> handleSuccessSignIn()
-                    is Error -> showMessage(it.message)
+                    is Error -> {
+                        // Condition 5: failed email verification
+                        _signInState.value = INPUT
+                        showMessage(it.message)
+                    }
                 }
             }
         } ?: showMessage(context.getString(R.string.signin_error))
@@ -122,21 +135,27 @@ class SignInViewModel @ViewModelInject constructor(
         emailDomainChannel.offer(authEmailDomain)
     }
 
-    fun skipSignIn() {
-        viewModelScope.launch {
-            saveSkippedSignInUseCase(true)
+    fun onAuthEmailVerifyingCanceled() = viewModelScope.launch {
+        // Condition 4: cancel email verification
+        _signInState.value = INPUT
+        saveEmailToBeVerifiedUseCase(null)
+        showMessage(context.getString(R.string.signin_cancel))
+    }
 
-            if (getSkippedSignInUseCase(Unit).getSuccessDataOr(false)) {
-                _authState.value = SKIPPED
-            }
+    fun skipSignIn() = viewModelScope.launch {
+        // Condition 6: skip sign-in
+        saveSkippedSignInUseCase(true)
+
+        if (getSkippedSignInUseCase(Unit).getSuccessDataOr(false)) {
+            _signInState.value = COMPLETED
         }
     }
 
     private fun handleSuccessSignIn() {
-        // Set auth state to complete and remove the saved email
+        // Condition 2: success email verification
         viewModelScope.launch {
             saveEmailToBeVerifiedUseCase(null)
-            _authState.value = EMAIL_VERIFIED
+            _signInState.value = COMPLETED
             showMessage(context.getString(R.string.signin_success))
         }
     }
@@ -165,8 +184,8 @@ class SignInViewModel @ViewModelInject constructor(
 
 data class AuthEmailDomain(val domain: String, val title: String)
 
-enum class AuthState {
-    EMAIL_SENT,
-    EMAIL_VERIFIED,
-    SKIPPED
+enum class SignInState {
+    INPUT,
+    VERIFYING,
+    COMPLETED,
 }

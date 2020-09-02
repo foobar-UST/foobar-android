@@ -11,7 +11,6 @@ import javax.inject.Inject
 /**
  * Created by kevin on 8/26/20
  */
-const val REQUEST_AUTH_EMAIL_CONTINUE_URL = "http://localhost/emailSignInLink"
 
 class FirebaseAuthRepository @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
@@ -22,13 +21,13 @@ class FirebaseAuthRepository @Inject constructor(
     override suspend fun sendAuthEmail(email: String) {
         val actionCodeSettings = actionCodeSettings {
             // TODO: This link will redirect the user to this URL if the app is not installed on their device and the app was not able to be installed.
-            url = REQUEST_AUTH_EMAIL_CONTINUE_URL
+            url = "https://foobar-group-delivery-app.web.app/"
 
             // The sign-in operation has to always be completed in the app unlike other out of band email actions (password reset and email verifications).
             handleCodeInApp = true
 
             // This will try to open the link in an iOS app if it is installed.
-            iosBundleId = "com.example.ios"
+            iosBundleId = "com.foobarust.ios"
 
             // Sets the Android package name. This will try to open the link in an android app if it is installed.
             // If installIfNotAvailable is set to true, it specifies whether to install the Android app if the device supports it and the app is not already installed.

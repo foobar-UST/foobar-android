@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
+    <style name="ThemeOverlay.Foobar.AlertDialog" parent="@style/ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="dialogCornerRadius">@dimen/medium_component_corner_radius</item>
+    </style>
+
+    <style name="ThemeOverlay.Foobar.BottomSheetDialog.DayNight" parent="@style/ThemeOverlay.Foobar.BottomSheetDialog"/>
+
+    <style name="ThemeOverlay.Foobar.BottomSheetDialog" parent="@style/ThemeOverlay.MaterialComponents.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/Widget.Foobar.BottomSheet</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+        <item name="android:navigationBarColor">?attr/colorSurface</item>
+        <item name="android:windowLightNavigationBar" tools:ignore="NewApi">true</item>
+    </style>
+
     <style name="Theme.Foobar.SignIn.DayNight" parent="Theme.Foobar.SignIn"/>
 
     <style name="Theme.Foobar.SignIn" parent="Theme.Foobar">
@@ -60,8 +74,11 @@
         <item name="motionInterpolatorOutgoing">@android:interpolator/accelerate_cubic</item>
 
         <!-- Theme Overlay -->
+        <item name="bottomSheetDialogTheme">@style/ThemeOverlay.Foobar.BottomSheetDialog.DayNight</item>
+        <item name="alertDialogTheme">@style/ThemeOverlay.Foobar.AlertDialog</item>
 
         <!-- Styles -->
+        <item name="bottomSheetStyle">@style/Widget.Foobar.BottomSheet</item>
 
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">?attr/colorPrimarySurface</item>

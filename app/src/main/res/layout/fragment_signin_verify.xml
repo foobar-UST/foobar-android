@@ -8,6 +8,9 @@
         <variable
             name="viewModel"
             type="com.foobarust.android.signin.SignInViewModel" />
+        <variable
+            name="listener"
+            type="com.foobarust.android.utils.OnTextViewClickableSpanListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -59,21 +62,34 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/signin_header_layout"
-            app:layout_constraintBottom_toTopOf="@id/sigin_verify_no_email_text_view"/>
+            app:layout_constraintBottom_toTopOf="@id/sigin_verify_tutorial_text_view"/>
 
         <TextView
             android:id="@+id/sigin_verify_no_email_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_mxlarge"
+            android:layout_marginBottom="@dimen/spacing_xmedium"
             android:text="@string/signin_verify_no_email"
             android:textAppearance="?attr/textAppearanceBody2"
             android:textColor="@color/material_on_surface_emphasis_medium"
             app:clickableSpanEnd="@{@string/signin_verify_resend_email}"
-            app:clickableSpanEndClicked="@{() -> viewModel.requestAuthEmail()}"
+            app:clickableSpanEndClicked="@{listener}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toTopOf="@id/sigin_verify_tutorial_text_view"/>
+
+        <TextView
+            android:id="@+id/sigin_verify_tutorial_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_mxlarge"
+            android:textAppearance="?attr/textAppearanceBody2"
+            app:clickableSpanEnd="@{@string/signin_verify_tutorial}"
+            app:clickableSpanEndClicked="@{listener}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:text="How to sign in?"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

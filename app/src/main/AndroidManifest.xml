@@ -34,6 +34,7 @@
             android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait"
             android:launchMode="singleInstance">
+            <!-- Email link handler -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>

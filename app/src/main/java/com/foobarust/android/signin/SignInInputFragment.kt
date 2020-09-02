@@ -8,8 +8,10 @@ import android.widget.ArrayAdapter
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentSigninInputBinding
+import com.foobarust.android.signin.SignInState.VERIFYING
 import com.foobarust.android.utils.AutoClearedValue
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -66,25 +68,15 @@ class SignInInputFragment : Fragment() {
             }
         }
 
+        // Navigate to VerifyFragment after successfully requesting an email
+        viewModel.signInState.observe(viewLifecycleOwner) { state ->
+            if (state == VERIFYING) {
+                findNavController().navigate(
+                    SignInInputFragmentDirections.actionSignInInputFragmentToSignInVerifyFragment()
+                )
+            }
+        }
+
         return binding.root
     }
-
-    /*
-    private fun setupEmailSuffixDropDown() {
-        val emailSuffixAdapter = ArrayAdapter(
-            requireContext(),
-            R.layout.item_email_suffix,
-            AuthEmailType.values().map { it.title }
-        )
-
-        binding.signinInputEmailSuffixDropdown.run {
-            setAdapter(emailSuffixAdapter)
-            setOnItemClickListener { _, _, position, _ ->
-                viewModel.updateAuthEmailType(AuthEmailType.values()[position])
-            }
-            setText(adapter.getItem(0) as String, false)
-        }
-    }
-
-     */
 }

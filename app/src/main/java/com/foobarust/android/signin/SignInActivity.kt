@@ -11,7 +11,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.foobarust.android.NavigationSigninDirections
 import com.foobarust.android.R
 import com.foobarust.android.databinding.ActivitySigninBinding
-import com.foobarust.android.signin.AuthState.*
+import com.foobarust.android.signin.SignInState.COMPLETED
 import com.foobarust.android.utils.showShortToast
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -41,19 +41,14 @@ class SignInActivity : AppCompatActivity() {
             showShortToast(it)
         }
 
-        viewModel.authState.observe(this) { state ->
-            when (state) {
-                EMAIL_SENT -> {
-                    navController.navigate(
-                        SignInInputFragmentDirections.actionSignInInputFragmentToSignInVerifyFragment()
-                    )
-                }
-                EMAIL_VERIFIED, SKIPPED -> {
-                    navController.navigate(
-                        NavigationSigninDirections.actionGlobalOverviewActivity()
-                    )
-                    finish()
-                }
+        // When the user is verified or want to skip the sign-in screen,
+        // navigate to overview screen
+        viewModel.signInState.observe(this) { state ->
+            if (state == COMPLETED) {
+                navController.navigate(
+                    NavigationSigninDirections.actionGlobalOverviewActivity()
+                )
+                finish()
             }
         }
 
