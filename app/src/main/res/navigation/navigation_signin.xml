@@ -34,24 +34,6 @@
             app:popExitAnim="@anim/slide_out_left"
             app:popUpTo="@id/signInInputFragment"
             app:popUpToInclusive="true"/>
-        <action
-            android:id="@+id/action_signInVerifyFragment_to_signInTutorialBottomSheet"
-            app:destination="@id/signInTutorialBottomSheet" />
     </fragment>
-
-    <dialog
-        android:id="@+id/signInTutorialBottomSheet"
-        android:name="com.foobarust.android.signin.SignInTutorialBottomSheet"
-        android:label="SignInTutorialBottomSheet"
-        tools:layout="@layout/bottom_sheet_signin_tutorial"/>
-
-    <activity
-        android:id="@+id/overviewActivity"
-        android:name="com.foobarust.android.overview.OverviewActivity"
-        android:label="OverviewActivity"
-        tools:layout="@layout/activity_overview"/>
-    <action
-        android:id="@+id/action_global_overviewActivity"
-        app:destination="@id/overviewActivity" />
 
 </navigation>

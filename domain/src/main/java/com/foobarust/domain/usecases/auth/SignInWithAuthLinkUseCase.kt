@@ -10,12 +10,8 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 /**
- * Sign in
  * Created by kevin on 8/26/20
  */
-
-private const val INVALID_AUTH_LINK = "Authentication link is invalid."
-private const val SIGNIN_FAILED = "Sign-in failed."
 
 class SignInWithAuthLinkUseCase @Inject constructor(
     private val authRepository: AuthRepository,
@@ -23,22 +19,10 @@ class SignInWithAuthLinkUseCase @Inject constructor(
 ): FlowUseCase<SignInWithAuthLinkParameters, Unit>(dispatcher) {
 
     override fun execute(parameters: SignInWithAuthLinkParameters): Flow<Resource<Unit>> = flow {
-        // Check if the auth link is valid
-        if (!authRepository.checkEmailLinkIsValid(parameters.authLink)) {
-            emit(Resource.Error(INVALID_AUTH_LINK))
-            return@flow
-        }
-
-        // Check if the sign-in is success
-        val result = authRepository.signInWithEmailLink(
+        authRepository.signInWithEmailLink(
             email = parameters.email,
             emailLink = parameters.authLink
         )
-
-        if (!result) {
-            emit(Resource.Error(SIGNIN_FAILED))
-            return@flow
-        }
 
         emit(Resource.Success(Unit))
     }

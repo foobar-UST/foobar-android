@@ -1,6 +1,6 @@
 package com.foobarust.data.di
 
-import com.foobarust.data.repositories.FirebaseAuthRepository
+import com.foobarust.data.repositories.AuthRepositoryImpl
 import com.foobarust.domain.repositories.AuthRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -13,7 +13,7 @@ import dagger.hilt.android.components.ApplicationComponent
 import javax.inject.Singleton
 
 /**
- * Created by kevin on 8/27/20
+ * Created by kevin on 9/14/20
  */
 
 @Module
@@ -31,6 +31,6 @@ abstract class AuthModule {
     @Singleton
     @Binds
     abstract fun bindsAuthRepository(
-        firebaseAuthRepository: FirebaseAuthRepository
+        authRepositoryImpl: AuthRepositoryImpl
     ): AuthRepository
 }

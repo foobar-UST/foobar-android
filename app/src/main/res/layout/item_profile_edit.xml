@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="profileEditModel"
+            type="com.foobarust.android.profile.ProfileListModel.ProfileEditModel" />
+        <variable
+            name="listener"
+            type="com.foobarust.android.profile.ProfileAdapter.ProfileAdapterListener" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:onClick="@{() -> listener.onProfileEditItemClicked(profileEditModel)}"
+        app:cardElevation="@dimen/elevation_none"
+        app:cardBackgroundColor="?attr/colorSurface"
+        app:cardCornerRadius="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/spacing_mlarge"
+            android:background="?attr/colorSurface">
+
+            <TextView
+                android:id="@+id/title_text_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@{profileEditModel.title}"
+                android:textAppearance="?attr/textAppearanceSubtitle2"
+                tools:text="Name"/>
+
+            <TextView
+                android:id="@+id/value_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{profileEditModel.displayValue}"
+                android:textColor="@color/material_on_surface_emphasis_medium"
+                android:textAppearance="?attr/textAppearanceBody2"
+                tools:text="Lucille Rooney"/>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</layout>

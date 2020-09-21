@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.zhpan.bannerview.BannerViewPager
+            android:id="@+id/promotion_view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="210dp"
+            android:paddingTop="@dimen/spacing_xmedium"
+            android:paddingBottom="@dimen/spacing_xmedium"
+            app:bvp_auto_play="false"
+            app:bvp_can_loop="true"
+            app:bvp_interval="@integer/banner_interval"
+            app:bvp_scroll_duration="@integer/banner_scroll_duration"
+            app:bvp_page_style="multi_page"
+            app:bvp_indicator_visibility="gone"
+            app:bvp_indicator_style="circle"
+            app:bvp_indicator_slide_mode="worm"
+            app:bvp_indicator_radius="6dp"
+            app:bvp_indicator_normal_color="@color/material_on_surface_stroke"
+            app:bvp_indicator_checked_color="?attr/colorSecondary" />
+
+        <com.zhpan.indicator.IndicatorView
+            android:id="@+id/promotion_indicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/spacing_xmedium"/>
+
+    </LinearLayout>
+
+</layout>

@@ -10,7 +10,18 @@ Food ordering and delivery services such as FoodPanda serve individual customers
 
 Features | Implementation | Unit Tests | Instrumental Tests
 ---------- | -------------- | --------- | ----------------
-Sign-in Screen | :warning: | :x: | :x:
+Notification Screen | :x: | :x: | :x:
+Favourite Screen | :x: | :x: | :x:
+Explore Screen | :x: | :x: | :x:
+Order Screen | :x: | :x: | :x:
+Order History Screen | :x: | :x: | :x:
+Seller Screen | :x: | :x: | :x:
+Seller Search Screen | :x: | :x: | :x:
+Profile Screen | :x: | :x: | :x:
+License Screen | :heavy_check_mark: | :x: | :x:
+Settings Screen | :heavy_check_mark: | :x: | :x:
+SignIn Screen | :heavy_check_mark: | :x: | :x:
+Onboarding Screen | :heavy_check_mark: | :x: | :x:
 Splash Screen | :heavy_check_mark: | :x: | :x:
 
 

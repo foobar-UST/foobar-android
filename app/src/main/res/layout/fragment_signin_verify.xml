@@ -20,7 +20,7 @@
         tools:paddingBottom="48dp">
 
         <LinearLayout
-            android:id="@+id/signin_header_layout"
+            android:id="@+id/header_layout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/signin_header_height"
             android:padding="@dimen/spacing_xlarge"
@@ -33,7 +33,7 @@
             app:layout_constraintEnd_toEndOf="parent">
 
             <TextView
-                android:id="@+id/signin_verify_title_text_view"
+                android:id="@+id/title_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/spacing_xmedium"
@@ -43,7 +43,7 @@
                 android:textAppearance="?attr/textAppearanceHeadline4"/>
 
             <TextView
-                android:id="@+id/signin_verify_description_text_view"
+                android:id="@+id/description_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/signin_verify_description"
@@ -54,42 +54,31 @@
 
         <com.github.ybq.android.spinkit.SpinKitView
             style="@style/SpinKitView.Large.WanderingCubes"
-            android:id="@+id/sigin_verify_progress_bar"
+            android:id="@+id/loading_progress_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/spacing_xmedium"
             app:SpinKit_Color="?attr/colorPrimary"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/signin_header_layout"
-            app:layout_constraintBottom_toTopOf="@id/sigin_verify_tutorial_text_view"/>
+            app:layout_constraintTop_toBottomOf="@id/header_layout"
+            app:layout_constraintBottom_toTopOf="@id/no_email_text_view"/>
 
         <TextView
-            android:id="@+id/sigin_verify_no_email_text_view"
+            android:id="@+id/no_email_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_xmedium"
+            android:layout_marginBottom="@dimen/spacing_mxlarge"
             android:text="@string/signin_verify_no_email"
             android:textAppearance="?attr/textAppearanceBody2"
             android:textColor="@color/material_on_surface_emphasis_medium"
             app:clickableSpanEnd="@{@string/signin_verify_resend_email}"
-            app:clickableSpanEndClicked="@{listener}"
+            app:clickableSpanListener="@{listener}"
+            app:clickableSpanBold="@{true}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/sigin_verify_tutorial_text_view"/>
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <TextView
-            android:id="@+id/sigin_verify_tutorial_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_mxlarge"
-            android:textAppearance="?attr/textAppearanceBody2"
-            app:clickableSpanEnd="@{@string/signin_verify_tutorial}"
-            app:clickableSpanEndClicked="@{listener}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            tools:text="How to sign in?"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

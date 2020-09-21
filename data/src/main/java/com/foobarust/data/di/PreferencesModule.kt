@@ -1,6 +1,6 @@
 package com.foobarust.data.di
 
-import com.foobarust.data.repositories.SharedPreferencesRepository
+import com.foobarust.data.repositories.PreferencesRepositoryImpl
 import com.foobarust.domain.repositories.PreferencesRepository
 import dagger.Binds
 import dagger.Module
@@ -9,9 +9,8 @@ import dagger.hilt.android.components.ApplicationComponent
 import javax.inject.Singleton
 
 /**
- * Created by kevin on 8/28/20
+ * Created by kevin on 9/11/20
  */
-
 @Module
 @InstallIn(ApplicationComponent::class)
 abstract class PreferencesModule {
@@ -19,6 +18,6 @@ abstract class PreferencesModule {
     @Singleton
     @Binds
     abstract fun providePreferencesRepository(
-        sharedPreferencesRepository: SharedPreferencesRepository
+        preferencesRepositoryImpl: PreferencesRepositoryImpl
     ): PreferencesRepository
 }

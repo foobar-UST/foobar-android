@@ -19,7 +19,6 @@ package com.foobarust.android.utils
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.observe
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -29,6 +28,7 @@ import kotlin.reflect.KProperty
  * Accessing this variable while the fragment's view is destroyed will throw NPE.
  */
 class AutoClearedValue<T : Any>(val fragment: Fragment) : ReadWriteProperty<Fragment, T> {
+
     private var _value: T? = null
 
     init {

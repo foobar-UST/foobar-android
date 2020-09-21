@@ -24,8 +24,14 @@
         </activity>
 
         <activity
-            android:name=".overview.OverviewActivity"
+            android:name=".main.MainActivity"
             android:theme="@style/Theme.Foobar.DayNight"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".onboarding.OnboardingActivity"
+            android:theme="@style/Theme.Foobar.Onboarding.DayNight"
             android:screenOrientation="portrait"/>
 
         <activity
@@ -50,7 +56,7 @@
             android:resource="@array/preloaded_fonts" />
 
         <service
-            android:name=".FoobarFirebaseMessagingService"
+            android:name=".services.FoobarFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>

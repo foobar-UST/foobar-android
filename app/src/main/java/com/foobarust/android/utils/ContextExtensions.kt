@@ -7,11 +7,9 @@ import android.graphics.drawable.Drawable
 import android.util.TypedValue
 import android.view.animation.AnimationUtils
 import android.view.animation.Interpolator
-import androidx.annotation.AttrRes
-import androidx.annotation.ColorInt
-import androidx.annotation.DrawableRes
-import androidx.annotation.StyleRes
+import androidx.annotation.*
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.use
 
 /**
@@ -54,4 +52,9 @@ fun Context.getDrawableOrNull(@DrawableRes id: Int?): Drawable? {
         null
     else
         AppCompatResources.getDrawable(this, id)
+}
+
+@ColorInt
+fun Context.getColorCompat(@ColorRes color: Int): Int {
+    return ContextCompat.getColor(this, color)
 }

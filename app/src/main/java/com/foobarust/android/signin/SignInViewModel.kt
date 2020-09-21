@@ -19,14 +19,8 @@ import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-/**
- * Created by kevin on 8/26/20
- */
-
 private const val RESEND_BUFFER = 5_000L          // TODO: Change resend buffer time
 private const val SECOND = 1_000L
-
-private const val TAG = "SignInViewModel"
 
 private val ustEmailDomains: List<AuthEmailDomain> = listOf(
     AuthEmailDomain(domain = "connect.ust.hk", title = "@connect.ust.hk"),
@@ -38,9 +32,7 @@ class SignInViewModel @ViewModelInject constructor(
     private val requestAuthEmailUseCase: RequestAuthEmailUseCase,
     private val signInWithAuthLinkUseCase: SignInWithAuthLinkUseCase,
     private val getEmailToBeVerifiedUseCase: GetEmailToBeVerifiedUseCase,
-    private val saveEmailToBeVerifiedUseCase: SaveEmailToBeVerifiedUseCase,
-    private val getSkippedSignInUseCase: GetSkippedSignInUseCase,
-    private val saveSkippedSignInUseCase: SaveSkippedSignInUseCase
+    private val saveEmailToBeVerifiedUseCase: SaveEmailToBeVerifiedUseCase
 ) : BaseViewModel() {
 
     // Domain list for drop down menu
@@ -68,7 +60,7 @@ class SignInViewModel @ViewModelInject constructor(
 
 
     fun requestAuthEmail() = viewModelScope.launch {
-        // Collect one value and cancel the flow
+        // Collect the first email value and cancel the flow
         val signInEmail = signInEmailFlow.first()
 
         // Check if the username input is empty
@@ -142,13 +134,8 @@ class SignInViewModel @ViewModelInject constructor(
         showMessage(context.getString(R.string.signin_cancel))
     }
 
-    fun skipSignIn() = viewModelScope.launch {
-        // Condition 6: skip sign-in
-        saveSkippedSignInUseCase(true)
-
-        if (getSkippedSignInUseCase(Unit).getSuccessDataOr(false)) {
-            _signInState.value = COMPLETED
-        }
+    fun onSignInSkip() {
+        _signInState.value = COMPLETED
     }
 
     private fun handleSuccessSignIn() {
@@ -156,7 +143,7 @@ class SignInViewModel @ViewModelInject constructor(
         viewModelScope.launch {
             saveEmailToBeVerifiedUseCase(null)
             _signInState.value = COMPLETED
-            showMessage(context.getString(R.string.signin_success))
+            //showMessage(context.getString(R.string.signin_success))
         }
     }
 

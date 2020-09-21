@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_settings"
+    app:startDestination="@id/settingsFragment">
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.foobarust.android.settings.SettingsFragment"
+        android:label="@string/settings_label"
+        tools:layout="@layout/fragment_settings">
+        <action
+            android:id="@+id/action_settingsFragment_to_licenseFragment"
+            app:destination="@id/licenseFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+        <action
+            android:id="@+id/action_settingsFragment_to_notificationFragment"
+            app:destination="@id/notificationFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+        <action
+            android:id="@+id/action_settingsFragment_to_favoriteFragment"
+            app:destination="@id/favoriteFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+        <action
+            android:id="@+id/action_settingsFragment_to_onboardingActivity"
+            app:destination="@id/onboardingActivity" />
+        <action
+            android:id="@+id/action_settingsFragment_to_signInActivity"
+            app:destination="@id/signInActivity" />
+        <action
+            android:id="@+id/action_settingsFragment_to_profileFragment"
+            app:destination="@id/profileFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+        <action
+            android:id="@+id/action_settingsFragment_to_orderHistoryFragment"
+            app:destination="@id/orderHistoryFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/notificationFragment"
+        android:name="com.foobarust.android.settings.NotificationFragment"
+        android:label="@string/notification_label"
+        tools:layout="@layout/fragment_notification"/>
+
+    <fragment
+        android:id="@+id/licenseFragment"
+        android:name="com.foobarust.android.settings.LicenseFragment"
+        android:label="@string/license_label"
+        tools:layout="@layout/fragment_license"/>
+
+    <fragment
+        android:id="@+id/favoriteFragment"
+        android:name="com.foobarust.android.settings.FavoriteFragment"
+        android:label="@string/favorite_label"
+        tools:layout="@layout/fragment_favorite"/>
+
+    <fragment
+        android:id="@+id/orderHistoryFragment"
+        android:name="com.foobarust.android.orderhistory.OrderHistoryFragment"
+        android:label="@string/order_history_label"
+        tools:layout="@layout/fragment_order_history"/>
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.foobarust.android.profile.ProfileFragment"
+        android:label="@string/profile_label"
+        tools:layout="@layout/fragment_profile">
+        <action
+            android:id="@+id/action_profileFragment_to_textInputBottomSheet"
+            app:destination="@id/textInputBottomSheet" />
+    </fragment>
+
+    <activity
+        android:id="@+id/onboardingActivity"
+        android:name="com.foobarust.android.onboarding.OnboardingActivity"
+        tools:layout="@layout/activity_onboarding"/>
+
+    <activity
+        android:id="@+id/signInActivity"
+        android:name="com.foobarust.android.signin.SignInActivity"
+        tools:layout="@layout/activity_signin"/>
+
+    <dialog
+        android:id="@+id/textInputBottomSheet"
+        android:name="com.foobarust.android.input.TextInputBottomSheet"
+        tools:layout="@layout/bottom_sheet_text_input">
+        <argument
+            android:name="property"
+            app:argType="com.foobarust.android.input.TextInputProperty"
+            app:nullable="false"/>
+    </dialog>
+
+</navigation>

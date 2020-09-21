@@ -6,6 +6,7 @@ object Dependencies {
     const val HILT_PLUGIN = "com.google.dagger:hilt-android-gradle-plugin:${Versions.HILT}"
     const val GOOGLE_SERVICES = "com.google.gms:google-services:${Versions.GOOGLE_SERVICES}"
     const val FIREBASE_CRASHLYTICS_PLUGIN = "com.google.firebase:firebase-crashlytics-gradle:${Versions.FIREBASE_CRASHLYTICS_GRADLE}"
+    const val GMS_OSS_LICENSES_PLUGIN = "com.google.android.gms:oss-licenses-plugin:${Versions.GMS_OSS_LICENSES_PLUGIN}"
 
     // Kotlin
     const val KOTLIN_STDLIB = "org.jetbrains.kotlin:kotlin-stdlib-jdk7"
@@ -33,9 +34,11 @@ object Dependencies {
     const val HILT_VIEWMODEL = "androidx.hilt:hilt-lifecycle-viewmodel:${Versions.HILT_LIFECYCLE}"
     const val HILT_WORK = "androidx.hilt:hilt-work:${Versions.HILT_WORK}"
     const val PAGING_RUNTIME = "androidx.paging:paging-runtime:${Versions.PAGING}"
+    const val PREFERENCES = "androidx.preference:preference-ktx:${Versions.PREFERENCES}"
     const val MATERIAL = "com.google.android.material:material:${Versions.MATERIAL}"
     const val GLIDE = "com.github.bumptech.glide:glide:${Versions.GLIDE}"
     const val LEAK_CANARY = "com.squareup.leakcanary:leakcanary-android:${Versions.LEAK_CANARY}"
+    const val WORK = "androidx.work:work-runtime-ktx:${Versions.WORK}"
 
     // Firebase
     const val FIREBASE_AUTH = "com.google.firebase:firebase-auth-ktx:${Versions.FIREBASE_AUTH}"
@@ -49,8 +52,10 @@ object Dependencies {
 
     // Play Services
     const val PLAY_SERVICES_AUTH = "com.google.android.gms:play-services-auth:${Versions.PLAY_SERVICES_AUTH}"
+    const val PLAY_SERVICES_OSS_LICENSES = "com.google.android.gms:play-services-oss-licenses:${Versions.PLAY_SERVICES_OSS_LICENSES}"
 
     // Others
+    const val BANNER_VIEW_PAGER = "com.github.zhpanvip:BannerViewPager:${Versions.BANNER_VIEW_PAGER}"
     const val DAGGER = "com.google.dagger:dagger:${Versions.DAGGER}"
     const val SPINKIT = "com.github.ybq:Android-SpinKit:${Versions.SPINKIT}"
 
@@ -66,7 +71,8 @@ object Dependencies {
     const val TEST_CORE = "androidx.test:core:${Versions.TEST_CORE}"
     const val TEST_RUNNER = "androidx.test:rules:${Versions.TEST_RUNNER}"
     const val TEST_RULES = "androidx.test:rules:${Versions.TEST_RULES}"
-    const val TEST_EXT_JUNIT = "androidx.test.ext:junit:${Versions.TEST_EXT_JUNIT}"
+    //const val TEST_EXT_JUNIT = "androidx.test.ext:junit:${Versions.TEST_EXT_JUNIT}"
+    const val TEST_EXT_JUNIT_KTX = "androidx.test.ext:junit-ktx:${Versions.TEST_EXT_JUNIT}"
     const val TEST_ESPRESSO_CORE = "androidx.test.espresso:espresso-core:${Versions.TEST_ESPRESSO_CORE}"
     const val FRAGMENT_TESTING = "androidx.fragment:fragment-testing:${Versions.FRAGMENT}"
     const val NAVIGATION_TESTING = "androidx.navigation:navigation-testing:${Versions.NAVIGATION}"

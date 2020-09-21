@@ -4,20 +4,33 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.foobarust.android.utils.SingleLiveEvent
 
-/**
- * Created by kevin on 8/9/20
- */
 abstract class BaseViewModel : ViewModel() {
 
-    private val _message = SingleLiveEvent<String?>()
-    val message: LiveData<String?>
-        get() = _message
+    private val _toastMessage = SingleLiveEvent<String?>()
+    val toastMessage: LiveData<String?>
+        get() = _toastMessage
+
+    private val _networkError = SingleLiveEvent<Boolean>()
+    val networkError: LiveData<Boolean>
+        get() = _networkError
+
+    private val _loadingProgress = SingleLiveEvent<Boolean>()
+    val loadingProgress: LiveData<Boolean>
+        get() = _loadingProgress
 
     fun showMessage(message: String?) {
-        _message.value = message
+        _toastMessage.value = message
     }
 
     fun postMessage(message: String?) {
-        _message.postValue(message)
+        _toastMessage.postValue(message)
+    }
+
+    fun showNetworkError() {
+        _networkError.value = true
+    }
+
+    fun controlLoadingProgress(isShow: Boolean) {
+        _loadingProgress.value = isShow
     }
 }

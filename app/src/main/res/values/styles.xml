@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Widget.Foobar.BottomSheet" parent="Widget.MaterialComponents.BottomSheet">
-
+    <style name="Widget.Foobar.TabLayout.Dot" parent="Widget.MaterialComponents.TabLayout">
+        <item name="tabBackground">@drawable/tab_pager_selector</item>
+        <item name="tabGravity">center</item>
+        <item name="tabIndicatorHeight">0dp</item>
+        <item name="tabRippleColor">@null</item>
+        <item name="android:background">@android:color/transparent</item>
     </style>
+    
+    <style name="Widget.Foobar.BottomSheet" parent="Widget.MaterialComponents.BottomSheet"/>
 </resources>

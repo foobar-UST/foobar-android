@@ -1,21 +1,24 @@
 package com.foobarust.android.utils
 
 import android.content.Context
+import android.graphics.Typeface.BOLD
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.text.Spannable
-import android.text.SpannableString
+import android.text.SpannableStringBuilder
 import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
 import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
+import android.view.View.*
 import android.view.ViewGroup
 import android.view.WindowInsets
 import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
+import androidx.annotation.AttrRes
 import androidx.annotation.DrawableRes
 import androidx.core.view.updateLayoutParams
 import androidx.databinding.BindingAdapter
@@ -26,25 +29,18 @@ import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.imageview.ShapeableImageView
 
-@BindingAdapter("srcCompat")
-fun ShapeableImageView.bindSrcCompat(@DrawableRes drawableRes: Int?) {
-    if (drawableRes == null) return
-
-    val drawable = context.getDrawableOrNull(drawableRes)
-    this.setImageDrawable(drawable)
+interface OnTextViewClickableSpanListener {
+    fun onClickableSpanEndClicked(view: View)
 }
 
 @BindingAdapter("showIf")
 fun FloatingActionButton.showIf(show: Boolean) {
-    if (show) show()
-    else hide()
+    if (show) show() else hide()
 }
 
 @BindingAdapter("requestFocus")
 fun View.bindRequestFocus(requestFocus: Boolean) {
-    if (requestFocus) {
-        this.requestFocus()
-    }
+    if (requestFocus) requestFocus()
 }
 
 @BindingAdapter("popupElevationOverlay")
@@ -57,11 +53,34 @@ fun Spinner.bindPopupElevationOverlay(popupElevationOverlay: Float) {
     )
 }
 
+@BindingAdapter(
+    "drawableLeft",
+    "drawableRight",
+    "drawableTop",
+    "DrawableBottom",
+    requireAll = false
+)
+fun TextView.bindDrawableStart(
+    @DrawableRes drawableStartRes: Int?,
+    @DrawableRes drawableEndRes: Int?,
+    @DrawableRes drawableTopRes: Int?,
+    @DrawableRes drawableBottomRes: Int?
+) {
+    val drawableLeft = drawableStartRes?.let { context.getDrawableOrNull(it) }
+    val drawableRight = drawableEndRes?.let { context.getDrawableOrNull(it) }
+    val drawableTop = drawableTopRes?.let { context.getDrawableOrNull(it) }
+    val drawableBottom = drawableBottomRes?.let { context.getDrawableOrNull(it) }
+
+    setCompoundDrawables(drawableLeft, drawableTop, drawableRight, drawableBottom)
+}
+
 @BindingAdapter("linkMovementMethod")
 fun TextView.bindLinkMovementMethod(
     enableLink: Boolean
 ) {
-    if (enableLink) movementMethod = LinkMovementMethod.getInstance()
+    if (enableLink) {
+        movementMethod = LinkMovementMethod.getInstance()
+    }
 }
 
 @BindingAdapter(
@@ -90,49 +109,110 @@ fun TextView.bindDrawables(
 }
 
 @BindingAdapter(
-    "clickableSpanEnd",
-    "clickableSpanEndClicked",
+    "colorSpanStart",
+    "colorSpanEnd",
+    "colorSpanBold",
+    "colorSpanColor",
     requireAll = false
 )
-fun TextView.bindClickableSpanEnd(
-    clickableSpanEnd: String? = null,
-    onTextViewClickableSpanListener: OnTextViewClickableSpanListener? = null
+fun TextView.bindColorSpan(
+    spanStart: String? = null,
+    spanEnd: String? = null,
+    spanBold: Boolean = false,
+    @AttrRes spanColor: Int? = null
 ) {
-    if (clickableSpanEnd == null) return
+    if (text.isNullOrBlank()) return
 
-    val joinedText = if (text.isNullOrBlank()) {
-        "$clickableSpanEnd"
+    val color = if (spanColor != null) {
+        context.themeColor(spanColor)
     } else {
-        "$text $clickableSpanEnd"
+        context.themeColor(R.attr.colorPrimary)
     }
-    val spannableString = SpannableString(joinedText)
+    val builder = SpannableStringBuilder(text)
+    val styles = mutableListOf<Any>(ForegroundColorSpan(color))
 
+    if (spanBold) styles.add(StyleSpan(BOLD))
+
+    spanStart?.let { start ->
+        builder.insert(0, start)
+        styles.forEach { style ->
+            builder.setSpan(
+                style,
+                0,
+                spanStart.length,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+    }
+
+    spanEnd?.let { end ->
+        builder.insert(0, end)
+        styles.forEach { style ->
+            builder.setSpan(
+                style,
+                builder.length - end.length,
+                builder.length,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+    }
+
+    setText(builder, TextView.BufferType.SPANNABLE)
+}
+
+@BindingAdapter(
+    "clickableSpanStart",
+    "clickableSpanEnd",
+    "clickableSpanListener",
+    "clickableSpanBold",
+    requireAll = false
+)
+fun TextView.bindClickableSpan(
+    spanStart: String? = null,
+    spanEnd: String? = null,
+    spanListener: OnTextViewClickableSpanListener? = null,
+    spanBold: Boolean = false
+) {
+    if (text.isNullOrBlank()) return
+    if (spanListener == null) return
+
+    val builder = SpannableStringBuilder(text)
     val clickableSpan = object : ClickableSpan() {
         override fun onClick(view: View) {
-            onTextViewClickableSpanListener?.onClickableSpanEndClicked(view)
+            spanListener.onClickableSpanEndClicked(view)
             view.invalidate()
         }
 
         override fun updateDrawState(textPaint: TextPaint) {
             textPaint.color = context.themeColor(R.attr.colorPrimary)
-            textPaint.isFakeBoldText = true
+            if (spanBold) textPaint.isFakeBoldText = true
         }
     }
 
-    spannableString.setSpan(
-        clickableSpan,
-        spannableString.length - clickableSpanEnd.length,
-        spannableString.length,
-        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-    )
+    spanStart?.let {
+        builder.insert(0, it)
+        builder.setSpan(
+            clickableSpan,
+            0,
+            it.length,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+    }
+
+    spanEnd?.let {
+        builder.append(it)
+        builder.setSpan(
+            clickableSpan,
+            builder.length - it.length,
+            builder.length,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+    }
 
     movementMethod = LinkMovementMethod.getInstance()
-    setText(spannableString, TextView.BufferType.SPANNABLE)
+    setText(builder, TextView.BufferType.SPANNABLE)
 }
 
-interface OnTextViewClickableSpanListener {
-    fun onClickableSpanEndClicked(view: View)
-}
 
 /*
 /**
@@ -183,6 +263,41 @@ fun Chip.bindGlideChipSrc(
 }
 */
 
+@BindingAdapter("srcCompat")
+fun ShapeableImageView.bindSrcCompat(@DrawableRes drawableRes: Int?) {
+    if (drawableRes == null) return
+
+    val drawable = context.getDrawableOrNull(drawableRes)
+    setImageDrawable(drawable)
+}
+
+@BindingAdapter(
+    "glideUrl",
+    "glideCenterCrop",
+    "glideCircularCrop",
+    "glidePlaceholder",
+    requireAll = false
+)
+fun ImageView.bindGlideUrl(
+    imageUrl: String?,
+    centerCrop: Boolean = false,
+    circularCrop: Boolean = false,
+    @DrawableRes placeholder: Int? = null
+) {
+    if (imageUrl == null) {
+        bindGlideSrc(placeholder, centerCrop, circularCrop)
+        return
+    }
+
+    createGlideRequest(
+        context,
+        imageUrl,
+        centerCrop,
+        circularCrop,
+        placeholder
+    ).into(this)
+}
+
 @BindingAdapter(
     "glideSrc",
     "glideCenterCrop",
@@ -211,8 +326,26 @@ private fun createGlideRequest(
     circularCrop: Boolean
 ): RequestBuilder<Drawable> {
     val req = Glide.with(context).load(src)
+
     if (centerCrop) req.centerCrop()
     if (circularCrop) req.circleCrop()
+
+    return req
+}
+
+private fun createGlideRequest(
+    context: Context,
+    imageUrl: String,
+    centerCrop: Boolean,
+    circularCrop: Boolean,
+    placeholder: Int?
+): RequestBuilder<Drawable> {
+    val req = Glide.with(context).load(imageUrl)
+
+    if (placeholder != null) req.placeholder(context.getDrawableOrNull(placeholder))
+    if (centerCrop) req.centerCrop()
+    if (circularCrop) req.circleCrop()
+
     return req
 }
 
@@ -220,6 +353,15 @@ private fun createGlideRequest(
 fun View.bindGoneIf(gone: Boolean) {
     visibility = if (gone) {
         GONE
+    } else {
+        VISIBLE
+    }
+}
+
+@BindingAdapter("hideIf")
+fun View.bindHideIf(hide: Boolean) {
+    visibility = if (hide) {
+        INVISIBLE
     } else {
         VISIBLE
     }
@@ -357,7 +499,7 @@ fun View.requestApplyInsetsWhenAttached() {
     } else {
         // We're not attached to the hierarchy, add a listener to
         // request when we are
-        addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
+        addOnAttachStateChangeListener(object : OnAttachStateChangeListener {
             override fun onViewAttachedToWindow(v: View) {
                 v.removeOnAttachStateChangeListener(this)
                 v.requestApplyInsets()

@@ -21,7 +21,7 @@ abstract class FlowUseCase<in P, R>(
     // loadDataUseCase.execute(parameters) is now equals to
     // loadDataUseCase(parameters)
     operator fun invoke(parameters: P): Flow<Resource<R>> = execute(parameters)
-        .onStart { emit(Resource.Loading) }
+        .onStart { emit(Resource.Loading()) }
         .catch { e -> emit(Resource.Error(e.message)) }
         .flowOn(coroutineDispatcher)
 

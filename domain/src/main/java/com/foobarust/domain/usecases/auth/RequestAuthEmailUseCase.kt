@@ -21,7 +21,7 @@ class RequestAuthEmailUseCase @Inject constructor(
 ): FlowUseCase<String, Unit>(dispatcher) {
 
     override fun execute(parameters: String): Flow<Resource<Unit>> = flow {
-        authRepository.sendAuthEmail(parameters)
+        authRepository.sendEmailWithSignInLink(parameters)
         emit(Resource.Success(Unit))
     }
 }

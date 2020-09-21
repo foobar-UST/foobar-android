@@ -1,20 +1,22 @@
 package com.foobarust.domain.repositories
 
-/**
- * Created by kevin on 8/26/20
- */
+import com.foobarust.domain.models.AuthProfile
+import com.foobarust.domain.states.Resource
+import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
 
-    suspend fun sendAuthEmail(email: String)
-
-    suspend fun signInWithEmailLink(email: String, emailLink: String): Boolean
-
-    suspend fun checkEmailLinkIsValid(emailLink: String): Boolean
-
-    suspend fun signOut()
-
     suspend fun isSignedIn(): Boolean
 
-    suspend fun reloadUser()
+    suspend fun getAuthUid(): String
+
+    fun getAuthProfileObservable(): Flow<Resource<AuthProfile>>
+
+    suspend fun sendEmailWithSignInLink(email: String)
+
+    suspend fun signInWithEmailLink(email: String, emailLink: String)
+
+    suspend fun reloadAuthInfo()
+
+    suspend fun signOut()
 }

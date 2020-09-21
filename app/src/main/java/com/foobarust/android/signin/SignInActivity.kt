@@ -5,27 +5,21 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.observe
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import com.foobarust.android.NavigationSigninDirections
 import com.foobarust.android.R
 import com.foobarust.android.databinding.ActivitySigninBinding
+import com.foobarust.android.main.MainActivity
 import com.foobarust.android.signin.SignInState.COMPLETED
+import com.foobarust.android.utils.navigateTo
 import com.foobarust.android.utils.showShortToast
 import dagger.hilt.android.AndroidEntryPoint
-
-/**
- * Created by kevin on 8/26/20
- */
 
 @AndroidEntryPoint
 class SignInActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySigninBinding
-
     private lateinit var navController: NavController
-
     private val viewModel: SignInViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,22 +27,19 @@ class SignInActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_signin)
 
         // Setup Navigation
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.signin_nav_container_view) as NavHostFragment
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
         navController = navHostFragment.navController
 
         // Toast
-        viewModel.message.observe(this) {
+        viewModel.toastMessage.observe(this) {
             showShortToast(it)
         }
 
         // When the user is verified or want to skip the sign-in screen,
-        // navigate to overview screen
+        // navigate to MainActivity
         viewModel.signInState.observe(this) { state ->
             if (state == COMPLETED) {
-                navController.navigate(
-                    NavigationSigninDirections.actionGlobalOverviewActivity()
-                )
-                finish()
+                navigateTo(destination = MainActivity::class, finishEnd = true)
             }
         }
 

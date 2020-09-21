@@ -27,7 +27,14 @@ android {
         getByName("release") {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            //manifestPlaceholders = mapOf("crashlyticsCollectionEnabled" to true)
         }
+
+        /*
+        getByName("debug") {
+            manifestPlaceholders = mapOf("crashlyticsCollectionEnabled" to false)
+        }
+         */
     }
 
     compileOptions {
@@ -41,6 +48,7 @@ android {
             freeCompilerArgs = listOf(
                 "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi",
                 "-Xuse-experimental=kotlinx.coroutines.FlowPreview",
+                "-Xuse-experimental=kotlin.ExperimentalStdlibApi",
                 "-Xuse-experimental=androidx.paging.ExperimentalPagingApi"
             )
         }
@@ -78,14 +86,15 @@ dependencies {
     implementation(Dependencies.HILT)
     implementation(Dependencies.HILT_VIEWMODEL)
     implementation(Dependencies.PAGING_RUNTIME)
+    implementation(Dependencies.PREFERENCES)
 
     // Firebase
     implementation(Dependencies.FIREBASE_CRASHLYTICS)
     implementation(Dependencies.FIREBASE_MESSAGING)
     implementation(Dependencies.FIREBASE_ANALYTICS)
 
-
-    // Dependencies
+    // Others
+    implementation(Dependencies.BANNER_VIEW_PAGER)
     implementation(Dependencies.MATERIAL)
     implementation(Dependencies.GLIDE)
     implementation(Dependencies.SPINKIT)
@@ -95,7 +104,8 @@ dependencies {
     kapt(Annotation.ANDROIDX_HILT_COMPILER)
 
     // Debug
-    debugImplementation(Dependencies.LEAK_CANARY)
+    // Who cares about memory leak
+    //debugImplementation(Dependencies.LEAK_CANARY)
 
     // Unit Test
     testImplementation(Dependencies.ARCH_CORE_TESTING)
@@ -107,7 +117,7 @@ dependencies {
     //androidTestImplementation(Dependencies.TEST_CORE)
     //androidTestImplementation(Dependencies.TEST_RUNNER)
     //androidTestImplementation(Dependencies.TEST_RULES)
-    androidTestImplementation(Dependencies.TEST_EXT_JUNIT)
+    androidTestImplementation(Dependencies.TEST_EXT_JUNIT_KTX)
     androidTestImplementation(Dependencies.TEST_ESPRESSO_CORE)
     androidTestImplementation(Dependencies.HILT_TESTING)
 

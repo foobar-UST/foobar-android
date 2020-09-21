@@ -15,10 +15,6 @@ import com.foobarust.android.signin.SignInState.VERIFYING
 import com.foobarust.android.utils.AutoClearedValue
 import dagger.hilt.android.AndroidEntryPoint
 
-/**
- * Created by kevin on 8/26/20
- */
-
 @AndroidEntryPoint
 class SignInInputFragment : Fragment() {
 
@@ -34,18 +30,18 @@ class SignInInputFragment : Fragment() {
         binding = FragmentSigninInputBinding.inflate(inflater, container, false)
 
         // Pass username input to view model
-        binding.signinInputUsernameEditText.doOnTextChanged { text, _, _, _ ->
+        binding.usernameEditText.doOnTextChanged { text, _, _, _ ->
             viewModel.onUsernameChanged(text.toString())
         }
 
         // Sign-in button
-        binding.signinInputConfirmButton.setOnClickListener {
+        binding.confirmButton.setOnClickListener {
             viewModel.requestAuthEmail()
         }
 
         // Skip login button
-        binding.signinInputSkipSigninButton.setOnClickListener {
-            viewModel.skipSignIn()
+        binding.skipSigninButton.setOnClickListener {
+            viewModel.onSignInSkip()
         }
 
         // Setup email domains drop down
@@ -56,7 +52,7 @@ class SignInInputFragment : Fragment() {
                 domains.map { it.title }
             )
 
-            binding.signinInputDomainsAutoCompleteTextView.run {
+            binding.domainsAutoCompleteTextView.run {
                 setAdapter(adapter)
                 setOnItemClickListener { _, _, position, _ ->
                     viewModel.onAuthEmailDomainChanged(domains[position])

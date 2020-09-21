@@ -8,29 +8,23 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.R
 import com.foobarust.android.common.BaseViewModel
-import com.foobarust.android.overview.OverviewActivity
-import com.foobarust.android.signin.SignInActivity
+import com.foobarust.android.main.MainActivity
+import com.foobarust.android.onboarding.OnboardingActivity
 import com.foobarust.android.utils.SingleLiveEvent
 import com.foobarust.android.utils.createNotificationChannel
 import com.foobarust.domain.states.getSuccessDataOr
-import com.foobarust.domain.usecases.auth.GetSkippedSignInUseCase
-import com.google.firebase.auth.FirebaseAuth
+import com.foobarust.domain.usecases.onboarding.GetOnboardingCompletedUseCase
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.reflect.KClass
-
-/**
- * Created by kevin on 8/26/20
- */
 
 const val SPLASH_DELAY = 800L
 
 class SplashViewModel @ViewModelInject constructor(
     @ApplicationContext private val context: Context,
     private val notificationManager: NotificationManager,
-    private val firebaseAuth: FirebaseAuth,
-    private val getSkippedSignInUseCase: GetSkippedSignInUseCase
+    private val getOnboardingCompletedUseCase: GetOnboardingCompletedUseCase
 ) : BaseViewModel() {
 
     // TODO: Create a list of notification channels
@@ -39,7 +33,12 @@ class SplashViewModel @ViewModelInject constructor(
             channelId = context.getString(R.string.foobar_default_notification_channel_id),
             channelName = context.getString(R.string.foobar_default_notification_channel_name),
             importance = NotificationManagerCompat.IMPORTANCE_DEFAULT
-        )
+        ),
+        NotificationChannel(
+            channelId = context.getString(R.string.foobar_upload_notification_channel_id),
+            channelName = context.getString(R.string.foobar_upload_notification_channel_name),
+            importance = NotificationManagerCompat.IMPORTANCE_DEFAULT
+        ),
     )
 
     private val _startNavigation = SingleLiveEvent<KClass<*>>()
@@ -56,10 +55,11 @@ class SplashViewModel @ViewModelInject constructor(
             // TODO: Insert delay for better transition
             delay(SPLASH_DELAY)
 
+            // Navigate to MainActivity if onboarding has been completed.
+            // Otherwise, navigate to OnboardingActivity to complete the onboarding process.
             _startNavigation.value = when {
-                firebaseAuth.currentUser != null ||
-                getSkippedSignInUseCase(Unit).getSuccessDataOr(false) -> OverviewActivity::class
-                else -> SignInActivity::class
+                getOnboardingCompletedUseCase(Unit).getSuccessDataOr(false) -> MainActivity::class
+                else -> OnboardingActivity::class
             }
         }
     }

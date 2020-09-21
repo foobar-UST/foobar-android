@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
+    <style name="ThemeOverlay.Foobar.Dialog.Fullscreen" parent="ThemeOverlay.MaterialComponents.Dialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowBackground">?attr/scrimBackground</item>
+        <item name="android:navigationBarColor">@color/nav_bar</item>
+        <item name="android:windowSoftInputMode">stateAlwaysVisible</item>
+    </style>
+
     <style name="ThemeOverlay.Foobar.AlertDialog" parent="@style/ThemeOverlay.MaterialComponents.MaterialAlertDialog">
         <item name="dialogCornerRadius">@dimen/medium_component_corner_radius</item>
     </style>
@@ -12,6 +19,15 @@
         <item name="android:windowIsFloating">false</item>
         <item name="android:windowSoftInputMode">adjustResize</item>
         <item name="android:navigationBarColor">?attr/colorSurface</item>
+        <item name="android:windowLightNavigationBar" tools:ignore="NewApi">true</item>
+    </style>
+
+    <style name="Theme.Foobar.Onboarding.DayNight" parent="Theme.Foobar.Onboarding"/>
+
+    <style name="Theme.Foobar.Onboarding" parent="Theme.Foobar">
+        <item name="android:statusBarColor">?android:attr/colorBackground</item>
+        <item name="android:windowLightStatusBar" tools:ignore="NewApi">true</item>
+        <item name="android:navigationBarColor">?android:attr/colorBackground</item>
         <item name="android:windowLightNavigationBar" tools:ignore="NewApi">true</item>
     </style>
 
@@ -39,10 +55,10 @@
         <item name="colorPrimary">@color/maroon_500</item>
         <item name="colorPrimaryVariant">@color/maroon_700</item>
         <item name="colorSecondary">@color/mint_500</item>
-        <item name="colorSecondaryVariant">@color/mint_700</item>
+        <item name="colorSecondaryVariant">@color/mint_300</item>
         <item name="colorError">@color/red_500</item>
         
-        <item name="android:colorBackground">@color/white</item>
+        <item name="android:colorBackground">@color/background_light</item>
         <item name="colorSurface">@color/white</item>
 
         <item name="colorOnPrimary">@color/white</item>
@@ -72,6 +88,8 @@
         <item name="motionInterpolatorPersistent">@android:interpolator/fast_out_slow_in</item>
         <item name="motionInterpolatorIncoming">@android:interpolator/decelerate_cubic</item>
         <item name="motionInterpolatorOutgoing">@android:interpolator/accelerate_cubic</item>
+
+        <item name="scrimBackground">@color/white_alpha_20</item>
 
         <!-- Theme Overlay -->
         <item name="bottomSheetDialogTheme">@style/ThemeOverlay.Foobar.BottomSheetDialog.DayNight</item>

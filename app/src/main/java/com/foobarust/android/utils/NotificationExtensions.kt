@@ -8,13 +8,16 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Build
 import androidx.annotation.DrawableRes
-import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationCompat.*
 import com.foobarust.android.R
 import kotlin.reflect.KClass
 
 /**
  * Created by kevin on 8/31/20
  */
+
+const val MAX_PROGRESS = 100
+const val MIN_PROGRESS = 0
 
 fun NotificationManager.createNotificationChannel(
     channelId: String,
@@ -45,7 +48,7 @@ fun NotificationManager.sendNotification(
     channelId: String,
     title: String,
     messageBody: String,
-    priority: Int,
+    priority: Int = PRIORITY_DEFAULT,
     autoCancel: Boolean = true,
     @DrawableRes largeIconRes: Int? = null,
     bigPictureStyle: Boolean = false,
@@ -53,9 +56,7 @@ fun NotificationManager.sendNotification(
     intentActivity: KClass<*>
 ) {
     val notificationId = generateNotificationId()
-
     val contentIntent = Intent(context, intentActivity.java)
-
     val contentPendingIntent = PendingIntent.getActivity(
         context,
         notificationId,
@@ -64,7 +65,7 @@ fun NotificationManager.sendNotification(
     )
 
     // Create notification builder
-    val builder = NotificationCompat.Builder(
+    val builder = Builder(
         context,
         channelId
     )
@@ -82,7 +83,7 @@ fun NotificationManager.sendNotification(
 
         // Create big picture style
         if (bigPictureStyle) {
-            val bigPicStyle = NotificationCompat.BigPictureStyle()
+            val bigPicStyle = BigPictureStyle()
                 .bigPicture(decodedImage)
                 .bigLargeIcon(null)
 
@@ -94,3 +95,45 @@ fun NotificationManager.sendNotification(
 
     notify(notificationId, builder.build())
 }
+
+fun NotificationManager.buildProgressNotification(
+    channelId: String,
+    title: String,
+    messageBody: String,
+    priority: Int = PRIORITY_DEFAULT,
+    autoCancel: Boolean = true,
+    context: Context,
+    intentActivity: KClass<*>
+): ProgressNotification {
+    val notificationId = generateNotificationId()
+    val contentIntent = Intent(context, intentActivity.java)
+    val contentPendingIntent = PendingIntent.getActivity(
+        context,
+        notificationId,
+        contentIntent,
+        PendingIntent.FLAG_UPDATE_CURRENT
+    )
+
+    // Create notification builder
+    val builder = Builder(
+        context,
+        channelId
+    )
+        .setSmallIcon(R.drawable.ic_restaurant)         // TODO: Change small icon
+        .setContentTitle(title)
+        .setContentText(messageBody)
+        .setContentIntent(contentPendingIntent)
+        .setPriority(priority)
+        .setAutoCancel(autoCancel)
+        .setProgress(MAX_PROGRESS, MIN_PROGRESS, false)
+
+    return ProgressNotification(
+        id = notificationId,
+        builder = builder
+    )
+}
+
+data class ProgressNotification(
+    val id: Int,
+    val builder: Builder
+)

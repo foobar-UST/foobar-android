@@ -15,15 +15,10 @@ import com.foobarust.android.utils.AutoClearedValue
 import com.foobarust.android.utils.OnTextViewClickableSpanListener
 import dagger.hilt.android.AndroidEntryPoint
 
-/**
- * Created by kevin on 8/26/20
- */
-
 @AndroidEntryPoint
 class SignInVerifyFragment : Fragment(), OnTextViewClickableSpanListener {
 
     private var binding: FragmentSigninVerifyBinding by AutoClearedValue(this)
-
     private val viewModel: SignInViewModel by activityViewModels()
 
     private val backPressedCallback = object : OnBackPressedCallback(true) {
@@ -35,7 +30,8 @@ class SignInVerifyFragment : Fragment(), OnTextViewClickableSpanListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // When back pressed, cancel the email verification and navigate back to input screen
+        // When back pressed, cancel the email verification and
+        // navigate back to input screen
         requireActivity().onBackPressedDispatcher.addCallback(this, backPressedCallback)
     }
 
@@ -68,14 +64,7 @@ class SignInVerifyFragment : Fragment(), OnTextViewClickableSpanListener {
 
     override fun onClickableSpanEndClicked(view: View) {
         when (view.id) {
-            R.id.sigin_verify_no_email_text_view -> viewModel.requestAuthEmail()
-            R.id.sigin_verify_tutorial_text_view -> showTutorialBottomSheet()
+            R.id.no_email_text_view -> viewModel.requestAuthEmail()
         }
-    }
-
-    private fun showTutorialBottomSheet() {
-        findNavController().navigate(
-            SignInVerifyFragmentDirections.actionSignInVerifyFragmentToSignInTutorialBottomSheet()
-        )
     }
 }

@@ -5,26 +5,22 @@ import android.app.NotificationManager
 import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.foobarust.android.R
-import com.foobarust.android.overview.OverviewActivity
-import com.foobarust.android.signin.SignInActivity
+import com.foobarust.android.main.MainActivity
+import com.foobarust.android.onboarding.OnboardingActivity
 import com.foobarust.android.utils.MainCoroutineRule
 import com.foobarust.android.utils.getOrAwaitValue
 import com.foobarust.android.utils.observeForTesting
 import com.foobarust.android.utils.runBlockingTest
 import com.foobarust.domain.repositories.PreferencesRepository
-import com.foobarust.domain.usecases.auth.GetSkippedSignInUseCase
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
+import com.foobarust.domain.usecases.onboarding.GetOnboardingCompletedUseCase
 import kotlinx.coroutines.delay
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import org.mockito.junit.MockitoJUnitRunner
-
 
 /**
  * Created by kevin on 9/2/20
@@ -41,85 +37,36 @@ class SplashViewModelTest {
     @get:Rule
     var coroutineRule = MainCoroutineRule()
 
-    @Mock
-    private lateinit var firebaseAuth: FirebaseAuth
-
-
     @Test
-    fun skip_signin_navigate_to_overview() = coroutineRule.runBlockingTest {
-        val viewModel = createSplashViewModel(firebaseAuth, isSkippedSignIn = true)
+    fun onboarding_completed_navigate_to_overview() = coroutineRule.runBlockingTest {
+        val viewModel = createSplashViewModel(isOnboardingCompleted = true)
 
         delay(SPLASH_DELAY)
 
         viewModel.startNavigation.observeForTesting {
             assertEquals(
                 viewModel.startNavigation.getOrAwaitValue(),
-                OverviewActivity::class
+                MainActivity::class
             )
         }
     }
 
     @Test
-    fun not_skip_signin_navigate_to_signin() = coroutineRule.runBlockingTest {
-        val viewModel = createSplashViewModel(isSkippedSignIn = false)
+    fun onboarding_not_completed_navigate_to_onboarding() = coroutineRule.runBlockingTest {
+        val viewModel = createSplashViewModel(isOnboardingCompleted = false)
 
         delay(SPLASH_DELAY)
 
         viewModel.startNavigation.observeForTesting {
             assertEquals(
                 viewModel.startNavigation.getOrAwaitValue(),
-                SignInActivity::class
+                OnboardingActivity::class
             )
         }
     }
 
-    @Test
-    fun not_signed_in_navigate_to_signin() = coroutineRule.runBlockingTest {
-        // Mock a unsigned in user
-        val firebaseAuth = mock(FirebaseAuth::class.java).apply {
-            `when`(currentUser).thenReturn(null)
-        }
 
-        val viewModel = createSplashViewModel(
-            firebaseAuth = firebaseAuth,
-            isSkippedSignIn = false
-        )
-
-        delay(SPLASH_DELAY)
-
-        viewModel.startNavigation.observeForTesting {
-            assertEquals(
-                viewModel.startNavigation.getOrAwaitValue(),
-                SignInActivity::class
-            )
-        }
-    }
-
-    @Test
-    fun signed_in_navigate_to_overview() = coroutineRule.runBlockingTest {
-        val firebaseAuth = mock(FirebaseAuth::class.java).apply {
-            val user = mock(FirebaseUser::class.java)
-            `when`(currentUser).thenReturn(user)
-        }
-        val viewModel = createSplashViewModel(
-            firebaseAuth = firebaseAuth,
-            isSkippedSignIn = false
-        )
-
-        delay(SPLASH_DELAY)
-
-        viewModel.startNavigation.observeForTesting {
-            assertEquals(
-                viewModel.startNavigation.getOrAwaitValue(),
-                OverviewActivity::class
-            )
-        }
-    }
-
-    private fun createSplashViewModel(
-        firebaseAuth: FirebaseAuth = mock(FirebaseAuth::class.java),
-        isSkippedSignIn: Boolean
-    ): SplashViewModel {
+    private fun createSplashViewModel(isOnboardingCompleted: Boolean): SplashViewModel {
         return SplashViewModel(
             context = mock(Context::class.java).apply {
                 `when`(getString(R.string.foobar_default_notification_channel_id))
@@ -128,13 +75,12 @@ class SplashViewModelTest {
                     .thenReturn("Default")
             },
             notificationManager = mock(NotificationManager::class.java),
-            firebaseAuth = firebaseAuth,
-            getSkippedSignInUseCase = createGetSkippedSignInUseCase(isSkippedSignIn)
+            getOnboardingCompletedUseCase = createGetOnboardingCompletedUseCase(isOnboardingCompleted)
         )
     }
 
-    private fun createGetSkippedSignInUseCase(result: Boolean): GetSkippedSignInUseCase {
-        return object : GetSkippedSignInUseCase(
+    private fun createGetOnboardingCompletedUseCase(result: Boolean): GetOnboardingCompletedUseCase {
+        return object : GetOnboardingCompletedUseCase(
             preferencesRepository = mock(PreferencesRepository::class.java),
             coroutineDispatcher = coroutineRule.testDispatcher
         ) {
