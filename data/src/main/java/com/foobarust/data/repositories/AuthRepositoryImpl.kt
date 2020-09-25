@@ -1,12 +1,16 @@
 package com.foobarust.data.repositories
 
 import android.content.Context
+import com.foobarust.data.common.Constants.USERS_COLLECTION
 import com.foobarust.data.mappers.AuthMapper
 import com.foobarust.domain.models.AuthProfile
 import com.foobarust.domain.repositories.AuthRepository
 import com.foobarust.domain.states.Resource
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.actionCodeSettings
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -19,20 +23,23 @@ import javax.inject.Inject
  */
 
 private const val ERROR_SIGN_IN_LINK_INVALID = "Invalid sign in link."
-private const val ERROR_GET_CURRENT_USER = "Error occurs during sign in."
+private const val ERROR_GET_CURRENT_USER = "Error getting current user."
 private const val ERROR_NOT_SIGNED_IN = "User is not signed in."
+
 
 class AuthRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context,
     private val firebaseAuth: FirebaseAuth,
+    private val firestore: FirebaseFirestore,
     private val authMapper: AuthMapper
 ) : AuthRepository {
 
     override suspend fun isSignedIn(): Boolean {
-        return firebaseAuth.currentUser != null && firebaseAuth.currentUser?.isAnonymous == false
+        return firebaseAuth.currentUser != null &&
+               firebaseAuth.currentUser?.isAnonymous == false
     }
 
-    override suspend fun getAuthUid(): String {
+    override suspend fun getAuthUserId(): String {
         return firebaseAuth.currentUser?.uid!!
     }
 
@@ -46,9 +53,13 @@ class AuthRepositoryImpl @Inject constructor(
             } else {
                 channel.offer(Resource.Success(authMapper.toAuthProfile(currentUser)))
             }
-        }.also { firebaseAuth.addAuthStateListener(it) }
+        }.also {
+            firebaseAuth.addAuthStateListener(it)
+        }
 
-        awaitClose { firebaseAuth.removeAuthStateListener(listener) }
+        awaitClose {
+            firebaseAuth.removeAuthStateListener(listener)
+        }
     }
 
     @Throws(Exception::class)
@@ -84,14 +95,20 @@ class AuthRepositoryImpl @Inject constructor(
             throw Exception(ERROR_SIGN_IN_LINK_INVALID)
         }
 
-        val authResult = firebaseAuth.signInWithEmailLink(email, emailLink).await()
-
-        if (authResult.user == null) {
+        val currentUser = firebaseAuth.signInWithEmailLink(email, emailLink).await().user ?:
             throw Exception(ERROR_GET_CURRENT_USER)
-        }
+
+        // Insert new user document into firestore
+        firestore.collection(USERS_COLLECTION).document(currentUser.uid)
+            .set(mapOf(
+                "email" to email,
+                "username" to email.substring(0, email.indexOf('@')),
+                "updated_at" to FieldValue.serverTimestamp()
+            ), SetOptions.merge())
+            .await()
     }
 
-    override suspend fun reloadAuthInfo() {
+    override suspend fun reloadAuthUser() {
         firebaseAuth.currentUser?.reload()?.await()
     }
 

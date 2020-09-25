@@ -1,4 +1,4 @@
-package com.foobarust.android.input
+package com.foobarust.android.common
 
 import android.os.Bundle
 import android.text.InputType
@@ -10,9 +10,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.foobarust.android.R
-import com.foobarust.android.common.PhoneFormatter
-import com.foobarust.android.databinding.BottomSheetTextInputBinding
-import com.foobarust.android.input.TextInputType.*
+import com.foobarust.android.common.TextInputType.*
+import com.foobarust.android.databinding.DialogTextInputBinding
 import com.foobarust.android.utils.AutoClearedValue
 import com.foobarust.android.utils.setMaxLength
 import com.foobarust.android.utils.showShortToast
@@ -20,18 +19,18 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class TextInputBottomSheet : BottomSheetDialogFragment() {
+class TextInputDialog : BottomSheetDialogFragment() {
 
-    private var binding: BottomSheetTextInputBinding by AutoClearedValue(this)
+    private var binding: DialogTextInputBinding by AutoClearedValue(this)
     private val viewModel: TextInputViewModel by viewModels()
-    private val args: TextInputBottomSheetArgs by navArgs()
+    private val args: TextInputDialogArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = BottomSheetTextInputBinding.inflate(inflater, container, false).apply {
+        binding = DialogTextInputBinding.inflate(inflater, container, false).apply {
             property = args.property
             lifecycleOwner = viewLifecycleOwner
         }
@@ -67,14 +66,14 @@ class TextInputBottomSheet : BottomSheetDialogFragment() {
         // Input type
         binding.valueEditText.inputType = when (args.property.type) {
             NORMAL -> InputType.TYPE_CLASS_TEXT
-            NAME -> InputType.TYPE_TEXT_FLAG_CAP_WORDS
+            NAME -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_WORDS
             PHONE_NUM -> InputType.TYPE_CLASS_NUMBER
         }
 
         // Length
         if (args.property.type == PHONE_NUM) {
             binding.valueEditText.setMaxLength(8)
-            binding.valueTextInputLayout.prefixText = PhoneFormatter.AREA_CODE
+            binding.valueTextInputLayout.prefixText = PhoneUtil.AREA_CODE
         }
     }
 }

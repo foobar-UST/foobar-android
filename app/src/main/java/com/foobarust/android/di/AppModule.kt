@@ -4,7 +4,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
-import com.foobarust.android.common.PhoneFormatter
+import com.foobarust.android.common.PhoneUtil
 import com.foobarust.domain.di.DispatcherModule
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.crashlytics.ktx.crashlytics
@@ -47,7 +47,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providePhoneFormatter(): PhoneFormatter {
-        return PhoneFormatter()
+    fun providePhoneUtil(): PhoneUtil {
+        return PhoneUtil()
     }
 }

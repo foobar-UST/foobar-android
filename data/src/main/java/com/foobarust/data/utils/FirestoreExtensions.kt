@@ -13,6 +13,8 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 
+const val ERROR_DOCUMENT_NOT_EXIST = "Document does not exist."
+
 inline fun <reified T, R> CollectionReference.snapshotFlow(crossinline mapper: (T) -> R): Flow<Resource<List<R>>> {
     return channelFlow {
         channel.offer(Resource.Loading())
@@ -25,7 +27,7 @@ inline fun <reified T, R> CollectionReference.snapshotFlow(crossinline mapper: (
                 value?.let {
                     val results = value.toObjects(T::class.java)
                     channel.offer(Resource.Success(results.map { mapper(it) }))
-                } ?: channel.close(CancellationException("Error getting data."))
+                } ?: channel.close(CancellationException(ERROR_DOCUMENT_NOT_EXIST))
             }
         }
         awaitClose { subscription.remove() }
@@ -45,12 +47,12 @@ inline fun <reified T, R> DocumentReference.snapshotFlow(crossinline mapper: (T)
                     val result = it.toObject(T::class.java)
 
                     if (result == null) {
-                        channel.offer(Resource.Error("Error getting data."))
-                        channel.close(CancellationException("Error getting data."))
+                        channel.offer(Resource.Error(ERROR_DOCUMENT_NOT_EXIST))
+                        channel.close(CancellationException(ERROR_DOCUMENT_NOT_EXIST))
                     } else {
                         channel.offer(Resource.Success(mapper(result)))
                     }
-                } ?: channel.close(CancellationException("Error getting data."))
+                } ?: channel.close(CancellationException(ERROR_DOCUMENT_NOT_EXIST))
             }
         }
         awaitClose { subscription.remove() }
@@ -69,7 +71,7 @@ inline fun <reified T, R> Query.snapshotFlow(crossinline mapper: (T) -> R): Flow
                 value?.let {
                     val results = value.toObjects(T::class.java)
                     channel.offer(Resource.Success(results.map { mapper(it) }))
-                } ?: channel.close(CancellationException("Error getting data."))
+                } ?: channel.close(CancellationException(ERROR_DOCUMENT_NOT_EXIST))
             }
         }
         awaitClose { subscription.remove() }

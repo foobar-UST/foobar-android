@@ -7,10 +7,29 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <com.google.android.material.tabs.TabLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            app:tabIndicatorFullWidth="false">
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="On Campus"/>
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Off Campus"/>
+
+        </com.google.android.material.tabs.TabLayout>
+
         <com.zhpan.bannerview.BannerViewPager
             android:id="@+id/promotion_view_pager"
             android:layout_width="match_parent"
             android:layout_height="210dp"
+            android:layout_marginTop="@dimen/spacing_xmedium"
             android:paddingTop="@dimen/spacing_xmedium"
             android:paddingBottom="@dimen/spacing_xmedium"
             app:bvp_auto_play="false"
@@ -31,6 +50,14 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/spacing_xmedium"/>
+
+        <Button
+            android:id="@+id/detail_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_xlarge"
+            android:layout_gravity="center_horizontal"
+            android:text="Seller Detail"/>
 
     </LinearLayout>
 

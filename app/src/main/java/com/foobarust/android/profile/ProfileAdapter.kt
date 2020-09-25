@@ -13,7 +13,7 @@ import com.foobarust.android.databinding.ItemProfileWarningBinding
 import com.foobarust.android.profile.ProfileAdapter.ProfileAdapterListener
 import com.foobarust.android.profile.ProfileListModel.*
 import com.foobarust.android.profile.ProfileViewHolder.*
-import com.foobarust.domain.models.UserDetailInfo
+import com.foobarust.domain.models.UserDetail
 
 class ProfileAdapter(
     private val listener: ProfileAdapterListener
@@ -44,7 +44,7 @@ class ProfileAdapter(
     override fun onBindViewHolder(holder: ProfileViewHolder, position: Int) {
         when (holder) {
             is ProfileInfoViewHolder -> holder.binding.run {
-                userModel = (getItem(position) as ProfileInfoModel).userDetailInfo
+                userModel = (getItem(position) as ProfileInfoModel).userDetail
                 listener = this@ProfileAdapter.listener
                 executePendingBindings()
             }
@@ -94,7 +94,7 @@ sealed class ProfileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVie
 
 sealed class ProfileListModel {
     data class ProfileInfoModel(
-        val userDetailInfo: UserDetailInfo
+        val userDetail: UserDetail
     ) : ProfileListModel()
 
     data class ProfileEditModel(
@@ -122,9 +122,9 @@ object ProfileListModelDiff : DiffUtil.ItemCallback<ProfileListModel>() {
     override fun areContentsTheSame(oldItem: ProfileListModel, newItem: ProfileListModel): Boolean {
         return when {
             oldItem is ProfileInfoModel && newItem is ProfileInfoModel ->
-                oldItem.userDetailInfo.username == newItem.userDetailInfo.username &&
-                oldItem.userDetailInfo.email == newItem.userDetailInfo.email &&
-                oldItem.userDetailInfo.photoUrl == newItem.userDetailInfo.photoUrl
+                oldItem.userDetail.username == newItem.userDetail.username &&
+                oldItem.userDetail.email == newItem.userDetail.email &&
+                oldItem.userDetail.photoUrl == newItem.userDetail.photoUrl
             oldItem is ProfileEditModel && newItem is ProfileEditModel -> oldItem == newItem
             oldItem is ProfileWarningModel && newItem is ProfileWarningModel -> oldItem.message == newItem.message
             else -> false

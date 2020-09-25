@@ -6,7 +6,6 @@ object Dependencies {
     const val HILT_PLUGIN = "com.google.dagger:hilt-android-gradle-plugin:${Versions.HILT}"
     const val GOOGLE_SERVICES = "com.google.gms:google-services:${Versions.GOOGLE_SERVICES}"
     const val FIREBASE_CRASHLYTICS_PLUGIN = "com.google.firebase:firebase-crashlytics-gradle:${Versions.FIREBASE_CRASHLYTICS_GRADLE}"
-    const val GMS_OSS_LICENSES_PLUGIN = "com.google.android.gms:oss-licenses-plugin:${Versions.GMS_OSS_LICENSES_PLUGIN}"
 
     // Kotlin
     const val KOTLIN_STDLIB = "org.jetbrains.kotlin:kotlin-stdlib-jdk7"
@@ -52,7 +51,6 @@ object Dependencies {
 
     // Play Services
     const val PLAY_SERVICES_AUTH = "com.google.android.gms:play-services-auth:${Versions.PLAY_SERVICES_AUTH}"
-    const val PLAY_SERVICES_OSS_LICENSES = "com.google.android.gms:play-services-oss-licenses:${Versions.PLAY_SERVICES_OSS_LICENSES}"
 
     // Others
     const val BANNER_VIEW_PAGER = "com.github.zhpanvip:BannerViewPager:${Versions.BANNER_VIEW_PAGER}"

@@ -5,7 +5,7 @@ package com.foobarust.domain.models
  * Created by kevin on 9/12/20
  */
 
-data class UserDetailInfo(
+data class UserDetail(
     val username: String? = null,
     val email: String? = null,
     val name: String? = null,
@@ -13,6 +13,6 @@ data class UserDetailInfo(
     val photoUrl: String? = null
 )
 
-fun UserDetailInfo.allowOrdering(): Boolean {
+fun UserDetail.allowOrdering(): Boolean {
     return !name.isNullOrEmpty() && !phoneNum.isNullOrEmpty()
 }

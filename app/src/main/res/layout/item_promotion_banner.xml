@@ -20,6 +20,8 @@
                 android:id="@+id/promotion_image_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                tools:scaleType="centerInside"
                 tools:src="@drawable/sample_image_1"/>
 
         </com.google.android.material.card.MaterialCardView>

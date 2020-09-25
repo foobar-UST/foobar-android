@@ -1,11 +1,16 @@
 # Changelog
 
+## 2020-09-25
+- Added create user document right after signed in.
+- Added order detail screen.
+- Added tab layout in SellerFragment for two types of ordering.
+
 ## 2020-09-21
 - Used NavigationExtensions to support multiple backstacks.
-- Moved sign in to SettingsFragment.
+- Moved sign in button to SettingsFragment.
 - Added toolbar in MainActivity.
-- Added TextInputBottomSheet for receiving text input.
-- Added banner view in SellerFragment for preview.
+- Added TextInputBottomSheet for acquiring text input.
+- Added banner view in SellerFragment.
 - Added Settings Screen.
 - Added Onboarding screen.
 

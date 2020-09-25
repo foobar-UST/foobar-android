@@ -24,6 +24,7 @@ import androidx.core.view.updateLayoutParams
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.foobarust.android.R
 import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -326,6 +327,7 @@ private fun createGlideRequest(
     circularCrop: Boolean
 ): RequestBuilder<Drawable> {
     val req = Glide.with(context).load(src)
+        .transition(DrawableTransitionOptions.withCrossFade())
 
     if (centerCrop) req.centerCrop()
     if (circularCrop) req.circleCrop()
@@ -341,6 +343,7 @@ private fun createGlideRequest(
     placeholder: Int?
 ): RequestBuilder<Drawable> {
     val req = Glide.with(context).load(imageUrl)
+        .transition(DrawableTransitionOptions.withCrossFade())
 
     if (placeholder != null) req.placeholder(context.getDrawableOrNull(placeholder))
     if (centerCrop) req.centerCrop()

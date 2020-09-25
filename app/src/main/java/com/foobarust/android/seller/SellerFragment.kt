@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentSellerBinding
 import com.foobarust.android.utils.AutoClearedValue
+import com.foobarust.android.utils.findNavController
 import com.foobarust.android.utils.showShortToast
 
 class SellerFragment : Fragment(), PromotionBannerAdapter.PromotionBannerAdapterListener {
@@ -44,6 +45,11 @@ class SellerFragment : Fragment(), PromotionBannerAdapter.PromotionBannerAdapter
             binding.promotionViewPager.create(it)
         }
 
+        binding.detailButton.setOnClickListener {
+            findNavController(R.id.sellerFragment)?.navigate(
+                SellerFragmentDirections.actionSellerFragmentToSellerDetailFragment()
+            )
+        }
 
         return binding.root
     }

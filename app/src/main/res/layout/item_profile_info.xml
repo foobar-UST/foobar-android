@@ -7,7 +7,7 @@
     <data>
         <variable
             name="userModel"
-            type="com.foobarust.domain.models.UserDetailInfo" />
+            type="com.foobarust.domain.models.UserDetail" />
         <variable
             name="listener"
             type="com.foobarust.android.profile.ProfileAdapter.ProfileAdapterListener" />

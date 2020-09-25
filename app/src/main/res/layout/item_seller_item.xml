@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/spacing_large">
+
+        <TextView
+            android:id="@+id/title_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Item Title"
+            android:textAppearance="?attr/textAppearanceSubtitle1" />
+
+        <TextView
+            android:id="@+id/description_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_xmedium"
+            android:layout_below="@id/title_text_view"
+            android:text="Description will be shown here."
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="@color/material_on_surface_emphasis_medium"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="$35.4"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:textColor="?attr/colorSecondary"
+            android:textStyle="bold"/>
+
+    </RelativeLayout>
+
+</layout>

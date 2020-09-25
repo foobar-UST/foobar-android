@@ -13,11 +13,16 @@ import javax.inject.Inject
 
 /**
  * Created by kevin on 9/20/20
+ *
+ * Get [AuthProfile] which contains basic auth information about a user,
+ * such as username, email and photoUrl.
+ *
+ * [Resource.Error] will be emitted when the user is signed out.
  */
 
 private const val GET_USER_BASIC_INFO_NOT_SIGNED_IN = "User is not signed in."
 
-class GetAuthProfileUseCase @Inject constructor(
+class GetAuthProfileObservableUseCase @Inject constructor(
     private val authRepository: AuthRepository,
     @IoDispatcher coroutineDispatcher: CoroutineDispatcher
 ) : FlowUseCase<Unit, AuthProfile>(coroutineDispatcher) {
@@ -25,8 +30,7 @@ class GetAuthProfileUseCase @Inject constructor(
     override fun execute(parameters: Unit): Flow<Resource<AuthProfile>> = flow {
         // Check if user is signed in
         if (!authRepository.isSignedIn()) {
-            emit(Resource.Error(GET_USER_BASIC_INFO_NOT_SIGNED_IN))
-            return@flow
+            throw Exception(GET_USER_BASIC_INFO_NOT_SIGNED_IN)
         }
 
         emitAll(authRepository.getAuthProfileObservable())

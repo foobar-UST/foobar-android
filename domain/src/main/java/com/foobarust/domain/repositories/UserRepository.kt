@@ -1,6 +1,6 @@
 package com.foobarust.domain.repositories
 
-import com.foobarust.domain.models.UserDetailInfo
+import com.foobarust.domain.models.UserDetail
 import com.foobarust.domain.states.Resource
 import kotlinx.coroutines.flow.Flow
 
@@ -10,11 +10,11 @@ import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
 
-    fun getUserDetailInfoObservable(uid: String): Flow<Resource<UserDetailInfo>>
+    fun getUserDetailObservable(userId: String): Flow<Resource<UserDetail>>
 
-    suspend fun updateUserName(uid: String, name: String)
+    suspend fun updateUserName(userId: String, name: String)
 
-    suspend fun updateUserPhoneNumber(uid: String, phoneNum: String)
+    suspend fun updateUserPhoneNumber(userId: String, phoneNum: String)
 
-    fun updateUserPhoto(uid: String, uriString: String): Flow<Resource<Unit>>
+    fun updateUserPhoto(userId: String, uriString: String): Flow<Resource<Unit>>
 }

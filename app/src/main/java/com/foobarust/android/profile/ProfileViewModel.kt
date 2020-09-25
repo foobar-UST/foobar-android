@@ -8,16 +8,16 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.R
 import com.foobarust.android.common.BaseViewModel
-import com.foobarust.android.common.PhoneFormatter
-import com.foobarust.android.input.TextInputProperty
-import com.foobarust.android.input.TextInputType.NAME
-import com.foobarust.android.input.TextInputType.PHONE_NUM
+import com.foobarust.android.common.PhoneUtil
+import com.foobarust.android.common.TextInputProperty
+import com.foobarust.android.common.TextInputType.NAME
+import com.foobarust.android.common.TextInputType.PHONE_NUM
 import com.foobarust.android.profile.ProfileListModel.*
 import com.foobarust.android.utils.SingleLiveEvent
-import com.foobarust.domain.models.UserDetailInfo
+import com.foobarust.domain.models.UserDetail
 import com.foobarust.domain.models.allowOrdering
 import com.foobarust.domain.states.Resource.*
-import com.foobarust.domain.usecases.user.GetUserDetailInfoUseCase
+import com.foobarust.domain.usecases.user.GetUserDetailObservableUseCase
 import com.foobarust.domain.usecases.user.UpdateUserInfoParameter
 import com.foobarust.domain.usecases.user.UpdateUserInfoUseCase
 import com.foobarust.domain.usecases.user.UpdateUserPhotoUseCase
@@ -31,13 +31,13 @@ const val EDIT_PROFILE_PHONE_NUMBER = "profile_phone_number"
 
 class ProfileViewModel @ViewModelInject constructor(
     @ApplicationContext private val context: Context,
-    getUserDetailInfoUseCase: GetUserDetailInfoUseCase,
+    getUserDetailObservableUseCase: GetUserDetailObservableUseCase,
     private val updateUserInfoUseCase: UpdateUserInfoUseCase,
     private val updateUserPhotoUseCase: UpdateUserPhotoUseCase,
-    private val phoneFormatter: PhoneFormatter,
+    private val phoneUtil: PhoneUtil,
 ) : BaseViewModel() {
 
-    val profileItems = getUserDetailInfoUseCase(Unit)
+    val profileItems = getUserDetailObservableUseCase(Unit)
         .map {
             controlLoadingProgress(isShow = it is Loading)
             when (it) {
@@ -56,8 +56,8 @@ class ProfileViewModel @ViewModelInject constructor(
     val navigateToTextInput: LiveData<TextInputProperty>
         get() = _navigateToTextInput
 
-    private fun buildProfileList(userDetailInfo: UserDetailInfo): List<ProfileListModel> {
-        val infoItem = ProfileInfoModel(userDetailInfo = userDetailInfo)
+    private fun buildProfileList(userDetail: UserDetail): List<ProfileListModel> {
+        val infoItem = ProfileInfoModel(userDetail = userDetail)
         val orderingWarningItem = ProfileWarningModel(
             message = context.getString(R.string.profile_require_data_for_ordering)
         )
@@ -65,23 +65,23 @@ class ProfileViewModel @ViewModelInject constructor(
             ProfileEditModel(
                 id = EDIT_PROFILE_NAME,
                 title = context.getString(R.string.profile_edit_field_name),
-                value = userDetailInfo.name,
-                displayValue = userDetailInfo.name.takeIf {
+                value = userDetail.name,
+                displayValue = userDetail.name.takeIf {
                     !it.isNullOrEmpty()
                 } ?: context.getString(R.string.profile_edit_field_null)
             ),
             ProfileEditModel(
                 id = EDIT_PROFILE_PHONE_NUMBER,
                 title = context.getString(R.string.profile_edit_field_phone_number),
-                value = userDetailInfo.phoneNum,
-                displayValue = userDetailInfo.phoneNum?.let {
-                    phoneFormatter.getFormattedString(it)
+                value = userDetail.phoneNum,
+                displayValue = userDetail.phoneNum?.let {
+                    phoneUtil.getFormattedString(it)
                 } ?: context.getString(R.string.profile_edit_field_null)
             )
         )
 
         return buildList {
-            if (!userDetailInfo.allowOrdering()) add(orderingWarningItem)
+            if (!userDetail.allowOrdering()) add(orderingWarningItem)
             add(infoItem)
             addAll(editItems)
         }

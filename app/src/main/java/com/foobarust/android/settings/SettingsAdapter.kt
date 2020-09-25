@@ -19,10 +19,10 @@ import com.foobarust.android.databinding.ItemSettingsSectionBinding
 import com.foobarust.android.settings.SettingsAdapter.SettingsAdapterListener
 import com.foobarust.android.settings.SettingsListModel.SettingsProfileModel
 import com.foobarust.android.settings.SettingsListModel.SettingsSectionModel
-import com.foobarust.android.settings.SettingsViewHolder.SettingsAuthViewHolder
+import com.foobarust.android.settings.SettingsViewHolder.SettingsProfileHolder
 import com.foobarust.android.settings.SettingsViewHolder.SettingsSectionViewHolder
 import com.foobarust.android.utils.*
-import com.foobarust.domain.models.AuthProfile
+import com.foobarust.domain.models.UserDetail
 
 class SettingsAdapter(
     private val listener: SettingsAdapterListener
@@ -32,7 +32,7 @@ class SettingsAdapter(
         val inflater = LayoutInflater.from(parent.context)
 
         return when (viewType) {
-            R.layout.item_settings_profile -> SettingsAuthViewHolder(
+            R.layout.item_settings_profile -> SettingsProfileHolder(
                 ItemSettingsProfileBinding.inflate(inflater, parent, false),
                 listener
             )
@@ -48,23 +48,23 @@ class SettingsAdapter(
 
     override fun onBindViewHolder(holder: SettingsViewHolder, position: Int) {
         when (holder) {
-            is SettingsAuthViewHolder -> holder.binding.run {
+            is SettingsProfileHolder -> holder.binding.run {
                 val currentItem = getItem(position) as SettingsProfileModel
                 listener = this@SettingsAdapter.listener
 
                 // Set user icon
-                if (currentItem.authProfile?.photoUrl != null) {
-                    avatarImageView.bindGlideUrl(currentItem.authProfile.photoUrl, centerCrop = true)
+                if (currentItem.userDetail?.photoUrl != null) {
+                    avatarImageView.bindGlideUrl(currentItem.userDetail.photoUrl, centerCrop = true)
                 } else {
                     avatarImageView.bindGlideSrc(R.drawable.ic_user, centerCrop = true)
                 }
 
                 // Set username text view
                 with(usernameTextView) {
-                    val spannable = if (currentItem.authProfile == null) {
+                    val spannable = if (currentItem.userDetail == null) {
                         buildSignedOutSpannable(context)
                     } else {
-                        buildSignedInSpannable(context, currentItem.authProfile.username)
+                        buildSignedInSpannable(context, currentItem.userDetail.username)
                     }
 
                     setText(spannable, TextView.BufferType.SPANNABLE)
@@ -140,7 +140,7 @@ class SettingsAdapter(
 }
 
 sealed class SettingsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    class SettingsAuthViewHolder(
+    class SettingsProfileHolder(
         val binding: ItemSettingsProfileBinding,
         val listener: SettingsAdapterListener
     ) : SettingsViewHolder(binding.root)
@@ -153,7 +153,7 @@ sealed class SettingsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVi
 
 sealed class SettingsListModel {
     data class SettingsProfileModel(
-        val authProfile: AuthProfile?
+        val userDetail: UserDetail?
     ) : SettingsListModel()
 
     data class SettingsSectionModel(
@@ -174,7 +174,7 @@ object SettingsListModelDiff : DiffUtil.ItemCallback<SettingsListModel>() {
 
     override fun areContentsTheSame(oldItem: SettingsListModel, newItem: SettingsListModel): Boolean {
         return when {
-            oldItem is SettingsProfileModel && newItem is SettingsProfileModel -> oldItem.authProfile == newItem.authProfile
+            oldItem is SettingsProfileModel && newItem is SettingsProfileModel -> oldItem.userDetail == newItem.userDetail
             oldItem is SettingsSectionModel && newItem is SettingsSectionModel -> oldItem.id == newItem.id
             else -> false
         }

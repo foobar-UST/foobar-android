@@ -21,16 +21,16 @@ class UpdateUserInfoUseCase @Inject constructor(
             throw Exception(UPDATE_USER_INFO_NOT_SIGNED_IN)
         }
 
-        val uid = authRepository.getAuthUid()
+        val userId = authRepository.getAuthUserId()
 
         // Upload user name
         parameters.name?.let {
-            userRepository.updateUserName(uid, it)
+            userRepository.updateUserName(userId, it)
         }
 
         // Upload phone number
         parameters.phoneNum?.let {
-            userRepository.updateUserPhoneNumber(uid, it)
+            userRepository.updateUserPhoneNumber(userId, it)
         }
     }
 }

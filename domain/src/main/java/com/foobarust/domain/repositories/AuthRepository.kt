@@ -8,7 +8,7 @@ interface AuthRepository {
 
     suspend fun isSignedIn(): Boolean
 
-    suspend fun getAuthUid(): String
+    suspend fun getAuthUserId(): String
 
     fun getAuthProfileObservable(): Flow<Resource<AuthProfile>>
 
@@ -16,7 +16,7 @@ interface AuthRepository {
 
     suspend fun signInWithEmailLink(email: String, emailLink: String)
 
-    suspend fun reloadAuthInfo()
+    suspend fun reloadAuthUser()
 
     suspend fun signOut()
 }

@@ -87,6 +87,7 @@ dependencies {
     implementation(Dependencies.HILT_VIEWMODEL)
     implementation(Dependencies.PAGING_RUNTIME)
     implementation(Dependencies.PREFERENCES)
+    implementation(Dependencies.WORK)
 
     // Firebase
     implementation(Dependencies.FIREBASE_CRASHLYTICS)

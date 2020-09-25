@@ -2,10 +2,9 @@ package com.foobarust.android.seller
 
 import android.view.View
 import android.widget.ImageView
-import androidx.annotation.DrawableRes
 import com.foobarust.android.R
 import com.foobarust.android.seller.PromotionBannerAdapter.PromotionBannerAdapterListener
-import com.foobarust.android.utils.bindGlideSrc
+import com.foobarust.android.utils.bindGlideUrl
 import com.google.android.material.card.MaterialCardView
 import com.zhpan.bannerview.BaseBannerAdapter
 import com.zhpan.bannerview.BaseViewHolder
@@ -51,15 +50,16 @@ class PromotionBannerViewHolder(
         }
 
         // Load the user image
-        promotionImage.bindGlideSrc(
-            drawableRes = data?.drawable,
+        promotionImage.bindGlideUrl(
+            imageUrl = data?.photoUrl,
+            placeholder = R.drawable.placeholder_card,
             centerCrop = true
         )
     }
 }
 
 data class PromotionItem(
-    @DrawableRes val drawable: Int
+    val photoUrl: String
 )
 
 

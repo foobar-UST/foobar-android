@@ -73,7 +73,7 @@
 
     <fragment
         android:id="@+id/orderHistoryFragment"
-        android:name="com.foobarust.android.orderhistory.OrderHistoryFragment"
+        android:name="com.foobarust.android.order.OrderHistoryFragment"
         android:label="@string/order_history_label"
         tools:layout="@layout/fragment_order_history"/>
 
@@ -83,8 +83,8 @@
         android:label="@string/profile_label"
         tools:layout="@layout/fragment_profile">
         <action
-            android:id="@+id/action_profileFragment_to_textInputBottomSheet"
-            app:destination="@id/textInputBottomSheet" />
+            android:id="@+id/action_profileFragment_to_textInputDialog"
+            app:destination="@id/textInputDialog" />
     </fragment>
 
     <activity
@@ -94,16 +94,16 @@
 
     <activity
         android:id="@+id/signInActivity"
-        android:name="com.foobarust.android.signin.SignInActivity"
-        tools:layout="@layout/activity_signin"/>
+        android:name="com.foobarust.android.auth.AuthActivity"
+        tools:layout="@layout/activity_auth"/>
 
     <dialog
-        android:id="@+id/textInputBottomSheet"
-        android:name="com.foobarust.android.input.TextInputBottomSheet"
-        tools:layout="@layout/bottom_sheet_text_input">
+        android:id="@+id/textInputDialog"
+        android:name="com.foobarust.android.common.TextInputDialog"
+        tools:layout="@layout/dialog_text_input">
         <argument
             android:name="property"
-            app:argType="com.foobarust.android.input.TextInputProperty"
+            app:argType="com.foobarust.android.common.TextInputProperty"
             app:nullable="false"/>
     </dialog>
 

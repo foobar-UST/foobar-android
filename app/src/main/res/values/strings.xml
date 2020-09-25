@@ -38,14 +38,15 @@
 
     <!-- Fragment Label -->
     <string name="seller_label">Restaurants</string>
+    <string name="seller_search_label">Search Restaurants</string>
+    <string name="seller_detail_label">Seller</string>
     <string name="order_label">Order</string>
+    <string name="order_history_label">My Orders</string>
     <string name="explore_label">Explore</string>
     <string name="settings_label">Settings</string>
     <string name="notification_label">Notifications</string>
     <string name="license_label">License</string>
     <string name="favorite_label">Favourite</string>
-    <string name="order_history_label">My Orders</string>
-    <string name="seller_search_label">Search Restaurants</string>
     <string name="profile_label">My Profile</string>
 
     <!-- Settings -->
@@ -54,7 +55,7 @@
     <string name="settings_account_sign_in">Click to Sign In</string>
     <string name="settings_section_notifications_title">Notifications</string>
     <string name="settings_section_contact_us_title">Contact Us</string>
-    <string name="settings_section_terms_conditions_title">Terms and Conditions</string>
+    <string name="settings_section_license_title">License</string>
     <string name="settings_section_features_title">Features</string>
     <string name="settings_section_sign_out_title">Sign Out</string>
     <string name="settings_section_favorite_title">My Favourite</string>

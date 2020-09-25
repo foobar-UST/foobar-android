@@ -1,4 +1,4 @@
-package com.foobarust.android.input
+package com.foobarust.android.common
 
 import android.os.Parcelable
 import androidx.hilt.lifecycle.ViewModelInject

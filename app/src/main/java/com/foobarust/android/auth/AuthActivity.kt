@@ -1,4 +1,4 @@
-package com.foobarust.android.signin
+package com.foobarust.android.auth
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,23 +8,23 @@ import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.foobarust.android.R
-import com.foobarust.android.databinding.ActivitySigninBinding
+import com.foobarust.android.auth.SignInState.COMPLETED
+import com.foobarust.android.databinding.ActivityAuthBinding
 import com.foobarust.android.main.MainActivity
-import com.foobarust.android.signin.SignInState.COMPLETED
 import com.foobarust.android.utils.navigateTo
 import com.foobarust.android.utils.showShortToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SignInActivity : AppCompatActivity() {
+class AuthActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivitySigninBinding
+    private lateinit var binding: ActivityAuthBinding
     private lateinit var navController: NavController
-    private val viewModel: SignInViewModel by viewModels()
+    private val viewModel: AuthViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_signin)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_auth)
 
         // Setup Navigation
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
@@ -56,8 +56,10 @@ class SignInActivity : AppCompatActivity() {
 
     private fun handleEmailDeepLink(intent: Intent?) {
         val emailLink = intent?.data?.toString()
+
         emailLink?.let {
             viewModel.verifyEmailLinkAndSignIn(it)
+            // TODO: navigate to verify
         }
     }
 }

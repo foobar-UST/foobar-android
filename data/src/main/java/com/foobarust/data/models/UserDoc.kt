@@ -1,6 +1,6 @@
 package com.foobarust.data.models
 
-import com.google.firebase.Timestamp
+import java.util.*
 
 /**
  * Document object of 'users' collection
@@ -12,7 +12,7 @@ data class UserDoc(
     val username: String? = null,
     val phone_num: String? = null,
     val photo_url: String? = null,
-    val updated_at: Timestamp? = null,
+    val updated_at: Date? = null,
     val allow_order: Boolean? = null
     // TODO: deviceIds: List<String>
 )

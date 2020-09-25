@@ -35,7 +35,7 @@
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".signin.SignInActivity"
+            android:name=".auth.AuthActivity"
             android:theme="@style/Theme.Foobar.SignIn.DayNight"
             android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait"

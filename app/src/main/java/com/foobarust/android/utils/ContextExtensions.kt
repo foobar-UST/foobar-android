@@ -1,7 +1,9 @@
 package com.foobarust.android.utils
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
+import android.content.ContextWrapper
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.util.TypedValue
@@ -11,6 +13,14 @@ import androidx.annotation.*
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.use
+
+/**
+ * Get the hosting activity from context
+ */
+tailrec fun Context?.getActivity(): Activity? = when (this) {
+    is Activity -> this
+    else -> (this as? ContextWrapper)?.baseContext?.getActivity()
+}
 
 /**
  * Retrieve a color from the current [android.content.res.Resources.Theme].

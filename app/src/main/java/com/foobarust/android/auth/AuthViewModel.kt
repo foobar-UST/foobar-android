@@ -1,4 +1,4 @@
-package com.foobarust.android.signin
+package com.foobarust.android.auth
 
 import android.content.Context
 import android.os.CountDownTimer
@@ -8,8 +8,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.R
+import com.foobarust.android.auth.SignInState.*
 import com.foobarust.android.common.BaseViewModel
-import com.foobarust.android.signin.SignInState.*
 import com.foobarust.domain.states.Resource.Error
 import com.foobarust.domain.states.Resource.Success
 import com.foobarust.domain.states.getSuccessDataOr
@@ -22,27 +22,23 @@ import kotlinx.coroutines.launch
 private const val RESEND_BUFFER = 5_000L          // TODO: Change resend buffer time
 private const val SECOND = 1_000L
 
-private val ustEmailDomains: List<AuthEmailDomain> = listOf(
-    AuthEmailDomain(domain = "connect.ust.hk", title = "@connect.ust.hk"),
-    AuthEmailDomain(domain = "ust.hk", title = "@ust.hk")
-)
-
-class SignInViewModel @ViewModelInject constructor(
+class AuthViewModel @ViewModelInject constructor(
     @ApplicationContext private val context: Context,
     private val requestAuthEmailUseCase: RequestAuthEmailUseCase,
     private val signInWithAuthLinkUseCase: SignInWithAuthLinkUseCase,
     private val getEmailToBeVerifiedUseCase: GetEmailToBeVerifiedUseCase,
-    private val saveEmailToBeVerifiedUseCase: SaveEmailToBeVerifiedUseCase
+    private val saveEmailToBeVerifiedUseCase: SaveEmailToBeVerifiedUseCase,
+    private val authEmailUtil: AuthEmailUtil
 ) : BaseViewModel() {
 
     // Domain list for drop down menu
     val emailDomains = liveData {
-        emit(ustEmailDomains)
+        emit(authEmailUtil.emailDomains)
     }
 
     // Channels holding user inputs
     private var usernameChannel = ConflatedBroadcastChannel("")
-    private val emailDomainChannel = ConflatedBroadcastChannel(ustEmailDomains.first())
+    private val emailDomainChannel = ConflatedBroadcastChannel(authEmailUtil.emailDomains.first())
 
     // Compute the sign-in email
     private val signInEmailFlow: Flow<String> = usernameChannel.asFlow()
@@ -143,7 +139,6 @@ class SignInViewModel @ViewModelInject constructor(
         viewModelScope.launch {
             saveEmailToBeVerifiedUseCase(null)
             _signInState.value = COMPLETED
-            //showMessage(context.getString(R.string.signin_success))
         }
     }
 
@@ -168,8 +163,6 @@ class SignInViewModel @ViewModelInject constructor(
         _resendAuthEmailTimerActive.offer(false)
     }
 }
-
-data class AuthEmailDomain(val domain: String, val title: String)
 
 enum class SignInState {
     INPUT,

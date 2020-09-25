@@ -9,7 +9,6 @@ object Plugins {
     const val KOTLIN_KAPT = "kotlin-kapt"
     const val HILT_ANDROID = "dagger.hilt.android.plugin"
     const val GOOGLE_SERVICES = "com.google.gms.google-services"
-    const val GMS_OSS_LICENSES = "com.google.android.gms.oss-licenses-plugin"
     const val NAVIGATION_SAFEARGS = "androidx.navigation.safeargs.kotlin"
     const val FIREBASE_CRASHLYTICS = "com.google.firebase.crashlytics"
 }

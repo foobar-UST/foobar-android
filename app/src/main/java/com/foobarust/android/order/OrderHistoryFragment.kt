@@ -1,4 +1,4 @@
-package com.foobarust.android.orderhistory
+package com.foobarust.android.order
 
 import android.os.Bundle
 import android.view.LayoutInflater

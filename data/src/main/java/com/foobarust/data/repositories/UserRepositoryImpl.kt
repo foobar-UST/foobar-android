@@ -1,14 +1,15 @@
 package com.foobarust.data.repositories
 
 import android.net.Uri
+import com.foobarust.data.common.Constants.USERS_COLLECTION
+import com.foobarust.data.common.Constants.USER_PHOTOS_FOLDER
 import com.foobarust.data.mappers.UserMapper
 import com.foobarust.data.utils.snapshotFlow
-import com.foobarust.domain.models.UserDetailInfo
+import com.foobarust.domain.models.UserDetail
 import com.foobarust.domain.repositories.UserRepository
 import com.foobarust.domain.states.Resource
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.OnProgressListener
@@ -21,28 +22,24 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
 
-private const val USERS_COLLECTION = "users"
-private const val USER_PHOTOS_BUCKET = "user_photos"
-
-private const val ERROR_NOT_SIGNED_IN = "User is not signed in."
+/**
+ * We assume users must be signed in before calling these methods
+ */
 
 class UserRepositoryImpl @Inject constructor(
-    private val firebaseAuth: FirebaseAuth,
     private val firestore: FirebaseFirestore,
     private val storageReference: StorageReference,
     private val userMapper: UserMapper
 ) : UserRepository {
 
     // Get a document from 'users' collection
-    override fun getUserDetailInfoObservable(uid: String): Flow<Resource<UserDetailInfo>> {
-        return firestore.collection(USERS_COLLECTION).document(uid)
-            .snapshotFlow(userMapper::toUserDetailInfo)
+    override fun getUserDetailObservable(userId: String): Flow<Resource<UserDetail>> {
+        return firestore.collection(USERS_COLLECTION).document(userId)
+            .snapshotFlow(userMapper::toUserDetail)
     }
 
-    override suspend fun updateUserName(uid: String, name: String) {
-        val currentUser = firebaseAuth.currentUser ?: throw Exception(ERROR_NOT_SIGNED_IN)
-
-        firestore.collection(USERS_COLLECTION).document(currentUser.uid)
+    override suspend fun updateUserName(userId: String, name: String) {
+        firestore.collection(USERS_COLLECTION).document(userId)
             .update(mapOf(
                 "name" to name,
                 "updated_at" to FieldValue.serverTimestamp()
@@ -50,10 +47,8 @@ class UserRepositoryImpl @Inject constructor(
             .await()
     }
 
-    override suspend fun updateUserPhoneNumber(uid: String, phoneNum: String) {
-        val currentUser = firebaseAuth.currentUser ?: throw Exception(ERROR_NOT_SIGNED_IN)
-
-        firestore.collection(USERS_COLLECTION).document(currentUser.uid)
+    override suspend fun updateUserPhoneNumber(userId: String, phoneNum: String) {
+        firestore.collection(USERS_COLLECTION).document(userId)
             .update(mapOf(
                 "phone_num" to phoneNum,
                 "updated_at" to FieldValue.serverTimestamp()
@@ -61,9 +56,9 @@ class UserRepositoryImpl @Inject constructor(
             .await()
     }
 
-    override fun updateUserPhoto(uid: String, uriString: String): Flow<Resource<Unit>> = channelFlow {
+    override fun updateUserPhoto(userId: String, uriString: String): Flow<Resource<Unit>> = channelFlow {
         val photoFile = Uri.parse(uriString)
-        val photoRef = storageReference.child("$USER_PHOTOS_BUCKET/$uid")
+        val photoRef = storageReference.child("$USER_PHOTOS_FOLDER/$userId")
 
         // Start uploading
         val progressListener = OnProgressListener<UploadTask.TaskSnapshot> {

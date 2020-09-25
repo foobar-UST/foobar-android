@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="com.foobarust.android.R"/>
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layoutFullscreen="@{true}">
+
+        <!--
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorSecondaryVariant"
+            android:gravity="center_vertical"
+            android:padding="@dimen/spacing_large"
+            android:text="SPECIAL OFFER: 70% OFF OF ALL ITEMS"
+            android:textAppearance="?attr/textAppearanceCaption"
+            android:textColor="?attr/colorOnSecondary" />
+        -->
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="260dp"
+            app:glideSrc="@{R.drawable.sample_image_5}"
+            app:glideCenterCrop="@{true}"
+            tools:src="@drawable/sample_image_5"
+            tools:scaleType="centerCrop"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/colorSurface"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/spacing_mlarge"
+                android:paddingStart="@dimen/spacing_large"
+                android:paddingEnd="@dimen/spacing_large"
+                android:paddingBottom="@dimen/spacing_xmedium"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Happy Restaurant"
+                    android:textAppearance="?attr/textAppearanceHeadline5"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xmedium"
+                    android:text="Now Opening (7:00 am - 9:00 pm)"
+                    android:textAppearance="?attr/textAppearanceSubtitle2"
+                    android:textColor="@color/material_on_surface_emphasis_medium"/>
+
+                <com.google.android.material.chip.Chip
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xmedium"
+                    android:text="Rating 4.6"
+                    app:chipIcon="@drawable/ic_star"
+                    app:chipIconTint="@color/yellow"
+                    app:chipIconSize="18dp"
+                    app:chipStartPadding="@dimen/spacing_xmedium"
+                    app:chipEndPadding="@dimen/spacing_xmedium"/>
+
+            </LinearLayout>
+
+            <com.google.android.material.tabs.TabLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                app:tabMode="scrollable"
+                app:tabPaddingStart="@dimen/spacing_large"
+                app:tabPaddingEnd="@dimen/spacing_large">
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Best Deal" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Soup"/>
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Thai"/>
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Chinese"/>
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Japanese"/>
+
+            </com.google.android.material.tabs.TabLayout>
+
+            <include layout="@layout/item_seller_item"/>
+            <include layout="@layout/item_seller_item"/>
+            <include layout="@layout/item_seller_item"/>
+            <include layout="@layout/item_seller_item"/>
+            <include layout="@layout/item_seller_item"/>
+            <include layout="@layout/item_seller_item"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</layout>

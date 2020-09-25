@@ -34,6 +34,8 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
 
         binding.toolbar.setOnMenuItemClickListener(this)
 
+        //viewModel.cacheUserDetail()
+
         viewModel.toastMessage.observe(this) {
             showShortToast(it)
         }

@@ -30,8 +30,11 @@ class UpdateUserPhotoUseCase @Inject constructor(
             return@flow
         }
 
-        val uid = authRepository.getAuthUid()
-
-        emitAll(userRepository.updateUserPhoto(uid, parameters))
+        emitAll(
+            userRepository.updateUserPhoto(
+                userId = authRepository.getAuthUserId(),
+                uriString = parameters
+            )
+        )
     }
 }

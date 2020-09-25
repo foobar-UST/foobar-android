@@ -40,8 +40,8 @@ class SettingsFragment : Fragment(), SettingsAdapter.SettingsAdapterListener {
             setHasFixedSize(true)
         }
 
-        viewModel.settingsItems.observe(viewLifecycleOwner) {
-            settingsAdapter.submitList(it)
+        viewModel.settingsItems.observe(viewLifecycleOwner) { models ->
+            settingsAdapter.submitList(models)
         }
 
         // Navigate to SignInActivity

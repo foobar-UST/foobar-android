@@ -1,4 +1,4 @@
-package com.foobarust.android.signin
+package com.foobarust.android.auth
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,24 +10,23 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.foobarust.android.R
-import com.foobarust.android.databinding.FragmentSigninInputBinding
-import com.foobarust.android.signin.SignInState.VERIFYING
+import com.foobarust.android.auth.SignInState.VERIFYING
+import com.foobarust.android.databinding.FragmentAuthInputBinding
 import com.foobarust.android.utils.AutoClearedValue
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SignInInputFragment : Fragment() {
+class AuthInputFragment : Fragment() {
 
-    private var binding: FragmentSigninInputBinding by AutoClearedValue(this)
-
-    private val viewModel: SignInViewModel by activityViewModels()
+    private var binding: FragmentAuthInputBinding by AutoClearedValue(this)
+    private val viewModel: AuthViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentSigninInputBinding.inflate(inflater, container, false)
+        binding = FragmentAuthInputBinding.inflate(inflater, container, false)
 
         // Pass username input to view model
         binding.usernameEditText.doOnTextChanged { text, _, _, _ ->
@@ -68,7 +67,7 @@ class SignInInputFragment : Fragment() {
         viewModel.signInState.observe(viewLifecycleOwner) { state ->
             if (state == VERIFYING) {
                 findNavController().navigate(
-                    SignInInputFragmentDirections.actionSignInInputFragmentToSignInVerifyFragment()
+                    AuthInputFragmentDirections.actionAuthInputFragmentToAuthVerifyFragment()
                 )
             }
         }

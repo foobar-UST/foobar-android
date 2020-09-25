@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -14,6 +15,7 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.fragment.findNavController
 import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentProfileBinding
+import com.foobarust.android.main.MainViewModel
 import com.foobarust.android.profile.ProfileListModel.ProfileEditModel
 import com.foobarust.android.utils.AutoClearedValue
 import com.foobarust.android.utils.findNavController
@@ -25,7 +27,8 @@ class ProfileFragment : Fragment(), ProfileAdapter.ProfileAdapterListener {
 
     private var binding: FragmentProfileBinding by AutoClearedValue(this)
     private var currentEditResultObserver: LifecycleEventObserver? = null
-    private val viewModel: ProfileViewModel by viewModels()
+    private val mainViewModel: MainViewModel by activityViewModels()
+    private val profileViewModel: ProfileViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,7 +36,7 @@ class ProfileFragment : Fragment(), ProfileAdapter.ProfileAdapterListener {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentProfileBinding.inflate(inflater, container, false).apply {
-            viewModel = this@ProfileFragment.viewModel
+            viewModel = this@ProfileFragment.profileViewModel
             lifecycleOwner = viewLifecycleOwner
         }
 
@@ -44,17 +47,17 @@ class ProfileFragment : Fragment(), ProfileAdapter.ProfileAdapterListener {
             adapter = profileAdapter
             setHasFixedSize(true)
         }
-        viewModel.profileItems.observe(viewLifecycleOwner) {
+        profileViewModel.profileItems.observe(viewLifecycleOwner) {
             profileAdapter.submitList(it)
         }
-        viewModel.toastMessage.observe(viewLifecycleOwner) {
+        profileViewModel.toastMessage.observe(viewLifecycleOwner) {
             showShortToast(it)
         }
 
         // Navigate to text input bottom sheet
-        viewModel.navigateToTextInput.observe(viewLifecycleOwner) {
+        profileViewModel.navigateToTextInput.observe(viewLifecycleOwner) {
             findNavController(R.id.profileFragment)?.navigate(
-                ProfileFragmentDirections.actionProfileFragmentToTextInputBottomSheet(it)
+                ProfileFragmentDirections.actionProfileFragmentToTextInputDialog(it)
             )
         }
 
@@ -75,13 +78,13 @@ class ProfileFragment : Fragment(), ProfileAdapter.ProfileAdapterListener {
 
     override fun onProfileAvatarClicked() {
         requireActivity().registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            uri?.let { viewModel.updateUserPhoto(it.toString()) }
+            uri?.let { mainViewModel.updateUserPhoto(it.toString()) }
         }.launch("image/*")
     }
 
     override fun onProfileEditItemClicked(editModel: ProfileEditModel) {
         subscribeForEditResult(editId = editModel.id)
-        viewModel.onNavigateToTextInput(editModel)
+        profileViewModel.onNavigateToTextInput(editModel)
     }
 
     private fun subscribeForEditResult(editId: String) {
@@ -113,8 +116,8 @@ class ProfileFragment : Fragment(), ProfileAdapter.ProfileAdapterListener {
 
     private fun updateEditResult(editId: String, result: String) {
         when (editId) {
-            EDIT_PROFILE_NAME -> viewModel.updateUserName(result)
-            EDIT_PROFILE_PHONE_NUMBER -> viewModel.updateUserPhoneNum(result)
+            EDIT_PROFILE_NAME -> profileViewModel.updateUserName(result)
+            EDIT_PROFILE_PHONE_NUMBER -> profileViewModel.updateUserPhoneNum(result)
         }
     }
 }

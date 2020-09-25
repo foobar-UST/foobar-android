@@ -7,7 +7,7 @@
     <data>
         <variable
             name="property"
-            type="com.foobarust.android.input.TextInputProperty" />
+            type="com.foobarust.android.common.TextInputProperty" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
