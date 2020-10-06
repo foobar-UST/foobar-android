@@ -3,7 +3,7 @@ package com.foobarust.android.seller
 import android.content.Context
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.asLiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.*
 import com.foobarust.android.R
@@ -14,12 +14,14 @@ import com.foobarust.android.utils.SingleLiveEvent
 import com.foobarust.domain.models.AdvertiseBasic
 import com.foobarust.domain.models.SuggestBasic
 import com.foobarust.domain.states.Resource
+import com.foobarust.domain.states.getSuccessDataOr
 import com.foobarust.domain.usecases.promotion.GetAdvertiseItemsUseCase
 import com.foobarust.domain.usecases.promotion.GetSuggestItemsUseCase
 import com.foobarust.domain.usecases.seller.GetSellerListUseCase
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 
 class SellerViewModel @ViewModelInject constructor(
     @ApplicationContext private val context: Context,
@@ -32,6 +34,7 @@ class SellerViewModel @ViewModelInject constructor(
     val loadState: LiveData<LoadState>
         get() = _loadState
 
+    // Reload promotion items at launch
     private val reloadPromotionChannel = ConflatedBroadcastChannel(Unit)
 
     val sellerModelItems: Flow<PagingData<SellerListModel>> = getSellerListUseCase(Unit)
@@ -48,43 +51,34 @@ class SellerViewModel @ViewModelInject constructor(
         }
         .cachedIn(viewModelScope)
 
-    private val advertiseItems = reloadPromotionChannel
-        .asFlow()
+    private val advertiseItemsFlow = reloadPromotionChannel.asFlow()
         .flatMapLatest {
             getAdvertiseItemsUseCase(Unit)
-                .flatMapLatest {
-                    when (it) {
-                        is Resource.Success -> flowOf(it.data)
-                        is Resource.Error -> {
-                            showMessage(it.message)
-                            flowOf(emptyList())
-                        }
-                        is Resource.Loading -> flowOf(emptyList())
-                    }
-                }
+                .filterNot { it is Resource.Loading }
+                .flatMapLatest { flowOf(it.getSuccessDataOr(emptyList())) }
         }
 
-    private val suggestItems = reloadPromotionChannel
-        .asFlow()
+    private val suggestItemsFlow = reloadPromotionChannel.asFlow()
         .flatMapLatest {
             getSuggestItemsUseCase(Unit)
-                .flatMapLatest {
-                    when (it) {
-                        is Resource.Success -> flowOf(it.data)
-                        is Resource.Error -> {
-                            showMessage(it.message)
-                            flowOf(emptyList())
-                        }
-                        is Resource.Loading -> flowOf(emptyList())
-                    }
-                }
+                .filterNot { it is Resource.Loading }
+                .flatMapLatest { flowOf(it.getSuccessDataOr(emptyList())) }
         }
 
-    val promotionModelItems: LiveData<List<PromotionListModel>> = advertiseItems
-        .combine(suggestItems) { advertises, suggests ->
-            buildPromotionModelList(advertises, suggests)
+    private val _promotionModelItems = MutableLiveData<List<PromotionListModel>>()
+    val promotionModelItems: LiveData<List<PromotionListModel>>
+        get() = _promotionModelItems
+
+    init {
+        // Collect promotion items at launch
+        viewModelScope.launch {
+            advertiseItemsFlow
+                .zip(suggestItemsFlow) { advertises, suggests ->
+                    buildPromotionModelList(advertises, suggests)
+                }
+                .collect { _promotionModelItems.value = it }
         }
-        .asLiveData(viewModelScope.coroutineContext)
+    }
 
     private fun buildPromotionModelList(
         advertiseBasics: List<AdvertiseBasic>,
