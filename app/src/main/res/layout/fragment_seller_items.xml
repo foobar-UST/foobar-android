@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.foobarust.android.seller.SellerItemsViewModel" />
+        <import type="androidx.paging.LoadState" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:goneIf="@{!(viewModel.loadState instanceof LoadState.Loading)}">
+
+            <include layout="@layout/seller_item_info_shimmer" />
+            <include layout="@layout/seller_item_info_shimmer" />
+            <include layout="@layout/seller_item_info_shimmer" />
+            <include layout="@layout/seller_item_info_shimmer" />
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/items_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:goneIf="@{!(viewModel.loadState instanceof LoadState.NotLoading)}"
+            app:paddingBottomSystemWindowInsets="@{true}"
+            tools:listitem="@layout/seller_item_info_content" />
+
+    </FrameLayout>
+
+</layout>

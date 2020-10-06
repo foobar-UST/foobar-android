@@ -1,6 +1,6 @@
 package com.foobarust.data.mappers
 
-import com.foobarust.data.utils.toStringOrNull
+import com.foobarust.data.models.UserDetailEntity
 import com.foobarust.domain.models.AuthProfile
 import com.google.firebase.auth.FirebaseUser
 import javax.inject.Inject
@@ -15,9 +15,22 @@ class AuthMapper @Inject constructor() {
         val email = firebaseUser.email!!
 
         return AuthProfile(
+            id = firebaseUser.uid,
             email = email,
-            username = email.substring(0, email.indexOf('@')),
-            photoUrl = firebaseUser.photoUrl?.toStringOrNull()
+            username = getUsernameFromEmail(email)
         )
+    }
+
+    fun toUserDetailEntity(firebaseUser: FirebaseUser): UserDetailEntity {
+        val email = firebaseUser.email!!
+
+        return UserDetailEntity(
+            email = email,
+            username = getUsernameFromEmail(email)
+        )
+    }
+
+    private fun getUsernameFromEmail(email: String): String {
+        return email.substring(0, email.indexOf('@'))
     }
 }

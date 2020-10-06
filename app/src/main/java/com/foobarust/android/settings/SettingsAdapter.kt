@@ -14,12 +14,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.foobarust.android.R
-import com.foobarust.android.databinding.ItemSettingsProfileBinding
-import com.foobarust.android.databinding.ItemSettingsSectionBinding
+import com.foobarust.android.databinding.SettingsProfileItemBinding
+import com.foobarust.android.databinding.SettingsSectionItemBinding
 import com.foobarust.android.settings.SettingsAdapter.SettingsAdapterListener
 import com.foobarust.android.settings.SettingsListModel.SettingsProfileModel
 import com.foobarust.android.settings.SettingsListModel.SettingsSectionModel
-import com.foobarust.android.settings.SettingsViewHolder.SettingsProfileHolder
+import com.foobarust.android.settings.SettingsViewHolder.SettingsProfileViewHolder
 import com.foobarust.android.settings.SettingsViewHolder.SettingsSectionViewHolder
 import com.foobarust.android.utils.*
 import com.foobarust.domain.models.UserDetail
@@ -32,13 +32,13 @@ class SettingsAdapter(
         val inflater = LayoutInflater.from(parent.context)
 
         return when (viewType) {
-            R.layout.item_settings_profile -> SettingsProfileHolder(
-                ItemSettingsProfileBinding.inflate(inflater, parent, false),
+            R.layout.settings_profile_item -> SettingsProfileViewHolder(
+                SettingsProfileItemBinding.inflate(inflater, parent, false),
                 listener
             )
 
-            R.layout.item_settings_section -> SettingsSectionViewHolder(
-                ItemSettingsSectionBinding.inflate(inflater, parent, false),
+            R.layout.settings_section_item -> SettingsSectionViewHolder(
+                SettingsSectionItemBinding.inflate(inflater, parent, false),
                 listener
             )
 
@@ -48,7 +48,7 @@ class SettingsAdapter(
 
     override fun onBindViewHolder(holder: SettingsViewHolder, position: Int) {
         when (holder) {
-            is SettingsProfileHolder -> holder.binding.run {
+            is SettingsProfileViewHolder -> holder.binding.run {
                 val currentItem = getItem(position) as SettingsProfileModel
                 listener = this@SettingsAdapter.listener
 
@@ -83,8 +83,8 @@ class SettingsAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
-            is SettingsProfileModel -> R.layout.item_settings_profile
-            is SettingsSectionModel -> R.layout.item_settings_section
+            is SettingsProfileModel -> R.layout.settings_profile_item
+            is SettingsSectionModel -> R.layout.settings_section_item
         }
     }
 
@@ -140,13 +140,13 @@ class SettingsAdapter(
 }
 
 sealed class SettingsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    class SettingsProfileHolder(
-        val binding: ItemSettingsProfileBinding,
+    class SettingsProfileViewHolder(
+        val binding: SettingsProfileItemBinding,
         val listener: SettingsAdapterListener
     ) : SettingsViewHolder(binding.root)
 
     class SettingsSectionViewHolder(
-        val binding: ItemSettingsSectionBinding,
+        val binding: SettingsSectionItemBinding,
         val listener: SettingsAdapterListener
     ) : SettingsViewHolder(binding.root)
 }

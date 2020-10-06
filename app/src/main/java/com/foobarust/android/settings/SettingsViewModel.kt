@@ -59,10 +59,12 @@ class SettingsViewModel @ViewModelInject constructor(
             getAuthProfileObservableUseCase(Unit).collect {
                 when (it) {
                     is Success -> {
+                        Log.d("SettingsViewModel", "success")
                         subscribeUserDetail()
                         _settingsItems.value = buildSettingList(it.data.asUserDetail())
                     }
                     is Error -> {
+                        Log.d("SettingsViewModel", "success")
                         unsubscribeUserDetail()
                         _settingsItems.value = buildSettingList()
                     }
@@ -77,7 +79,6 @@ class SettingsViewModel @ViewModelInject constructor(
     private fun subscribeUserDetail() {
         unsubscribeUserDetail()
         subscribeUserDetailJob = viewModelScope.launch {
-            Log.d("SettingsViewModel", "subscribeUserDetail")
             getUserDetailObservableUseCase(Unit).collect {
                 when (it) {
                     is Success -> {
@@ -90,7 +91,6 @@ class SettingsViewModel @ViewModelInject constructor(
     }
 
     private fun unsubscribeUserDetail() {
-        Log.d("SettingsViewModel", "unsubscribeUserDetail")
         subscribeUserDetailJob?.cancel()
         subscribeUserDetailJob = null
     }

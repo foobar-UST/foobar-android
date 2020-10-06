@@ -7,9 +7,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.foobarust.android.R
-import com.foobarust.android.databinding.ItemProfileEditBinding
-import com.foobarust.android.databinding.ItemProfileInfoBinding
-import com.foobarust.android.databinding.ItemProfileWarningBinding
+import com.foobarust.android.databinding.ProfileEditItemBinding
+import com.foobarust.android.databinding.ProfileInfoItemBinding
+import com.foobarust.android.databinding.ProfileWarningItemBinding
 import com.foobarust.android.profile.ProfileAdapter.ProfileAdapterListener
 import com.foobarust.android.profile.ProfileListModel.*
 import com.foobarust.android.profile.ProfileViewHolder.*
@@ -23,18 +23,18 @@ class ProfileAdapter(
         val inflater = LayoutInflater.from(parent.context)
 
         return when (viewType) {
-            R.layout.item_profile_info -> ProfileInfoViewHolder(
-                ItemProfileInfoBinding.inflate(inflater, parent, false),
+            R.layout.profile_info_item -> ProfileInfoViewHolder(
+                ProfileInfoItemBinding.inflate(inflater, parent, false),
                 listener
             )
 
-            R.layout.item_profile_edit -> ProfileEditViewHolder(
-                ItemProfileEditBinding.inflate(inflater, parent, false),
+            R.layout.profile_edit_item -> ProfileEditViewHolder(
+                ProfileEditItemBinding.inflate(inflater, parent, false),
                 listener
             )
 
-            R.layout.item_profile_warning -> ProfileWarningViewHolder(
-                ItemProfileWarningBinding.inflate(inflater, parent, false)
+            R.layout.profile_warning_item -> ProfileWarningViewHolder(
+                ProfileWarningItemBinding.inflate(inflater, parent, false)
             )
 
             else -> throw IllegalStateException("Unknown view type $viewType")
@@ -64,9 +64,9 @@ class ProfileAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
-            is ProfileInfoModel -> R.layout.item_profile_info
-            is ProfileEditModel -> R.layout.item_profile_edit
-            is ProfileWarningModel -> R.layout.item_profile_warning
+            is ProfileInfoModel -> R.layout.profile_info_item
+            is ProfileEditModel -> R.layout.profile_edit_item
+            is ProfileWarningModel -> R.layout.profile_warning_item
         }
     }
 
@@ -78,17 +78,17 @@ class ProfileAdapter(
 
 sealed class ProfileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     class ProfileInfoViewHolder(
-        val binding: ItemProfileInfoBinding,
+        val binding: ProfileInfoItemBinding,
         val listener: ProfileAdapterListener
     ) : ProfileViewHolder(binding.root)
 
     class ProfileEditViewHolder(
-        val binding: ItemProfileEditBinding,
+        val binding: ProfileEditItemBinding,
         val listener: ProfileAdapterListener
     ) : ProfileViewHolder(binding.root)
 
     class ProfileWarningViewHolder(
-        val binding: ItemProfileWarningBinding
+        val binding: ProfileWarningItemBinding
     ) : ProfileViewHolder(binding.root)
 }
 

@@ -7,7 +7,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.foobarust.android.R
 import com.foobarust.android.main.MainActivity
 import com.foobarust.android.onboarding.OnboardingActivity
-import com.foobarust.android.utils.MainCoroutineRule
+import com.foobarust.android.utils.TestCoroutineRule
 import com.foobarust.android.utils.getOrAwaitValue
 import com.foobarust.android.utils.observeForTesting
 import com.foobarust.android.utils.runBlockingTest
@@ -35,7 +35,7 @@ class SplashViewModelTest {
 
     // Test dispatcher
     @get:Rule
-    var coroutineRule = MainCoroutineRule()
+    var coroutineRule = TestCoroutineRule()
 
     @Test
     fun onboarding_completed_navigate_to_overview() = coroutineRule.runBlockingTest {

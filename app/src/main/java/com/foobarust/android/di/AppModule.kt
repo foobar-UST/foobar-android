@@ -4,8 +4,8 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
-import com.foobarust.android.common.PhoneUtil
 import com.foobarust.domain.di.DispatcherModule
+import com.foobarust.domain.utils.PhoneUtil
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
@@ -16,7 +16,9 @@ import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Singleton
 
-@Module(includes = [DispatcherModule::class])
+@Module(includes = [
+    DispatcherModule::class
+])
 @InstallIn(ApplicationComponent::class)
 object AppModule {
 

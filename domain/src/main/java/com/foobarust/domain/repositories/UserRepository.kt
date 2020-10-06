@@ -12,9 +12,7 @@ interface UserRepository {
 
     fun getUserDetailObservable(userId: String): Flow<Resource<UserDetail>>
 
-    suspend fun updateUserName(userId: String, name: String)
-
-    suspend fun updateUserPhoneNumber(userId: String, phoneNum: String)
+    suspend fun updateUserDetail(userId: String, userDetail: UserDetail)
 
     fun updateUserPhoto(userId: String, uriString: String): Flow<Resource<Unit>>
 }

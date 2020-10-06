@@ -47,7 +47,7 @@ class AuthInputFragment : Fragment() {
         viewModel.emailDomains.observe(viewLifecycleOwner) { domains ->
             val adapter = ArrayAdapter(
                 requireContext(),
-                R.layout.item_email_suffix,
+                R.layout.auth_email_domain_item,
                 domains.map { it.title }
             )
 

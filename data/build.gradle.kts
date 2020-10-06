@@ -16,7 +16,7 @@ android {
         targetSdkVersion(Application.TARGET_SDK)
         versionCode = Application.VERSION_CODE
         versionName = Application.VERSION_NAME
-        testInstrumentationRunner = Dependencies.INSTRUMENTAL_RUNNER
+        testInstrumentationRunner = Dependencies.HILT_TEST_RUNNER
 
         consumerProguardFiles("consumer-proguard-rules.pro")
     }
@@ -25,6 +25,10 @@ android {
         getByName("release") {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
+        getByName("debug") {
+            buildConfigField("Boolean", "USE_FIREBASE_EMULATOR", "false")
+            buildConfigField("String", "FIREBASE_EMULATOR_HOST", "\"192.168.128.106:8080\"")
         }
     }
 
@@ -61,11 +65,11 @@ dependencies {
     implementation(Dependencies.ROOM_RUNTIME)
     implementation(Dependencies.ROOM_KTX)
     implementation(Dependencies.HILT)
+    implementation(Dependencies.PAGING_RUNTIME)
 
     // Firebase
     api(Dependencies.FIREBASE_AUTH)
     api(Dependencies.FIREBASE_FIRESTORE)
-    //api(Dependencies.FIREBASE_FUNCTIONS)
     api(Dependencies.FIREBASE_STORAGE)
 
     // Play Services
@@ -73,7 +77,26 @@ dependencies {
 
     // Annotation Processors
     kapt(Annotation.ROOM_COMPILER)
-    kapt(Annotation.HILT_COMPILER)
+    kapt(Annotation.HILT_ANDROID_COMPILER)
 
-    // Test
+    // Other Dependencies
+    implementation(Dependencies.GSON)
+
+    // Unit Test
+    testImplementation(Dependencies.ARCH_CORE_TESTING)
+    testImplementation(Dependencies.COROUTINE_TEST)
+    testImplementation(Dependencies.JUNIT)
+    testImplementation(Dependencies.MOCKITO_CORE)
+
+    // Android Test
+    //androidTestImplementation(Dependencies.TEST_CORE)
+    //androidTestImplementation(Dependencies.TEST_RUNNER)
+    //androidTestImplementation(Dependencies.TEST_RULES)
+    androidTestImplementation(Dependencies.TEST_EXT_JUNIT_KTX)
+    androidTestImplementation(Dependencies.TEST_ESPRESSO_CORE)
+    androidTestImplementation(Dependencies.HILT_TESTING)
+
+
+    // Android Test Annotation Processors
+    androidTestAnnotationProcessor(Annotation.HILT_ANDROID_COMPILER)
 }

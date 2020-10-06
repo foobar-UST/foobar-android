@@ -1,33 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/network_error_container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ImageView
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:src="@drawable/undraw_page_not_found"/>
+    <data>
+        <variable
+            name="showRetry"
+            type="Boolean" />
+    </data>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Whoops!"
-        android:textStyle="bold"
-        android:textAppearance="?attr/textAppearanceHeadline6"
-        android:textColor="?attr/colorPrimarySurface"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
 
-    <TextView
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_xmedium"
-        android:text="Something goes wrong when getting data."
-        android:textAppearance="?attr/textAppearanceSubtitle2"
-        android:lineSpacingMultiplier="1.2"
-        android:gravity="center"
-        android:textColor="?attr/colorPrimarySurface"/>
+        <ImageView
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:src="@drawable/undraw_page_not_found"
+            android:contentDescription="@string/loading_failed_title"/>
 
-</LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/loading_failed_title"
+            android:textStyle="bold"
+            android:textAppearance="?attr/textAppearanceSubtitle1" />
+
+        <TextView
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_xmedium"
+            android:text="@string/loading_failed_description"
+            android:textAppearance="?attr/textAppearanceSubtitle2"
+            android:textColor="@color/material_on_background_emphasis_medium"
+            android:lineSpacingMultiplier="1.2"
+            android:gravity="center" />
+
+        <Button
+            style="@style/Widget.MaterialComponents.Button"
+            android:id="@+id/retry_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_xlarge"
+            android:layout_gravity="center"
+            android:text="@string/loading_retry_title"
+            app:icon="@drawable/ic_refresh"
+            app:goneIf="@{!showRetry}"/>
+
+    </LinearLayout>
+
+</layout>

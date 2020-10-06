@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.foobarust.android">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -21,13 +22,17 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts"
+                tools:targetApi="25"/>
         </activity>
 
         <activity
             android:name=".main.MainActivity"
             android:theme="@style/Theme.Foobar.DayNight"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".onboarding.OnboardingActivity"
@@ -36,10 +41,10 @@
 
         <activity
             android:name=".auth.AuthActivity"
-            android:theme="@style/Theme.Foobar.SignIn.DayNight"
+            android:theme="@style/Theme.Foobar.Auth.DayNight"
             android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait"
-            android:launchMode="singleInstance">
+            android:launchMode="singleTask">
             <!-- Email link handler -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
@@ -50,6 +55,8 @@
                     android:scheme="https"/>
             </intent-filter>
         </activity>
+
+        <activity android:name=".DemoActivity"/>
 
         <meta-data
             android:name="preloaded_fonts"

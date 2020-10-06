@@ -4,6 +4,7 @@
     <style name="ThemeOverlay.Foobar.Dialog.Fullscreen" parent="ThemeOverlay.MaterialComponents.Dialog">
         <item name="android:windowIsFloating">false</item>
         <item name="android:windowBackground">?attr/scrimBackground</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@color/nav_bar</item>
         <item name="android:windowSoftInputMode">stateAlwaysVisible</item>
     </style>
@@ -32,9 +33,10 @@
         <item name="android:windowLightNavigationBar" tools:ignore="NewApi">true</item>
     </style>
 
-    <style name="Theme.Foobar.SignIn.DayNight" parent="Theme.Foobar.SignIn"/>
+    <style name="Theme.Foobar.Auth.DayNight" parent="Theme.Foobar.Auth"/>
 
-    <style name="Theme.Foobar.SignIn" parent="Theme.Foobar">
+    <style name="Theme.Foobar.Auth" parent="Theme.Foobar">
+        <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">?android:attr/colorBackground</item>
         <item name="android:windowLightStatusBar" tools:ignore="NewApi">false</item>
         <item name="android:windowLightNavigationBar" tools:ignore="NewApi">true</item>
@@ -99,7 +101,7 @@
         <!-- Styles -->
         <item name="bottomSheetStyle">@style/Widget.Foobar.BottomSheet</item>
 
-        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">?android:attr/colorBackground</item>
         <item name="android:navigationBarColor">?attr/colorPrimarySurface</item>
         <item name="android:windowBackground">?android:colorBackground</item>
         <item name="android:windowLightStatusBar" tools:ignore="NewApi">true</item>

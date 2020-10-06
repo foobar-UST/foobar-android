@@ -7,6 +7,7 @@ object Plugins {
     const val KOTLIN_ANDROID = "kotlin-android"
     const val KOTLIN_ANDROID_EXTENSIONS = "kotlin-android-extensions"
     const val KOTLIN_KAPT = "kotlin-kapt"
+    const val KOTLIN_SERIALIZATION = "plugin.serialization"
     const val HILT_ANDROID = "dagger.hilt.android.plugin"
     const val GOOGLE_SERVICES = "com.google.gms.google-services"
     const val NAVIGATION_SAFEARGS = "androidx.navigation.safeargs.kotlin"

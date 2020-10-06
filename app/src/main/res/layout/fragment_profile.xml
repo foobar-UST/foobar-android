@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_profile_edit"/>
+            tools:listitem="@layout/profile_edit_item"/>
 
         <ProgressBar
             android:id="@+id/profile_progress_bar"
@@ -30,8 +30,9 @@
             app:goneIf="@{!viewModel.loadingProgress}"/>
 
         <include
-            android:id="@+id/profile_network_error_layout"
             layout="@layout/network_error"
+            android:id="@+id/profile_network_error_layout"
+            app:showRetry="@{false}"
             app:goneIf="@{!viewModel.networkError || viewModel.networkError == null}"/>
 
     </FrameLayout>

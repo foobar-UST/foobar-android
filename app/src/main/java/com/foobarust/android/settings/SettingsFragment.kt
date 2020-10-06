@@ -36,7 +36,8 @@ class SettingsFragment : Fragment(), SettingsAdapter.SettingsAdapterListener {
 
         binding.itemRecyclerView.run {
             adapter = settingsAdapter
-            //drawDivider(forViewType = R.layout.item_settings_profile)
+            //drawDivider(forViewType = R.layout.settings_profile_item)
+            isNestedScrollingEnabled = false
             setHasFixedSize(true)
         }
 
@@ -105,7 +106,7 @@ class SettingsFragment : Fragment(), SettingsAdapter.SettingsAdapterListener {
         try {
             startActivity(intent)
         } catch (e: ActivityNotFoundException) {
-            showShortToast(getString(R.string.activity_not_found_message))
+            showShortToast(getString(R.string.activity_not_found_error))
         }
     }
 

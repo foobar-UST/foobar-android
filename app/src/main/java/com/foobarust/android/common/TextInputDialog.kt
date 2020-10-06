@@ -15,8 +15,10 @@ import com.foobarust.android.databinding.DialogTextInputBinding
 import com.foobarust.android.utils.AutoClearedValue
 import com.foobarust.android.utils.setMaxLength
 import com.foobarust.android.utils.showShortToast
+import com.foobarust.domain.utils.PhoneUtil
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class TextInputDialog : BottomSheetDialogFragment() {
@@ -24,6 +26,7 @@ class TextInputDialog : BottomSheetDialogFragment() {
     private var binding: DialogTextInputBinding by AutoClearedValue(this)
     private val viewModel: TextInputViewModel by viewModels()
     private val args: TextInputDialogArgs by navArgs()
+    @Inject lateinit var phoneUtil: PhoneUtil
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -70,10 +73,10 @@ class TextInputDialog : BottomSheetDialogFragment() {
             PHONE_NUM -> InputType.TYPE_CLASS_NUMBER
         }
 
-        // Length
+        // Set phone number input field constraints
         if (args.property.type == PHONE_NUM) {
             binding.valueEditText.setMaxLength(8)
-            binding.valueTextInputLayout.prefixText = PhoneUtil.AREA_CODE
+            binding.valueTextInputLayout.prefixText = "${phoneUtil.getPhoneNumPrefixString()} "
         }
     }
 }

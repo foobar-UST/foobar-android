@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <!-- Require settings section model -->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/item_recycler_view"
@@ -12,6 +11,6 @@
         android:clipToPadding="false"
         android:overScrollMode="never"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_settings_section"/>
+        tools:listitem="@layout/settings_section_item"/>
 
 </layout>

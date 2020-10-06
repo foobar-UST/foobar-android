@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="ThemeOverlay.Foobar.DayNight" parent="@style/ThemeOverlay.Foobar.BottomSheetDialog.Dark"/>
+    <style name="ThemeOverlay.Foobar.BottomSheetDialog.DayNight" parent="@style/ThemeOverlay.Foobar.BottomSheetDialog.Dark"/>
 
     <style name="ThemeOverlay.Foobar.BottomSheetDialog.Dark" parent="@style/ThemeOverlay.Foobar.BottomSheetDialog">
         <item name="android:windowLightNavigationBar" tools:ignore="NewApi">false</item>
@@ -14,9 +14,9 @@
         <item name="android:windowLightNavigationBar" tools:ignore="NewApi">false</item>
     </style>
 
-    <style name="Theme.Foobar.SignIn.DayNight" parent="Theme.Foobar.SignIn.Dark"/>
+    <style name="Theme.Foobar.Auth.DayNight" parent="Theme.Foobar.Auth.Dark"/>
 
-    <style name="Theme.Foobar.SignIn.Dark" parent="Theme.Foobar.Dark">
+    <style name="Theme.Foobar.Auth.Dark" parent="Theme.Foobar.Dark">
         <item name="android:navigationBarColor">?android:attr/colorBackground</item>
         <item name="android:windowLightStatusBar" tools:ignore="NewApi">false</item>
         <item name="android:windowLightNavigationBar" tools:ignore="NewApi">false</item>

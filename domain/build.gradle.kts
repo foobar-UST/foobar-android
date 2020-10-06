@@ -8,11 +8,11 @@ plugins {
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 
-    // Kotlin
     implementation(Dependencies.KOTLIN_STDLIB)
     implementation(Dependencies.COROUTINE_CORE)
-
     implementation(Dependencies.DAGGER)
+    implementation(Dependencies.PAGING_COMMON)
+
     kapt(Annotation.DAGGER_COMPILER)
 }
 

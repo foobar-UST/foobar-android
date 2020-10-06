@@ -25,7 +25,7 @@ class SellerSearchFragment : DialogFragment() {
     ): View? {
         binding = FragmentSellerSearchBinding.inflate(inflater, container, false)
 
-        // ScrimView
+        // Click scrim to dismiss dialog
         binding.scrimView.setOnClickListener { dismiss() }
 
         // Clear text

@@ -9,6 +9,8 @@
         android:id="@+id/exploreFragment"
         android:name="com.foobarust.android.explore.ExploreFragment"
         android:label="@string/explore_label"
-        tools:layout="@layout/fragment_explore"/>
+        tools:layout="@layout/fragment_explore">
+        <deepLink app:uri="foobarust://navigation_explore" />
+    </fragment>
 
 </navigation>

@@ -16,6 +16,7 @@ import kotlin.reflect.KProperty
  */
 
 private const val PREFS_NAME = "foobarust"
+
 private const val PREF_KEY_EMAIL_VERIFY = "pref_email_to_be_verified"
 private const val PREF_KEY_ONBOARDING_COMPLETED = "pref_onboarding_completed"
 
@@ -27,9 +28,13 @@ class PreferencesRepositoryImpl @Inject constructor(
         context.applicationContext.getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
     }
 
-    override var emailToBeVerified by StringPreference(prefs, PREF_KEY_EMAIL_VERIFY, null)
+    override var emailToBeVerified by StringPreference(
+        prefs, PREF_KEY_EMAIL_VERIFY, null
+    )
 
-    override var isOnboardingCompleted by BooleanPreference(prefs, PREF_KEY_ONBOARDING_COMPLETED, false)
+    override var isOnboardingCompleted by BooleanPreference(
+        prefs, PREF_KEY_ONBOARDING_COMPLETED, false
+    )
 }
 
 class BooleanPreference(

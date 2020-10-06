@@ -16,6 +16,7 @@
         <action
             android:id="@+id/action_sellerFragment_to_sellerDetailFragment"
             app:destination="@id/sellerDetailFragment" />
+        <deepLink app:uri="foobarust://navigation_seller" />
     </fragment>
 
     <dialog
@@ -28,6 +29,11 @@
         android:id="@+id/sellerDetailFragment"
         android:name="com.foobarust.android.seller.SellerDetailFragment"
         android:label="@string/seller_detail_label"
-        tools:layout="@layout/fragment_seller_detail"/>
+        tools:layout="@layout/fragment_seller_detail">
+        <argument
+            android:name="sellerId"
+            app:argType="string"
+            app:nullable="false"/>
+    </dialog>
 
 </navigation>

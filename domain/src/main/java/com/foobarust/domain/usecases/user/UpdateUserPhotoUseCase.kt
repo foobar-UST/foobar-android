@@ -30,11 +30,9 @@ class UpdateUserPhotoUseCase @Inject constructor(
             return@flow
         }
 
-        emitAll(
-            userRepository.updateUserPhoto(
-                userId = authRepository.getAuthUserId(),
-                uriString = parameters
-            )
-        )
+        emitAll(userRepository.updateUserPhoto(
+            userId = authRepository.getAuthUserId(),
+            uriString = parameters
+        ))
     }
 }

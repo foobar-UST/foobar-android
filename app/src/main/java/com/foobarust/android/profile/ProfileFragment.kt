@@ -45,11 +45,15 @@ class ProfileFragment : Fragment(), ProfileAdapter.ProfileAdapterListener {
 
         binding.profileRecyclerView.run {
             adapter = profileAdapter
+            isNestedScrollingEnabled = false
             setHasFixedSize(true)
         }
+
         profileViewModel.profileItems.observe(viewLifecycleOwner) {
             profileAdapter.submitList(it)
         }
+
+        // Toast
         profileViewModel.toastMessage.observe(viewLifecycleOwner) {
             showShortToast(it)
         }

@@ -9,6 +9,7 @@ plugins {
     id(Plugins.NAVIGATION_SAFEARGS)
     id(Plugins.CHECK_DEPENDENCY_UPDATES) version "1.0.211"
     id(Plugins.FIREBASE_CRASHLYTICS)
+    kotlin(Plugins.KOTLIN_SERIALIZATION) version "1.4.10"
 }
 
 android {
@@ -20,7 +21,7 @@ android {
         targetSdkVersion(Application.TARGET_SDK)
         versionCode = Application.VERSION_CODE
         versionName = Application.VERSION_NAME
-        testInstrumentationRunner = Dependencies.INSTRUMENTAL_RUNNER
+        testInstrumentationRunner = Dependencies.HILT_TEST_RUNNER
     }
 
     buildTypes {
@@ -57,6 +58,13 @@ android {
     buildFeatures {
         dataBinding = true
     }
+
+    sourceSets {
+        val test by getting
+        val androidTest by getting
+        test.java.srcDirs("src/sharedTest/java")
+        androidTest.java.srcDirs("src/sharedTest/java")
+    }
 }
 
 dependencies {
@@ -69,6 +77,7 @@ dependencies {
     implementation(Dependencies.COROUTINE_CORE)
     implementation(Dependencies.COROUTINE_ANDROID)
     implementation(Dependencies.COROUTINE_PLAY_SERVICES)
+    implementation(Dependencies.KOTLIN_SERIALIZATION)
 
     // Android
     implementation(Dependencies.CORE)
@@ -87,7 +96,8 @@ dependencies {
     implementation(Dependencies.HILT_VIEWMODEL)
     implementation(Dependencies.PAGING_RUNTIME)
     implementation(Dependencies.PREFERENCES)
-    implementation(Dependencies.WORK)
+    //implementation(Dependencies.WORK)
+    implementation(Dependencies.SWIPE_REFRESH_LAYOUT)
 
     // Firebase
     implementation(Dependencies.FIREBASE_CRASHLYTICS)
@@ -101,8 +111,8 @@ dependencies {
     implementation(Dependencies.SPINKIT)
 
     // Annotation Processors
-    kapt(Annotation.HILT_COMPILER)
-    kapt(Annotation.ANDROIDX_HILT_COMPILER)
+    kapt(Annotation.HILT_ANDROID_COMPILER)
+    kapt(Annotation.HILT_ANDROIDX_COMPILER)
 
     // Debug
     // Who cares about memory leak
@@ -122,7 +132,9 @@ dependencies {
     androidTestImplementation(Dependencies.TEST_ESPRESSO_CORE)
     androidTestImplementation(Dependencies.HILT_TESTING)
 
+    kaptAndroidTest(Annotation.HILT_ANDROID_COMPILER)
+
 
     // Android Test Annotation Processors
-    androidTestAnnotationProcessor(Annotation.HILT_COMPILER)
+    androidTestAnnotationProcessor(Annotation.HILT_ANDROID_COMPILER)
 }

@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.foobarust.android.seller.SellerViewModel" />
+        <import type="androidx.paging.LoadState" />
+    </data>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,48 +24,51 @@
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="On Campus"/>
+                android:text="@string/seller_on_campus_title"/>
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Off Campus"/>
+                android:text="@string/seller_off_campus_title"/>
 
         </com.google.android.material.tabs.TabLayout>
 
-        <com.zhpan.bannerview.BannerViewPager
-            android:id="@+id/promotion_view_pager"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
-            android:layout_height="210dp"
-            android:layout_marginTop="@dimen/spacing_xmedium"
-            android:paddingTop="@dimen/spacing_xmedium"
-            android:paddingBottom="@dimen/spacing_xmedium"
-            app:bvp_auto_play="false"
-            app:bvp_can_loop="true"
-            app:bvp_interval="@integer/banner_interval"
-            app:bvp_scroll_duration="@integer/banner_scroll_duration"
-            app:bvp_page_style="multi_page"
-            app:bvp_indicator_visibility="gone"
-            app:bvp_indicator_style="circle"
-            app:bvp_indicator_slide_mode="worm"
-            app:bvp_indicator_radius="6dp"
-            app:bvp_indicator_normal_color="@color/material_on_surface_stroke"
-            app:bvp_indicator_checked_color="?attr/colorSecondary" />
+            android:layout_height="match_parent">
 
-        <com.zhpan.indicator.IndicatorView
-            android:id="@+id/promotion_indicator"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/spacing_xmedium"/>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:animateLayoutChanges="true">
 
-        <Button
-            android:id="@+id/detail_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_xlarge"
-            android:layout_gravity="center_horizontal"
-            android:text="Seller Detail"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/seller_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:goneIf="@{!(viewModel.loadState instanceof LoadState.NotLoading)}"
+                    tools:listitem="@layout/seller_basic_item" />
+
+                <ProgressBar
+                    android:id="@+id/progress_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:goneIf="@{!(viewModel.loadState instanceof LoadState.Loading)}"/>
+
+                <include
+                    layout="@layout/network_error"
+                    android:id="@+id/network_error_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:showRetry="@{true}"
+                    app:goneIf="@{!(viewModel.loadState instanceof LoadState.Error)}"/>
+
+            </FrameLayout>
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </LinearLayout>
 

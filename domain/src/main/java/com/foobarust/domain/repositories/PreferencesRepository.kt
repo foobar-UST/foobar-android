@@ -7,6 +7,5 @@ package com.foobarust.domain.repositories
 interface PreferencesRepository {
 
     var emailToBeVerified: String?
-
     var isOnboardingCompleted: Boolean
 }

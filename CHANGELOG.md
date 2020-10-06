@@ -1,5 +1,17 @@
 # Changelog
 
+## 2020-10-6
+- Added on-campus seller list view.
+- Added advertise row on on-campus seller screen.
+- Added suggest row on on-campus seller screen.
+- Added seller detail screen.
+- Added network error layout.
+- Added emulator support. Configuration in build.gradle of data module.
+- Added some scripts and json files for inserting fake data.
+- Added pagination for better scrolling experience.
+- Added image placeholder.
+- Improved settings screen.
+
 ## 2020-09-25
 - Added create user document right after signed in.
 - Added order detail screen.

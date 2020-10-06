@@ -10,15 +10,18 @@ Food ordering and delivery services such as FoodPanda serve individual customers
 
 Features | Implementation | Unit Tests | Instrumental Tests
 ---------- | -------------- | --------- | ----------------
+Advertise Detail | :x: | :x: | :x:
+Item Detail | :x: | :x: | :x:
 Notification | :x: | :x: | :x:
 Favourite | :x: | :x: | :x:
 Explore | :x: | :x: | :x:
 Order | :x: | :x: | :x:
 Order History | :x: | :x: | :x:
-Seller | :x: | :x: | :x:
-Seller Detail | :x: | :x: | :x:
-Seller Search | :x: | :x: | :x:
-Profile | :x: | :x: | :x:
+Off-Campus Seller List | :x: | :x: | :x:
+Seller Search | :hammer: | :x: | :x:
+Seller Detail | :hammer: | :x: | :x:
+On-Campus Seller List | :hammer: | :x: | :x:
+Profile | :heavy_check_mark: | :x: | :x:
 License | :heavy_check_mark: | :x: | :x:
 Settings | :heavy_check_mark: | :x: | :x:
 Auth | :heavy_check_mark: | :x: | :x:

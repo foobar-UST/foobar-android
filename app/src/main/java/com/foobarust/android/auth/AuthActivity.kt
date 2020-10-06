@@ -59,7 +59,6 @@ class AuthActivity : AppCompatActivity() {
 
         emailLink?.let {
             viewModel.verifyEmailLinkAndSignIn(it)
-            // TODO: navigate to verify
         }
     }
 }

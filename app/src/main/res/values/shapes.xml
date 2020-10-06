@@ -4,7 +4,7 @@
         <item name="cornerSize">50%</item>
     </style>
 
-    <style name="ShapeAppearanceOverlay.Foobar.Button" parent="">
+    <style name="ShapeAppearanceOverlay.Foobar.Button.RoundCorner" parent="">
         <item name="cornerSize">50%</item>
     </style>
 

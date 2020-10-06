@@ -12,6 +12,7 @@ object Dependencies {
     const val COROUTINE_CORE = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.COROUTINE}"
     const val COROUTINE_ANDROID = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.COROUTINE}"
     const val COROUTINE_PLAY_SERVICES = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:${Versions.COROUTINE}"
+    const val KOTLIN_SERIALIZATION = "org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.KOTLIN_SERIALIZATION}"
 
     // Android
     const val APPCOMPAT = "androidx.appcompat:appcompat:${Versions.APPCOMPAT}"
@@ -19,6 +20,7 @@ object Dependencies {
     const val CORE = "androidx.core:core-ktx:${Versions.CORE}"
     const val CONSTRAINT_LAYOUT = "androidx.constraintlayout:constraintlayout:${Versions.CONSTRAINT_LAYOUT}"
     const val FRAGMENT = "androidx.fragment:fragment-ktx:${Versions.FRAGMENT}"
+    const val GLIDE = "com.github.bumptech.glide:glide:${Versions.GLIDE}"
     const val NAVIGATION_FRAGMENT = "androidx.navigation:navigation-fragment-ktx:${Versions.NAVIGATION}"
     const val NAVIGATION_UI = "androidx.navigation:navigation-ui-ktx:${Versions.NAVIGATION}"
     const val NAVIGATION_FEATURES = "androidx.navigation:navigation-dynamic-features-fragment:${Versions.NAVIGATION}"
@@ -33,11 +35,12 @@ object Dependencies {
     const val HILT_VIEWMODEL = "androidx.hilt:hilt-lifecycle-viewmodel:${Versions.HILT_LIFECYCLE}"
     const val HILT_WORK = "androidx.hilt:hilt-work:${Versions.HILT_WORK}"
     const val PAGING_RUNTIME = "androidx.paging:paging-runtime:${Versions.PAGING}"
+    const val PAGING_COMMON = "androidx.paging:paging-common:${Versions.PAGING}"
     const val PREFERENCES = "androidx.preference:preference-ktx:${Versions.PREFERENCES}"
     const val MATERIAL = "com.google.android.material:material:${Versions.MATERIAL}"
-    const val GLIDE = "com.github.bumptech.glide:glide:${Versions.GLIDE}"
     const val LEAK_CANARY = "com.squareup.leakcanary:leakcanary-android:${Versions.LEAK_CANARY}"
     const val WORK = "androidx.work:work-runtime-ktx:${Versions.WORK}"
+    const val SWIPE_REFRESH_LAYOUT = "androidx.swiperefreshlayout:swiperefreshlayout:${Versions.SWIPE_REFRESH_LAYOUT}"
 
     // Firebase
     const val FIREBASE_AUTH = "com.google.firebase:firebase-auth-ktx:${Versions.FIREBASE_AUTH}"
@@ -56,11 +59,14 @@ object Dependencies {
     const val BANNER_VIEW_PAGER = "com.github.zhpanvip:BannerViewPager:${Versions.BANNER_VIEW_PAGER}"
     const val DAGGER = "com.google.dagger:dagger:${Versions.DAGGER}"
     const val SPINKIT = "com.github.ybq:Android-SpinKit:${Versions.SPINKIT}"
+    const val GSON = "com.google.code.gson:gson:${Versions.GSON}"
+    const val SHIMMER = "com.facebook.shimmer:shimmer:${Versions.SHIMMER}"
 
     // Test
     const val ARCH_CORE_TESTING = "androidx.arch.core:core-testing:${Versions.ARCH}"
     const val COROUTINE_TEST = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.COROUTINE}"
-    const val INSTRUMENTAL_RUNNER = "androidx.test.runner.AndroidJUnitRunner"
+    const val ANDROID_JUNIT_RUNNER = "androidx.test.runner.AndroidJUnitRunner"
+    const val HILT_TEST_RUNNER = "com.foobarust.android.CustomHiltTestRunner"
     const val JUNIT = "junit:junit:${Versions.JUNIT}"
     const val KOTLIN_TEST = "org.jetbrains.kotlin:kotlin-test-junit:${Versions.KOTLIN}"
     const val MOCKITO_CORE = "org.mockito:mockito-core:${Versions.MOCKITO_CORE}"

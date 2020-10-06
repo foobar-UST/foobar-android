@@ -10,7 +10,6 @@
     <string name="signin_input_description">Login using your ITSC username.</string>
     <string name="signin_input_username_hint">Username</string>
     <string name="signin_input_email_domain_hint">Domain</string>
-    <string name="signin_input_username_suffix">\@connect.ust.hk</string>
     <string name="signin_input_confirm">Login</string>
     <string name="signin_input_skip_sigin">Skip</string>
     <string name="signin_input_email_empty">Please enter your username to login.</string>
@@ -18,11 +17,8 @@
     <string name="signin_verify_description">Please check your ITSC mailbox.</string>
     <string name="signin_verify_no_email">Did\'t receive the email?&#160;</string>
     <string name="signin_verify_resend_email">Resend Email</string>
-    <string name="signin_verify_tutorial">How to sign in?</string>
-    <string name="signin_success">Sign-in success.</string>
     <string name="signin_error">Sign-in error. Please try again.</string>
     <string name="signin_cancel">Sign-in canceled.</string>
-    <string name="signin_ongoing">Signing in. Please wait.</string>
     <string name="signin_auth_email_sent">Authentication email is sent.</string>
     <string name="signin_auth_email_resend_interval">Please try a few seconds later.</string>
 
@@ -34,7 +30,6 @@
     <string name="onboarding_group_orders_description">You can create group orders with your friends and colleague to enjoy better discounts</string>
     <string name="onboarding_pick_up_delivery_title">Pick up or delivery</string>
     <string name="onboarding_pick_up_delivery_description">You can choose our fast delivery service or pick up your orders in person</string>
-
 
     <!-- Fragment Label -->
     <string name="seller_label">Restaurants</string>
@@ -66,7 +61,6 @@
     <string name="profile_edit_field_phone_number">Phone Number</string>
     <string name="profile_edit_field_null">Not Set</string>
     <string name="profile_require_data_for_ordering">Profile data have to be set before using ordering service.</string>
-    <string name="profile_update_error">Error updating profile data.</string>
 
     <!-- Sign out dialog -->
     <string name="sign_out_dialog_title">Sign Out</string>
@@ -74,7 +68,23 @@
 
     <!-- Input dialogs -->
     <string name="text_input_dialog_title_prefix">Enter your&#160;</string>
-    <string name="text_input_dialog_input_empty">Input is empty.</string>
+
+    <!-- Seller -->
+    <string name="seller_on_campus_title">On Campus</string>
+    <string name="seller_off_campus_title">Off Campus</string>
+    <string name="seller_list_subtitle">Restaurants</string>
+    <string name="seller_status_opening">Opening</string>
+    <string name="seller_status_closed">Closed</string>
+    <string name="seller_status_opening_detail">Now Opening (%s - %s)</string>
+    <string name="seller_status_closed_detail">Closed (%s - %s)</string>
+    <string name="seller_rating_format">%.1f</string>
+    <string name="seller_search_hint">Find Restaurants</string>
+
+    <!-- Promotion -->
+    <string name="promotion_suggest_subtitle">Suggest For You</string>
+
+    <!-- Item -->
+    <string name="item_price_format">$ %.1f</string>
 
     <!-- Notification -->
     <string name="foobar_default_notification_channel_id" translatable="false">default_notification_channel</string>
@@ -84,7 +94,25 @@
     <string name="foobar_upload_user_photo_notification_title">User Photo</string>
     <string name="foobar_upload_user_photo_notification_body">Uploading in progress</string>
 
-    <!-- Misc -->
-    <string name="activity_not_found_message">No app to handle this action.</string>
+    <!-- Error Messages -->
+    <string name="activity_not_found_error">No app to handle this action.</string>
+    <string name="loading_retry_title">Retry</string>
+    <string name="loading_failed_title">No connection</string>
+    <string name="loading_failed_description">Please check your internet connection and try again.</string>
+
+    <!-- Shortcuts -->
+    <string name="shortcut_seller_short_label">Restaurants</string>
+    <string name="shortcut_seller_long_label">Restaurants</string>
+    <string name="shortcut_order_short_label">Order</string>
+    <string name="shortcut_order_long_label">Order</string>
+    <string name="shortcut_explore_short_label">Explore</string>
+    <string name="shortcut_explore_long_label">Explore</string>
+
+    <!-- Toolbar action button -->
+    <string name="toolbar_action_seller_search_title">Search Restaurants</string>
+    <string name="toolbar_action_seller_metadata_title">More seller details</string>
+
+    <!-- Content Descriptions -->
+    <string name="clear_text_button_content_description">Clear text</string>
 
 </resources>

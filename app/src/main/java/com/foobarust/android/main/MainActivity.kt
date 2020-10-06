@@ -1,5 +1,6 @@
 package com.foobarust.android.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.viewModels
@@ -34,8 +35,6 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
 
         binding.toolbar.setOnMenuItemClickListener(this)
 
-        //viewModel.cacheUserDetail()
-
         viewModel.toastMessage.observe(this) {
             showShortToast(it)
         }
@@ -50,6 +49,14 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
         setupBottomNavigation()
     }
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+
+        // When the user is signed in, restart MainActivity to reload the data.
+        finish()
+        startActivity(intent)
+    }
+
     private fun setupBottomNavigation() {
         val navGraphIds = listOf(
             R.navigation.navigation_seller,
@@ -62,7 +69,8 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
             navGraphIds = navGraphIds,
             fragmentManager = supportFragmentManager,
             containerId = R.id.fragment_container,
-            intent = intent
+            intent = intent,
+            itemReselected = { viewModel.onTabScrollToTop() }
         )
 
         controller.observe(this) {
@@ -77,6 +85,9 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
                 R.id.navigation_seller -> setupViewsForSeller()
                 else -> setupViewsForOthers()
             }
+
+            // Restore app bar height
+            binding.appBarLayout.setExpanded(true, true)
         }
         currentNavController = controller
 

@@ -31,12 +31,10 @@ class AuthViewModel @ViewModelInject constructor(
     private val authEmailUtil: AuthEmailUtil
 ) : BaseViewModel() {
 
-    // Domain list for drop down menu
     val emailDomains = liveData {
         emit(authEmailUtil.emailDomains)
     }
 
-    // Channels holding user inputs
     private var usernameChannel = ConflatedBroadcastChannel("")
     private val emailDomainChannel = ConflatedBroadcastChannel(authEmailUtil.emailDomains.first())
 
@@ -46,7 +44,7 @@ class AuthViewModel @ViewModelInject constructor(
             "$username@${emailDomain.domain}"
         }
 
-    // Timer to provide buffer time for each email resend request
+    // Timer to provide buffer time between each email resend request
     private val _resendAuthEmailTimerActive = ConflatedBroadcastChannel(false)
     private lateinit var resendAuthEmailTimer: CountDownTimer
 
@@ -54,9 +52,7 @@ class AuthViewModel @ViewModelInject constructor(
     val signInState: LiveData<SignInState>
         get() = _signInState
 
-
     fun requestAuthEmail() = viewModelScope.launch {
-        // Collect the first email value and cancel the flow
         val signInEmail = signInEmailFlow.first()
 
         // Check if the username input is empty
@@ -71,9 +67,9 @@ class AuthViewModel @ViewModelInject constructor(
             return@launch
         }
 
-        requestAuthEmailUseCase(signInEmail).collect { result ->
+        requestAuthEmailUseCase(signInEmail).collect {
             // Navigate to VerifyFragment if the request is success, otherwise do nothing.
-            when (result) {
+            when (it) {
                 is Success -> {
                     // Condition 1: success email request
                     saveEmailToBeVerifiedUseCase(signInEmail)
@@ -84,7 +80,7 @@ class AuthViewModel @ViewModelInject constructor(
                     // Condition 3: failed email request
                     // When there is something wrong with the request, navigate back to input screen
                     _signInState.value = INPUT
-                    showMessage(result.message)
+                    showMessage(it.message)
                 }
             }
 
@@ -94,13 +90,16 @@ class AuthViewModel @ViewModelInject constructor(
     }
 
     fun verifyEmailLinkAndSignIn(emailLink: String) = viewModelScope.launch {
+        _signInState.value = VERIFYING
+
+        // Get the saved email and start to verify
         getEmailToBeVerifiedUseCase(Unit).getSuccessDataOr(null)?.let { email ->
             val signInParams = SignInWithAuthLinkParameters(
                 email = email,
                 authLink = emailLink
             )
 
-            showMessage(context.getString(R.string.signin_ongoing))
+            //showMessage(context.getString(R.string.signin_ongoing))
 
             signInWithAuthLinkUseCase(signInParams).collect {
                 when (it) {
