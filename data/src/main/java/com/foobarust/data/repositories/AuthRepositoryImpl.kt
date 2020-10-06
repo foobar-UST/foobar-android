@@ -4,7 +4,6 @@ import android.content.Context
 import com.foobarust.data.common.Constants.USERS_COLLECTION
 import com.foobarust.data.mappers.AuthMapper
 import com.foobarust.data.utils.saveUpdateTimestamp
-import com.foobarust.data.utils.serializeToMutableMap
 import com.foobarust.domain.models.AuthProfile
 import com.foobarust.domain.repositories.AuthRepository
 import com.foobarust.domain.states.Resource
@@ -103,8 +102,8 @@ class AuthRepositoryImpl @Inject constructor(
             throw Exception(ERROR_GET_CURRENT_USER)
 
         // Insert a new user document into firestore
-        val userMap = authMapper.toUserDetailEntity(currentUser)
-            .serializeToMutableMap()
+        val userMap = authMapper.toUserDetailEntityMap(currentUser)
+            //.serializeToMutableMap()
             .saveUpdateTimestamp()
 
         firestore.collection(USERS_COLLECTION).document(currentUser.uid)

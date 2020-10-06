@@ -1,5 +1,7 @@
 package com.foobarust.data.mappers
 
+import com.foobarust.data.common.Constants.USER_NAME_FIELD
+import com.foobarust.data.common.Constants.USER_PHONE_NUM_FIELD
 import com.foobarust.data.models.UserDetailEntity
 import com.foobarust.domain.models.UserDetail
 import javax.inject.Inject
@@ -25,5 +27,17 @@ class UserMapper @Inject constructor() {
             phoneNum = userDetail.phoneNum,
             photoUrl = userDetail.photoUrl
         )
+    }
+
+    // TODO: fix toUserDetailEntityMap
+    fun toUserDetailEntityMap(userDetail: UserDetail): MutableMap<String, Any> {
+        val userDetailMap = mutableMapOf<String, Any>()
+
+        with(userDetail) {
+            name?.let { userDetailMap.put(USER_NAME_FIELD, it) }
+            phoneNum?.let { userDetailMap.put(USER_PHONE_NUM_FIELD, it) }
+        }
+
+        return userDetailMap
     }
 }

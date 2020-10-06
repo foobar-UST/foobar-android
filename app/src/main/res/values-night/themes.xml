@@ -10,16 +10,16 @@
     <style name="Theme.Foobar.Onboarding.DayNight" parent="Theme.Foobar.Onboarding.Dark"/>
 
     <style name="Theme.Foobar.Onboarding.Dark" parent="Theme.Foobar.Dark">
-        <item name="android:windowLightStatusBar" tools:ignore="NewApi">false</item>
-        <item name="android:windowLightNavigationBar" tools:ignore="NewApi">false</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="23">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
     </style>
 
     <style name="Theme.Foobar.Auth.DayNight" parent="Theme.Foobar.Auth.Dark"/>
 
     <style name="Theme.Foobar.Auth.Dark" parent="Theme.Foobar.Dark">
         <item name="android:navigationBarColor">?android:attr/colorBackground</item>
-        <item name="android:windowLightStatusBar" tools:ignore="NewApi">false</item>
-        <item name="android:windowLightNavigationBar" tools:ignore="NewApi">false</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="23">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
     </style>
 
     <style name="Theme.Foobar.Splash.DayNight" parent="Theme.Foobar.Splash.Dark"/>
@@ -28,8 +28,8 @@
         <item name="android:statusBarColor">?attr/colorSurface</item>
         <item name="android:navigationBarColor">?attr/colorSurface</item>
         <item name="android:windowBackground">@drawable/splash_background</item>
-        <item name="android:windowLightStatusBar" tools:ignore="NewApi">false</item>
-        <item name="android:windowLightNavigationBar" tools:ignore="NewApi">false</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="23">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
     </style>
 
     <style name="Theme.Foobar.DayNight" parent="Theme.Foobar.Dark"/>
@@ -53,6 +53,6 @@
         <item name="scrimBackground">@color/black_alpha_20</item>
         <item name="elevationOverlayEnabled">true</item>
 
-        <item name="android:windowLightStatusBar" tools:ignore="NewApi">false</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="23">false</item>
     </style>
 </resources>

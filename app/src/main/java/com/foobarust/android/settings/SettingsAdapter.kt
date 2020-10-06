@@ -102,6 +102,7 @@ class SettingsAdapter(
             )
 
             it.setSpan(
+                // TODO: fix wrong color in older android version
                 ForegroundColorSpan(context.themeColor(R.attr.colorPrimary)),
                 it.length - extraText.length,
                 it.length,
@@ -125,6 +126,7 @@ class SettingsAdapter(
             )
 
             it.setSpan(
+                // TODO: fix wrong color in older android version
                 ForegroundColorSpan(context.getColorCompat(R.color.material_on_background_emphasis_medium)),
                 it.length - extraText.length,
                 it.length,

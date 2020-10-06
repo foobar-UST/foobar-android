@@ -5,7 +5,6 @@ import com.foobarust.data.common.Constants.USERS_COLLECTION
 import com.foobarust.data.common.Constants.USER_PHOTOS_STORAGE_FOLDER
 import com.foobarust.data.mappers.UserMapper
 import com.foobarust.data.utils.saveUpdateTimestamp
-import com.foobarust.data.utils.serializeToMutableMap
 import com.foobarust.data.utils.snapshotObservableFlow
 import com.foobarust.domain.models.UserDetail
 import com.foobarust.domain.repositories.UserRepository
@@ -40,8 +39,8 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateUserDetail(userId: String, userDetail: UserDetail) {
-        val updatedMap = userMapper.toUserDetailEntity(userDetail)
-            .serializeToMutableMap()
+        val updatedMap = userMapper.toUserDetailEntityMap(userDetail)
+            //.serializeToMutableMap()
             .saveUpdateTimestamp()
 
         firestore.collection(USERS_COLLECTION).document(userId)

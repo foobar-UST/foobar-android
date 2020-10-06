@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+    
+    <style name="ThemeOverlay.Foobar.Dialog.Fullscreen.PopIME" parent="ThemeOverlay.Foobar.Dialog.Fullscreen">
+        <item name="android:windowSoftInputMode">stateAlwaysVisible</item>
+    </style>
 
     <style name="ThemeOverlay.Foobar.Dialog.Fullscreen" parent="ThemeOverlay.MaterialComponents.Dialog">
         <item name="android:windowIsFloating">false</item>
         <item name="android:windowBackground">?attr/scrimBackground</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@color/nav_bar</item>
-        <item name="android:windowSoftInputMode">stateAlwaysVisible</item>
     </style>
 
     <style name="ThemeOverlay.Foobar.AlertDialog" parent="@style/ThemeOverlay.MaterialComponents.MaterialAlertDialog">
@@ -20,7 +23,7 @@
         <item name="android:windowIsFloating">false</item>
         <item name="android:windowSoftInputMode">adjustResize</item>
         <item name="android:navigationBarColor">?attr/colorSurface</item>
-        <item name="android:windowLightNavigationBar" tools:ignore="NewApi">true</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
         <item name="android:windowBackground">?attr/scrimBackground</item>
     </style>
 
@@ -28,9 +31,9 @@
 
     <style name="Theme.Foobar.Onboarding" parent="Theme.Foobar">
         <item name="android:statusBarColor">?android:attr/colorBackground</item>
-        <item name="android:windowLightStatusBar" tools:ignore="NewApi">true</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>
         <item name="android:navigationBarColor">?android:attr/colorBackground</item>
-        <item name="android:windowLightNavigationBar" tools:ignore="NewApi">true</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
     </style>
 
     <style name="Theme.Foobar.Auth.DayNight" parent="Theme.Foobar.Auth"/>
@@ -38,8 +41,8 @@
     <style name="Theme.Foobar.Auth" parent="Theme.Foobar">
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">?android:attr/colorBackground</item>
-        <item name="android:windowLightStatusBar" tools:ignore="NewApi">false</item>
-        <item name="android:windowLightNavigationBar" tools:ignore="NewApi">true</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="23">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
     </style>
 
     <style name="Theme.Foobar.Splash.DayNight" parent="Theme.Foobar.Splash"/>
@@ -48,8 +51,8 @@
         <item name="android:statusBarColor">?attr/colorPrimary</item>
         <item name="android:navigationBarColor">?attr/colorPrimary</item>
         <item name="android:windowBackground">@drawable/splash_background</item>
-        <item name="android:windowLightStatusBar" tools:ignore="NewApi">false</item>
-        <item name="android:windowLightNavigationBar" tools:ignore="NewApi">false</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="23">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
     </style>
 
     <style name="Theme.Foobar.DayNight" parent="Theme.Foobar"/>
@@ -104,8 +107,8 @@
         <item name="android:statusBarColor">?android:attr/colorBackground</item>
         <item name="android:navigationBarColor">?attr/colorPrimarySurface</item>
         <item name="android:windowBackground">?android:colorBackground</item>
-        <item name="android:windowLightStatusBar" tools:ignore="NewApi">true</item>
-        <item name="android:windowLightNavigationBar" tools:ignore="NewApi">false</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
 
     </style>
 

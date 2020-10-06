@@ -60,9 +60,7 @@ class SellerFragment : Fragment(),
 
         // Fixed the issue when the promotion banner is inserted after the suggestion list,
         // and got hidden at the top of the recycler view
-        viewLifecycleOwner.lifecycleScope.launch {
-            promotionAdapter.firstItemInsertedScrollTop(binding.sellerRecyclerView)
-        }
+        scrollToTopWhenItemsRefreshed(promotionAdapter)
 
         // Subscribe for promotion items
         sellerViewModel.promotionModelItems.observe(viewLifecycleOwner) {
@@ -96,6 +94,7 @@ class SellerFragment : Fragment(),
         binding.swipeRefreshLayout.setOnRefreshListener {
             sellerViewModel.reloadPromotionItems()
             sellerAdapter.refresh()
+            scrollToTopWhenItemsRefreshed(promotionAdapter)
         }
 
         // Scroll to top when the tab is reselected
@@ -132,5 +131,11 @@ class SellerFragment : Fragment(),
 
     override fun onPromotionSuggestItemClicked(itemId: String?) {
         showShortToast("suggest item: $itemId")
+    }
+
+    private fun scrollToTopWhenItemsRefreshed(promotionAdapter: PromotionAdapter) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            promotionAdapter.firstItemInsertedScrollTop(binding.sellerRecyclerView)
+        }
     }
 }

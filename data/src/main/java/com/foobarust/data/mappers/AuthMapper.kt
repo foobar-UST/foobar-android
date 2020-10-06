@@ -1,5 +1,7 @@
 package com.foobarust.data.mappers
 
+import com.foobarust.data.common.Constants.USER_EMAIL_FIELD
+import com.foobarust.data.common.Constants.USER_USERNAME_FIELD
 import com.foobarust.data.models.UserDetailEntity
 import com.foobarust.domain.models.AuthProfile
 import com.google.firebase.auth.FirebaseUser
@@ -27,6 +29,16 @@ class AuthMapper @Inject constructor() {
         return UserDetailEntity(
             email = email,
             username = getUsernameFromEmail(email)
+        )
+    }
+
+    // TODO: fix toUserDetailEntityMap
+    fun toUserDetailEntityMap(firebaseUser: FirebaseUser): MutableMap<String, Any> {
+        val email = firebaseUser.email!!
+
+        return mutableMapOf(
+            USER_EMAIL_FIELD to email,
+            USER_USERNAME_FIELD to getUsernameFromEmail(email)
         )
     }
 
