@@ -35,9 +35,10 @@ class PromotionMapper @Inject constructor() {
     fun toSuggestItem(suggestBasicEntity: SuggestBasicEntity): SuggestBasic {
         return SuggestBasic(
             id = suggestBasicEntity.id!!,
-            itemTitle = suggestBasicEntity.item_title!!,
-            sellerName = suggestBasicEntity.seller_name!!,
-            imageUrl = suggestBasicEntity.image_url
+            itemId = suggestBasicEntity.itemId!!,
+            itemTitle = suggestBasicEntity.itemTitle!!,
+            sellerName = suggestBasicEntity.sellerName!!,
+            imageUrl = suggestBasicEntity.imageUrl
         )
     }
 }

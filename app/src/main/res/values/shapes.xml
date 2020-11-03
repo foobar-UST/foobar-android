@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="ShapeAppearanceOverlay.Foobar.Avatar" parent="">
-        <item name="cornerSize">50%</item>
+    <style name="ShapeAppearanceOverlay.Foobar.BottomSheet" parent="">
+        <item name="cornerSizeTopLeft">@dimen/medium_component_corner_radius</item>
+        <item name="cornerSizeTopRight">@dimen/medium_component_corner_radius</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
     </style>
 
-    <style name="ShapeAppearanceOverlay.Foobar.Button.RoundCorner" parent="">
+    <style name="ShapeAppearanceOverlay.Foobar.Circle" parent="">
         <item name="cornerSize">50%</item>
     </style>
 
@@ -28,6 +31,6 @@
 
     <!-- Corner Radius -->
     <dimen name="small_component_corner_radius">4dp</dimen>
-    <dimen name="medium_component_corner_radius">16dp</dimen>
-    <dimen name="large_component_corner_radius">20dp</dimen>
+    <dimen name="medium_component_corner_radius">8dp</dimen>
+    <dimen name="large_component_corner_radius">16dp</dimen>
 </resources>

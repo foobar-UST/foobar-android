@@ -11,5 +11,8 @@ data class SellerItemDetail(
     val sellerId: String,
     val catalogId: String,
     val price: Double,
-    val imageUrl: String? = null
+    val imageUrl: String? = null,
+    val choices: List<SellerItemChoice>,
+    val extraItems: List<SellerItemExtraItem>,
+    val available: Boolean
 )

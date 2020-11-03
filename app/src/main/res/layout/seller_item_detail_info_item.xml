@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="infoModel"
+            type="com.foobarust.android.sellerdetail.SellerItemDetailListModel.SellerItemDetailInfoModel" />
+        <import type="com.foobarust.android.R"/>
+    </data>
+
+    <RelativeLayout
+        android:id="@+id/item_info_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/spacing_large"
+        android:paddingEnd="@dimen/spacing_large"
+        android:paddingTop="@dimen/spacing_mlarge"
+        android:paddingBottom="@dimen/spacing_mlarge"
+        android:background="?attr/colorPrimary">
+
+        <TextView
+            android:id="@+id/title_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/spacing_large"
+            android:layout_toStartOf="@id/price_text_view"
+            android:text="@{infoModel.itemTitle}"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:textColor="?attr/colorOnPrimary"
+            android:maxLines="2"
+            android:ellipsize="end"
+            tools:text="Item Title" />
+
+        <TextView
+            android:id="@+id/description_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_xmedium"
+            android:layout_marginEnd="@dimen/spacing_large"
+            android:layout_below="@id/title_text_view"
+            android:layout_toStartOf="@id/price_text_view"
+            android:text="@{infoModel.itemDescription}"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="@color/material_on_primary_emphasis_medium"
+            android:maxLines="2"
+            android:ellipsize="end"
+            tools:text="Item description will be shown here" />
+
+        <TextView
+            android:id="@+id/price_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:gravity="end"
+            android:text="$ 57.4\n(+$ 14.2)"
+            android:textStyle="bold"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:textColor="?attr/colorSecondary"
+            android:lineSpacingMultiplier="1.2"
+            tools:text="$ 57.4\n(+$ 14.2)"/>
+
+    </RelativeLayout>
+
+</layout>

@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Widget.Foobar.TabLayout.Dot" parent="Widget.MaterialComponents.TabLayout">
+    <style name="Widget.Foobar.Chip.SellerAction" parent="Widget.MaterialComponents.Chip.Action">
+        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
+        <item name="iconStartPadding">@dimen/spacing_xmedium</item>
+        <item name="chipMinTouchTargetSize">@dimen/spacing_none</item>
+        <item name="chipIconSize">17dp</item>
+        <item name="chipIconTint">@color/material_on_surface_emphasis_medium</item>
+    </style>
+
+    <style name="Widget.Foobar.RadioButton" parent="Widget.MaterialComponents.CompoundButton.RadioButton">
+        <item name="android:paddingStart">@dimen/spacing_large</item>
+        <item name="android:paddingEnd">@dimen/spacing_large</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:textColor">@color/material_on_surface_emphasis_medium</item>
+    </style>
+    
+    <style name="Widget.Foobar.TabLayout.CircleDot" parent="Widget.MaterialComponents.TabLayout">
         <item name="tabBackground">@drawable/tab_pager_selector</item>
         <item name="tabGravity">center</item>
         <item name="tabIndicatorHeight">0dp</item>
@@ -8,5 +23,7 @@
         <item name="android:background">@android:color/transparent</item>
     </style>
     
-    <style name="Widget.Foobar.BottomSheet" parent="Widget.MaterialComponents.BottomSheet"/>
+    <style name="Widget.Foobar.BottomSheet" parent="Widget.MaterialComponents.BottomSheet">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.Foobar.BottomSheet</item>
+    </style>
 </resources>

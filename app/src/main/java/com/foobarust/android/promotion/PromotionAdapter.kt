@@ -3,6 +3,7 @@ package com.foobarust.android.promotion
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -10,9 +11,10 @@ import com.foobarust.android.R
 import com.foobarust.android.databinding.PromotionAdvertiseSectionBinding
 import com.foobarust.android.databinding.PromotionSuggestSectionBinding
 import com.foobarust.android.databinding.SellerSubtitleItemBinding
+import com.foobarust.android.promotion.PromotionAdvertiseAdapter.PromotionAdvertiseAdapterListener
 import com.foobarust.android.promotion.PromotionListModel.*
+import com.foobarust.android.promotion.PromotionSuggestAdapter.PromotionSuggestAdapterListener
 import com.foobarust.android.promotion.PromotionViewHolder.*
-import com.foobarust.android.seller.SellerFragment
 import com.foobarust.domain.models.AdvertiseBasic
 import com.foobarust.domain.models.SuggestBasic
 
@@ -21,7 +23,9 @@ import com.foobarust.domain.models.SuggestBasic
  */
 
 class PromotionAdapter(
-    private val sellerFragment: SellerFragment
+    private val lifecycle: Lifecycle,
+    private val promotionAdvertiseAdapterListener: PromotionAdvertiseAdapterListener,
+    private val promotionSuggestAdapterListener: PromotionSuggestAdapterListener
 ) : ListAdapter<PromotionListModel, PromotionViewHolder>(PromotionListModelDiff) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PromotionViewHolder {
@@ -47,12 +51,12 @@ class PromotionAdapter(
     override fun onBindViewHolder(holder: PromotionViewHolder, position: Int) {
         when (holder) {
             is PromotionAdvertiseViewHolder -> holder.binding.run {
-                val promotionAdapter = PromotionAdvertiseAdapter(sellerFragment)
+                val promotionAdapter = PromotionAdvertiseAdapter(promotionAdvertiseAdapterListener)
                 val promotionItems = (getItem(position) as PromotionAdvertiseModel).advertiseBasics
 
                 viewPager.apply {
                     setAdapter(promotionAdapter)
-                    setLifecycleRegistry(sellerFragment.lifecycle)
+                    setLifecycleRegistry(lifecycle)
 
                     // Banner item margin
                     val margin = resources.getDimensionPixelOffset(R.dimen.spacing_xmedium)
@@ -70,7 +74,7 @@ class PromotionAdapter(
 
             is PromotionSuggestViewHolder -> holder.binding.run {
                 val suggestItems = (getItem(position) as PromotionSuggestModel).suggestBasics
-                val suggestAdapter = PromotionSuggestAdapter(sellerFragment)
+                val suggestAdapter = PromotionSuggestAdapter(promotionSuggestAdapterListener)
 
                 suggestRecyclerView.run {
                     adapter = suggestAdapter
@@ -78,7 +82,6 @@ class PromotionAdapter(
                 }
 
                 suggestAdapter.submitList(suggestItems)
-
                 executePendingBindings()
             }
 
@@ -119,7 +122,6 @@ sealed class PromotionListModel {
     ) : PromotionListModel()
 
     data class PromotionSuggestModel(
-        // TODO: create suggest data object
         val suggestBasics: List<SuggestBasic>
     ) : PromotionListModel()
 

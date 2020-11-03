@@ -20,6 +20,11 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 private const val TAG = "NavigationExtensions"
 
+fun NavController.registerOnDestinationChangedListener(listener: NavController.OnDestinationChangedListener) {
+    removeOnDestinationChangedListener(listener)
+    addOnDestinationChangedListener(listener)
+}
+
 /**
  * Prevent clicking too fast on a view and crash the application
  * when using navigation component.

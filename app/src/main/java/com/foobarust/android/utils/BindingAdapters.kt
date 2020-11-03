@@ -26,12 +26,46 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.foobarust.android.R
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.imageview.ShapeableImageView
+import kotlin.math.round
 
 interface OnTextViewClickableSpanListener {
     fun onClickableSpanEndClicked(view: View)
+}
+
+@BindingAdapter(
+    "marginTop",
+    "marginBottom",
+    "marginStart",
+    "marginEnd",
+    requireAll = false
+)
+fun View.bindMargin(
+    marginTop: Float?,
+    marginBottom: Float?,
+    marginStart: Float?,
+    marginEnd: Float?
+) {
+    val layoutParams = layoutParams as ViewGroup.MarginLayoutParams
+
+    marginTop?.let { layoutParams.topMargin = it.toInt() }
+    marginBottom?.let { layoutParams.bottomMargin = it.toInt() }
+    marginStart?.let { layoutParams.marginStart = it.toInt() }
+    marginEnd?.let { layoutParams.marginEnd = it.toInt() }
+
+    setLayoutParams(layoutParams)
+}
+
+@BindingAdapter("iconRes")
+fun MaterialButton.bindIconRes(
+    @DrawableRes drawableRes: Int?
+) {
+    if (drawableRes == null) return
+
+    setIconResource(drawableRes)
 }
 
 @BindingAdapter("showIf")
@@ -55,13 +89,33 @@ fun Spinner.bindPopupElevationOverlay(popupElevationOverlay: Float) {
 }
 
 @BindingAdapter(
+    "drawableScale"
+)
+fun TextView.bindDrawableScale(scale: Double?) {
+    if (scale == null) return
+
+    val drawableSize = round(lineHeight * scale).toInt()
+    val updatedDrawables = compoundDrawablesRelative.map {
+        (it as Drawable?)?.setBounds(0, 0, drawableSize, drawableSize)
+        it
+    }
+
+    setCompoundDrawables(
+        updatedDrawables[0],        // left
+        updatedDrawables[1],        // top
+        updatedDrawables[2],        // right
+        updatedDrawables[3]         // bottom
+    )
+}
+
+@BindingAdapter(
     "drawableLeft",
     "drawableRight",
     "drawableTop",
     "DrawableBottom",
     requireAll = false
 )
-fun TextView.bindDrawableStart(
+fun TextView.bindDrawableRes(
     @DrawableRes drawableStartRes: Int?,
     @DrawableRes drawableEndRes: Int?,
     @DrawableRes drawableTopRes: Int?,

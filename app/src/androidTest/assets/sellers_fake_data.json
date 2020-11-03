@@ -1,621 +1,725 @@
 [
   {
     "id": "5f71cda284299999cbbdf6e8",
-    "name": "Niquent",
-    "description": "Winfred",
+    "name": "McCafe",
+    "description": "It serves Espresso Coffees, Iced Coffees, Teas and Frappés... don't forget to enjoy with the featured cakes, Ciabatta and selected bakeries.",
     "location": {
-      "lat": 29.9,
-      "long": -123.2
+      "address": "LG5, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Himrod Street",
-    "email": "lenabentley@niquent.com",
-    "phone_num": "+852 4597-2552",
-    "image_url": "https://i.picsum.photos/id/915/640/320.jpg?hmac=6DNRUp5Xd_kD7u74Q8K5jbjpUTyLxFwRrqVAoyZkU0c",
-    "rating": 0.4425,
+    "email": "mcdonalds.com.hk",
+    "phone_num": "+852 2358-0271",
+    "image_url": "https://cso.ust.hk/sites/cso862-prod.sites2.ust.hk/files/2018-09/lg5-01_0.jpg",
+    "rating": 5.0,
     "catalogs": [
       {
         "id": "5f71cda21eb3153baab505a7",
-        "name": "Northern Mariana Islands"
+        "name": "Catalog A",
+        "available": true,
+        "start_time": "09:00",
+        "end_time": "22:00"
       },
       {
         "id": "5f71cda27ff4b9d9e87ab030",
-        "name": "Guam"
+        "name": "Catalog B",
+        "available": true,
+        "start_time": "09:00",
+        "end_time": "22:00"
       },
       {
         "id": "5f71cda239264da6e8e74960",
-        "name": "Montana"
+        "name": "Catalog C",
+        "available": true,
+        "start_time": "09:00",
+        "end_time": "22:00"
       }
     ],
-    "min_spend": 11.3734,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "min_spend": 0,
+    "opening_hours": "Sunday - Saturday 07:00 - 24:00",
+    "type": 0,
+    "online": true,
+    "notice": "\uD83C\uDF89 Notice will be shown here. Notice will be shown here."
   },
   {
     "id": "5f71cda23827f5d483374c96",
-    "name": "Vurbo",
-    "description": "Carrsville",
+    "name": "Pacific Coffee",
+    "description": "Operated by the Pacific Coffee Company Limited, The Coffee Corner dishes up a wide array of fare; from muffins and different types of pastry in the morning, through to Panini, packed salad and more for lunch and dinner. In addition, a variety of gourmet coffee and chillino provide a welcome respite throughout the day, where users can relax outdoors or mingle with each other.",
     "location": {
-      "lat": -17,
-      "long": -29.1
+      "address": "G/F, LSK Business Building, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Exeter Street",
-    "email": "lenabentley@vurbo.com",
-    "phone_num": "+852 9029-6838",
-    "image_url": "https://i.picsum.photos/id/939/640/320.jpg?hmac=9n-a8NtMrO5X7n_6ED1Cic9m5NQ8JPJbfEkgjh72x2A",
-    "rating": 1.3188,
+    "email": "pacificcoffee.com",
+    "phone_num": "+852 2868-5100",
+    "image_url": "https://cso.ust.hk/sites/cso862-prod.sites2.ust.hk/files/2018-09/lskc_04_0.jpg",
+    "rating": 5.0,
     "catalogs": [
       {
         "id": "5f71cda2b49734cd2aebb706",
-        "name": "Massachusetts"
+        "name": "Massachusetts",
+        "available": true
       },
       {
         "id": "5f71cda20e23b2ee43b1aa0f",
-        "name": "American Samoa"
+        "name": "American Samoa",
+        "available": true
       },
       {
         "id": "5f71cda20a4cc9b8f6297886",
-        "name": "Virginia"
+        "name": "Virginia",
+        "available": true
       }
     ],
-    "min_spend": 52.2568,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "min_spend": 0,
+    "opening_hours": "Monday - Friday 08:00 - 20:00\nSaturday 08:00 - 17:00",
+    "type": 0,
+    "online": true
   },
   {
     "id": "5f71cda235eada3204009966",
-    "name": "Geekola",
-    "description": "Walton",
+    "name": "Starbucks Coffee",
+    "description": "Starbucks offers a range of exceptional products that customers enjoy in our stores, at home, and on the go.\nCoffee: More than 30 blends and single-origin premium coffees.\nHandcrafted Beverages: Fresh-brewed coffee, hot and iced espresso beverages, Frappuccino® coffee and non-coffee blended beverages, Starbucks Refreshers® beverages, smoothies and teas.\nMerchandise: Coffee- and tea-brewing equipment, Verismo® System by Starbucks, mugs and accessories, packaged goods, books and gifts.\nFresh Food: Baked pastries, sandwiches, salads, salad and grain bowls, oatmeal, yogurt parfaits and fruit cups.",
     "location": {
-      "lat": 78.3,
-      "long": 165
+      "address": "G/F, Hong Kong Jockey Club Atrium, near Lift 3",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Beard Street",
-    "email": "lenabentley@geekola.com",
-    "phone_num": "+852 1088-6027",
-    "image_url": "https://i.picsum.photos/id/797/640/320.jpg?hmac=-W0OTGCs4Xt1wUvaTJVVlc9g579-d-INGq_0VTiJMBk",
-    "rating": 2.6033,
+    "email": "info@coffee-concepts.com",
+    "phone_num": "+852 2358-1080",
+    "image_url": "https://cso.ust.hk/sites/cso862-prod.sites2.ust.hk/files/2018-09/starbucks-03.jpg",
+    "rating": 5.0,
     "catalogs": [
       {
         "id": "5f71cda293d1bdb56742f918",
-        "name": "Nevada"
+        "name": "Nevada",
+        "available": true
       },
       {
         "id": "5f71cda2aeff28dffe12846d",
-        "name": "North Dakota"
+        "name": "North Dakota",
+        "available": true
       },
       {
         "id": "5f71cda2b447a1235cfd57f7",
-        "name": "North Carolina"
+        "name": "North Carolina",
+        "available": true
       }
     ],
-    "min_spend": 58.0488,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "min_spend": 0,
+    "opening_hours": "Mon - Fri: 08:00 - 20:00\nSat, Sun & PH: 08:30 - 20:00",
+    "type": 0,
+    "online": true
   },
   {
     "id": "5f71cda28cd84b7fcdb0f5d6",
-    "name": "Snowpoke",
-    "description": "Sanders",
+    "name": "China Garden",
+    "description": "The G/F Restaurant is a bookable venue which provides full table service with a comprehensive seasonal menu of Chinese dishes and other special functions, including cocktail receptions, banquets and buffets. This premise is issued with a Liquor Licence by the Liquor Licensing Board.",
     "location": {
-      "lat": 49.6,
-      "long": -143.8
+      "address": "G/F, Academic Building, Hong Kong University of Science and Technology, Clear Water Bay",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Indiana Place",
-    "email": "lenabentley@snowpoke.com",
-    "phone_num": "+852 1069-3541",
-    "image_url": "https://i.picsum.photos/id/914/640/320.jpg?hmac=EqXG_2nzhX0ntQ0Ek10dkp80PV-uHa6ztpnQ0lGRMNY",
-    "rating": 1.031,
+    "email": "ab.ust.hk",
+    "phone_num": "+852 2358-1133",
+    "image_url": "https://cso.ust.hk/sites/cso862-prod.sites2.ust.hk/files/2018-07/_dsc2929.jpg",
+    "rating": 5.0,
     "catalogs": [
       {
         "id": "5f71cda273748b48d4937206",
-        "name": "Kentucky"
+        "name": "Kentucky",
+        "available": true
       },
       {
         "id": "5f71cda22ed6f8827da5cd1c",
-        "name": "Maine"
+        "name": "Maine",
+        "available": true
       },
       {
         "id": "5f71cda2b2259b6b97c1f949",
-        "name": "Federated States Of Micronesia"
+        "name": "Federated States Of Micronesia",
+        "available": true
       }
     ],
-    "min_spend": 21.1766,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "min_spend": 0,
+    "opening_hours": "Monday - Saturday 11:00 - 22:00\nSunday 10:00 - 22:00",
+    "type": 0,
+    "online": true
   },
   {
     "id": "5f71cda20110962a4b772122",
-    "name": "Homelux",
-    "description": "Riceville",
+    "name": "UniBistro",
+    "description": "The restaurant and bar will offer a predominantly Mediterranean cuisine including a daily salad bar with pasta or pizza. In the evening the restaurant and bar will also offer tempting food choices, a variety of mocktails to complement the traditional bar all of which can be enjoyed whilst watching a variety of live and rerun sports games including English Premier League, NBA, rugby, tennis & cricket.",
     "location": {
-      "lat": 8.2,
-      "long": 21.1
+      "address": "Lo Ka Chung University Center, Clear Water Bay",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Fountain Avenue",
-    "email": "lenabentley@homelux.com",
-    "phone_num": "+852 9103-4844",
-    "image_url": "https://i.picsum.photos/id/787/640/320.jpg?hmac=uhpkRqratWADABdFVcTV8sS9bmy4xRQHtW56gr3HQWU",
-    "rating": 4.872,
+    "email": "ab.ust.hk",
+    "phone_num": "+852 2363-6638",
+    "image_url": "https://cso.ust.hk/sites/cso862-prod.sites2.ust.hk/files/2019-02/ucb_03.jpg",
+    "rating": 5.0,
     "catalogs": [
       {
         "id": "5f71cda21b931e41d0d715f2",
-        "name": "Puerto Rico"
+        "name": "Puerto Rico",
+        "available": true
       },
       {
         "id": "5f71cda2377dd2058a54198e",
-        "name": "Kansas"
+        "name": "Kansas",
+        "available": true
       },
       {
         "id": "5f71cda291d8f6b420ba3c4e",
-        "name": "Florida"
+        "name": "Florida",
+        "available": true
       }
     ],
-    "min_spend": 34.3369,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "min_spend": 0,
+    "opening_hours": "Sunday - Saturday 12:00 - 21:00\nPH : 12:00 - 21:00",
+    "type": 0,
+    "online": true
   },
   {
     "id": "5f71cda2a4151ec8471231a2",
-    "name": "Frosnex",
-    "description": "Coyote",
+    "name": "UniQue",
+    "description": "A stylish restaurant with panoramic sea views, a sensational bar and a patio for al fresco dining, UniQue acts as a faculty clubhouse, providing a casual, friendly ambiance for university academics, staff and guests. The well-varied menu offers something for everyone, with options that includes international dishes and local favorites, health-conscious meals, and vegan, dairy-free and gluten-free items.",
     "location": {
-      "lat": -73.4,
-      "long": 70
+      "address": "Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Waldane Court",
-    "email": "lenabentley@frosnex.com",
-    "phone_num": "+852 4671-4600",
-    "image_url": "https://i.picsum.photos/id/755/640/320.jpg?hmac=wed1FYib6berm2X-pshcazatAcknrK3FEUmwdKJnTTA",
-    "rating": 4.9609,
+    "email": "conferencelodge.hk",
+    "phone_num": "+852 3701-8822",
+    "image_url": "https://cso.ust.hk/sites/cso862-prod.sites2.ust.hk/files/2018-12/unq_03.jpg",
+    "rating": 5.0,
     "catalogs": [
       {
         "id": "5f71cda2edd3e52f1ad652db",
-        "name": "Vermont"
+        "name": "Vermont",
+        "available": true
       },
       {
         "id": "5f71cda2996c418930d12b6c",
-        "name": "Delaware"
+        "name": "Delaware",
+        "available": true
       },
       {
         "id": "5f71cda2b2041b5c535019d3",
-        "name": "Virgin Islands"
+        "name": "Virgin Islands",
+        "available": true
       }
     ],
-    "min_spend": 47.0245,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "min_spend": 0,
+    "opening_hours": "Sunday - Saturday 07:30 - 23:00\nPH : 07:30 - 23:00",
+    "type": 0,
+    "online": true
   },
   {
     "id": "5f71cda2ea9622b4abd52afc",
-    "name": "Megall",
-    "description": "Chicopee",
+    "name": "American Diner",
+    "description": "",
     "location": {
-      "lat": 20.4,
-      "long": 49.8
+      "address": "Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Tennis Court",
-    "email": "lenabentley@megall.com",
-    "phone_num": "+852 6721-5414",
-    "image_url": "https://i.picsum.photos/id/441/640/320.jpg?hmac=0H8mkqXfCdaUyCsR0GrQRf0ffeGpcztqmd5BUzvBf6k",
-    "rating": 0.7547,
+    "email": "",
+    "phone_num": "+852 2335-1875",
+    "image_url": null,
+    "rating": 5.0,
     "catalogs": [
       {
         "id": "5f71cda2e746027096a89769",
-        "name": "Alaska"
+        "name": "Alaska",
+        "available": true
       },
       {
         "id": "5f71cda2393087849c09942d",
-        "name": "Washington"
+        "name": "Washington",
+        "available": true
       },
       {
         "id": "5f71cda2f0df4f3716a04540",
-        "name": "Missouri"
+        "name": "Missouri",
+        "available": true
       }
     ],
-    "min_spend": 46.0063,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "min_spend": 0,
+    "opening_hours": " Monday - Saturday 07:30 - 21:00\nSunday & PH : 10:00 - 18:00",
+    "type": 0,
+    "online": true
   },
   {
     "id": "5f71cda2d25b70d3d1951e68",
-    "name": "Netagy",
-    "description": "Rosedale",
+    "name": "McDonalds",
+    "description": "It serves burgers, French fries, fried chicken wings, extra value breakfast & extra value meal.",
     "location": {
-      "lat": 18.4,
-      "long": -70.7
+      "address": "LG5, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Pierrepont Street",
-    "email": "lenabentley@netagy.com",
-    "phone_num": "+852 6720-2345",
-    "image_url": "https://i.picsum.photos/id/452/640/320.jpg?hmac=LVRFpSrdcN2nGi9kOxoNB3iMoJ9JcP7XEv-r1YBdsxA",
-    "rating": 1.8425,
+    "email": "mcdonalds.com.hk",
+    "phone_num": "+852 2358-0271",
+    "image_url": "https://cso.ust.hk/sites/cso862-prod.sites2.ust.hk/files/2018-08/IMG_2005.jpg",
+    "rating": 5.0,
     "catalogs": [
       {
         "id": "5f71cda28fe49f69de34b64d",
-        "name": "Oregon"
+        "name": "Oregon",
+        "available": true
       },
       {
         "id": "5f71cda2f4588e6a67f0c916",
-        "name": "New Mexico"
+        "name": "New Mexico",
+        "available": true
       },
       {
         "id": "5f71cda25bc8c991999ff6d3",
-        "name": "Illinois"
+        "name": "Illinois",
+        "available": true
       }
     ],
-    "min_spend": 37.0554,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "min_spend": 0,
+    "opening_hours": "Sunday - Saturday 07:00 - 24:00",
+    "type": 0,
+    "online": true
   },
   {
     "id": "5f71cda24103e172af59bf83",
-    "name": "Kinetica",
-    "description": "Darbydale",
+    "name": "Passion",
+    "description": "The name of the shop Passion echoes the lifelong passion of owner Gerard Dubois, a Swiss-born pastry chef, for delivering top-quality products. Here, patrons seeking a traditional French cafe experience can sit back to savour a crispy oven-to-plate baguette with a rich chocolat chaud, in a homey country cottage decor and the aroma of freshly baked bread.\n\nEvery deli sandwiches created in the shop is prepared with selective homemade artisan bread made in house. A light evening menu is available for diners graving for casual yet tasty meal. For the health-conscious customers, the salad counter is never lack of choice. All salads, sandwiches, bakeries and pastries are available for take-away and sit-in dining.",
     "location": {
-      "lat": 24.5,
-      "long": -0.4
+      "address": "Clear Water Bay, 香港科技大學學術大樓1樓吳家瑋學術廊",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Hall Street",
-    "email": "lenabentley@kinetica.com",
-    "phone_num": "+852 4764-4747",
-    "image_url": "https://i.picsum.photos/id/33/640/320.jpg?hmac=qLYnBu2RswaSti--kZSPvICo0ONzS3y5NLBxVfKNiXs",
-    "rating": 2.9937,
+    "email": "passionbygd.com",
+    "phone_num": "+852 2811-1243",
+    "image_url": "https://cso.ust.hk/sites/cso862-prod.sites2.ust.hk/files/2019-01/cc_05_0.jpg",
+    "rating": 5.0,
     "catalogs": [
       {
         "id": "5f71cda20163554f8a0e4322",
-        "name": "Michigan"
+        "name": "Michigan",
+        "available": true
       },
       {
         "id": "5f71cda2619a7bd2639991d1",
-        "name": "District Of Columbia"
+        "name": "District Of Columbia",
+        "available": true
       },
       {
         "id": "5f71cda231bbad908346f276",
-        "name": "Pennsylvania"
+        "name": "Pennsylvania",
+        "available": true
       }
     ],
-    "min_spend": 57.6782,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "min_spend": 0,
+    "opening_hours": "Monday - Friday 08:00 - 21:00\nSaturday 09:00 - 18:00\nSun & PH : 09:00 - 18:00",
+    "type": 0,
+    "online": true
   },
   {
     "id": "5f71cda239b8bfbda7b0c9d1",
-    "name": "Flotonic",
-    "description": "Churchill",
+    "name": "Subway",
+    "description": "All sandwiches are prepared on a variety of freshly baked breads, with your choice of cold cuts or Veggie Delite. Top off your selection with your choice of vegetables and condiments. Moreover, you can check out in-depth nutritional information on any sub they made.",
     "location": {
-      "lat": 60.2,
-      "long": 177.8
+      "address": "G/F, Cheng Yu Tung Building",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Onderdonk Avenue",
-    "email": "lenabentley@flotonic.com",
-    "phone_num": "+852 8845-6813",
-    "image_url": "https://i.picsum.photos/id/441/640/320.jpg?hmac=0H8mkqXfCdaUyCsR0GrQRf0ffeGpcztqmd5BUzvBf6k",
-    "rating": 4.88,
+    "email": "subway.com.hk",
+    "phone_num": "+852 2324-3600",
+    "image_url": "https://cso.ust.hk/sites/cso862-prod.sites2.ust.hk/files/2018-09/subway-03_0.jpg",
+    "rating": 5.0,
     "catalogs": [
       {
         "id": "5f71cda26c133635e1b7a503",
-        "name": "Nebraska"
+        "name": "Nebraska",
+        "available": true
       },
       {
         "id": "5f71cda279b887fce2079469",
-        "name": "Louisiana"
+        "name": "Louisiana",
+        "available": true
       },
       {
         "id": "5f71cda27e1b04bc6136662a",
-        "name": "Connecticut"
+        "name": "Connecticut",
+        "available": true
       }
     ],
-    "min_spend": 35.2868,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "min_spend": 0,
+    "opening_hours": "Monday - Saturday 08:00 - 21:00\nSunday 10:00 - 20:00",
+    "type": 0,
+    "online": true
   },
   {
     "id": "5f71cda260374f08da50d5b4",
-    "name": "Harmoney",
-    "description": "Columbus",
+    "name": "Can.teen II",
+    "description": "Embellished with a minimalist and modern design, the casual diners’ experience at the new LG1 Restaurant is taken to a whole new level. You will find your much-loved food served up in one convenient location.  Boasting a selection of local and regional cuisines, the LG1 Restaurant promises an optimum marriage of flavour, variety and comfort.  Favorites include hotplate-fried meats complete with rice from “Teppanyaki”; irresistible HK Roast from “Supreme BBQ”; authentic Japanese Ramen and set meals from “Japanese Counter”, nourishing vegetarian dishes from “Veggies” and quintessential buns from “Bistro Salon”.",
     "location": {
-      "lat": 67.5,
-      "long": 58.8
+      "address": " G/F & 1/F, HKUST, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Jay Street",
-    "email": "lenabentley@harmoney.com",
-    "phone_num": "+852 6155-5560",
-    "image_url": "https://i.picsum.photos/id/106/640/320.jpg?hmac=FpB16LKT-u4io1GYs-Ke_VKKhALcdIXjk0RyQ2TD4vc",
-    "rating": 3.9792,
+    "email": "ab.ust.hk",
+    "phone_num": "+852 2358-3123",
+    "image_url": "https://cso.ust.hk/sites/cso862-prod.sites2.ust.hk/files/2018-09/lg1-01_2.jpg",
+    "rating": 5.0,
     "catalogs": [
       {
         "id": "5f71cda237023d38f850c6f1",
-        "name": "Indiana"
+        "name": "Indiana",
+        "available": true
       },
       {
         "id": "5f71cda2715c0762e3e5c673",
-        "name": "Rhode Island"
+        "name": "Rhode Island",
+        "available": true
       },
       {
         "id": "5f71cda2ec1aecbad05f20e2",
-        "name": "California"
+        "name": "California",
+        "available": true
       }
     ],
-    "min_spend": 59.2715,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "min_spend": 0,
+    "opening_hours": "Monday - Saturday 07:30 - 21:00\nSun & PH: 07:30 - 21:00",
+    "type": 0,
+    "online": true
   },
   {
     "id": "5f71cda2394fa9f3b352c70a",
-    "name": "Flumbo",
-    "description": "Katonah",
+    "name": "Hungry Korean",
+    "description": "",
     "location": {
-      "lat": 6.1,
-      "long": 125.4
+      "address": "Asian Food Outlet, 1/F, Chia-Wei Woo Academic Concourse, HKUST, Clear Water Bay",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Strauss Street",
-    "email": "lenabentley@flumbo.com",
-    "phone_num": "+852 8002-7302",
-    "image_url": "https://i.picsum.photos/id/50/640/320.jpg?hmac=NWv7_WW_nuASV-LC_ci2_8mO0lhEBqeW68aJhaBVj9g",
-    "rating": 3.4741,
+    "email": "hungrykorean.com",
+    "phone_num": "+852 2980-3900",
+    "image_url": null,
+    "rating": 5.0,
     "catalogs": [
       {
         "id": "5f71cda2c07c449655aaa533",
-        "name": "Texas"
+        "name": "Texas",
+        "available": true
       },
       {
         "id": "5f71cda251a2d68b88e239c2",
-        "name": "South Carolina"
+        "name": "South Carolina",
+        "available": true
       },
       {
         "id": "5f71cda27248c2ff47fd86c1",
-        "name": "New Hampshire"
+        "name": "New Hampshire",
+        "available": true
       }
     ],
-    "min_spend": 37.0479,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "min_spend": 0,
+    "opening_hours": " Monday - Saturday 09:00 - 20:00 (Last Order - 19:30)\nSunday & PH : Closed",
+    "type": 0,
+    "online": true
   },
   {
     "id": "5f71cda2c73306c591dc9b36",
-    "name": "Uneeq",
-    "description": "Neibert",
+    "name": "Gold Rice Bowl Delicious Food",
+    "description": "This kitchen serves Japanese and South East Asian Food.",
     "location": {
-      "lat": 11.6,
-      "long": -72
+      "address": "LG7, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Commerce Street",
-    "email": "lenabentley@uneeq.com",
-    "phone_num": "+852 5990-1840",
-    "image_url": "https://i.picsum.photos/id/219/640/320.jpg?hmac=FHbC9dcwEJXP2pDOA3FloykXeeX2qcrwZvtfbmAIH4g",
-    "rating": 1.6355,
+    "email": "ab.ust.hk",
+    "phone_num": "+852 2325-2533",
+    "image_url": "https://cso.ust.hk/sites/cso862-prod.sites2.ust.hk/files/2018-09/lg7-k2-02.jpg",
+    "rating": 5.0,
     "catalogs": [
       {
         "id": "5f71cda24680668f66d7919c",
-        "name": "Utah"
+        "name": "Utah",
+        "available": true
       },
       {
         "id": "5f71cda2890333f4dca3993a",
-        "name": "New York"
+        "name": "New York",
+        "available": true
       },
       {
         "id": "5f71cda28b84886994262c78",
-        "name": "Mississippi"
+        "name": "Mississippi",
+        "available": true
       }
     ],
-    "min_spend": 34.5482,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "min_spend": 0,
+    "opening_hours": "Sunday - Saturday 11:00 - 21:00\nPH : 11:00 - 21:00",
+    "type": 0,
+    "online": true
   },
   {
     "id": "5f71cda2fd430da3509d6f2b",
-    "name": "Junipoor",
-    "description": "Rosburg",
+    "name": "Diners@LSKBB",
+    "description": "The restaurant features a variety of Asian and Western food includes pasta and rice dishes, daily set meals at reasonable prices serving breakfast till afternoon tea daily. Vegetarian food, snacks, coffee, tea, and soda will also be available.",
     "location": {
-      "lat": 87.1,
-      "long": -179
+      "address": "G/F, LSK Business Building",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Lloyd Court",
-    "email": "lenabentley@junipoor.com",
-    "phone_num": "+852 9543-6532",
-    "image_url": "https://i.picsum.photos/id/543/640/320.jpg?hmac=eoPTSfkmAONEJUl21XtUmXI1gWfiQMJDuF9Z8NO9X30",
-    "rating": 1.2967,
+    "email": "ab.ust.hk",
+    "phone_num": "+852 2701-1821",
+    "image_url": "https://cso.ust.hk/sites/cso862-prod.sites2.ust.hk/files/2018-09/lskr_01_0.jpg",
+    "rating": 5.0,
     "catalogs": [
       {
         "id": "5f71cda29da7f02511a3d49b",
-        "name": "Tennessee"
+        "name": "Tennessee",
+        "available": true
       },
       {
         "id": "5f71cda27d589a125b2faeca",
-        "name": "New Jersey"
+        "name": "New Jersey",
+        "available": true
       },
       {
         "id": "5f71cda24ade612a9688451d",
-        "name": "Hawaii"
+        "name": "Hawaii",
+        "available": true
       }
     ],
-    "min_spend": 11.0093,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "min_spend": 0,
+    "opening_hours": "Monday - Saturday 07:30 - 18:00\nSun & PH : Closed",
+    "type": 0,
+    "online": true
   },
   {
     "id": "5f71cda2707b81823b4f80d8",
-    "name": "Andershun",
-    "description": "Hardyville",
+    "name": "Asia Pacific Catering",
+    "description": "This Kitchen offers a menu which is highly adopted to local's taste with some dishes changed from time to time according to season & occasion.",
     "location": {
-      "lat": 35.3,
-      "long": 168
+      "address": "LG7, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Troutman Street",
-    "email": "lenabentley@andershun.com",
-    "phone_num": "+852 6877-2902",
-    "image_url": "https://i.picsum.photos/id/375/640/320.jpg?hmac=EJ-aOqPDWtTsfmo047w6Ha0mQWzVR_EQQWzm4w6jH-I",
-    "rating": 0.0333,
+    "email": "ab.ust.hk",
+    "phone_num": "+852 2243-1087",
+    "image_url": "https://cso.ust.hk/sites/cso862-prod.sites2.ust.hk/files/2018-07/IMG_4068_0.JPG",
+    "rating": 5.0,
     "catalogs": [
       {
         "id": "5f71cda2021d0daddd8ff88d",
-        "name": "Maryland"
+        "name": "Maryland",
+        "available": true
       },
       {
         "id": "5f71cda231bfc24cdff406de",
-        "name": "Iowa"
+        "name": "Iowa",
+        "available": true
       },
       {
         "id": "5f71cda287b0c13738277a7f",
-        "name": "West Virginia"
+        "name": "West Virginia",
+        "available": true
       }
     ],
-    "min_spend": 17.4361,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "min_spend": 0,
+    "opening_hours": "Monday - Saturday 07:30 - 21:00\nSunday & PH 09:00 - 21:00",
+    "type": 0,
+    "online": true
   },
   {
     "id": "5f71cda2900682efb519d4f4",
-    "name": "Gynk",
-    "description": "Woodburn",
+    "name": "Seafront Cafeteria",
+    "description": "The Cafeteria serves Chinese soup noodles, rice dishes, drinks, and desserts.",
     "location": {
-      "lat": -69.9,
-      "long": 111.4
+      "address": "Jockey Club Tower, Clear Water Bay",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Pioneer Street",
-    "email": "lenabentley@gynk.com",
-    "phone_num": "+852 7144-3646",
-    "image_url": "https://i.picsum.photos/id/237/640/320.jpg?hmac=uGX-MP2j0MU_pYfqVpjNVM982JxKxVAI68-zNV4g2U4",
-    "rating": 4.5456,
+    "email": "ab.ust.hk",
+    "phone_num": "+852 9055-9306 / +852 9487-0417",
+    "image_url": "https://cso.ust.hk/sites/cso862-prod.sites2.ust.hk/files/2019-03/sf_03.jpg",
+    "rating": 5.0,
     "catalogs": [
       {
         "id": "5f71cda24181c535e1f13c20",
-        "name": "Wisconsin"
+        "name": "Wisconsin",
+        "available": true
       },
       {
         "id": "5f71cda211097fd098aec92c",
-        "name": "Idaho"
+        "name": "Idaho",
+        "available": true
       },
       {
         "id": "5f71cda2a974e5c6e3f05636",
-        "name": "Colorado"
+        "name": "Colorado",
+        "available": true
       }
     ],
-    "min_spend": 49.1445,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "min_spend": 0,
+    "opening_hours": "Sunday - Saturday 18:00 - 02:00\nClosed on Saturdays during Summer Holidays",
+    "type": 0,
+    "online": true
   },
   {
     "id": "5f71cda27c5f68f46baca054",
-    "name": "Fuelworks",
-    "description": "Bordelonville",
+    "name": "Ebeneezers",
+    "description": "Operated by the Ebeneezer's, one of the experienced and certified Halal food operators in town specializing in a variety of kebabs, Indian curries, biryanis and pizzas, etc.",
     "location": {
-      "lat": 84.6,
-      "long": -12.7
+      "address": "Kee Business Building, LSK Campus",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Ridge Court",
-    "email": "lenabentley@fuelworks.com",
-    "phone_num": "+852 4676-9012",
-    "image_url": "https://i.picsum.photos/id/305/640/320.jpg?hmac=qB3m-OVJx_JLMnBxo-kRWNTqmEIhWhOdL6lwtakaOIU",
-    "rating": 1.3745,
+    "email": "ebeneezers.com",
+    "phone_num": "+852 3188-5550",
+    "image_url": "https://cso.ust.hk/sites/cso862-prod.sites2.ust.hk/files/2018-09/lsk-hl-02_0.jpg",
+    "rating": 5.0,
     "catalogs": [
       {
         "id": "5f71cda2de53889d28fffdd0",
-        "name": "Oklahoma"
+        "name": "Oklahoma",
+        "available": true
       },
       {
         "id": "5f71cda28d06b0262e3252ac",
-        "name": "Palau"
+        "name": "Palau",
+        "available": true
       },
       {
         "id": "5f71cda278d58f5c033a3903",
-        "name": "Wyoming"
+        "name": "Wyoming",
+        "available": true
       }
     ],
-    "min_spend": 41.4676,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "min_spend": 0,
+    "opening_hours": "Monday - Saturday 10:00 - 21:00 (Last Order - 20:30)\nSun & PH : Closed",
+    "type": 0,
+    "online": true
   },
   {
     "id": "5f71cda2aac29ca91a37e3e4",
-    "name": "Comtent",
-    "description": "Golconda",
+    "name": "TT Veggie",
+    "description": "",
     "location": {
-      "lat": 41.2,
-      "long": 94.4
+      "address": "LG7, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Rost Place",
     "email": "lenabentley@comtent.com",
-    "phone_num": "+852 7300-6420",
-    "image_url": "https://i.picsum.photos/id/769/640/320.jpg?hmac=8nxE9wIggTUBI8-MWg2EWjhymngRoaolgGTzVxev38w",
-    "rating": 3.092,
+    "phone_num": "+852 2426-1838",
+    "image_url": "https://scontent.fhkg1-1.fna.fbcdn.net/v/t1.0-9/72306941_2548895671822768_1922522443675598848_o.jpg?_nc_cat=104&ccb=2&_nc_sid=a26aad&_nc_ohc=NIWl2Ri8NMQAX9a48N1&_nc_ht=scontent.fhkg1-1.fna&oh=065e44c4c66d2bed4976fe82b188606f&oe=5FC4B45C",
+    "rating": 5.0,
     "catalogs": [
       {
         "id": "5f71cda2d65bfd8908e5520e",
-        "name": "South Dakota"
+        "name": "South Dakota",
+        "available": true
       },
       {
         "id": "5f71cda261ec995cbeb14eb8",
-        "name": "Arkansas"
+        "name": "Arkansas",
+        "available": true
       },
       {
         "id": "5f71cda28f1b2c9b1b4d82df",
-        "name": "Ohio"
+        "name": "Ohio",
+        "available": true
       }
     ],
-    "min_spend": 54.0219,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "min_spend": 0,
+    "opening_hours": "Monday - Saturday 11:00 - 21:00\nPH : 11:00 - 21:00\nSunday Closed",
+    "type": 0,
+    "online": true
   },
   {
     "id": "5f71cda210cb0cc92321987e",
-    "name": "Enaut",
-    "description": "Lindcove",
+    "name": "The UniBar",
+    "description": "All the while, the Unibar will offer tempting food choices, a variety of mocktails to complement the traditional bar all of which can be enjoyed whilst watching a variety of live and rerun sports games including English Premier League, NBA, rugby, tennis & cricket.  Now, you have another choice to enjoy with your friends the exciting sports heat!",
     "location": {
-      "lat": 21.8,
-      "long": -156.4
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Marconi Place",
     "email": "lenabentley@enaut.com",
     "phone_num": "+852 4762-2392",
-    "image_url": "https://i.picsum.photos/id/874/640/320.jpg?hmac=K08wDbK6m7wUlr9A_th8zfpRw4pZ1Zm2CK9312k7Sig",
-    "rating": 3.4491,
+    "image_url": "https://cso.ust.hk/sites/cso862-prod.sites2.ust.hk/files/2019-02/unb_02_0.jpg",
+    "rating": 5.0,
     "catalogs": [
       {
         "id": "5f71cda221ef20e6a2d1738c",
-        "name": "Arizona"
+        "name": "Arizona",
+        "available": true
       },
       {
         "id": "5f71cda2f229ed2e32b749a6",
-        "name": "Alabama"
+        "name": "Alabama",
+        "available": true
       },
       {
         "id": "5f71cda2bc31a8956367c525",
-        "name": "Minnesota"
+        "name": "Minnesota",
+        "available": true
       }
     ],
-    "min_spend": 48.5505,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "min_spend": 0,
+    "opening_hours": "Sunday - Thursday 16:00 - 23:00\nFriday - Saturday 16:00 - 24:00\nPH : 16:00 - 23:00\nPH Eve : 16:00 - 24:00",
+    "type": 0,
+    "online": true
   },
   {
     "id": "5f71cda2d100a89b0e6bc350",
     "name": "Geofarm",
     "description": "Sehili",
     "location": {
-      "lat": 63.8,
-      "long": -73.1
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Ferris Street",
     "email": "lenabentley@geofarm.com",
     "phone_num": "+852 6251-1097",
     "image_url": "https://i.picsum.photos/id/978/640/320.jpg?hmac=aW5oGkFY_pfKCR7TfhWyk6Qu46aBFjD9g_57tZ-B0a0",
@@ -623,31 +727,36 @@
     "catalogs": [
       {
         "id": "5f71cda29047516662bc10b3",
-        "name": "Georgia"
+        "name": "Georgia",
+        "available": true
       },
       {
         "id": "5f71cda2a2cd47a61ccc580f",
-        "name": "Northern Mariana Islands"
+        "name": "Northern Mariana Islands",
+        "available": true
       },
       {
         "id": "5f71cda2c6fc0d57efb3124d",
-        "name": "Guam"
+        "name": "Guam",
+        "available": true
       }
     ],
     "min_spend": 54.9941,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda2107313ea699bf55e",
     "name": "Zenolux",
     "description": "Rehrersburg",
     "location": {
-      "lat": -34.3,
-      "long": 41.5
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Nixon Court",
     "email": "lenabentley@zenolux.com",
     "phone_num": "+852 2189-2024",
     "image_url": "https://i.picsum.photos/id/740/640/320.jpg?hmac=zd4p4DFGe_RorFXtV2dL74jtL_TExR7dq9r_-Jwp3qw",
@@ -655,31 +764,36 @@
     "catalogs": [
       {
         "id": "5f71cda2a523c16b15aaace8",
-        "name": "Montana"
+        "name": "Montana",
+        "available": true
       },
       {
         "id": "5f71cda2485f4fb54b43f121",
-        "name": "Massachusetts"
+        "name": "Massachusetts",
+        "available": true
       },
       {
         "id": "5f71cda28e10e8faaf454396",
-        "name": "American Samoa"
+        "name": "American Samoa",
+        "available": true
       }
     ],
     "min_spend": 39.303,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda2c555ce38f16f6331",
     "name": "Bulljuice",
     "description": "Gilgo",
     "location": {
-      "lat": 53.7,
-      "long": 63.5
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Randolph Street",
     "email": "lenabentley@bulljuice.com",
     "phone_num": "+852 5034-7234",
     "image_url": "https://i.picsum.photos/id/563/640/320.jpg?hmac=Gd-bqg9o9pzvqQ6q_Qr63mRKWPVpkdeiZInICBgQqFk",
@@ -687,31 +801,36 @@
     "catalogs": [
       {
         "id": "5f71cda241c903a364b7826d",
-        "name": "Virginia"
+        "name": "Virginia",
+        "available": true
       },
       {
         "id": "5f71cda268a1da40a7139e3e",
-        "name": "Nevada"
+        "name": "Nevada",
+        "available": true
       },
       {
         "id": "5f71cda28b51264dc8e5102b",
-        "name": "North Dakota"
+        "name": "North Dakota",
+        "available": true
       }
     ],
     "min_spend": 41.2201,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda2a769eebe2daeaad8",
     "name": "Quilch",
     "description": "Kipp",
     "location": {
-      "lat": 74.1,
-      "long": -47.3
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Banner Avenue",
     "email": "lenabentley@quilch.com",
     "phone_num": "+852 3922-9228",
     "image_url": "https://i.picsum.photos/id/295/640/320.jpg?hmac=wViqdVYSSh-jr5WHmoeXvxz9RefMAvsVigrD7ZOUUVA",
@@ -719,31 +838,36 @@
     "catalogs": [
       {
         "id": "5f71cda2015be02c9be3480c",
-        "name": "North Carolina"
+        "name": "North Carolina",
+        "available": true
       },
       {
         "id": "5f71cda2de2b5a5fc7a6cb7e",
-        "name": "Kentucky"
+        "name": "Kentucky",
+        "available": true
       },
       {
         "id": "5f71cda22cecd5b1c2cf3e92",
-        "name": "Maine"
+        "name": "Maine",
+        "available": true
       }
     ],
     "min_spend": 49.0537,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda233abee206506ab92",
     "name": "Vendblend",
     "description": "Iberia",
     "location": {
-      "lat": -69.7,
-      "long": 111.9
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Caton Place",
     "email": "lenabentley@vendblend.com",
     "phone_num": "+852 3817-9690",
     "image_url": "https://i.picsum.photos/id/443/640/320.jpg?hmac=GxeGuQlXc7UXt9BP1FWg0ulATgX1e5RMO0l2O94ICLQ",
@@ -751,31 +875,36 @@
     "catalogs": [
       {
         "id": "5f71cda20589b4c9c19ef8a1",
-        "name": "Federated States Of Micronesia"
+        "name": "Federated States Of Micronesia",
+        "available": true
       },
       {
         "id": "5f71cda259bedff73094d917",
-        "name": "Puerto Rico"
+        "name": "Puerto Rico",
+        "available": true
       },
       {
         "id": "5f71cda2ddb2126a03fac67d",
-        "name": "Kansas"
+        "name": "Kansas",
+        "available": true
       }
     ],
     "min_spend": 43.2969,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda2fe2231d2248e27fc",
     "name": "Turnling",
     "description": "Retsof",
     "location": {
-      "lat": 58.9,
-      "long": -11.3
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Jodie Court",
     "email": "lenabentley@turnling.com",
     "phone_num": "+852 8035-9673",
     "image_url": "https://i.picsum.photos/id/1028/640/320.jpg?hmac=qL0AcrIpE_qVSZm5UEUvxvICS5-j3j3C2wEu9JXXiuM",
@@ -783,31 +912,36 @@
     "catalogs": [
       {
         "id": "5f71cda29257619cab257a38",
-        "name": "Florida"
+        "name": "Florida",
+        "available": true
       },
       {
         "id": "5f71cda2d2472ea4caa86d99",
-        "name": "Vermont"
+        "name": "Vermont",
+        "available": true
       },
       {
         "id": "5f71cda2bce707be21a942a9",
-        "name": "Delaware"
+        "name": "Delaware",
+        "available": true
       }
     ],
     "min_spend": 55.0207,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda24bebd04e44eedb24",
     "name": "Kyagoro",
     "description": "Drytown",
     "location": {
-      "lat": 1.4,
-      "long": 40.3
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Mersereau Court",
     "email": "lenabentley@kyagoro.com",
     "phone_num": "+852 9387-6443",
     "image_url": "https://i.picsum.photos/id/123/640/320.jpg?hmac=Wkg5B-YAQs4nnlbPF18SzxoR_TZeWAymxGyFXeCxtPA",
@@ -815,31 +949,36 @@
     "catalogs": [
       {
         "id": "5f71cda2119ba087d01602db",
-        "name": "Virgin Islands"
+        "name": "Virgin Islands",
+        "available": true
       },
       {
         "id": "5f71cda2f6af2eee106fa93c",
-        "name": "Alaska"
+        "name": "Alaska",
+        "available": true
       },
       {
         "id": "5f71cda2d925a42b48307bdf",
-        "name": "Washington"
+        "name": "Washington",
+        "available": true
       }
     ],
     "min_spend": 31.2068,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda2bc0614c2b9e1f75f",
     "name": "Xyqag",
     "description": "Iola",
     "location": {
-      "lat": 68.7,
-      "long": -55.7
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Ross Street",
     "email": "lenabentley@xyqag.com",
     "phone_num": "+852 3740-9033",
     "image_url": "https://i.picsum.photos/id/1048/640/320.jpg?hmac=NkvDx-_VVTSksUJ5qnQYTrbjWIKRly-U2jNr52AXL0A",
@@ -847,31 +986,36 @@
     "catalogs": [
       {
         "id": "5f71cda2f4e8b25ada057eae",
-        "name": "Missouri"
+        "name": "Missouri",
+        "available": true
       },
       {
         "id": "5f71cda2e94991338e498473",
-        "name": "Oregon"
+        "name": "Oregon",
+        "available": true
       },
       {
         "id": "5f71cda2913a64b8d54598a4",
-        "name": "New Mexico"
+        "name": "New Mexico",
+        "available": true
       }
     ],
     "min_spend": 23.8309,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda218fb8f2991c53d2a",
     "name": "Viagrand",
     "description": "Alden",
     "location": {
-      "lat": 87.3,
-      "long": 140.7
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Livonia Avenue",
     "email": "lenabentley@viagrand.com",
     "phone_num": "+852 5972-6997",
     "image_url": "https://i.picsum.photos/id/54/640/320.jpg?hmac=hzP8kfz4KNl2LK8QgYnvQ-lhG8InBjYC16LyKqfaImg",
@@ -879,31 +1023,36 @@
     "catalogs": [
       {
         "id": "5f71cda25b7a7aef3a9b3c85",
-        "name": "Illinois"
+        "name": "Illinois",
+        "available": true
       },
       {
         "id": "5f71cda2932119333c055253",
-        "name": "Michigan"
+        "name": "Michigan",
+        "available": true
       },
       {
         "id": "5f71cda29b9be6cc60901977",
-        "name": "District Of Columbia"
+        "name": "District Of Columbia",
+        "available": true
       }
     ],
     "min_spend": 52.9588,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda211c89221ec35d282",
     "name": "Insource",
     "description": "Connerton",
     "location": {
-      "lat": -7.3,
-      "long": 108.6
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Cleveland Street",
     "email": "lenabentley@insource.com",
     "phone_num": "+852 1634-1417",
     "image_url": "https://i.picsum.photos/id/737/640/320.jpg?hmac=ASaPGsOb9fv7Vym0SqGV2D5Af6L_LYXSb1ON3NGgGog",
@@ -911,31 +1060,36 @@
     "catalogs": [
       {
         "id": "5f71cda22de5809e79a63e70",
-        "name": "Pennsylvania"
+        "name": "Pennsylvania",
+        "available": true
       },
       {
         "id": "5f71cda25c48e8e97998b645",
-        "name": "Nebraska"
+        "name": "Nebraska",
+        "available": true
       },
       {
         "id": "5f71cda2be3363ccbe18614f",
-        "name": "Louisiana"
+        "name": "Louisiana",
+        "available": true
       }
     ],
     "min_spend": 47.1686,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda2d11ce0ae6e46525e",
     "name": "Assitia",
     "description": "Denio",
     "location": {
-      "lat": -39.8,
-      "long": -102.6
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Willoughby Street",
     "email": "lenabentley@assitia.com",
     "phone_num": "+852 3681-8955",
     "image_url": "https://i.picsum.photos/id/256/640/320.jpg?hmac=LHpcT7iV5BYBuKogsBubJ0UXeHrrkSUx4XayWmYdVy0",
@@ -943,31 +1097,36 @@
     "catalogs": [
       {
         "id": "5f71cda2b2a4324c238e96c9",
-        "name": "Connecticut"
+        "name": "Connecticut",
+        "available": true
       },
       {
         "id": "5f71cda2d7b9d64f70454560",
-        "name": "Indiana"
+        "name": "Indiana",
+        "available": true
       },
       {
         "id": "5f71cda25c4a5a26db1e84b9",
-        "name": "Rhode Island"
+        "name": "Rhode Island",
+        "available": true
       }
     ],
     "min_spend": 23.215,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda240c5d70aed8af30e",
     "name": "Eweville",
     "description": "Carlton",
     "location": {
-      "lat": -87.1,
-      "long": -83.1
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Jerome Avenue",
     "email": "lenabentley@eweville.com",
     "phone_num": "+852 7416-5350",
     "image_url": "https://i.picsum.photos/id/132/640/320.jpg?hmac=0ul3EGti_M9c-RH_0hurwEqocVsAgtov5wY5Dmt41oo",
@@ -975,31 +1134,36 @@
     "catalogs": [
       {
         "id": "5f71cda2ce5b3c8c0b495847",
-        "name": "California"
+        "name": "California",
+        "available": true
       },
       {
         "id": "5f71cda231619f387abeddcc",
-        "name": "Texas"
+        "name": "Texas",
+        "available": true
       },
       {
         "id": "5f71cda2cd9d96062caaf92d",
-        "name": "South Carolina"
+        "name": "South Carolina",
+        "available": true
       }
     ],
     "min_spend": 36.451,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda263e7c4c7fb8daacf",
     "name": "Quantasis",
     "description": "Bennett",
     "location": {
-      "lat": -55.3,
-      "long": -78.9
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Vandervoort Place",
     "email": "lenabentley@quantasis.com",
     "phone_num": "+852 3076-3618",
     "image_url": "https://i.picsum.photos/id/347/640/320.jpg?hmac=wiQRNHdBtNlSS7QuVspRvRDvPX6fSuG3qq87bhlSQnI",
@@ -1007,31 +1171,36 @@
     "catalogs": [
       {
         "id": "5f71cda2ec77d306066d6bf3",
-        "name": "New Hampshire"
+        "name": "New Hampshire",
+        "available": true
       },
       {
         "id": "5f71cda218b3d846fb12839d",
-        "name": "Utah"
+        "name": "Utah",
+        "available": true
       },
       {
         "id": "5f71cda2e6f205660b959bbe",
-        "name": "New York"
+        "name": "New York",
+        "available": true
       }
     ],
     "min_spend": 15.3204,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda2ca2636ca315fa061",
     "name": "Malathion",
     "description": "Croom",
     "location": {
-      "lat": -44.5,
-      "long": 139.1
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Williams Avenue",
     "email": "lenabentley@malathion.com",
     "phone_num": "+852 3744-3778",
     "image_url": "https://i.picsum.photos/id/154/640/320.jpg?hmac=EpTq5PVTetAjO26cWTqCitHjQt1K1mOdg-GQboNwVAM",
@@ -1039,31 +1208,36 @@
     "catalogs": [
       {
         "id": "5f71cda2b30a89957701ca3a",
-        "name": "Mississippi"
+        "name": "Mississippi",
+        "available": true
       },
       {
         "id": "5f71cda20cf5417040e9d4b1",
-        "name": "Tennessee"
+        "name": "Tennessee",
+        "available": true
       },
       {
         "id": "5f71cda2257ea14633dc13ab",
-        "name": "New Jersey"
+        "name": "New Jersey",
+        "available": true
       }
     ],
     "min_spend": 56.0359,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda2a606e4946bdddb78",
     "name": "Deepends",
     "description": "Welda",
     "location": {
-      "lat": 35.7,
-      "long": 57.2
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Duryea Court",
     "email": "lenabentley@deepends.com",
     "phone_num": "+852 7301-8213",
     "image_url": "https://i.picsum.photos/id/147/640/320.jpg?hmac=KBII96IIEO9IUEwD5qoazFz0Gelnr9NKRkjylucmKXg",
@@ -1071,31 +1245,36 @@
     "catalogs": [
       {
         "id": "5f71cda292e46061802029d6",
-        "name": "Hawaii"
+        "name": "Hawaii",
+        "available": true
       },
       {
         "id": "5f71cda2a91c02451fd918c8",
-        "name": "Maryland"
+        "name": "Maryland",
+        "available": true
       },
       {
         "id": "5f71cda292c58ac73f6a6735",
-        "name": "Iowa"
+        "name": "Iowa",
+        "available": true
       }
     ],
     "min_spend": 18.5598,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda2a9272d89db6d2cb8",
     "name": "Undertap",
     "description": "Clayville",
     "location": {
-      "lat": -53.5,
-      "long": -114.2
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Polhemus Place",
     "email": "lenabentley@undertap.com",
     "phone_num": "+852 7678-3365",
     "image_url": "https://i.picsum.photos/id/1024/640/320.jpg?hmac=WwWnzGo5abx8QazqhcmFFg6Y1ql3WL4RmO4NqaBAclM",
@@ -1103,31 +1282,36 @@
     "catalogs": [
       {
         "id": "5f71cda23a4c5e3035166fed",
-        "name": "West Virginia"
+        "name": "West Virginia",
+        "available": true
       },
       {
         "id": "5f71cda2ca9b697a101bf3dd",
-        "name": "Wisconsin"
+        "name": "Wisconsin",
+        "available": true
       },
       {
         "id": "5f71cda27ea2e652e04169ca",
-        "name": "Idaho"
+        "name": "Idaho",
+        "available": true
       }
     ],
     "min_spend": 16.7111,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda2c08f2633f0eac076",
     "name": "Translink",
     "description": "Waverly",
     "location": {
-      "lat": 50.5,
-      "long": 126
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Seagate Avenue",
     "email": "lenabentley@translink.com",
     "phone_num": "+852 3712-3670",
     "image_url": "https://i.picsum.photos/id/118/640/320.jpg?hmac=n7vuJnYJHsvM0T2gQYLw-k3nIPHdGIFDIhR7JFmO-CI",
@@ -1135,31 +1319,36 @@
     "catalogs": [
       {
         "id": "5f71cda292b2eb669d2fe419",
-        "name": "Colorado"
+        "name": "Colorado",
+        "available": true
       },
       {
         "id": "5f71cda2a4cdaaf397bad92e",
-        "name": "Oklahoma"
+        "name": "Oklahoma",
+        "available": true
       },
       {
         "id": "5f71cda21886270f12a1a8ce",
-        "name": "Palau"
+        "name": "Palau",
+        "available": true
       }
     ],
     "min_spend": 10.6478,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda2b9305bb5055ab236",
     "name": "Tropolis",
     "description": "Westerville",
     "location": {
-      "lat": 10.4,
-      "long": -153.5
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Sedgwick Place",
     "email": "lenabentley@tropolis.com",
     "phone_num": "+852 8304-1606",
     "image_url": "https://i.picsum.photos/id/507/640/320.jpg?hmac=-JS_xHHJct2RozwEdqxRJtTrE5rb47lOOWHoduuBAE0",
@@ -1167,31 +1356,36 @@
     "catalogs": [
       {
         "id": "5f71cda28bca4f9c11a4b7f9",
-        "name": "Wyoming"
+        "name": "Wyoming",
+        "available": true
       },
       {
         "id": "5f71cda205de3cea133ab214",
-        "name": "South Dakota"
+        "name": "South Dakota",
+        "available": true
       },
       {
         "id": "5f71cda2fd09bd6c36986f91",
-        "name": "Arkansas"
+        "name": "Arkansas",
+        "available": true
       }
     ],
     "min_spend": 17.4871,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda2a552b7e9ff3666e1",
     "name": "Gluid",
     "description": "Klagetoh",
     "location": {
-      "lat": -68.2,
-      "long": 22.4
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Woodhull Street",
     "email": "lenabentley@gluid.com",
     "phone_num": "+852 6729-2481",
     "image_url": "https://i.picsum.photos/id/524/640/320.jpg?hmac=K49FQD8qm6jof3KBVgRX7s6hcHI74WC6iN7sCVx9vVA",
@@ -1199,31 +1393,36 @@
     "catalogs": [
       {
         "id": "5f71cda2e27c6bc83c5adbe2",
-        "name": "Ohio"
+        "name": "Ohio",
+        "available": true
       },
       {
         "id": "5f71cda23d7b3ffd9296a15c",
-        "name": "Arizona"
+        "name": "Arizona",
+        "available": true
       },
       {
         "id": "5f71cda2bd242ebf737e5d5d",
-        "name": "Alabama"
+        "name": "Alabama",
+        "available": true
       }
     ],
     "min_spend": 49.784,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda225fe9046e0df5c61",
     "name": "Pigzart",
     "description": "Harviell",
     "location": {
-      "lat": -83.9,
-      "long": 83.7
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Beayer Place",
     "email": "lenabentley@pigzart.com",
     "phone_num": "+852 1743-9311",
     "image_url": "https://i.picsum.photos/id/590/640/320.jpg?hmac=7ct8NXKtXrCokABS0agHZNp4rrLQ-VBDjPMi8BNTTCs",
@@ -1231,31 +1430,36 @@
     "catalogs": [
       {
         "id": "5f71cda215fcbfb4512ae91b",
-        "name": "Minnesota"
+        "name": "Minnesota",
+        "available": true
       },
       {
         "id": "5f71cda283f65b32306af9cf",
-        "name": "Georgia"
+        "name": "Georgia",
+        "available": true
       },
       {
         "id": "5f71cda28ddb2963f4b5fa3c",
-        "name": "Northern Mariana Islands"
+        "name": "Northern Mariana Islands",
+        "available": true
       }
     ],
     "min_spend": 40.1894,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda27509ccd950590e25",
     "name": "Maroptic",
     "description": "Takilma",
     "location": {
-      "lat": -19,
-      "long": -157.6
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Dunne Court",
     "email": "lenabentley@maroptic.com",
     "phone_num": "+852 1470-3144",
     "image_url": "https://i.picsum.photos/id/182/640/320.jpg?hmac=fgGQq4lpay_NtN7av1Sj8Qja2hLMdbYgvydhdi5MZyA",
@@ -1263,31 +1467,36 @@
     "catalogs": [
       {
         "id": "5f71cda2b60e8d6ae9fac63a",
-        "name": "Guam"
+        "name": "Guam",
+        "available": true
       },
       {
         "id": "5f71cda225749ad7289902fd",
-        "name": "Montana"
+        "name": "Montana",
+        "available": true
       },
       {
         "id": "5f71cda205cd6072a4b19b53",
-        "name": "Massachusetts"
+        "name": "Massachusetts",
+        "available": true
       }
     ],
     "min_spend": 38.7603,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda2c971e602ba04e9e6",
     "name": "Unq",
     "description": "Bedias",
     "location": {
-      "lat": -74.3,
-      "long": 17.7
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Fanchon Place",
     "email": "lenabentley@unq.com",
     "phone_num": "+852 5319-1653",
     "image_url": "https://i.picsum.photos/id/446/640/320.jpg?hmac=L-BH_mbuHYCV9aY6mgE4KqNo8u1ltTYpcKHU3gWwjz0",
@@ -1295,31 +1504,36 @@
     "catalogs": [
       {
         "id": "5f71cda27135483058f04309",
-        "name": "American Samoa"
+        "name": "American Samoa",
+        "available": true
       },
       {
         "id": "5f71cda2fd26b3c549016062",
-        "name": "Virginia"
+        "name": "Virginia",
+        "available": true
       },
       {
         "id": "5f71cda2101079fc3b685a60",
-        "name": "Nevada"
+        "name": "Nevada",
+        "available": true
       }
     ],
     "min_spend": 51.8759,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda29dd1e322b31b413e",
     "name": "Interfind",
     "description": "Longbranch",
     "location": {
-      "lat": -41,
-      "long": -62.4
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Montague Street",
     "email": "lenabentley@interfind.com",
     "phone_num": "+852 2171-5618",
     "image_url": "https://i.picsum.photos/id/211/640/320.jpg?hmac=ydJYB5ao4k7SlwlCa21uqlw-Q0Uk02stDXbomhC3mwY",
@@ -1327,31 +1541,36 @@
     "catalogs": [
       {
         "id": "5f71cda2c640f32d69b8affc",
-        "name": "North Dakota"
+        "name": "North Dakota",
+        "available": true
       },
       {
         "id": "5f71cda27dc1aec2f1852308",
-        "name": "North Carolina"
+        "name": "North Carolina",
+        "available": true
       },
       {
         "id": "5f71cda2d9dda7451d9a5417",
-        "name": "Kentucky"
+        "name": "Kentucky",
+        "available": true
       }
     ],
     "min_spend": 24.1397,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda297a9f160cbe9f19a",
     "name": "Everest",
     "description": "Elliston",
     "location": {
-      "lat": -35.1,
-      "long": -50.3
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Farragut Road",
     "email": "lenabentley@everest.com",
     "phone_num": "+852 1425-9259",
     "image_url": "https://i.picsum.photos/id/492/640/320.jpg?hmac=nb3M2PUFCPKHv71ShDhEY6L4ncPprO0-IPZDJsRh2Sc",
@@ -1359,31 +1578,36 @@
     "catalogs": [
       {
         "id": "5f71cda21b5044b38edf18eb",
-        "name": "Maine"
+        "name": "Maine",
+        "available": true
       },
       {
         "id": "5f71cda2aa6c317c55925054",
-        "name": "Federated States Of Micronesia"
+        "name": "Federated States Of Micronesia",
+        "available": true
       },
       {
         "id": "5f71cda26642f3e72b430b55",
-        "name": "Puerto Rico"
+        "name": "Puerto Rico",
+        "available": true
       }
     ],
     "min_spend": 16.1056,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda26a315a6a3029a112",
     "name": "Ultrasure",
     "description": "Bradenville",
     "location": {
-      "lat": -11.9,
-      "long": -84.6
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Bayview Place",
     "email": "lenabentley@ultrasure.com",
     "phone_num": "+852 8132-7997",
     "image_url": "https://i.picsum.photos/id/321/640/320.jpg?hmac=j2z_KKLx3pBN9wSQqC2I7ujdaNR3JAbvJMM1oWAeL2U",
@@ -1391,31 +1615,36 @@
     "catalogs": [
       {
         "id": "5f71cda2c1dd36d83ddeebc4",
-        "name": "Kansas"
+        "name": "Kansas",
+        "available": true
       },
       {
         "id": "5f71cda20852dedd89458f6f",
-        "name": "Florida"
+        "name": "Florida",
+        "available": true
       },
       {
         "id": "5f71cda2e19b84965a4822ce",
-        "name": "Vermont"
+        "name": "Vermont",
+        "available": true
       }
     ],
     "min_spend": 57.4011,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda20a23e170e69136d6",
     "name": "Isbol",
     "description": "Sisquoc",
     "location": {
-      "lat": -13.8,
-      "long": 153.6
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Beverly Road",
     "email": "lenabentley@isbol.com",
     "phone_num": "+852 5947-1995",
     "image_url": "https://i.picsum.photos/id/230/640/320.jpg?hmac=ubuJ3pSCoqFt24dlyadmHC2QwV9dbeAO1Rb_uI1G1RM",
@@ -1423,31 +1652,36 @@
     "catalogs": [
       {
         "id": "5f71cda290e8c85c3cfe13f8",
-        "name": "Delaware"
+        "name": "Delaware",
+        "available": true
       },
       {
         "id": "5f71cda2a095217d2d5e41e9",
-        "name": "Virgin Islands"
+        "name": "Virgin Islands",
+        "available": true
       },
       {
         "id": "5f71cda24d030e7ce273a6c4",
-        "name": "Alaska"
+        "name": "Alaska",
+        "available": true
       }
     ],
     "min_spend": 47.5673,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda26d18331bf7e72314",
     "name": "Ecraze",
     "description": "Stagecoach",
     "location": {
-      "lat": 1.2,
-      "long": 145.1
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Miami Court",
     "email": "lenabentley@ecraze.com",
     "phone_num": "+852 3260-2483",
     "image_url": "https://i.picsum.photos/id/996/640/320.jpg?hmac=h9fVI34uQxcitId07wF6Bo76yxSbfTnWH9DWBzlbQOU",
@@ -1455,31 +1689,36 @@
     "catalogs": [
       {
         "id": "5f71cda29ce400e2f964ed4b",
-        "name": "Washington"
+        "name": "Washington",
+        "available": true
       },
       {
         "id": "5f71cda2899e3f353d87a7c4",
-        "name": "Missouri"
+        "name": "Missouri",
+        "available": true
       },
       {
         "id": "5f71cda2731b52398ddc2d99",
-        "name": "Oregon"
+        "name": "Oregon",
+        "available": true
       }
     ],
     "min_spend": 51.7411,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda2f8540ac3a62880c9",
     "name": "Liquicom",
     "description": "Hobucken",
     "location": {
-      "lat": 48.8,
-      "long": 147
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Navy Walk",
     "email": "lenabentley@liquicom.com",
     "phone_num": "+852 6345-8639",
     "image_url": "https://i.picsum.photos/id/261/640/320.jpg?hmac=OZCDGbc40kqIcPYZLy6o7ZtaxaMIA_WeJSb1wH6h77o",
@@ -1487,31 +1726,36 @@
     "catalogs": [
       {
         "id": "5f71cda2aa27ecda974aaa60",
-        "name": "New Mexico"
+        "name": "New Mexico",
+        "available": true
       },
       {
         "id": "5f71cda2ce382fe69efb66d5",
-        "name": "Illinois"
+        "name": "Illinois",
+        "available": true
       },
       {
         "id": "5f71cda272165f996e148891",
-        "name": "Michigan"
+        "name": "Michigan",
+        "available": true
       }
     ],
     "min_spend": 59.0817,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda2bf1cd0a54a549c96",
     "name": "Slax",
     "description": "Seymour",
     "location": {
-      "lat": -52.9,
-      "long": -106
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Oxford Street",
     "email": "lenabentley@slax.com",
     "phone_num": "+852 9146-6118",
     "image_url": "https://i.picsum.photos/id/403/640/320.jpg?hmac=GcZLlHDBwmRgU1KhwOC7xbwHzw7yH-6dDk-72H3YKoA",
@@ -1519,31 +1763,36 @@
     "catalogs": [
       {
         "id": "5f71cda2febe7f40120735bc",
-        "name": "District Of Columbia"
+        "name": "District Of Columbia",
+        "available": true
       },
       {
         "id": "5f71cda2fab66748e2a96e7f",
-        "name": "Pennsylvania"
+        "name": "Pennsylvania",
+        "available": true
       },
       {
         "id": "5f71cda27f611b6d16afa926",
-        "name": "Nebraska"
+        "name": "Nebraska",
+        "available": true
       }
     ],
     "min_spend": 12.4272,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda2cd5004636de12359",
     "name": "Baluba",
     "description": "Fidelis",
     "location": {
-      "lat": -35.7,
-      "long": -2.3
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Middleton Street",
     "email": "lenabentley@baluba.com",
     "phone_num": "+852 4133-8878",
     "image_url": "https://i.picsum.photos/id/1012/640/320.jpg?hmac=09QA2VAk4xdYI9Qcyov4gW0sRXW8lMaSRihBbEZadpY",
@@ -1551,31 +1800,36 @@
     "catalogs": [
       {
         "id": "5f71cda29c5b7e9353c736b7",
-        "name": "Louisiana"
+        "name": "Louisiana",
+        "available": true
       },
       {
         "id": "5f71cda2969640545caefd23",
-        "name": "Connecticut"
+        "name": "Connecticut",
+        "available": true
       },
       {
         "id": "5f71cda2e1ed84f658f74782",
-        "name": "Indiana"
+        "name": "Indiana",
+        "available": true
       }
     ],
     "min_spend": 24.8805,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda21046b1fa75ff6882",
     "name": "Centregy",
     "description": "Day",
     "location": {
-      "lat": 75.5,
-      "long": -149.3
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Hendrickson Street",
     "email": "lenabentley@centregy.com",
     "phone_num": "+852 8668-6181",
     "image_url": "https://i.picsum.photos/id/724/640/320.jpg?hmac=fcrPq1qtqm3GgTBH9cr53Pmr4d-cAvIm64rOv9Pkn14",
@@ -1583,31 +1837,36 @@
     "catalogs": [
       {
         "id": "5f71cda2000c8ce8cc5a3b5c",
-        "name": "Rhode Island"
+        "name": "Rhode Island",
+        "available": true
       },
       {
         "id": "5f71cda2822d4fce6cc819e2",
-        "name": "California"
+        "name": "California",
+        "available": true
       },
       {
         "id": "5f71cda2dec9cb677abdcf02",
-        "name": "Texas"
+        "name": "Texas",
+        "available": true
       }
     ],
     "min_spend": 11.4423,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda24a852e49bc2484dd",
     "name": "Senmei",
     "description": "Summerset",
     "location": {
-      "lat": -41,
-      "long": 150.9
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Hillel Place",
     "email": "lenabentley@senmei.com",
     "phone_num": "+852 2643-5375",
     "image_url": "https://i.picsum.photos/id/509/640/320.jpg?hmac=DQeu_YVg-XYkJsp_kACKZEmOLTIRc7YE5ayLfE4x3Bw",
@@ -1615,31 +1874,36 @@
     "catalogs": [
       {
         "id": "5f71cda23df762def2872a99",
-        "name": "South Carolina"
+        "name": "South Carolina",
+        "available": true
       },
       {
         "id": "5f71cda2c3280570a76bdbaf",
-        "name": "New Hampshire"
+        "name": "New Hampshire",
+        "available": true
       },
       {
         "id": "5f71cda2f72bbc25f6e5aa7b",
-        "name": "Utah"
+        "name": "Utah",
+        "available": true
       }
     ],
     "min_spend": 38.9775,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda232fdde30df2f31bc",
     "name": "Affluex",
     "description": "Darrtown",
     "location": {
-      "lat": -11.7,
-      "long": -40.5
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Hemlock Street",
     "email": "lenabentley@affluex.com",
     "phone_num": "+852 8009-9160",
     "image_url": "https://i.picsum.photos/id/796/640/320.jpg?hmac=CGGuRZZwMqy31mZGKiTU7RHHyGFXzrCA_h4gQFMlvm0",
@@ -1647,31 +1911,36 @@
     "catalogs": [
       {
         "id": "5f71cda2fb3f4cc100fbd47d",
-        "name": "New York"
+        "name": "New York",
+        "available": true
       },
       {
         "id": "5f71cda262f1c1d71d68b354",
-        "name": "Mississippi"
+        "name": "Mississippi",
+        "available": true
       },
       {
         "id": "5f71cda21232607b287f7451",
-        "name": "Tennessee"
+        "name": "Tennessee",
+        "available": true
       }
     ],
     "min_spend": 21.2036,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda245a5fd24a2ba9783",
     "name": "Orboid",
     "description": "Harborton",
     "location": {
-      "lat": 34.9,
-      "long": 70.8
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Manhattan Court",
     "email": "lenabentley@orboid.com",
     "phone_num": "+852 8648-5462",
     "image_url": "https://i.picsum.photos/id/12/640/320.jpg?hmac=-C_q4CZawTa3eatHJChf4DX7g1LwCp0TrHmFr2wmP1s",
@@ -1679,31 +1948,36 @@
     "catalogs": [
       {
         "id": "5f71cda2a0fcda2381d0c6a9",
-        "name": "New Jersey"
+        "name": "New Jersey",
+        "available": true
       },
       {
         "id": "5f71cda28dcfd1a78d6f7c00",
-        "name": "Hawaii"
+        "name": "Hawaii",
+        "available": true
       },
       {
         "id": "5f71cda24609783280d13230",
-        "name": "Maryland"
+        "name": "Maryland",
+        "available": true
       }
     ],
     "min_spend": 57.6229,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda228e98033941bd3ed",
     "name": "Cowtown",
     "description": "Martell",
     "location": {
-      "lat": -39.6,
-      "long": -78.7
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Vandervoort Avenue",
     "email": "lenabentley@cowtown.com",
     "phone_num": "+852 7318-4273",
     "image_url": "https://i.picsum.photos/id/870/640/320.jpg?hmac=GnuijMyBLg35hQFbu82KX8vv0m7zaBfhQRLuS0azfKk",
@@ -1711,31 +1985,36 @@
     "catalogs": [
       {
         "id": "5f71cda28a1ba732e58fa5b5",
-        "name": "Iowa"
+        "name": "Iowa",
+        "available": true
       },
       {
         "id": "5f71cda281e38df4d24ec504",
-        "name": "West Virginia"
+        "name": "West Virginia",
+        "available": true
       },
       {
         "id": "5f71cda2a6e4586414286323",
-        "name": "Wisconsin"
+        "name": "Wisconsin",
+        "available": true
       }
     ],
     "min_spend": 33.2052,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda25b67e486a1ff4d19",
     "name": "Solaren",
     "description": "Avalon",
     "location": {
-      "lat": -32.9,
-      "long": -78.9
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Lefferts Avenue",
     "email": "lenabentley@solaren.com",
     "phone_num": "+852 8062-6431",
     "image_url": "https://i.picsum.photos/id/569/640/320.jpg?hmac=_d-lh7yPC0NGWfWAT8jcZGBBt70v-cCi6kQi5SKROOE",
@@ -1743,31 +2022,36 @@
     "catalogs": [
       {
         "id": "5f71cda2164c35a8c0852d8f",
-        "name": "Idaho"
+        "name": "Idaho",
+        "available": true
       },
       {
         "id": "5f71cda253664a194027854b",
-        "name": "Colorado"
+        "name": "Colorado",
+        "available": true
       },
       {
         "id": "5f71cda276c77382b33f1059",
-        "name": "Oklahoma"
+        "name": "Oklahoma",
+        "available": true
       }
     ],
     "min_spend": 30.7863,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda23fb83618fa88ef91",
     "name": "Fossiel",
     "description": "Muse",
     "location": {
-      "lat": 23.8,
-      "long": -96
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Bowne Street",
     "email": "lenabentley@fossiel.com",
     "phone_num": "+852 3847-1874",
     "image_url": "https://i.picsum.photos/id/875/640/320.jpg?hmac=3NwCjlJI5PFnkWHH-rZezZeQee63_gkBJcY4oadkKnI",
@@ -1775,31 +2059,36 @@
     "catalogs": [
       {
         "id": "5f71cda2ab5a2fefb4cb4847",
-        "name": "Palau"
+        "name": "Palau",
+        "available": true
       },
       {
         "id": "5f71cda2a451f38ff971a0e8",
-        "name": "Wyoming"
+        "name": "Wyoming",
+        "available": true
       },
       {
         "id": "5f71cda2afe322e35f2ae6ca",
-        "name": "South Dakota"
+        "name": "South Dakota",
+        "available": true
       }
     ],
     "min_spend": 16.1734,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda27ab7e0bb75a746dd",
     "name": "Miraclis",
     "description": "Bloomington",
     "location": {
-      "lat": 64.3,
-      "long": 22.9
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Kaufman Place",
     "email": "lenabentley@miraclis.com",
     "phone_num": "+852 2111-2259",
     "image_url": "https://i.picsum.photos/id/985/640/320.jpg?hmac=Z0nyeTpwtNqhqkXVGp0rkdrWfmfhYKmcegF2uzkcf_g",
@@ -1807,31 +2096,36 @@
     "catalogs": [
       {
         "id": "5f71cda2565074b943a34219",
-        "name": "Arkansas"
+        "name": "Arkansas",
+        "available": true
       },
       {
         "id": "5f71cda260876b507e5a81ae",
-        "name": "Ohio"
+        "name": "Ohio",
+        "available": true
       },
       {
         "id": "5f71cda2c289ddb778bb9572",
-        "name": "Arizona"
+        "name": "Arizona",
+        "available": true
       }
     ],
     "min_spend": 48.6366,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda2cbbf4e32c1a79870",
     "name": "Imageflow",
     "description": "Barronett",
     "location": {
-      "lat": -70.1,
-      "long": 135.9
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Cadman Plaza",
     "email": "lenabentley@imageflow.com",
     "phone_num": "+852 6156-6231",
     "image_url": "https://i.picsum.photos/id/940/640/320.jpg?hmac=jKFlkncpxloO0mp5uAKsQvoTkTHw_hgeROkrHZJSKZ4",
@@ -1839,31 +2133,36 @@
     "catalogs": [
       {
         "id": "5f71cda28b8d4f20e3c80fe3",
-        "name": "Alabama"
+        "name": "Alabama",
+        "available": true
       },
       {
         "id": "5f71cda2c5bc32629f660bd7",
-        "name": "Minnesota"
+        "name": "Minnesota",
+        "available": true
       },
       {
         "id": "5f71cda2928543a24cb9fd5c",
-        "name": "Georgia"
+        "name": "Georgia",
+        "available": true
       }
     ],
     "min_spend": 22.6287,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda2cc09646396c0f868",
     "name": "Quintity",
     "description": "Bethany",
     "location": {
-      "lat": -59.8,
-      "long": -124
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Varet Street",
     "email": "lenabentley@quintity.com",
     "phone_num": "+852 7714-9719",
     "image_url": "https://i.picsum.photos/id/145/640/320.jpg?hmac=Cp6EXsMXwCarb_5ESfZTByK_bg-fjCRbrW0J1C6x4Ic",
@@ -1871,31 +2170,36 @@
     "catalogs": [
       {
         "id": "5f71cda2b55dc7d162620c17",
-        "name": "Northern Mariana Islands"
+        "name": "Northern Mariana Islands",
+        "available": true
       },
       {
         "id": "5f71cda24e6ce9cc8d60406c",
-        "name": "Guam"
+        "name": "Guam",
+        "available": true
       },
       {
         "id": "5f71cda2847ea5cb1cdfd93d",
-        "name": "Montana"
+        "name": "Montana",
+        "available": true
       }
     ],
     "min_spend": 55.583,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda2e9cc41a8c62ec721",
     "name": "Acusage",
     "description": "Chical",
     "location": {
-      "lat": -52.3,
-      "long": -99.3
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Irving Street",
     "email": "lenabentley@acusage.com",
     "phone_num": "+852 5833-1450",
     "image_url": "https://i.picsum.photos/id/518/640/320.jpg?hmac=c3CXxsUVbYJegSn58u-v5fKcqedNNc0nrylDJjDeQk4",
@@ -1903,31 +2207,36 @@
     "catalogs": [
       {
         "id": "5f71cda233a4d760d4b5f8aa",
-        "name": "Massachusetts"
+        "name": "Massachusetts",
+        "available": true
       },
       {
         "id": "5f71cda2a1a6299dc3d0775a",
-        "name": "American Samoa"
+        "name": "American Samoa",
+        "available": true
       },
       {
         "id": "5f71cda24f983ad72bb9e754",
-        "name": "Virginia"
+        "name": "Virginia",
+        "available": true
       }
     ],
     "min_spend": 50.7299,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda20a9c905cbab49af8",
     "name": "Xurban",
     "description": "Hemlock",
     "location": {
-      "lat": 13.8,
-      "long": -135
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Regent Place",
     "email": "lenabentley@xurban.com",
     "phone_num": "+852 1290-9650",
     "image_url": "https://i.picsum.photos/id/551/640/320.jpg?hmac=xGHoXFZcV0z9xC45rXSDJ_UHWY6HjyXwPwaRXlyoAko",
@@ -1935,31 +2244,36 @@
     "catalogs": [
       {
         "id": "5f71cda2456e0697476151a1",
-        "name": "Nevada"
+        "name": "Nevada",
+        "available": true
       },
       {
         "id": "5f71cda2cc23edcc4855500e",
-        "name": "North Dakota"
+        "name": "North Dakota",
+        "available": true
       },
       {
         "id": "5f71cda264a6ae6e4b5bb060",
-        "name": "North Carolina"
+        "name": "North Carolina",
+        "available": true
       }
     ],
     "min_spend": 48.0311,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda2a32204ee0df6c5ca",
     "name": "Terragen",
     "description": "Wakarusa",
     "location": {
-      "lat": -8.3,
-      "long": 143.6
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Micieli Place",
     "email": "lenabentley@terragen.com",
     "phone_num": "+852 7097-7314",
     "image_url": "https://i.picsum.photos/id/204/640/320.jpg?hmac=VWCRmcF30QahqNHQSm90U0en-VF4JGl5zOQ67Mv_2cw",
@@ -1967,31 +2281,36 @@
     "catalogs": [
       {
         "id": "5f71cda2357f9106b6b4377c",
-        "name": "Kentucky"
+        "name": "Kentucky",
+        "available": true
       },
       {
         "id": "5f71cda216a88126f4d7dcae",
-        "name": "Maine"
+        "name": "Maine",
+        "available": true
       },
       {
         "id": "5f71cda275a1807263c374cc",
-        "name": "Federated States Of Micronesia"
+        "name": "Federated States Of Micronesia",
+        "available": true
       }
     ],
     "min_spend": 23.7265,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda2ad98a1ebaf0d7a4b",
     "name": "Rocklogic",
     "description": "Winchester",
     "location": {
-      "lat": -25.8,
-      "long": 11.9
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Hancock Street",
     "email": "lenabentley@rocklogic.com",
     "phone_num": "+852 2735-2906",
     "image_url": "https://i.picsum.photos/id/615/640/320.jpg?hmac=_6aI9kwuwQP_3reW8mtAvSCTS_g9fS26dJItF3cBTLA",
@@ -1999,31 +2318,36 @@
     "catalogs": [
       {
         "id": "5f71cda24d090df622c14e83",
-        "name": "Puerto Rico"
+        "name": "Puerto Rico",
+        "available": true
       },
       {
         "id": "5f71cda219b69594c33ae28d",
-        "name": "Kansas"
+        "name": "Kansas",
+        "available": true
       },
       {
         "id": "5f71cda2f99ee80cd2070d64",
-        "name": "Florida"
+        "name": "Florida",
+        "available": true
       }
     ],
     "min_spend": 46.6254,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda283b4ff521d2eff3a",
     "name": "Anocha",
     "description": "Hillsboro",
     "location": {
-      "lat": 19.1,
-      "long": -64.1
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Fairview Place",
     "email": "lenabentley@anocha.com",
     "phone_num": "+852 4989-4101",
     "image_url": "https://i.picsum.photos/id/717/640/320.jpg?hmac=W4qMG1WjpPeolaczlkPPzJoB6Tmbsmf2ZeTwnt7P5v8",
@@ -2031,31 +2355,36 @@
     "catalogs": [
       {
         "id": "5f71cda2dc0a50bff53bd763",
-        "name": "Vermont"
+        "name": "Vermont",
+        "available": true
       },
       {
         "id": "5f71cda2e25da50e11119f77",
-        "name": "Delaware"
+        "name": "Delaware",
+        "available": true
       },
       {
         "id": "5f71cda2e4759b812b8c199c",
-        "name": "Virgin Islands"
+        "name": "Virgin Islands",
+        "available": true
       }
     ],
     "min_spend": 47.5154,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda25194904d15a9ff33",
     "name": "Daycore",
     "description": "Saranap",
     "location": {
-      "lat": 1.9,
-      "long": 152.3
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Seabring Street",
     "email": "lenabentley@daycore.com",
     "phone_num": "+852 3151-7343",
     "image_url": "https://i.picsum.photos/id/437/640/320.jpg?hmac=EUdsZ6iP4XS4lg0jfaQ-QjbSRjOI3zq1uMvE54BI7WE",
@@ -2063,31 +2392,36 @@
     "catalogs": [
       {
         "id": "5f71cda2bac3e4b25e413521",
-        "name": "Alaska"
+        "name": "Alaska",
+        "available": true
       },
       {
         "id": "5f71cda21a9e2e395956b6b3",
-        "name": "Washington"
+        "name": "Washington",
+        "available": true
       },
       {
         "id": "5f71cda2b805ff955b688fb5",
-        "name": "Missouri"
+        "name": "Missouri",
+        "available": true
       }
     ],
     "min_spend": 18.7034,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda2a6c54f79ccecc14f",
     "name": "Bovis",
     "description": "Gardiner",
     "location": {
-      "lat": -43.9,
-      "long": -59.2
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Wolcott Street",
     "email": "lenabentley@bovis.com",
     "phone_num": "+852 4056-1707",
     "image_url": "https://i.picsum.photos/id/1058/640/320.jpg?hmac=GPIayWwfFcKLZ8ekne4TFdTdNeYwWXuq1Z789Gbd-Lo",
@@ -2095,31 +2429,36 @@
     "catalogs": [
       {
         "id": "5f71cda2c601ecddf9d5c059",
-        "name": "Oregon"
+        "name": "Oregon",
+        "available": true
       },
       {
         "id": "5f71cda2023d4c71e0ad758f",
-        "name": "New Mexico"
+        "name": "New Mexico",
+        "available": true
       },
       {
         "id": "5f71cda2c511b5cf66139ca9",
-        "name": "Illinois"
+        "name": "Illinois",
+        "available": true
       }
     ],
     "min_spend": 47.3948,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda25d44b2e4ea9f8779",
     "name": "Netility",
     "description": "Movico",
     "location": {
-      "lat": 34.2,
-      "long": -126.3
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Gelston Avenue",
     "email": "lenabentley@netility.com",
     "phone_num": "+852 5016-8623",
     "image_url": "https://i.picsum.photos/id/240/640/320.jpg?hmac=memFW_9nfvYUFGmcN8JE-ijTkbkmIIdF-CCSJmgu4jY",
@@ -2127,31 +2466,36 @@
     "catalogs": [
       {
         "id": "5f71cda204682b186c05b215",
-        "name": "Michigan"
+        "name": "Michigan",
+        "available": true
       },
       {
         "id": "5f71cda28ab3a3d5f03daea8",
-        "name": "District Of Columbia"
+        "name": "District Of Columbia",
+        "available": true
       },
       {
         "id": "5f71cda2b62add64cca9e79b",
-        "name": "Pennsylvania"
+        "name": "Pennsylvania",
+        "available": true
       }
     ],
     "min_spend": 22.41,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda20c61408b74363b73",
     "name": "Marvane",
     "description": "Herald",
     "location": {
-      "lat": -66,
-      "long": -170.1
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Lorraine Street",
     "email": "lenabentley@marvane.com",
     "phone_num": "+852 2808-5353",
     "image_url": "https://i.picsum.photos/id/805/640/320.jpg?hmac=YDOCXXvimfPDDI2ywTK53naThN_0NOmrnO345QeHmCE",
@@ -2159,31 +2503,36 @@
     "catalogs": [
       {
         "id": "5f71cda2481fa13191c0ebc5",
-        "name": "Nebraska"
+        "name": "Nebraska",
+        "available": true
       },
       {
         "id": "5f71cda2ac7978002b3bfeba",
-        "name": "Louisiana"
+        "name": "Louisiana",
+        "available": true
       },
       {
         "id": "5f71cda22f7329ccede2b912",
-        "name": "Connecticut"
+        "name": "Connecticut",
+        "available": true
       }
     ],
     "min_spend": 48.1459,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda2b8426f6719b82724",
     "name": "Digirang",
     "description": "Williams",
     "location": {
-      "lat": -44.1,
-      "long": -25.2
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "George Street",
     "email": "lenabentley@digirang.com",
     "phone_num": "+852 2233-9804",
     "image_url": "https://i.picsum.photos/id/236/640/320.jpg?hmac=lwbmDN-dy-oYL7Q1R8hLaKl8SYVtP7l7R0Grs6E9pWQ",
@@ -2191,31 +2540,36 @@
     "catalogs": [
       {
         "id": "5f71cda2bc718854e7a7d6c7",
-        "name": "Indiana"
+        "name": "Indiana",
+        "available": true
       },
       {
         "id": "5f71cda203ff1413857d49a5",
-        "name": "Rhode Island"
+        "name": "Rhode Island",
+        "available": true
       },
       {
         "id": "5f71cda2d3d6f892d1112a77",
-        "name": "California"
+        "name": "California",
+        "available": true
       }
     ],
     "min_spend": 57.212,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda29312cf48916da460",
     "name": "Incubus",
     "description": "Freeburn",
     "location": {
-      "lat": 22.1,
-      "long": -148.2
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Union Street",
     "email": "lenabentley@incubus.com",
     "phone_num": "+852 3899-6760",
     "image_url": "https://i.picsum.photos/id/668/640/320.jpg?hmac=8tkyuIlZNP_gMgEc3lG7qSsXd8NJK4dhkHiiHpta4Js",
@@ -2223,31 +2577,36 @@
     "catalogs": [
       {
         "id": "5f71cda2e550e1823a1d914d",
-        "name": "Texas"
+        "name": "Texas",
+        "available": true
       },
       {
         "id": "5f71cda27a27ce1b0280e5ac",
-        "name": "South Carolina"
+        "name": "South Carolina",
+        "available": true
       },
       {
         "id": "5f71cda2b78f6492df25db39",
-        "name": "New Hampshire"
+        "name": "New Hampshire",
+        "available": true
       }
     ],
     "min_spend": 42.3719,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda2760bf3dca6729819",
     "name": "Comtrek",
     "description": "Hinsdale",
     "location": {
-      "lat": -57.1,
-      "long": 55.7
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Richards Street",
     "email": "lenabentley@comtrek.com",
     "phone_num": "+852 7879-1923",
     "image_url": "https://i.picsum.photos/id/45/640/320.jpg?hmac=ksx5ajakS8SnQ3zQ9ucYfngwnUAASaM70adO7l28ed4",
@@ -2255,31 +2614,36 @@
     "catalogs": [
       {
         "id": "5f71cda20f945e6cfe1ca6fe",
-        "name": "Utah"
+        "name": "Utah",
+        "available": true
       },
       {
         "id": "5f71cda2d2c87f1dfb694264",
-        "name": "New York"
+        "name": "New York",
+        "available": true
       },
       {
         "id": "5f71cda24a0c2cf4297ce47a",
-        "name": "Mississippi"
+        "name": "Mississippi",
+        "available": true
       }
     ],
     "min_spend": 13.6461,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda273919d582bc0d8e5",
     "name": "Quizmo",
     "description": "Gadsden",
     "location": {
-      "lat": -81.4,
-      "long": 148.6
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Herzl Street",
     "email": "lenabentley@quizmo.com",
     "phone_num": "+852 6518-2846",
     "image_url": "https://i.picsum.photos/id/583/640/320.jpg?hmac=dh1X61fB7drxZP1Bcc-_zdGh7RKS-QY0kos2cIEFvAk",
@@ -2287,31 +2651,36 @@
     "catalogs": [
       {
         "id": "5f71cda23fd8de86f42ab4bc",
-        "name": "Tennessee"
+        "name": "Tennessee",
+        "available": true
       },
       {
         "id": "5f71cda26179d3527166cb3a",
-        "name": "New Jersey"
+        "name": "New Jersey",
+        "available": true
       },
       {
         "id": "5f71cda2af1ac36e93bc10ce",
-        "name": "Hawaii"
+        "name": "Hawaii",
+        "available": true
       }
     ],
     "min_spend": 53.7844,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda26c849e089df3a106",
     "name": "Ecosys",
     "description": "Maury",
     "location": {
-      "lat": -25.5,
-      "long": 177.6
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Canal Avenue",
     "email": "lenabentley@ecosys.com",
     "phone_num": "+852 4940-2832",
     "image_url": "https://i.picsum.photos/id/451/640/320.jpg?hmac=56z874xosEM8ZhsHnwENc2bFMaAABtsmR0nMFLvG7HE",
@@ -2319,31 +2688,36 @@
     "catalogs": [
       {
         "id": "5f71cda289e1278dd833f693",
-        "name": "Maryland"
+        "name": "Maryland",
+        "available": true
       },
       {
         "id": "5f71cda2c56217d67db65144",
-        "name": "Iowa"
+        "name": "Iowa",
+        "available": true
       },
       {
         "id": "5f71cda247de0cf73ceb4f86",
-        "name": "West Virginia"
+        "name": "West Virginia",
+        "available": true
       }
     ],
     "min_spend": 34.3206,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda2a9082deb991e8654",
     "name": "Eargo",
     "description": "Harmon",
     "location": {
-      "lat": 19.6,
-      "long": -103.6
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Williamsburg Street",
     "email": "lenabentley@eargo.com",
     "phone_num": "+852 1630-3883",
     "image_url": "https://i.picsum.photos/id/610/640/320.jpg?hmac=e3d1cu_DgsLxP_EI34OG8oVNnigBq4Qu3es4O5relNA",
@@ -2351,31 +2725,36 @@
     "catalogs": [
       {
         "id": "5f71cda239d4dbfb9f524310",
-        "name": "Wisconsin"
+        "name": "Wisconsin",
+        "available": true
       },
       {
         "id": "5f71cda2344a00ecc672691c",
-        "name": "Idaho"
+        "name": "Idaho",
+        "available": true
       },
       {
         "id": "5f71cda26b61ff0abf5e85d3",
-        "name": "Colorado"
+        "name": "Colorado",
+        "available": true
       }
     ],
     "min_spend": 38.292,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda249446a20b96909ac",
     "name": "Geekwagon",
     "description": "Lookingglass",
     "location": {
-      "lat": 20.9,
-      "long": -41.3
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Hart Place",
     "email": "lenabentley@geekwagon.com",
     "phone_num": "+852 7134-9437",
     "image_url": "https://i.picsum.photos/id/108/640/320.jpg?hmac=X09i1osvJL5Vm-B_3muz2Ee_tAKa9fAwBq5TCpujyUw",
@@ -2383,31 +2762,36 @@
     "catalogs": [
       {
         "id": "5f71cda2192f374a3f2e5c23",
-        "name": "Oklahoma"
+        "name": "Oklahoma",
+        "available": true
       },
       {
         "id": "5f71cda2e98603334fe1baeb",
-        "name": "Palau"
+        "name": "Palau",
+        "available": true
       },
       {
         "id": "5f71cda23a67951e854090bd",
-        "name": "Wyoming"
+        "name": "Wyoming",
+        "available": true
       }
     ],
     "min_spend": 45.3504,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda21c24153af1c42bfa",
     "name": "Zensor",
     "description": "Aurora",
     "location": {
-      "lat": -87.6,
-      "long": 30
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Hamilton Walk",
     "email": "lenabentley@zensor.com",
     "phone_num": "+852 4004-4107",
     "image_url": "https://i.picsum.photos/id/19/640/320.jpg?hmac=yUeSOkTJxpDhp0ZvFYm80orLa6ZLqO098M6DV4OH3cY",
@@ -2415,31 +2799,36 @@
     "catalogs": [
       {
         "id": "5f71cda2f34addae49855114",
-        "name": "South Dakota"
+        "name": "South Dakota",
+        "available": true
       },
       {
         "id": "5f71cda2ec5db307d9881ade",
-        "name": "Arkansas"
+        "name": "Arkansas",
+        "available": true
       },
       {
         "id": "5f71cda2e0f69a1dd142e6eb",
-        "name": "Ohio"
+        "name": "Ohio",
+        "available": true
       }
     ],
     "min_spend": 40.6806,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda26a4a53b0fd2940fd",
     "name": "Satiance",
     "description": "Gerton",
     "location": {
-      "lat": -14.6,
-      "long": -104.1
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Calyer Street",
     "email": "lenabentley@satiance.com",
     "phone_num": "+852 8198-8160",
     "image_url": "https://i.picsum.photos/id/849/640/320.jpg?hmac=REAZ_3jKmwKDU-KoQ2n848_9HykjZhSI6wwVUcMBpAA",
@@ -2447,31 +2836,36 @@
     "catalogs": [
       {
         "id": "5f71cda2320ab2194788d881",
-        "name": "Arizona"
+        "name": "Arizona",
+        "available": true
       },
       {
         "id": "5f71cda2688cb688d10594d1",
-        "name": "Alabama"
+        "name": "Alabama",
+        "available": true
       },
       {
         "id": "5f71cda29f0b0c5e105d9553",
-        "name": "Minnesota"
+        "name": "Minnesota",
+        "available": true
       }
     ],
     "min_spend": 12.9279,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda21f307cbca6d6c5ef",
     "name": "Konnect",
     "description": "Waiohinu",
     "location": {
-      "lat": -57.9,
-      "long": -72
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Tillary Street",
     "email": "lenabentley@konnect.com",
     "phone_num": "+852 6564-4825",
     "image_url": "https://i.picsum.photos/id/1041/640/320.jpg?hmac=HauRcTCzy-XSFn05HXMgHiaMYla6q-9Iw3ZiyijaPQw",
@@ -2479,31 +2873,36 @@
     "catalogs": [
       {
         "id": "5f71cda2f2102dd43bbe9fc1",
-        "name": "Georgia"
+        "name": "Georgia",
+        "available": true
       },
       {
         "id": "5f71cda2016b54696950feaf",
-        "name": "Northern Mariana Islands"
+        "name": "Northern Mariana Islands",
+        "available": true
       },
       {
         "id": "5f71cda28e6bba9a2a178ebd",
-        "name": "Guam"
+        "name": "Guam",
+        "available": true
       }
     ],
     "min_spend": 42.7554,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda20ff53a79541c7cec",
     "name": "Slumberia",
     "description": "Harleigh",
     "location": {
-      "lat": -47.8,
-      "long": 88
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Lloyd Street",
     "email": "lenabentley@slumberia.com",
     "phone_num": "+852 6081-4943",
     "image_url": "https://i.picsum.photos/id/431/640/320.jpg?hmac=lcj1yecxMy7yUdGM59QtDSqVl5p9F-IRjmu7xE-w1Zs",
@@ -2511,31 +2910,36 @@
     "catalogs": [
       {
         "id": "5f71cda2d1598ae0d09eab27",
-        "name": "Montana"
+        "name": "Montana",
+        "available": true
       },
       {
         "id": "5f71cda2478c292bab332ccf",
-        "name": "Massachusetts"
+        "name": "Massachusetts",
+        "available": true
       },
       {
         "id": "5f71cda2f89ae9d8ece00383",
-        "name": "American Samoa"
+        "name": "American Samoa",
+        "available": true
       }
     ],
     "min_spend": 31.6608,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda2eaa6422d15137cc5",
     "name": "Sarasonic",
     "description": "Stewartville",
     "location": {
-      "lat": -31.6,
-      "long": 178.1
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Heath Place",
     "email": "lenabentley@sarasonic.com",
     "phone_num": "+852 4035-3634",
     "image_url": "https://i.picsum.photos/id/989/640/320.jpg?hmac=NWI0d6K1A6h64KmBXgP1WWpnGvEZESg65ySmyXCQASg",
@@ -2543,31 +2947,36 @@
     "catalogs": [
       {
         "id": "5f71cda2a598cb32e35c8f0c",
-        "name": "Virginia"
+        "name": "Virginia",
+        "available": true
       },
       {
         "id": "5f71cda23aaaeebdd9d0e248",
-        "name": "Nevada"
+        "name": "Nevada",
+        "available": true
       },
       {
         "id": "5f71cda2b5a0d72dd95abb40",
-        "name": "North Dakota"
+        "name": "North Dakota",
+        "available": true
       }
     ],
     "min_spend": 11.7231,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda2ca846be7137a6f93",
     "name": "Extrawear",
     "description": "Devon",
     "location": {
-      "lat": 36,
-      "long": -171.5
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Colby Court",
     "email": "lenabentley@extrawear.com",
     "phone_num": "+852 7559-8452",
     "image_url": "https://i.picsum.photos/id/995/640/320.jpg?hmac=DidGzXFvM0goe6-wruHAajwmDbeW-ILVwNEbn_XBqhE",
@@ -2575,31 +2984,36 @@
     "catalogs": [
       {
         "id": "5f71cda26c1917d427d996b5",
-        "name": "North Carolina"
+        "name": "North Carolina",
+        "available": true
       },
       {
         "id": "5f71cda20a6827c548267d0d",
-        "name": "Kentucky"
+        "name": "Kentucky",
+        "available": true
       },
       {
         "id": "5f71cda25f75ca2d537863b6",
-        "name": "Maine"
+        "name": "Maine",
+        "available": true
       }
     ],
     "min_spend": 48.5467,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda2f654eb0f1133609a",
     "name": "Nebulean",
     "description": "Glenbrook",
     "location": {
-      "lat": -3.1,
-      "long": -29.5
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Williams Court",
     "email": "lenabentley@nebulean.com",
     "phone_num": "+852 7068-7654",
     "image_url": "https://i.picsum.photos/id/171/640/320.jpg?hmac=dt-7DMIUCKAW8eTAijdPvrZ9-1q7pQ-I-f63dXmTGtE",
@@ -2607,31 +3021,36 @@
     "catalogs": [
       {
         "id": "5f71cda28b0559444ce942bf",
-        "name": "Federated States Of Micronesia"
+        "name": "Federated States Of Micronesia",
+        "available": true
       },
       {
         "id": "5f71cda272d60a6377c675ea",
-        "name": "Puerto Rico"
+        "name": "Puerto Rico",
+        "available": true
       },
       {
         "id": "5f71cda26b92ebead3293299",
-        "name": "Kansas"
+        "name": "Kansas",
+        "available": true
       }
     ],
     "min_spend": 52.5487,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda28f57fff50a501083",
     "name": "Portico",
     "description": "Dellview",
     "location": {
-      "lat": -38.3,
-      "long": 9.2
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Adelphi Street",
     "email": "lenabentley@portico.com",
     "phone_num": "+852 3587-7451",
     "image_url": "https://i.picsum.photos/id/804/640/320.jpg?hmac=75jMZM2NI39O6zTtlaP2CEdrcno-LqR-C7fn9U54FHQ",
@@ -2639,31 +3058,36 @@
     "catalogs": [
       {
         "id": "5f71cda24564efc81fd04075",
-        "name": "Florida"
+        "name": "Florida",
+        "available": true
       },
       {
         "id": "5f71cda2a12b576416375fb5",
-        "name": "Vermont"
+        "name": "Vermont",
+        "available": true
       },
       {
         "id": "5f71cda20e85754986c8bc5a",
-        "name": "Delaware"
+        "name": "Delaware",
+        "available": true
       }
     ],
     "min_spend": 54.8883,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda24afe2bc92871be0a",
     "name": "Entogrok",
     "description": "Zeba",
     "location": {
-      "lat": -42.3,
-      "long": -77.2
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Jamison Lane",
     "email": "lenabentley@entogrok.com",
     "phone_num": "+852 8183-5327",
     "image_url": "https://i.picsum.photos/id/234/640/320.jpg?hmac=BWZgWRqS00SxsPokfniVYoGnTJjgFmStmtwwOjbl9vk",
@@ -2671,31 +3095,36 @@
     "catalogs": [
       {
         "id": "5f71cda278abfd212ef115d5",
-        "name": "Virgin Islands"
+        "name": "Virgin Islands",
+        "available": true
       },
       {
         "id": "5f71cda20d6b2abc23a86e35",
-        "name": "Alaska"
+        "name": "Alaska",
+        "available": true
       },
       {
         "id": "5f71cda283c1275885f99551",
-        "name": "Washington"
+        "name": "Washington",
+        "available": true
       }
     ],
     "min_spend": 30.4507,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda27baf295600cc5714",
     "name": "Plasmos",
     "description": "Delshire",
     "location": {
-      "lat": 68.3,
-      "long": -28.5
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Gilmore Court",
     "email": "lenabentley@plasmos.com",
     "phone_num": "+852 1770-2732",
     "image_url": "https://i.picsum.photos/id/108/640/320.jpg?hmac=X09i1osvJL5Vm-B_3muz2Ee_tAKa9fAwBq5TCpujyUw",
@@ -2703,31 +3132,36 @@
     "catalogs": [
       {
         "id": "5f71cda24823377aa0b09b99",
-        "name": "Missouri"
+        "name": "Missouri",
+        "available": true
       },
       {
         "id": "5f71cda2f39bdefad062fa6b",
-        "name": "Oregon"
+        "name": "Oregon",
+        "available": true
       },
       {
         "id": "5f71cda2217f426aa7c54a62",
-        "name": "New Mexico"
+        "name": "New Mexico",
+        "available": true
       }
     ],
     "min_spend": 23.4845,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda289e0a434543faa43",
     "name": "Brainquil",
     "description": "Williston",
     "location": {
-      "lat": 15.1,
-      "long": -112.9
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Woodrow Court",
     "email": "lenabentley@brainquil.com",
     "phone_num": "+852 4326-1577",
     "image_url": "https://i.picsum.photos/id/693/640/320.jpg?hmac=oSNttU6p-UoUTPpezxRhUWv886iPlGzccJ536FI4j1I",
@@ -2735,31 +3169,36 @@
     "catalogs": [
       {
         "id": "5f71cda23ee1a5e209d4d65a",
-        "name": "Illinois"
+        "name": "Illinois",
+        "available": true
       },
       {
         "id": "5f71cda2d96646e3d1f6cbd9",
-        "name": "Michigan"
+        "name": "Michigan",
+        "available": true
       },
       {
         "id": "5f71cda2cc5b11c35aa15b31",
-        "name": "District Of Columbia"
+        "name": "District Of Columbia",
+        "available": true
       }
     ],
     "min_spend": 59.6037,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda2f2af020b750bd038",
     "name": "Techade",
     "description": "Talpa",
     "location": {
-      "lat": 5.5,
-      "long": 101.1
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Bay Parkway",
     "email": "lenabentley@techade.com",
     "phone_num": "+852 6049-3946",
     "image_url": "https://i.picsum.photos/id/75/640/320.jpg?hmac=VluFU36gpJV7Sv7CF31XuGqfxfDkjApS1MtIng4WpWA",
@@ -2767,31 +3206,36 @@
     "catalogs": [
       {
         "id": "5f71cda2498d3c0b9aed2c0d",
-        "name": "Pennsylvania"
+        "name": "Pennsylvania",
+        "available": true
       },
       {
         "id": "5f71cda20ad1e6a655975798",
-        "name": "Nebraska"
+        "name": "Nebraska",
+        "available": true
       },
       {
         "id": "5f71cda281fe78c0dabf1612",
-        "name": "Louisiana"
+        "name": "Louisiana",
+        "available": true
       }
     ],
     "min_spend": 32.3053,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda2c477bd38b386a244",
     "name": "Quordate",
     "description": "Rockhill",
     "location": {
-      "lat": 59,
-      "long": -88.3
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Applegate Court",
     "email": "lenabentley@quordate.com",
     "phone_num": "+852 2999-1492",
     "image_url": "https://i.picsum.photos/id/416/640/320.jpg?hmac=5Rl3z848kcUzD2K6gfFJn9LbWPBKS-_TxnxJ3d02VCs",
@@ -2799,31 +3243,36 @@
     "catalogs": [
       {
         "id": "5f71cda2c2e95b572c30724a",
-        "name": "Connecticut"
+        "name": "Connecticut",
+        "available": true
       },
       {
         "id": "5f71cda22b048d9f91c0367c",
-        "name": "Indiana"
+        "name": "Indiana",
+        "available": true
       },
       {
         "id": "5f71cda22db628c6d84b3883",
-        "name": "Rhode Island"
+        "name": "Rhode Island",
+        "available": true
       }
     ],
     "min_spend": 56.481,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda2a9070c85a2973530",
     "name": "Quilm",
     "description": "Glasgow",
     "location": {
-      "lat": 8.4,
-      "long": 91.1
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "School Lane",
     "email": "lenabentley@quilm.com",
     "phone_num": "+852 9811-4614",
     "image_url": "https://i.picsum.photos/id/311/640/320.jpg?hmac=UgpCE43WRMTowWqLbmwp-0Yj_JtG65KW7FxbQXE0OeQ",
@@ -2831,31 +3280,36 @@
     "catalogs": [
       {
         "id": "5f71cda24d2056fc24280da1",
-        "name": "California"
+        "name": "California",
+        "available": true
       },
       {
         "id": "5f71cda23ef743933ce481eb",
-        "name": "Texas"
+        "name": "Texas",
+        "available": true
       },
       {
         "id": "5f71cda29e37604513a08a8c",
-        "name": "South Carolina"
+        "name": "South Carolina",
+        "available": true
       }
     ],
     "min_spend": 20.122,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda2034db4192008506e",
     "name": "Exoblue",
     "description": "Williamson",
     "location": {
-      "lat": 85,
-      "long": 152.7
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Strong Place",
     "email": "lenabentley@exoblue.com",
     "phone_num": "+852 8249-4057",
     "image_url": "https://i.picsum.photos/id/1023/640/320.jpg?hmac=JSCNKUvpgSPN-M9GdOAIxOGnzWxkbPz0KP3G3BxiBPk",
@@ -2863,31 +3317,36 @@
     "catalogs": [
       {
         "id": "5f71cda2de54ea16cec61416",
-        "name": "New Hampshire"
+        "name": "New Hampshire",
+        "available": true
       },
       {
         "id": "5f71cda2f9125e76160216b4",
-        "name": "Utah"
+        "name": "Utah",
+        "available": true
       },
       {
         "id": "5f71cda2820552de84f00074",
-        "name": "New York"
+        "name": "New York",
+        "available": true
       }
     ],
     "min_spend": 20.6316,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda2115c2d899b9a6809",
     "name": "Delphide",
     "description": "Rodman",
     "location": {
-      "lat": -59.1,
-      "long": -5.3
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Monument Walk",
     "email": "lenabentley@delphide.com",
     "phone_num": "+852 8079-2194",
     "image_url": "https://i.picsum.photos/id/177/640/320.jpg?hmac=hXAhUxKee50dF1GGVPuRHEl_a1uSdkLUjnUMBgROCEc",
@@ -2895,31 +3354,36 @@
     "catalogs": [
       {
         "id": "5f71cda20852fa6f931af551",
-        "name": "Mississippi"
+        "name": "Mississippi",
+        "available": true
       },
       {
         "id": "5f71cda266e79d05dc7a0ed6",
-        "name": "Tennessee"
+        "name": "Tennessee",
+        "available": true
       },
       {
         "id": "5f71cda2bfd63b1261bec8a6",
-        "name": "New Jersey"
+        "name": "New Jersey",
+        "available": true
       }
     ],
     "min_spend": 32.8815,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda23334cf66ce8f811c",
     "name": "Terrasys",
     "description": "Grazierville",
     "location": {
-      "lat": 76.4,
-      "long": -48
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Saratoga Avenue",
     "email": "lenabentley@terrasys.com",
     "phone_num": "+852 2409-7066",
     "image_url": "https://i.picsum.photos/id/874/640/320.jpg?hmac=K08wDbK6m7wUlr9A_th8zfpRw4pZ1Zm2CK9312k7Sig",
@@ -2927,31 +3391,36 @@
     "catalogs": [
       {
         "id": "5f71cda2b8ef2e3314c535fb",
-        "name": "Hawaii"
+        "name": "Hawaii",
+        "available": true
       },
       {
         "id": "5f71cda2d8b3ce2c93915e94",
-        "name": "Maryland"
+        "name": "Maryland",
+        "available": true
       },
       {
         "id": "5f71cda27842643bcf7a4865",
-        "name": "Iowa"
+        "name": "Iowa",
+        "available": true
       }
     ],
     "min_spend": 31.5917,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda252982cd0727e79d2",
     "name": "Geeky",
     "description": "Barstow",
     "location": {
-      "lat": -5,
-      "long": -149.2
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Boulevard Court",
     "email": "lenabentley@geeky.com",
     "phone_num": "+852 2624-5793",
     "image_url": "https://i.picsum.photos/id/883/640/320.jpg?hmac=TkpcwXxqimYQTLSZsr5b2RmLKCUMbJ9RYk-LLNSbJkI",
@@ -2959,31 +3428,36 @@
     "catalogs": [
       {
         "id": "5f71cda263fee7a169608a4e",
-        "name": "West Virginia"
+        "name": "West Virginia",
+        "available": true
       },
       {
         "id": "5f71cda2e9e0e7cd5df77d24",
-        "name": "Wisconsin"
+        "name": "Wisconsin",
+        "available": true
       },
       {
         "id": "5f71cda25031a97f88bac90c",
-        "name": "Idaho"
+        "name": "Idaho",
+        "available": true
       }
     ],
     "min_spend": 11.3664,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda2f06f9da2469f05b2",
     "name": "Portica",
     "description": "Dunbar",
     "location": {
-      "lat": 9.4,
-      "long": -84.3
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Thames Street",
     "email": "lenabentley@portica.com",
     "phone_num": "+852 6945-9841",
     "image_url": "https://i.picsum.photos/id/329/640/320.jpg?hmac=9_G5i-LNWvfpY8gGvgidYq-89_q1MAC4l5Pu06Qn2l0",
@@ -2991,31 +3465,36 @@
     "catalogs": [
       {
         "id": "5f71cda2ae68dfef4f829ba0",
-        "name": "Colorado"
+        "name": "Colorado",
+        "available": true
       },
       {
         "id": "5f71cda25f343b3ea5875c1f",
-        "name": "Oklahoma"
+        "name": "Oklahoma",
+        "available": true
       },
       {
         "id": "5f71cda2d52c5d9d5a9f1da4",
-        "name": "Palau"
+        "name": "Palau",
+        "available": true
       }
     ],
     "min_spend": 58.1569,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda27f2d3984cc94d7f2",
     "name": "Caxt",
     "description": "Breinigsville",
     "location": {
-      "lat": -70.1,
-      "long": 88
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Lawrence Street",
     "email": "lenabentley@caxt.com",
     "phone_num": "+852 7394-8245",
     "image_url": "https://i.picsum.photos/id/1076/640/320.jpg?hmac=YHl_LUpFMq5PxcYMKVxB7xYkxrtME1q3s870wXEtlik",
@@ -3023,31 +3502,36 @@
     "catalogs": [
       {
         "id": "5f71cda2f3ab184eeef672f8",
-        "name": "Wyoming"
+        "name": "Wyoming",
+        "available": true
       },
       {
         "id": "5f71cda2df9435252cad252a",
-        "name": "South Dakota"
+        "name": "South Dakota",
+        "available": true
       },
       {
         "id": "5f71cda22e8321f7aa35710b",
-        "name": "Arkansas"
+        "name": "Arkansas",
+        "available": true
       }
     ],
     "min_spend": 43.1897,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda24eb718e8c74fe75a",
     "name": "Zilla",
     "description": "Hartsville/Hartley",
     "location": {
-      "lat": 82.8,
-      "long": -60.2
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Bokee Court",
     "email": "lenabentley@zilla.com",
     "phone_num": "+852 5443-2108",
     "image_url": "https://i.picsum.photos/id/213/640/320.jpg?hmac=w48onbjP7UHErBt4oDWaXIv4eWNFoiYwjRGmiqA5I-Y",
@@ -3055,31 +3539,36 @@
     "catalogs": [
       {
         "id": "5f71cda2877a983ec8fa5d2b",
-        "name": "Ohio"
+        "name": "Ohio",
+        "available": true
       },
       {
         "id": "5f71cda2292623708f249864",
-        "name": "Arizona"
+        "name": "Arizona",
+        "available": true
       },
       {
         "id": "5f71cda2ab81c4fa76435d82",
-        "name": "Alabama"
+        "name": "Alabama",
+        "available": true
       }
     ],
     "min_spend": 28.1112,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda2c1426b4e18c9bac3",
     "name": "Newcube",
     "description": "Rosine",
     "location": {
-      "lat": -34.1,
-      "long": 133.8
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Newport Street",
     "email": "lenabentley@newcube.com",
     "phone_num": "+852 5915-5851",
     "image_url": "https://i.picsum.photos/id/256/640/320.jpg?hmac=LHpcT7iV5BYBuKogsBubJ0UXeHrrkSUx4XayWmYdVy0",
@@ -3087,31 +3576,36 @@
     "catalogs": [
       {
         "id": "5f71cda28382bfd1ebefad0c",
-        "name": "Minnesota"
+        "name": "Minnesota",
+        "available": true
       },
       {
         "id": "5f71cda2b9900f6bd4ef52c0",
-        "name": "Georgia"
+        "name": "Georgia",
+        "available": true
       },
       {
         "id": "5f71cda28048d7b56ba48011",
-        "name": "Northern Mariana Islands"
+        "name": "Northern Mariana Islands",
+        "available": true
       }
     ],
     "min_spend": 29.0355,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda2e4c5a19b355511f1",
     "name": "Fangold",
     "description": "Highland",
     "location": {
-      "lat": 8.7,
-      "long": 131.2
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Noble Street",
     "email": "lenabentley@fangold.com",
     "phone_num": "+852 2740-2792",
     "image_url": "https://i.picsum.photos/id/536/640/320.jpg?hmac=JgH5z3YUrjtDfg4MI5sDDcFE20N5ZqHbC6COkgPfY2s",
@@ -3119,31 +3613,36 @@
     "catalogs": [
       {
         "id": "5f71cda2af2719acf56ba2d1",
-        "name": "Guam"
+        "name": "Guam",
+        "available": true
       },
       {
         "id": "5f71cda2a1d128511e916730",
-        "name": "Montana"
+        "name": "Montana",
+        "available": true
       },
       {
         "id": "5f71cda2aa4bf3d0166b0563",
-        "name": "Massachusetts"
+        "name": "Massachusetts",
+        "available": true
       }
     ],
     "min_spend": 27.0418,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda2a5f9aeac05e5f5a2",
     "name": "Comvey",
     "description": "Vernon",
     "location": {
-      "lat": -17.5,
-      "long": -123.2
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Dinsmore Place",
     "email": "lenabentley@comvey.com",
     "phone_num": "+852 4957-6536",
     "image_url": "https://i.picsum.photos/id/941/640/320.jpg?hmac=v0ooABh7TxdJrny7VSfRWZnrJ2ucnwVgNsyJdMHvRtM",
@@ -3151,31 +3650,36 @@
     "catalogs": [
       {
         "id": "5f71cda2ab474605707c589e",
-        "name": "American Samoa"
+        "name": "American Samoa",
+        "available": true
       },
       {
         "id": "5f71cda2754a37a5fb58c4a6",
-        "name": "Virginia"
+        "name": "Virginia",
+        "available": true
       },
       {
         "id": "5f71cda2b569dd2343104172",
-        "name": "Nevada"
+        "name": "Nevada",
+        "available": true
       }
     ],
     "min_spend": 16.1974,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   },
   {
     "id": "5f71cda22d014f6ab6da7af6",
     "name": "Maxemia",
     "description": "Jamestown",
     "location": {
-      "lat": -69.4,
-      "long": 51
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
     },
-    "address": "Little Street",
     "email": "lenabentley@maxemia.com",
     "phone_num": "+852 6426-7083",
     "image_url": "https://i.picsum.photos/id/9/640/320.jpg?hmac=eGK2Z8omdHlidjzFZ1FmgA3ILvTdRjryeGh_m7sCez4",
@@ -3183,20 +3687,23 @@
     "catalogs": [
       {
         "id": "5f71cda2d2d5c074dea2b29f",
-        "name": "North Dakota"
+        "name": "North Dakota",
+        "available": true
       },
       {
         "id": "5f71cda28f7407897027a9a8",
-        "name": "North Carolina"
+        "name": "North Carolina",
+        "available": true
       },
       {
         "id": "5f71cda26d3ccfbdcf360f82",
-        "name": "Kentucky"
+        "name": "Kentucky",
+        "available": true
       }
     ],
     "min_spend": 29.6632,
-    "open_time": "09:00",
-    "close_time": "22:00",
-    "type": 0
+    "opening_hours": "Mon - Sat : 07:30 - 21:00\nSun & PH : 09:00 - 21:00",
+    "type": 1,
+    "online": true
   }
 ]

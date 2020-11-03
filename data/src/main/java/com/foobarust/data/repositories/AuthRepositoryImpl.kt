@@ -1,9 +1,12 @@
 package com.foobarust.data.repositories
 
 import android.content.Context
+import android.content.SharedPreferences
+import androidx.core.content.edit
 import com.foobarust.data.common.Constants.USERS_COLLECTION
 import com.foobarust.data.mappers.AuthMapper
-import com.foobarust.data.utils.saveUpdateTimestamp
+import com.foobarust.data.preferences.PreferencesKeys.PREF_KEY_EMAIL_VERIFY
+import com.foobarust.data.utils.getStringFlow
 import com.foobarust.domain.models.AuthProfile
 import com.foobarust.domain.repositories.AuthRepository
 import com.foobarust.domain.states.Resource
@@ -35,8 +38,17 @@ class AuthRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context,
     private val firebaseAuth: FirebaseAuth,
     private val firestore: FirebaseFirestore,
-    private val authMapper: AuthMapper
+    private val authMapper: AuthMapper,
+    private val preferences: SharedPreferences
 ) : AuthRepository {
+
+    override fun getAuthRequestedEmail(): Flow<Resource<String?>> {
+        return preferences.getStringFlow(PREF_KEY_EMAIL_VERIFY)
+    }
+
+    override suspend fun updateAuthRequestedEmail(email: String?) {
+        preferences.edit { putString(PREF_KEY_EMAIL_VERIFY, email) }
+    }
 
     override suspend fun isSignedIn(): Boolean {
         return firebaseAuth.currentUser != null &&
@@ -102,18 +114,14 @@ class AuthRepositoryImpl @Inject constructor(
             throw Exception(ERROR_GET_CURRENT_USER)
 
         // Insert a new user document into firestore
-        val userMap = authMapper.toUserDetailEntityMap(currentUser)
-            //.serializeToMutableMap()
-            .saveUpdateTimestamp()
+        val userDetail = authMapper.toUserDetailEntity(currentUser)
 
         firestore.collection(USERS_COLLECTION).document(currentUser.uid)
-            .set(userMap, SetOptions.merge())
+            .set(userDetail, SetOptions.merge())
             .await()
-
-        // Update
     }
 
-    override suspend fun reloadAuthUser() {
+    override suspend fun reloadUser() {
         firebaseAuth.currentUser?.reload()?.await()
     }
 

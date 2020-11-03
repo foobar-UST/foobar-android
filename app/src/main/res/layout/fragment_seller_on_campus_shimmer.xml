@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/spacing_large"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:background="@drawable/shimmer_round_rect"/>
+
+        <View
+            android:layout_width="120dp"
+            android:layout_height="@dimen/shimmer_default_text_height"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:background="@drawable/shimmer_round_rect"/>
+
+        <View
+            android:layout_width="280dp"
+            android:layout_height="@dimen/shimmer_default_text_height"
+            android:layout_marginTop="@dimen/spacing_xmedium"
+            android:background="@drawable/shimmer_round_rect"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:layout_marginTop="@dimen/spacing_mxlarge"
+            android:background="@drawable/shimmer_round_rect"/>
+
+        <View
+            android:layout_width="120dp"
+            android:layout_height="@dimen/shimmer_default_text_height"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:background="@drawable/shimmer_round_rect"/>
+
+        <View
+            android:layout_width="280dp"
+            android:layout_height="@dimen/shimmer_default_text_height"
+            android:layout_marginTop="@dimen/spacing_xmedium"
+            android:background="@drawable/shimmer_round_rect"/>
+
+    </LinearLayout>
+
+</layout>

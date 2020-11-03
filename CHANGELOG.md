@@ -1,5 +1,15 @@
 # Changelog
 
+## 2020-11-3
+- Added custom tab for advertisement.
+- Added seller misc screen (for showing contact details and map).
+- Prepare for cart screen.
+- Prepare for off-campus seller screen.
+- Prepare for seller item detail screen.
+- Prepare for on-campus seller action sheet.
+- Fixed timestamp issue when updating user detail to firestore.
+- Fixed crashes when navigating food catalogs.
+
 ## 2020-10-6
 - Added on-campus seller list view.
 - Added advertise row on on-campus seller screen.

@@ -1,7 +1,6 @@
 package com.foobarust.android.settings
 
 import android.content.Context
-import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,9 +10,7 @@ import com.foobarust.android.common.BaseViewModel
 import com.foobarust.android.settings.SettingsListModel.SettingsProfileModel
 import com.foobarust.android.settings.SettingsListModel.SettingsSectionModel
 import com.foobarust.android.utils.SingleLiveEvent
-import com.foobarust.domain.models.UserDetail
-import com.foobarust.domain.models.asUserDetail
-import com.foobarust.domain.states.Resource.*
+import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.auth.GetIsUserSignedInUseCase
 import com.foobarust.domain.usecases.auth.SignOutUseCase
 import com.foobarust.domain.usecases.user.GetAuthProfileObservableUseCase
@@ -58,17 +55,17 @@ class SettingsViewModel @ViewModelInject constructor(
         viewModelScope.launch {
             getAuthProfileObservableUseCase(Unit).collect {
                 when (it) {
-                    is Success -> {
-                        Log.d("SettingsViewModel", "success")
+                    is Resource.Success -> {
                         subscribeUserDetail()
-                        _settingsItems.value = buildSettingList(it.data.asUserDetail())
+                        buildSettingList(
+                            SettingsProfile(username = it.data.username)
+                        )
                     }
-                    is Error -> {
-                        Log.d("SettingsViewModel", "success")
+                    is Resource.Error -> {
                         unsubscribeUserDetail()
-                        _settingsItems.value = buildSettingList()
+                        buildSettingList(SettingsProfile())
                     }
-                    is Loading -> {
+                    is Resource.Loading -> {
                         _settingsItems.value = emptyList()
                     }
                 }
@@ -78,13 +75,18 @@ class SettingsViewModel @ViewModelInject constructor(
 
     private fun subscribeUserDetail() {
         unsubscribeUserDetail()
+
         subscribeUserDetailJob = viewModelScope.launch {
             getUserDetailObservableUseCase(Unit).collect {
                 when (it) {
-                    is Success -> {
-                        _settingsItems.value = buildSettingList(it.data)
-                    }
-                    is Error -> showMessage(it.message)
+                    is Resource.Success -> buildSettingList(
+                        SettingsProfile(
+                            username = it.data.username,
+                            photoUrl = it.data.photoUrl
+                        )
+                    )
+                    is Resource.Error -> showToastMessage(it.message)
+                    is Resource.Loading -> Unit
                 }
             }
         }
@@ -97,11 +99,12 @@ class SettingsViewModel @ViewModelInject constructor(
 
     fun onUserAccountCardClicked() = viewModelScope.launch {
         when (val result = getIsUserSignedInUseCase(Unit)) {
-            is Success -> {
+            is Resource.Success -> {
                 val isSignedIn = result.data
                 if (isSignedIn) _navigateToProfile.value = Unit else _navigateToSignIn.value = Unit
             }
-            is Error -> showMessage(result.message)
+            is Resource.Error -> showToastMessage(result.message)
+            is Resource.Loading -> Unit
         }
     }
 
@@ -109,53 +112,68 @@ class SettingsViewModel @ViewModelInject constructor(
         signOutUseCase(Unit)
     }
 
-    private fun buildSettingList(userDetail: UserDetail? = null): List<SettingsListModel> {
-        val authItem = SettingsProfileModel(userDetail = userDetail)
-        val signOutItem = SettingsSectionModel(
-            id = SETTINGS_SIGN_OUT,
-            icon = R.drawable.ic_exit_to_app,
-            title = context.getString(R.string.settings_section_sign_out_title)
-        )
-        val signedInItems = listOf(
-            SettingsSectionModel(
-                id = SETTINGS_FAVORITE,
-                icon = R.drawable.ic_loyalty,
-                title = context.getString(R.string.settings_section_favorite_title)
-            ),
-            SettingsSectionModel(
-                id = SETTINGS_ORDER_HISTORY,
-                icon = R.drawable.ic_fastfood,
-                title = context.getString(R.string.settings_section_orders_title)
-            )
-        )
-        val commonItems = listOf(
-            SettingsSectionModel(
-                id = SETTINGS_NOTIFICATIONS,
-                icon = R.drawable.ic_notification_important,
-                title = context.getString(R.string.settings_section_notifications_title)
-            ),
-            SettingsSectionModel(
-                id = SETTINGS_FEATURES,
-                icon = R.drawable.ic_whatshot,
-                title = context.getString(R.string.settings_section_features_title)
-            ),
-            SettingsSectionModel(
-                id = SETTINGS_CONTACT_US,
-                icon = R.drawable.ic_live_help,
-                title = context.getString(R.string.settings_section_contact_us_title)
-            ),
-            SettingsSectionModel(
-                id = SETTINGS_TERMS_CONDITIONS,
-                icon = R.drawable.ic_copyright,
-                title = context.getString(R.string.settings_section_license_title)
-            )
-        )
+    private fun buildSettingList(settingsProfile: SettingsProfile) {
+        _settingsItems.value = buildList {
+            // Add auth item
+            add(SettingsProfileModel(settingsProfile))
 
-        return buildList {
-            add(authItem)
-            userDetail?.let { addAll(signedInItems) }
-            addAll(commonItems)
-            userDetail?.let { add(signOutItem) }
+            // Add signed in items
+            if (settingsProfile.isSignedIn()) {
+                addAll(listOf(
+                    SettingsSectionModel(
+                        id = SETTINGS_FAVORITE,
+                        icon = R.drawable.ic_loyalty,
+                        title = context.getString(R.string.settings_section_favorite_title)
+                    ),
+                    SettingsSectionModel(
+                        id = SETTINGS_ORDER_HISTORY,
+                        icon = R.drawable.ic_fastfood,
+                        title = context.getString(R.string.settings_section_orders_title)
+                    )
+                ))
+            }
+
+            // Add common items
+            addAll(listOf(
+                SettingsSectionModel(
+                    id = SETTINGS_NOTIFICATIONS,
+                    icon = R.drawable.ic_notification_important,
+                    title = context.getString(R.string.settings_section_notifications_title)
+                ),
+                SettingsSectionModel(
+                    id = SETTINGS_FEATURES,
+                    icon = R.drawable.ic_whatshot,
+                    title = context.getString(R.string.settings_section_features_title)
+                ),
+                SettingsSectionModel(
+                    id = SETTINGS_CONTACT_US,
+                    icon = R.drawable.ic_live_help,
+                    title = context.getString(R.string.settings_section_contact_us_title)
+                ),
+                SettingsSectionModel(
+                    id = SETTINGS_TERMS_CONDITIONS,
+                    icon = R.drawable.ic_copyright,
+                    title = context.getString(R.string.settings_section_license_title)
+                )
+            ))
+
+            // Add sign out button
+            if (settingsProfile.isSignedIn()) {
+                add(SettingsSectionModel(
+                    id = SETTINGS_SIGN_OUT,
+                    icon = R.drawable.ic_exit_to_app,
+                    title = context.getString(R.string.settings_section_sign_out_title)
+                ))
+            }
         }
     }
+}
+
+data class SettingsProfile(
+    val username: String? = null,
+    val photoUrl: String? = null
+) {
+    fun isSignedIn(): Boolean = username != null
+
+    fun hasPhoto(): Boolean = photoUrl != null
 }

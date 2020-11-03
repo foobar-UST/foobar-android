@@ -1,7 +1,7 @@
 package com.foobarust.domain.usecases.onboarding
 
 import com.foobarust.domain.di.IoDispatcher
-import com.foobarust.domain.repositories.PreferencesRepository
+import com.foobarust.domain.repositories.UserRepository
 import com.foobarust.domain.usecases.CoroutineUseCase
 import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Inject
@@ -11,11 +11,11 @@ import javax.inject.Inject
  */
 
 class SaveOnboardingCompletedUseCase @Inject constructor(
-    private val preferencesRepository: PreferencesRepository,
+    private val userRepository: UserRepository,
     @IoDispatcher coroutineDispatcher: CoroutineDispatcher
 ) : CoroutineUseCase<Boolean, Unit>(coroutineDispatcher) {
 
     override suspend fun execute(parameters: Boolean) {
-        preferencesRepository.isOnboardingCompleted = parameters
+        userRepository.saveIsOnboardingCompleted(parameters)
     }
 }

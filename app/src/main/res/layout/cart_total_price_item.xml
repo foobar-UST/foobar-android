@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/spacing_large">
+
+        <TextView
+            android:id="@+id/total_title_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/total_value_text_view"
+            android:layout_alignBottom="@id/total_value_text_view"
+            android:gravity="center_vertical"
+            android:text="Total"
+            android:textAllCaps="true"
+            android:textAppearance="?attr/textAppearanceSubtitle2"/>
+
+        <TextView
+            android:id="@+id/total_value_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="$1,052.84"
+            android:textColor="?attr/colorPrimary"
+            android:textAppearance="?attr/textAppearanceHeadline4"/>
+
+        <TextView
+            android:id="@+id/subtotal_title_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_xmedium"
+            android:layout_below="@id/total_title_text_view"
+            android:text="Subtotal"
+            android:textAppearance="?attr/textAppearanceSubtitle2"/>
+
+        <TextView
+            android:id="@+id/subtotal_value_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_xmedium"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/total_value_text_view"
+            android:text="$914.00"
+            android:textColor="?attr/colorPrimary"
+            android:textAppearance="?attr/textAppearanceSubtitle2"/>
+
+        <TextView
+            android:id="@+id/delivery_fee_title_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_xmedium"
+            android:layout_below="@id/subtotal_title_text_view"
+            android:text="Delivery Fee"
+            android:textAppearance="?attr/textAppearanceSubtitle2"/>
+
+        <TextView
+            android:id="@+id/delivery_fee_value_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_xmedium"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/subtotal_value_text_view"
+            android:text="$84.00"
+            android:textColor="?attr/colorPrimary"
+            android:textAppearance="?attr/textAppearanceSubtitle2"/>
+
+    </RelativeLayout>
+
+</layout>

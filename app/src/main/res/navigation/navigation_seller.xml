@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_seller"
@@ -9,14 +10,20 @@
         android:id="@+id/sellerFragment"
         android:name="com.foobarust.android.seller.SellerFragment"
         android:label="@string/app_name"
-        tools:layout="@layout/fragment_seller">
+        tools:layout="@layout/fragment_seller_on_campus">
+        <deepLink app:uri="foobarust://navigation_seller" />
         <action
             android:id="@+id/action_sellerFragment_to_sellerSearchFragment"
             app:destination="@id/sellerSearchFragment" />
         <action
             android:id="@+id/action_sellerFragment_to_sellerDetailFragment"
             app:destination="@id/sellerDetailFragment" />
-        <deepLink app:uri="foobarust://navigation_seller" />
+        <action
+            android:id="@+id/action_sellerFragment_to_itemDetailDialog"
+            app:destination="@id/sellerItemDetailDialog" />
+        <action
+            android:id="@+id/action_sellerFragment_to_sellerActionDialog"
+            app:destination="@id/sellerActionDialog" />
     </fragment>
 
     <dialog
@@ -27,13 +34,73 @@
 
     <dialog
         android:id="@+id/sellerDetailFragment"
-        android:name="com.foobarust.android.seller.SellerDetailFragment"
+        android:name="com.foobarust.android.sellerdetail.SellerDetailFragment"
         android:label="@string/seller_detail_label"
         tools:layout="@layout/fragment_seller_detail">
         <argument
             android:name="sellerId"
+            app:argType="string" />
+        <argument
+            android:name="sellerName"
+            app:argType="string" />
+        <argument
+            android:name="sellerImageUrl"
             app:argType="string"
+            app:nullable="true"/>
+        <action
+            android:id="@+id/action_sellerDetailFragment_to_sellerMiscFragment"
+            app:destination="@id/sellerMiscFragment" />
+        <action
+            android:id="@+id/action_sellerDetailFragment_to_sellerItemDetailDialog"
+            app:destination="@id/sellerItemDetailDialog" />
+    </dialog>
+
+    <dialog
+        android:id="@+id/sellerMiscFragment"
+        android:name="com.foobarust.android.sellermisc.SellerMiscFragment"
+        android:label="@string/seller_misc_label"
+        tools:layout="@layout/fragment_seller_misc">
+        <argument
+            android:name="sellerMiscProperty"
+            app:argType="com.foobarust.android.sellermisc.SellerMiscProperty"
             app:nullable="false"/>
     </dialog>
+
+    <dialog
+        android:id="@+id/sellerItemDetailDialog"
+        android:name="com.foobarust.android.sellerdetail.SellerItemDetailDialog"
+        android:label="@string/item_detail_label"
+        tools:layout="@layout/dialog_item_detail">
+        <argument
+            android:name="itemId"
+            app:argType="string" />
+        <argument
+            android:name="itemTitle"
+            app:argType="string" />
+        <argument
+            android:name="itemDescription"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="itemPrice"
+            app:argType="string" />
+    </dialog>
+
+    <dialog
+        android:id="@+id/sellerActionDialog"
+        android:name="com.foobarust.android.seller.SellerActionDialog"
+        android:label="@string/seller_action_dialog_label"
+        tools:layout="@layout/dialog_seller_action"/>
+
+    <dialog
+        android:id="@+id/cartFragment"
+        android:name="com.foobarust.android.cart.CartFragment"
+        android:label="@string/cart_label"
+        tools:layout="@layout/fragment_cart"/>
+
+    <action
+        android:id="@+id/action_global_cartFragment"
+        app:destination="@id/cartFragment"/>
 
 </navigation>

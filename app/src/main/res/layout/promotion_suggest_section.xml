@@ -8,7 +8,7 @@
         android:id="@+id/suggest_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_xmedium"
+        android:layout_marginTop="@dimen/spacing_medium"
         android:paddingStart="@dimen/spacing_xmedium"
         android:paddingEnd="@dimen/spacing_xmedium"
         android:orientation="horizontal"

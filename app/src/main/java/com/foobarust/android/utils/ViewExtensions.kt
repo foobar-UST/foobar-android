@@ -5,13 +5,16 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
+import android.graphics.drawable.Drawable
 import android.text.InputFilter
 import android.util.TypedValue
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
+import androidx.annotation.ColorInt
 import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,12 +26,25 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
-import kotlin.math.absoluteValue
-
 
 /**
  * Created by kevin on 8/14/20
  */
+
+fun View.show() {
+    visibility = View.VISIBLE
+}
+
+fun View.hide() {
+    visibility = View.GONE
+}
+
+fun Drawable.setTintCompat(@ColorInt color: Int) {
+    DrawableCompat.setTint(
+        DrawableCompat.wrap(this),
+        color
+    )
+}
 
 fun AppBarLayout.doOnOffsetChanged(): Flow<AppBarStateChangedListener.State> = channelFlow {
     val listener = object : AppBarStateChangedListener() {
@@ -42,45 +58,7 @@ fun AppBarLayout.doOnOffsetChanged(): Flow<AppBarStateChangedListener.State> = c
     awaitClose { removeOnOffsetChangedListener(listener) }
 }
 
-abstract class AppBarStateChangedListener : AppBarLayout.OnOffsetChangedListener {
-
-    enum class State {
-        EXPANDED,
-        COLLAPSED,
-        IDLE
-    }
-
-    private var currentState: State = State.IDLE
-
-    override fun onOffsetChanged(appBarLayout: AppBarLayout, verticalOffset: Int) {
-        when {
-            verticalOffset == 0 -> {
-                if (currentState != State.EXPANDED) {
-                    onStateChanged(appBarLayout, State.EXPANDED)
-                }
-                currentState = State.EXPANDED;
-            }
-            verticalOffset.absoluteValue >= appBarLayout.totalScrollRange -> {
-                if (currentState != State.COLLAPSED) {
-                    onStateChanged(appBarLayout, State.COLLAPSED)
-                }
-                currentState = State.COLLAPSED
-            }
-            else -> {
-                if (currentState != State.IDLE) {
-                    onStateChanged(appBarLayout, State.IDLE)
-                }
-                currentState = State.IDLE
-            }
-        }
-    }
-
-    abstract fun onStateChanged(appBarLayout: AppBarLayout, state: State)
-}
-
-fun RecyclerView.scrollToTop() {
-    smoothScrollToPosition(0)
-}
+fun RecyclerView.scrollToTop() = smoothScrollToPosition(0)
 
 suspend fun <VH : RecyclerView.ViewHolder> RecyclerView.Adapter<VH>.firstItemInsertedScrollTop(
     recyclerView: RecyclerView

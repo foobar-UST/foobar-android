@@ -6,6 +6,10 @@ import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
 
+    fun getAuthRequestedEmail(): Flow<Resource<String?>>
+
+    suspend fun updateAuthRequestedEmail(email: String?)
+
     suspend fun isSignedIn(): Boolean
 
     suspend fun getAuthUserId(): String
@@ -16,7 +20,7 @@ interface AuthRepository {
 
     suspend fun signInWithEmailLink(email: String, emailLink: String)
 
-    suspend fun reloadAuthUser()
+    suspend fun reloadUser()
 
     suspend fun signOut()
 }

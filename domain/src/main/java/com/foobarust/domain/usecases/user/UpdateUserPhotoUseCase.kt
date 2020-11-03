@@ -1,5 +1,6 @@
 package com.foobarust.domain.usecases.user
 
+import com.foobarust.domain.common.UseCaseExceptions.ERROR_USER_NOT_SIGNED_IN
 import com.foobarust.domain.di.IoDispatcher
 import com.foobarust.domain.repositories.AuthRepository
 import com.foobarust.domain.repositories.UserRepository
@@ -15,8 +16,6 @@ import javax.inject.Inject
  * Created by kevin on Sep, 2020
  */
 
-private const val UPDATE_USER_PHOTO_NOT_SIGNED_IN = "User is not signed in."
-
 class UpdateUserPhotoUseCase @Inject constructor(
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository,
@@ -26,7 +25,7 @@ class UpdateUserPhotoUseCase @Inject constructor(
     override fun execute(parameters: String): Flow<Resource<Unit>> = flow {
         // Check if user is signed in
         if (!authRepository.isSignedIn()) {
-            emit(Resource.Error(UPDATE_USER_PHOTO_NOT_SIGNED_IN))
+            emit(Resource.Error(ERROR_USER_NOT_SIGNED_IN))
             return@flow
         }
 

@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--suppress AndroidUnknownAttribute -->
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <variable
-            name="message"
-            type="String" />
+            name="warningModel"
+            type="com.foobarust.android.profile.ProfileListModel.ProfileWarningModel" />
     </data>
 
     <TextView
@@ -15,10 +17,14 @@
         android:background="?attr/colorSecondaryVariant"
         android:gravity="center_vertical"
         android:padding="@dimen/spacing_large"
-        android:text="@{message}"
+        android:text="@{warningModel.message}"
         android:textAppearance="?attr/textAppearanceCaption"
         android:textColor="?attr/colorOnSecondary"
         android:drawablePadding="@dimen/spacing_xmedium"
+        android:selected="@{true}"
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
         app:drawableStartCompat="@drawable/ic_error_outline"
         app:drawableTint="?attr/colorOnSecondary"
         tools:drawableTint="?attr/colorOnSecondary"

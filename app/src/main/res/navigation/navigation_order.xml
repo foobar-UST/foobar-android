@@ -13,4 +13,15 @@
         <deepLink app:uri="foobarust://navigation_order" />
     </fragment>
 
+    <dialog
+        android:id="@+id/cartFragment"
+        android:name="com.foobarust.android.cart.CartFragment"
+        android:label="@string/cart_label"
+        tools:layout="@layout/fragment_cart"/>
+
+    <action
+        android:id="@+id/action_global_cartFragment"
+        app:destination="@id/cartFragment"/>
+
+
 </navigation>

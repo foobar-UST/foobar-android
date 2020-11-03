@@ -9,5 +9,6 @@ data class SellerItemBasic(
     val title: String,
     val description: String,
     val catalogId: String,
-    val price: Double
+    val price: Double,
+    val available: Boolean
 )

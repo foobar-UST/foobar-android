@@ -1,26 +1,23 @@
 package com.foobarust.data.repositories
 
+import android.content.SharedPreferences
 import android.net.Uri
+import androidx.core.content.edit
 import com.foobarust.data.common.Constants.USERS_COLLECTION
 import com.foobarust.data.common.Constants.USER_PHOTOS_STORAGE_FOLDER
 import com.foobarust.data.mappers.UserMapper
-import com.foobarust.data.utils.saveUpdateTimestamp
-import com.foobarust.data.utils.snapshotObservableFlow
+import com.foobarust.data.preferences.PreferencesKeys.PREF_KEY_ONBOARDING_COMPLETED
+import com.foobarust.data.preferences.PreferencesKeys.PREF_KEY_USER_DETAIL
+import com.foobarust.data.utils.*
 import com.foobarust.domain.models.UserDetail
 import com.foobarust.domain.repositories.UserRepository
 import com.foobarust.domain.states.Resource
-import com.google.android.gms.tasks.OnFailureListener
-import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.OnProgressListener
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.UploadTask
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
-import kotlin.coroutines.cancellation.CancellationException
 
 /**
  * We assume users must be signed in before calling these methods
@@ -29,57 +26,52 @@ import kotlin.coroutines.cancellation.CancellationException
 class UserRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val storageReference: StorageReference,
-    private val userMapper: UserMapper
+    private val userMapper: UserMapper,
+    private val preferences: SharedPreferences
 ) : UserRepository {
 
-    // Get a document from 'users' collection
-    override fun getUserDetailObservable(userId: String): Flow<Resource<UserDetail>> {
-        return firestore.collection(USERS_COLLECTION).document(userId)
-            .snapshotObservableFlow(userMapper::toUserDetail)
+    override suspend fun getIsOnboardingCompleted(): Boolean {
+        return preferences.getBoolean(PREF_KEY_ONBOARDING_COMPLETED, false)
     }
 
-    override suspend fun updateUserDetail(userId: String, userDetail: UserDetail) {
-        val updatedMap = userMapper.toUserDetailEntityMap(userDetail)
-            //.serializeToMutableMap()
-            .saveUpdateTimestamp()
+    override suspend fun saveIsOnboardingCompleted(isCompleted: Boolean) {
+        preferences.edit { putBoolean(PREF_KEY_ONBOARDING_COMPLETED, isCompleted) }
+    }
+
+    override suspend fun getLocalUserDetail(userId: String): UserDetail? {
+        return preferences.getObject("${PREF_KEY_USER_DETAIL}_$userId")
+    }
+
+    override suspend fun updateLocalUserDetail(userId: String, userDetail: UserDetail) {
+        preferences.putObject("${PREF_KEY_USER_DETAIL}_$userId", userDetail)
+    }
+
+    override suspend fun removeLocalUserDetail(userId: String) {
+        preferences.putObject("${PREF_KEY_USER_DETAIL}_$userId", null)
+    }
+
+    override suspend fun getRemoteUserDetail(userId: String): UserDetail? {
+        return firestore.collection(USERS_COLLECTION).document(userId)
+            .getAwaitResult(userMapper::toUserDetail)
+    }
+
+    override fun getRemoteUserDetailObservable(userId: String): Flow<Resource<UserDetail>> {
+        return firestore.collection(USERS_COLLECTION).document(userId)
+            .snapshotFlow(userMapper::toUserDetail)
+    }
+
+    override suspend fun updateRemoteUserDetail(userId: String, userDetail: UserDetail) {
+        val userDetailEntity = userMapper.toUserDetailEntity(userDetail)
 
         firestore.collection(USERS_COLLECTION).document(userId)
-            .update(updatedMap)
+            .set(userDetailEntity, SetOptions.merge())
             .await()
     }
 
     override fun updateUserPhoto(userId: String, uriString: String): Flow<Resource<Unit>> {
-        return channelFlow {
-            val photoFile = Uri.parse(uriString)
-            val photoRef = storageReference.child("$USER_PHOTOS_STORAGE_FOLDER/$userId")
+        val photoFile = Uri.parse(uriString)
+        val photoRef = storageReference.child("$USER_PHOTOS_STORAGE_FOLDER/$userId")
 
-            // Start uploading
-            val progressListener = OnProgressListener<UploadTask.TaskSnapshot> {
-                val progress = 100.0 * it.bytesTransferred / it.totalByteCount
-                channel.offer(Resource.Loading(progress))
-            }
-            val successListener = OnSuccessListener<UploadTask.TaskSnapshot> {
-                channel.offer(Resource.Success(Unit))
-                channel.close()
-            }
-            val failureListener = OnFailureListener {
-                channel.offer(Resource.Error(it.message))
-                channel.close(CancellationException(it.message))
-            }
-
-            val uploadTask = photoRef.putFile(photoFile)
-                .addOnProgressListener(progressListener)
-                .addOnSuccessListener(successListener)
-                .addOnFailureListener(failureListener)
-
-            // Clean up
-            awaitClose {
-                uploadTask.run {
-                    removeOnProgressListener(progressListener)
-                    removeOnSuccessListener(successListener)
-                    removeOnFailureListener(failureListener)
-                }
-            }
-        }
+        return photoRef.putFileFlow(photoFile)
     }
 }

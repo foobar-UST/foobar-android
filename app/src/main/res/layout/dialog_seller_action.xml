@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigation_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:itemIconSize="18dp"
+        app:itemIconTint="@color/material_on_surface_emphasis_medium"
+        app:itemTextAppearance="?attr/textAppearanceSubtitle2"
+        app:itemTextColor="@color/material_on_surface_emphasis_medium"
+        app:menu="@menu/menu_seller_action" />
+
+</layout>

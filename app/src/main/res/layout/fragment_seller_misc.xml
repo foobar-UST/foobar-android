@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.foobarust.android.sellermisc.SellerMiscViewModel" />
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?android:attr/colorBackground"
+        app:layoutFullscreen="@{true}">
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/map_view"
+            android:layout_width="match_parent"
+            android:layout_height="270dp"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            tools:background="@sample/sample_image_1"/>
+
+        <com.google.android.material.appbar.MaterialToolbar
+            style="@style/Widget.MaterialComponents.Toolbar.Surface"
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:paddingTopSystemWindowInsets="@{true}"/>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+            app:marginTopSystemWindowInsets="@{true}">
+
+            <LinearLayout
+                android:id="@+id/bottom_sheet_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                tools:background="?attr/colorSurface">
+
+                <View
+                    android:layout_width="36dp"
+                    android:layout_height="4dp"
+                    android:layout_marginTop="@dimen/spacing_xmedium"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/bottom_sheet_pill"/>
+
+                <TextView
+                    android:id="@+id/title_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_large"
+                    android:layout_marginEnd="@dimen/spacing_large"
+                    android:layout_marginTop="@dimen/spacing_large"
+                    android:text="@{viewModel.miscProperty.sellerName}"
+                    android:textColor="@color/material_on_surface_emphasis_high_type"
+                    android:textAppearance="?attr/textAppearanceHeadline6"
+                    tools:text="Happy Restaurant"/>
+
+                <TextView
+                    android:id="@+id/address_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_large"
+                    android:layout_marginEnd="@dimen/spacing_large"
+                    android:layout_marginTop="@dimen/spacing_xmedium"
+                    android:text="@{viewModel.miscProperty.address}"
+                    android:textColor="@color/material_on_surface_emphasis_medium"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    android:lineSpacingMultiplier="1.2"
+                    android:ellipsize="end"
+                    tools:text="LG5, Hong Kong University of Science and Technology, Sai Kung"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/spacing_mlarge"
+                    android:background="@drawable/divider" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_large"
+                    android:layout_marginStart="@dimen/spacing_large"
+                    android:layout_marginEnd="@dimen/spacing_large"
+                    android:text="@string/seller_misc_opening_hours_title"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xmedium"
+                    android:layout_marginStart="@dimen/spacing_large"
+                    android:layout_marginEnd="@dimen/spacing_large"
+                    android:text="@{viewModel.miscProperty.openingHours}"
+                    android:textColor="@color/material_on_surface_emphasis_medium"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    android:lineSpacingMultiplier="1.4"
+                    tools:text="Monday - Friday 08:00 - 20:00\nSaturday 08:00 - 17:00"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_mlarge"
+                    android:layout_marginStart="@dimen/spacing_large"
+                    android:layout_marginEnd="@dimen/spacing_large"
+                    android:text="@string/seller_misc_contact_title"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xmedium"
+                    android:layout_marginStart="@dimen/spacing_large"
+                    android:layout_marginEnd="@dimen/spacing_large"
+                    android:text="@{@string/seller_misc_contact_content(viewModel.miscProperty.phoneNum, viewModel.miscProperty.email)}"
+                    android:textColor="@color/material_on_surface_emphasis_medium"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    android:lineSpacingMultiplier="1.4"
+                    tools:text="Phone: +852 2358-0271\nWebsite: mcdonalds.com.hk"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_mlarge"
+                    android:layout_marginStart="@dimen/spacing_large"
+                    android:layout_marginEnd="@dimen/spacing_large"
+                    android:text="@string/seller_misc_description_title"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xmedium"
+                    android:layout_marginStart="@dimen/spacing_large"
+                    android:layout_marginEnd="@dimen/spacing_large"
+                    android:text="@{viewModel.miscProperty.description}"
+                    android:textColor="@color/material_on_surface_emphasis_medium"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    android:lineSpacingMultiplier="1.2"
+                    tools:text="It serves Espresso Coffees, Iced Coffees, Teas and Frappés... don't forget to enjoy with the featured cakes, Ciabatta and selected bakeries."/>
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</layout>

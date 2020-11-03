@@ -1,5 +1,6 @@
 package com.foobarust.domain.usecases.user
 
+import com.foobarust.domain.common.UseCaseExceptions.ERROR_USER_NOT_SIGNED_IN
 import com.foobarust.domain.di.IoDispatcher
 import com.foobarust.domain.models.UserDetail
 import com.foobarust.domain.repositories.AuthRepository
@@ -22,8 +23,6 @@ import javax.inject.Inject
  * in server.
  */
 
-private const val GET_USER_DETAIL_NOT_SIGNED_IN = "User is not signed in."
-
 class GetUserDetailObservableUseCase @Inject constructor(
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository,
@@ -33,11 +32,11 @@ class GetUserDetailObservableUseCase @Inject constructor(
     override fun execute(parameters: Unit): Flow<Resource<UserDetail>> = flow {
         // Check if user is signed in
         if (!authRepository.isSignedIn()) {
-            throw Exception(GET_USER_DETAIL_NOT_SIGNED_IN)
+            throw Exception(ERROR_USER_NOT_SIGNED_IN)
         }
 
         val userId = authRepository.getAuthUserId()
 
-        emitAll(userRepository.getUserDetailObservable(userId))
+        emitAll(userRepository.getRemoteUserDetailObservable(userId))
     }
 }

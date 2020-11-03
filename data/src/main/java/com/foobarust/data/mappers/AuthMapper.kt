@@ -28,7 +28,8 @@ class AuthMapper @Inject constructor() {
 
         return UserDetailEntity(
             email = email,
-            username = getUsernameFromEmail(email)
+            username = getUsernameFromEmail(email),
+            updatedAt = null
         )
     }
 

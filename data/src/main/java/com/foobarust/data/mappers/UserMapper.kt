@@ -1,7 +1,6 @@
 package com.foobarust.data.mappers
 
-import com.foobarust.data.common.Constants.USER_NAME_FIELD
-import com.foobarust.data.common.Constants.USER_PHONE_NUM_FIELD
+import android.util.Log
 import com.foobarust.data.models.UserDetailEntity
 import com.foobarust.domain.models.UserDetail
 import javax.inject.Inject
@@ -9,12 +8,15 @@ import javax.inject.Inject
 class UserMapper @Inject constructor() {
 
     fun toUserDetail(userDetailEntity: UserDetailEntity): UserDetail {
+        Log.d("UserMapper", "$userDetailEntity")
+
         return UserDetail(
             username = userDetailEntity.username!!,
             email = userDetailEntity.email!!,
             name = userDetailEntity.name,
             phoneNum = userDetailEntity.phoneNum,
             photoUrl = userDetailEntity.photoUrl,
+            updatedAt = userDetailEntity.updatedAt?.toDate(),
             allowOrder = userDetailEntity.allowOrder ?: false
         )
     }
@@ -25,19 +27,8 @@ class UserMapper @Inject constructor() {
             email = userDetail.email,
             name = userDetail.name,
             phoneNum = userDetail.phoneNum,
-            photoUrl = userDetail.photoUrl
+            photoUrl = userDetail.photoUrl,
+            updatedAt = null
         )
-    }
-
-    // TODO: fix toUserDetailEntityMap
-    fun toUserDetailEntityMap(userDetail: UserDetail): MutableMap<String, Any> {
-        val userDetailMap = mutableMapOf<String, Any>()
-
-        with(userDetail) {
-            name?.let { userDetailMap.put(USER_NAME_FIELD, it) }
-            phoneNum?.let { userDetailMap.put(USER_PHONE_NUM_FIELD, it) }
-        }
-
-        return userDetailMap
     }
 }

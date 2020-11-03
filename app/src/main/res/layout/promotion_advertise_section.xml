@@ -13,7 +13,7 @@
         <com.zhpan.bannerview.BannerViewPager
             android:id="@+id/view_pager"
             android:layout_width="match_parent"
-            android:layout_height="210dp"
+            android:layout_height="190dp"
             android:paddingTop="@dimen/spacing_xmedium"
             android:paddingBottom="@dimen/spacing_xmedium"
             app:bvp_auto_play="false"

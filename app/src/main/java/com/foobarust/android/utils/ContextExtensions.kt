@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.util.TypedValue
@@ -67,4 +68,15 @@ fun Context.getDrawableOrNull(@DrawableRes id: Int?): Drawable? {
 @ColorInt
 fun Context.getColorCompat(@ColorRes color: Int): Int {
     return ContextCompat.getColor(this, color)
+}
+
+fun Context.getColorStateListCompat(@ColorRes color: Int): ColorStateList? {
+    return ContextCompat.getColorStateList(this, color)
+}
+
+fun Context.buildColorStateList(@ColorRes color: Int): ColorStateList {
+    val states = arrayOf(intArrayOf(android.R.attr.state_enabled))
+    val colors = intArrayOf(getColorCompat(color))
+
+    return ColorStateList(states, colors)
 }

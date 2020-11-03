@@ -36,7 +36,6 @@ class SettingsFragment : Fragment(), SettingsAdapter.SettingsAdapterListener {
 
         binding.itemRecyclerView.run {
             adapter = settingsAdapter
-            //drawDivider(forViewType = R.layout.settings_profile_item)
             isNestedScrollingEnabled = false
             setHasFixedSize(true)
         }
@@ -59,7 +58,7 @@ class SettingsFragment : Fragment(), SettingsAdapter.SettingsAdapterListener {
             )
         }
 
-        // Observe toast message
+        // Show toast message
         viewModel.toastMessage.observe(viewLifecycleOwner) {
             showShortToast(it)
         }

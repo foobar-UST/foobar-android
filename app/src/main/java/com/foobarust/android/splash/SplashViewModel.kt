@@ -12,7 +12,7 @@ import com.foobarust.android.main.MainActivity
 import com.foobarust.android.onboarding.OnboardingActivity
 import com.foobarust.android.utils.SingleLiveEvent
 import com.foobarust.android.utils.createNotificationChannel
-import com.foobarust.domain.states.getSuccessDataOr
+import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.onboarding.GetOnboardingCompletedUseCase
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
@@ -57,9 +57,10 @@ class SplashViewModel @ViewModelInject constructor(
 
             // Navigate to MainActivity if onboarding has been completed.
             // Otherwise, navigate to OnboardingActivity to complete the onboarding process.
-            _startNavigation.value = when {
-                getOnboardingCompletedUseCase(Unit).getSuccessDataOr(false) -> MainActivity::class
-                else -> OnboardingActivity::class
+            when (getOnboardingCompletedUseCase(Unit)) {
+                is Resource.Success -> _startNavigation.value = MainActivity::class
+                is Resource.Error -> _startNavigation.value = OnboardingActivity::class
+                is Resource.Loading -> Unit
             }
         }
     }

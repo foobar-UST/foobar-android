@@ -27,7 +27,7 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
         getByName("debug") {
-            buildConfigField("Boolean", "USE_FIREBASE_EMULATOR", "false")
+            buildConfigField("Boolean", "USE_FIREBASE_EMULATOR", "true")
             buildConfigField("String", "FIREBASE_EMULATOR_HOST", "\"192.168.128.106:8080\"")
         }
     }
@@ -66,6 +66,8 @@ dependencies {
     implementation(Dependencies.ROOM_KTX)
     implementation(Dependencies.HILT)
     implementation(Dependencies.PAGING_RUNTIME)
+    //implementation(Dependencies.PREFERENCES_DATASTORE)
+    //implementation(Dependencies.PROTO_DATASTORE)
 
     // Firebase
     api(Dependencies.FIREBASE_AUTH)
@@ -86,6 +88,7 @@ dependencies {
     testImplementation(Dependencies.ARCH_CORE_TESTING)
     testImplementation(Dependencies.COROUTINE_TEST)
     testImplementation(Dependencies.JUNIT)
+    testImplementation(Dependencies.MOCKITO_CORE)
     testImplementation(Dependencies.MOCKITO_CORE)
 
     // Android Test

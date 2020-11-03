@@ -9,6 +9,7 @@ import com.foobarust.data.common.Constants.USER_PHOTO_URL_FIELD
 import com.foobarust.data.common.Constants.USER_USERNAME_FIELD
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.PropertyName
+import com.google.firebase.firestore.ServerTimestamp
 
 /**
  * Represent a document structure in 'users' collection.
@@ -31,6 +32,7 @@ data class UserDetailEntity(
     @PropertyName(USER_PHOTO_URL_FIELD) val photoUrl: String? = null,
 
     @JvmField
+    @ServerTimestamp
     @PropertyName(UPDATED_AT_FIELD) val updatedAt: Timestamp? = null,
 
     @JvmField

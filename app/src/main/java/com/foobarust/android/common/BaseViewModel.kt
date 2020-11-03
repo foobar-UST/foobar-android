@@ -1,36 +1,32 @@
 package com.foobarust.android.common
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
+import com.foobarust.android.states.UiFetchState
 import com.foobarust.android.utils.SingleLiveEvent
 
 abstract class BaseViewModel : ViewModel() {
 
+    // Observable for displaying toast message
     private val _toastMessage = SingleLiveEvent<String?>()
     val toastMessage: LiveData<String?>
         get() = _toastMessage
 
-    private val _networkError = SingleLiveEvent<Boolean>()
-    val networkError: LiveData<Boolean>
-        get() = _networkError
+    // Observable for controlling layouts including progress bar and network error layout
+    private val _uiFetchState = MutableLiveData<UiFetchState>()
+    val uiFetchState: LiveData<UiFetchState>
+        get() = _uiFetchState.map {
+            if (it is UiFetchState.Error) showToastMessage(it.message)
+            it
+        }
 
-    private val _loadingProgress = SingleLiveEvent<Boolean>()
-    val loadingProgress: LiveData<Boolean>
-        get() = _loadingProgress
-
-    fun showMessage(message: String?) {
+    fun showToastMessage(message: String?) {
         _toastMessage.value = message
     }
 
-    fun postMessage(message: String?) {
-        _toastMessage.postValue(message)
-    }
-
-    fun showNetworkError() {
-        _networkError.value = true
-    }
-
-    fun controlLoadingProgress(isShow: Boolean) {
-        _loadingProgress.value = isShow
+    fun setUiFetchState(uiFetchState: UiFetchState) {
+        _uiFetchState.value = uiFetchState
     }
 }

@@ -98,17 +98,22 @@ dependencies {
     implementation(Dependencies.PREFERENCES)
     //implementation(Dependencies.WORK)
     implementation(Dependencies.SWIPE_REFRESH_LAYOUT)
+    implementation(Dependencies.BROWSER)
 
     // Firebase
     implementation(Dependencies.FIREBASE_CRASHLYTICS)
     implementation(Dependencies.FIREBASE_MESSAGING)
     implementation(Dependencies.FIREBASE_ANALYTICS)
 
+    // Play Services
+    implementation(Dependencies.PLAY_SERVICES_MAP)
+
     // Others
     implementation(Dependencies.BANNER_VIEW_PAGER)
     implementation(Dependencies.MATERIAL)
     implementation(Dependencies.GLIDE)
     implementation(Dependencies.SPINKIT)
+    implementation(Dependencies.MAP)
 
     // Annotation Processors
     kapt(Annotation.HILT_ANDROID_COMPILER)

@@ -34,7 +34,7 @@ class PromotionSuggestAdapter(
     }
 
     interface PromotionSuggestAdapterListener {
-        fun onPromotionSuggestItemClicked(itemId: String?)
+        fun onPromotionSuggestItemClicked(suggestBasic: SuggestBasic)
     }
 }
 
@@ -44,7 +44,7 @@ class PromotionSuggestCardViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(suggestBasic: SuggestBasic) = binding.run {
-        this.suggestBasicItem = suggestBasic
+        this.suggestBasic = suggestBasic
         listener = this@PromotionSuggestCardViewHolder.listener
         executePendingBindings()
     }

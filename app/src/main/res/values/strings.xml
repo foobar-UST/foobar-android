@@ -5,6 +5,9 @@
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
 
+    <!-- System -->
+    <string name="open_url_no_resolve_activity">Failed to open link.</string>
+
     <!-- Sign in -->
     <string name="signin_input_title">Login</string>
     <string name="signin_input_description">Login using your ITSC username.</string>
@@ -12,7 +15,7 @@
     <string name="signin_input_email_domain_hint">Domain</string>
     <string name="signin_input_confirm">Login</string>
     <string name="signin_input_skip_sigin">Skip</string>
-    <string name="signin_input_email_empty">Please enter your username to login.</string>
+    <string name="signin_input_username_empty">Please enter your username to login.</string>
     <string name="signin_verify_title">We have sent you a sign-in link</string>
     <string name="signin_verify_description">Please check your ITSC mailbox.</string>
     <string name="signin_verify_no_email">Did\'t receive the email?&#160;</string>
@@ -35,6 +38,8 @@
     <string name="seller_label">Restaurants</string>
     <string name="seller_search_label">Search Restaurants</string>
     <string name="seller_detail_label">Seller</string>
+    <string name="seller_misc_label">Seller Misc</string>
+    <string name="seller_action_dialog_label">Seller Action</string>
     <string name="order_label">Order</string>
     <string name="order_history_label">My Orders</string>
     <string name="explore_label">Explore</string>
@@ -43,6 +48,8 @@
     <string name="license_label">License</string>
     <string name="favorite_label">Favourite</string>
     <string name="profile_label">My Profile</string>
+    <string name="item_detail_label">Item Detail</string>
+    <string name="cart_label">My Cart</string>
 
     <!-- Settings -->
     <string name="settings_account_edit_profile">View My Profile</string>
@@ -73,18 +80,47 @@
     <string name="seller_on_campus_title">On Campus</string>
     <string name="seller_off_campus_title">Off Campus</string>
     <string name="seller_list_subtitle">Restaurants</string>
-    <string name="seller_status_opening">Opening</string>
+    <string name="seller_min_spend_format">%.1f Min</string>
+    <string name="seller_pick_up">Pick Up</string>
+    <string name="seller_delivery">Delivery</string>
+    <string name="seller_status_available">Available</string>
     <string name="seller_status_closed">Closed</string>
-    <string name="seller_status_opening_detail">Now Opening (%s - %s)</string>
-    <string name="seller_status_closed_detail">Closed (%s - %s)</string>
     <string name="seller_rating_format">%.1f</string>
     <string name="seller_search_hint">Find Restaurants</string>
+    <string name="seller_unavailable">Unavailable</string>
+    <string name="seller_features_format">$ %.1f Min &#183; Pick-Up</string>
+    <string name="seller_status_online">Opening</string>
+    <string name="seller_status_offline">Closed</string>
+
+    <!-- Seller Misc -->
+    <string name="seller_misc_opening_hours_title">Opening Hours</string>
+    <string name="seller_misc_contact_title">Contact Details</string>
+    <string name="seller_misc_description_title">Info</string>
+    <string name="seller_misc_contact_content">Phone: %s\nWebsite: %s</string>
+
+    <!-- Seller Actions -->
+    <string name="seller_action_add_favorite">Add to Favorite</string>
+    <string name="seller_action_ratings">View Ratings</string>
+    <string name="seller_action_feedback">Send Feedback</string>
 
     <!-- Promotion -->
+    <string name="promotion_advertise_subtitle">What\'s New</string>
     <string name="promotion_suggest_subtitle">Suggest For You</string>
 
     <!-- Item -->
     <string name="item_price_format">$ %.1f</string>
+    <string name="item_detail_price_format">$ %.1f\n(+$ %.1f)</string>
+    <string name="item_detail_notes_hint">E.g. Add extra sauce</string>
+    <string name="item_detail_submit">Add to Cart</string>
+    <string name="item_detail_choices_subtitle">Choices</string>
+    <string name="item_detail_choice_item_title">%s (+$ %.1f)</string>
+    <string name="item_detail_extra_items_subtitle">Add Extras</string>
+    <string name="item_detail_extra_item_title">%s ($ %.1f)</string>
+    <string name="item_detail_notes_subtitle">Special Notes</string>
+
+    <!-- Cart -->
+    <string name="cart_items_count_title">Items in Cart</string>
+    <string name="cart_open_content_desc">Open Cart</string>
 
     <!-- Notification -->
     <string name="foobar_default_notification_channel_id" translatable="false">default_notification_channel</string>
@@ -114,5 +150,6 @@
 
     <!-- Content Descriptions -->
     <string name="clear_text_button_content_description">Clear text</string>
+    <string name="title_activity_maps">Map</string>
 
 </resources>

@@ -6,8 +6,8 @@
 
     <data>
         <variable
-            name="userModel"
-            type="com.foobarust.domain.models.UserDetail" />
+            name="infoModel"
+            type="com.foobarust.android.profile.ProfileListModel.ProfileInfoModel" />
         <variable
             name="listener"
             type="com.foobarust.android.profile.ProfileAdapter.ProfileAdapterListener" />
@@ -26,10 +26,11 @@
             android:layout_height="104dp"
             android:layout_gravity="center_horizontal"
             android:onClick="@{() -> listener.onProfileAvatarClicked()}"
-            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Foobar.Avatar"
-            app:glideUrl="@{userModel.photoUrl}"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Foobar.Circle"
+            app:glideUrl="@{infoModel.userDetail.photoUrl}"
             app:glideCenterCrop="@{true}"
-            app:glidePlaceholder="@{R.drawable.ic_user}" />
+            app:glidePlaceholder="@{R.drawable.ic_user}"
+            tools:src="@sample/sample_image_5"/>
 
         <TextView
             android:id="@+id/username_text_view"
@@ -37,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_large"
             android:layout_gravity="center_horizontal"
-            android:text="@{userModel.username}"
+            android:text="@{infoModel.userDetail.username}"
             android:textAppearance="?attr/textAppearanceHeadline5"
             android:textStyle="bold"
             tools:text="user"/>
@@ -48,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_xmedium"
             android:layout_gravity="center_horizontal"
-            android:text="@{userModel.email}"
+            android:text="@{infoModel.userDetail.email}"
             android:textAppearance="?attr/textAppearanceSubtitle2"
             android:textColor="@color/material_on_background_emphasis_medium"
             tools:text="user@connect.ust.hk"/>

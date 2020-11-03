@@ -11,16 +11,19 @@ import com.foobarust.android.common.TextInputProperty
 import com.foobarust.android.common.TextInputType.NAME
 import com.foobarust.android.common.TextInputType.PHONE_NUM
 import com.foobarust.android.profile.ProfileListModel.*
+import com.foobarust.android.states.UiFetchState
 import com.foobarust.android.utils.SingleLiveEvent
 import com.foobarust.domain.models.UserDetail
 import com.foobarust.domain.models.isFieldsFulfilledForOrdering
-import com.foobarust.domain.states.Resource.*
+import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.user.GetUserDetailObservableUseCase
 import com.foobarust.domain.usecases.user.UpdateUserDetailUseCase
-import com.foobarust.domain.usecases.user.UpdateUserInfoParameter
 import com.foobarust.domain.utils.PhoneUtil
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.channels.ConflatedBroadcastChannel
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
 
 const val EDIT_PROFILE_NAME = "profile_name"
@@ -33,15 +36,25 @@ class ProfileViewModel @ViewModelInject constructor(
     private val phoneUtil: PhoneUtil,
 ) : BaseViewModel() {
 
-    val profileItems = getUserDetailObservableUseCase(Unit)
-        .map {
-            controlLoadingProgress(isShow = it is Loading)
+    private val fetchUserDetailChannel = ConflatedBroadcastChannel<Unit>()
+    private var userDetailCache: UserDetail? = null
+
+    val profileItems = fetchUserDetailChannel
+        .asFlow()
+        .flatMapLatest { getUserDetailObservableUseCase(Unit) }
+        .mapLatest {
             when (it) {
-                is Success -> buildProfileList(it.data)
-                is Loading -> emptyList()
-                is Error -> {
-                    showNetworkError()
-                    showMessage(it.message)
+                is Resource.Success -> {
+                    setUiFetchState(UiFetchState.Success)
+                    userDetailCache = it.data
+                    buildProfileList(it.data)
+                }
+                is Resource.Loading -> {
+                    setUiFetchState(UiFetchState.Loading)
+                    emptyList()
+                }
+                is Resource.Error -> {
+                    setUiFetchState(UiFetchState.Error(it.message))
                     emptyList()
                 }
             }
@@ -51,6 +64,10 @@ class ProfileViewModel @ViewModelInject constructor(
     private val _navigateToTextInput = SingleLiveEvent<TextInputProperty>()
     val navigateToTextInput: LiveData<TextInputProperty>
         get() = _navigateToTextInput
+
+    init {
+        fetchUserDetail()
+    }
 
     private fun buildProfileList(userDetail: UserDetail): List<ProfileListModel> {
         val infoItem = ProfileInfoModel(userDetail = userDetail)
@@ -83,19 +100,29 @@ class ProfileViewModel @ViewModelInject constructor(
         }
     }
 
+    fun fetchUserDetail() {
+        fetchUserDetailChannel.offer(Unit)
+    }
+
     fun updateUserName(name: String) = viewModelScope.launch {
-        updateUserDetailUseCase(
-            UpdateUserInfoParameter(name = name)
-        ).let {
-            if (it is Error) showMessage(it.message)
+        userDetailCache?.let {
+            val updatedUserDetail = it.copy(name = name, updatedAt = null)
+            val resource = updateUserDetailUseCase(updatedUserDetail)
+
+            if (resource is Resource.Error) {
+                showToastMessage(resource.message)
+            }
         }
     }
 
     fun updateUserPhoneNum(phoneNum: String) = viewModelScope.launch {
-        updateUserDetailUseCase(
-            UpdateUserInfoParameter(phoneNum = phoneNum)
-        ).let {
-            if (it is Error) showMessage(it.message)
+        userDetailCache?.let {
+            val updatedUserDetail = it.copy(phoneNum = phoneNum, updatedAt = null)
+            val resource = updateUserDetailUseCase(updatedUserDetail)
+
+            if (resource is Resource.Error) {
+                showToastMessage(resource.message)
+            }
         }
     }
 

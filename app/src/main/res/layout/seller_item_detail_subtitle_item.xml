@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="subtitleModel"
+            type="com.foobarust.android.sellerdetail.SellerItemDetailListModel.SellerItemDetailSubtitleModel" />
+    </data>
+
+    <TextView
+        android:id="@+id/subtitle_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_large"
+        android:layout_marginBottom="@dimen/spacing_xmedium"
+        android:layout_marginStart="@dimen/spacing_large"
+        android:text="@{subtitleModel.subtitle}"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        tools:text="Subtitle"/>
+
+</layout>

@@ -17,8 +17,11 @@ object Dependencies {
     // Android
     const val APPCOMPAT = "androidx.appcompat:appcompat:${Versions.APPCOMPAT}"
     const val ACTIVITY = "androidx.activity:activity-ktx:${Versions.ACTIVITY}"
+    const val BROWSER = "androidx.browser:browser:${Versions.BROWSER}"
     const val CORE = "androidx.core:core-ktx:${Versions.CORE}"
     const val CONSTRAINT_LAYOUT = "androidx.constraintlayout:constraintlayout:${Versions.CONSTRAINT_LAYOUT}"
+    const val PREFERENCES_DATASTORE = "androidx.datastore:datastore-preferences:${Versions.DATASTORE}"
+    const val PROTO_DATASTORE = "androidx.datastore:datastore-core:${Versions.DATASTORE}"
     const val FRAGMENT = "androidx.fragment:fragment-ktx:${Versions.FRAGMENT}"
     const val GLIDE = "com.github.bumptech.glide:glide:${Versions.GLIDE}"
     const val NAVIGATION_FRAGMENT = "androidx.navigation:navigation-fragment-ktx:${Versions.NAVIGATION}"
@@ -54,6 +57,7 @@ object Dependencies {
 
     // Play Services
     const val PLAY_SERVICES_AUTH = "com.google.android.gms:play-services-auth:${Versions.PLAY_SERVICES_AUTH}"
+    const val PLAY_SERVICES_MAP = "com.google.android.gms:play-services-maps:${Versions.PLAY_SERVICES_MAP}"
 
     // Others
     const val BANNER_VIEW_PAGER = "com.github.zhpanvip:BannerViewPager:${Versions.BANNER_VIEW_PAGER}"
@@ -61,6 +65,7 @@ object Dependencies {
     const val SPINKIT = "com.github.ybq:Android-SpinKit:${Versions.SPINKIT}"
     const val GSON = "com.google.code.gson:gson:${Versions.GSON}"
     const val SHIMMER = "com.facebook.shimmer:shimmer:${Versions.SHIMMER}"
+    const val MAP = "com.google.maps.android:maps-ktx:${Versions.MAP}"
 
     // Test
     const val ARCH_CORE_TESTING = "androidx.arch.core:core-testing:${Versions.ARCH}"

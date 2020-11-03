@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="com.foobarust.android">
 
+    <!--
+         The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
+         Google Maps Android API v2, but you must specify either coarse or fine
+         location permissions for the "MyLocation" functionality.
+    -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <queries>
+        <intent>
+            <action android:name="android.support.customtabs.action.CustomTabsService" />
+        </intent>
+    </queries>
 
     <application
         android:name=".FoobarUST"
@@ -16,47 +27,54 @@
 
         <activity
             android:name=".splash.SplashActivity"
-            android:theme="@style/Theme.Foobar.Splash.DayNight"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Foobar.Splash.DayNight">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <!-- TODO: app shortcuts
             <meta-data
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts"
-                tools:targetApi="25"/>
+                tools:targetApi="25" />
+             -->
         </activity>
 
         <activity
             android:name=".main.MainActivity"
-            android:theme="@style/Theme.Foobar.DayNight"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Foobar.DayNight" />
 
         <activity
             android:name=".onboarding.OnboardingActivity"
-            android:theme="@style/Theme.Foobar.Onboarding.DayNight"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Foobar.Onboarding.DayNight" />
 
         <activity
             android:name=".auth.AuthActivity"
-            android:theme="@style/Theme.Foobar.Auth.DayNight"
-            android:windowSoftInputMode="adjustPan"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:launchMode="singleTask">
+            android:theme="@style/Theme.Foobar.Auth.DayNight"
+            android:windowSoftInputMode="adjustPan">
+
             <!-- Email link handler -->
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
                 <data
                     android:host="foobarust.page.link"
-                    android:scheme="https"/>
+                    android:scheme="https" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".DemoActivity"/>
+        <activity android:name=".InsertFakeDataActivity" />
 
         <meta-data
             android:name="preloaded_fonts"
@@ -66,10 +84,9 @@
             android:name=".services.FoobarFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
         <!--
             TODO:
             Set custom default icon. This is used when no icon is set for incoming notification messages.
@@ -77,8 +94,7 @@
         -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/ic_restaurant"/>
-
+            android:resource="@drawable/ic_restaurant" />
         <!--
             TODO:
             Set color used with incoming notification messages. This is used when no color is set for the incoming
@@ -86,8 +102,7 @@
         -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/maroon_500"/>
-
+            android:resource="@color/maroon_500" />
         <!--
             TODO:
             This default channel will be used when notification message has no specified channel,
@@ -96,6 +111,14 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/foobar_default_notification_channel_id" />
+
+        <!--
+            The API key for Google Maps-based APIs is defined as a string resource.
+            (See the file "res/values/google_maps_api.xml").
+        -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
 
     </application>
 

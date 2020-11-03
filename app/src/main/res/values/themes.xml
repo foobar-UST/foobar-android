@@ -1,32 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    
-    <style name="ThemeOverlay.Foobar.Dialog.Fullscreen.PopIME" parent="ThemeOverlay.Foobar.Dialog.Fullscreen">
+
+    <!-- Full screen dialog fragment -->
+    <style name="ThemeOverlay.Foobar.Dialog.Fullscreen.DayNight.Search" parent="ThemeOverlay.Foobar.Dialog.Fullscreen.DayNight">
         <item name="android:windowSoftInputMode">stateAlwaysVisible</item>
+        <item name="android:windowBackground">?attr/scrimBackground</item>
     </style>
+
+    <style name="ThemeOverlay.Foobar.Dialog.Fullscreen.DayNight" parent="ThemeOverlay.Foobar.Dialog.Fullscreen"/>
 
     <style name="ThemeOverlay.Foobar.Dialog.Fullscreen" parent="ThemeOverlay.MaterialComponents.Dialog">
         <item name="android:windowIsFloating">false</item>
-        <item name="android:windowBackground">?attr/scrimBackground</item>
+        <item name="android:colorBackground">@color/background_light</item>
+        <item name="android:windowBackground">?android:colorBackground</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@color/nav_bar</item>
     </style>
 
+    <!-- Alert dialog -->
     <style name="ThemeOverlay.Foobar.AlertDialog" parent="@style/ThemeOverlay.MaterialComponents.MaterialAlertDialog">
         <item name="dialogCornerRadius">@dimen/medium_component_corner_radius</item>
     </style>
 
+    <!-- Bottom sheet dialog -->
     <style name="ThemeOverlay.Foobar.BottomSheetDialog.DayNight" parent="@style/ThemeOverlay.Foobar.BottomSheetDialog"/>
 
     <style name="ThemeOverlay.Foobar.BottomSheetDialog" parent="@style/ThemeOverlay.MaterialComponents.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/Widget.Foobar.BottomSheet</item>
         <item name="android:windowIsFloating">false</item>
-        <item name="android:windowSoftInputMode">adjustResize</item>
+        <item name="android:windowSoftInputMode">adjustPan</item>
         <item name="android:navigationBarColor">?attr/colorSurface</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
-        <item name="android:windowBackground">?attr/scrimBackground</item>
+        <!--item name="android:windowBackground">?attr/scrimBackground</item-->
     </style>
 
+    <!-- Onboarding activity -->
     <style name="Theme.Foobar.Onboarding.DayNight" parent="Theme.Foobar.Onboarding"/>
 
     <style name="Theme.Foobar.Onboarding" parent="Theme.Foobar">
@@ -36,6 +44,7 @@
         <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
     </style>
 
+    <!-- Auth activity -->
     <style name="Theme.Foobar.Auth.DayNight" parent="Theme.Foobar.Auth"/>
 
     <style name="Theme.Foobar.Auth" parent="Theme.Foobar">
@@ -45,6 +54,7 @@
         <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
     </style>
 
+    <!-- Splash activity -->
     <style name="Theme.Foobar.Splash.DayNight" parent="Theme.Foobar.Splash"/>
 
     <style name="Theme.Foobar.Splash" parent="Theme.Foobar">
@@ -55,6 +65,7 @@
         <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
     </style>
 
+    <!-- Main theme -->
     <style name="Theme.Foobar.DayNight" parent="Theme.Foobar"/>
 
     <style name="Theme.Foobar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
@@ -103,12 +114,16 @@
 
         <!-- Styles -->
         <item name="bottomSheetStyle">@style/Widget.Foobar.BottomSheet</item>
+        <item name="radioButtonStyle">@style/Widget.Foobar.RadioButton</item>
+        <item name="sellerActionChipStyle">@style/Widget.Foobar.Chip.SellerAction</item>
 
         <item name="android:statusBarColor">?android:attr/colorBackground</item>
         <item name="android:navigationBarColor">?attr/colorPrimarySurface</item>
         <item name="android:windowBackground">?android:colorBackground</item>
         <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
+
+        <item name="cartBackgroundColor">@color/maroon_400</item>
 
     </style>
 

@@ -10,9 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.foobarust.android.R
 import com.foobarust.android.auth.SignInState.*
 import com.foobarust.android.common.BaseViewModel
-import com.foobarust.domain.states.Resource.Error
-import com.foobarust.domain.states.Resource.Success
-import com.foobarust.domain.states.getSuccessDataOr
+import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.auth.*
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
@@ -26,8 +24,8 @@ class AuthViewModel @ViewModelInject constructor(
     @ApplicationContext private val context: Context,
     private val requestAuthEmailUseCase: RequestAuthEmailUseCase,
     private val signInWithAuthLinkUseCase: SignInWithAuthLinkUseCase,
-    private val getEmailToBeVerifiedUseCase: GetEmailToBeVerifiedUseCase,
-    private val saveEmailToBeVerifiedUseCase: SaveEmailToBeVerifiedUseCase,
+    private val getRequestedEmailUseCase: GetRequestedEmailUseCase,
+    private val updateRequestedEmailUseCase: UpdateRequestedEmailUseCase,
     private val authEmailUtil: AuthEmailUtil
 ) : BaseViewModel() {
 
@@ -57,31 +55,34 @@ class AuthViewModel @ViewModelInject constructor(
 
         // Check if the username input is empty
         if (usernameChannel.value.isBlank()) {
-            showMessage(context.getString(R.string.signin_input_email_empty))
+            showToastMessage(context.getString(R.string.signin_input_username_empty))
             return@launch
         }
 
         // Check if the request timer is still active
         if (_resendAuthEmailTimerActive.value) {
-            showMessage(context.getString(R.string.signin_auth_email_resend_interval))
+            showToastMessage(context.getString(R.string.signin_auth_email_resend_interval))
             return@launch
         }
 
         requestAuthEmailUseCase(signInEmail).collect {
             // Navigate to VerifyFragment if the request is success, otherwise do nothing.
             when (it) {
-                is Success -> {
+                is Resource.Success -> {
                     // Condition 1: success email request
-                    saveEmailToBeVerifiedUseCase(signInEmail)
+                    updateRequestedEmailUseCase(signInEmail)
                     _signInState.value = VERIFYING
-                    showMessage(context.getString(R.string.signin_auth_email_sent))
+                    showToastMessage(context.getString(R.string.signin_auth_email_sent))
                 }
-                is Error -> {
+
+                is Resource.Error -> {
                     // Condition 3: failed email request
                     // When there is something wrong with the request, navigate back to input screen
                     _signInState.value = INPUT
-                    showMessage(it.message)
+                    showToastMessage(it.message)
                 }
+
+                is Resource.Loading -> Unit
             }
 
             // Start timer to prevent abuse of email request
@@ -92,26 +93,24 @@ class AuthViewModel @ViewModelInject constructor(
     fun verifyEmailLinkAndSignIn(emailLink: String) = viewModelScope.launch {
         _signInState.value = VERIFYING
 
-        // Get the saved email and start to verify
-        getEmailToBeVerifiedUseCase(Unit).getSuccessDataOr(null)?.let { email ->
-            val signInParams = SignInWithAuthLinkParameters(
-                email = email,
-                authLink = emailLink
-            )
+        getRequestedEmailUseCase(Unit).collect {
+            when (it) {
+                is Resource.Success -> {
+                    val signInParams = SignInWithAuthLinkParameters(
+                        email = it.data,
+                        authLink = emailLink
+                    )
 
-            //showMessage(context.getString(R.string.signin_ongoing))
-
-            signInWithAuthLinkUseCase(signInParams).collect {
-                when (it) {
-                    is Success -> handleSuccessSignIn()
-                    is Error -> {
-                        // Condition 5: failed email verification
-                        _signInState.value = INPUT
-                        showMessage(it.message)
-                    }
+                    signInWithAuthLink(signInParams)
                 }
+                is Resource.Error -> {
+                    // No email is saved for verification, go back to input screen
+                    _signInState.value = INPUT
+                    showToastMessage(context.getString(R.string.signin_error))
+                }
+                is Resource.Loading -> Unit
             }
-        } ?: showMessage(context.getString(R.string.signin_error))
+        }
     }
 
     fun onUsernameChanged(username: String) {
@@ -125,18 +124,32 @@ class AuthViewModel @ViewModelInject constructor(
     fun onAuthEmailVerifyingCanceled() = viewModelScope.launch {
         // Condition 4: cancel email verification
         _signInState.value = INPUT
-        saveEmailToBeVerifiedUseCase(null)
-        showMessage(context.getString(R.string.signin_cancel))
+        updateRequestedEmailUseCase(null)
+        showToastMessage(context.getString(R.string.signin_cancel))
     }
 
     fun onSignInSkip() {
         _signInState.value = COMPLETED
     }
 
+    private fun signInWithAuthLink(signInParams: SignInWithAuthLinkParameters) = viewModelScope.launch {
+        signInWithAuthLinkUseCase(signInParams).collect {
+            when (it) {
+                is Resource.Success -> handleSuccessSignIn()
+                is Resource.Error -> {
+                    // Condition 5: failed email verification
+                    _signInState.value = INPUT
+                    showToastMessage(it.message)
+                }
+                is Resource.Loading -> Unit
+            }
+        }
+    }
+
     private fun handleSuccessSignIn() {
         // Condition 2: success email verification
         viewModelScope.launch {
-            saveEmailToBeVerifiedUseCase(null)
+            updateRequestedEmailUseCase(null)
             _signInState.value = COMPLETED
         }
     }

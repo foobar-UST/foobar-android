@@ -3,4 +3,8 @@
     <attr name="motionInterpolatorPersistent" format="float"/>
     <attr name="motionInterpolatorIncoming" format="float"/>
     <attr name="motionInterpolatorOutgoing" format="float"/>
+
+    <attr name="sellerActionChipStyle" format="reference"/>
+
+    <attr name="cartBackgroundColor" format="color"/>
 </resources>

@@ -6,7 +6,7 @@
 
     <data>
         <variable
-            name="profileEditModel"
+            name="editModel"
             type="com.foobarust.android.profile.ProfileListModel.ProfileEditModel" />
         <variable
             name="listener"
@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:focusable="true"
-        android:onClick="@{() -> listener.onProfileEditItemClicked(profileEditModel)}"
+        android:onClick="@{() -> listener.onProfileEditItemClicked(editModel)}"
         app:cardElevation="@dimen/elevation_none"
         app:cardBackgroundColor="?attr/colorSurface"
         app:cardCornerRadius="0dp">
@@ -34,7 +34,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@{profileEditModel.title}"
+                android:text="@{editModel.title}"
                 android:textAppearance="?attr/textAppearanceSubtitle2"
                 tools:text="Name"/>
 
@@ -42,7 +42,7 @@
                 android:id="@+id/value_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{profileEditModel.displayValue}"
+                android:text="@{editModel.displayValue}"
                 android:textColor="@color/material_on_surface_emphasis_medium"
                 android:textAppearance="?attr/textAppearanceBody2"
                 tools:text="Lucille Rooney"/>

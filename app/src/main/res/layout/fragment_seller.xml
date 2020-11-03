@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-        <variable
-            name="viewModel"
-            type="com.foobarust.android.seller.SellerViewModel" />
-        <import type="androidx.paging.LoadState" />
-    </data>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,59 +9,16 @@
         android:orientation="vertical">
 
         <com.google.android.material.tabs.TabLayout
+            android:id="@+id/seller_tab_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            app:tabIndicatorFullWidth="false">
+            app:tabIndicatorFullWidth="false"/>
 
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/seller_on_campus_title"/>
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/seller_off_campus_title"/>
-
-        </com.google.android.material.tabs.TabLayout>
-
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/swipe_refresh_layout"
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/seller_view_pager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:animateLayoutChanges="true">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/seller_recycler_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:goneIf="@{!(viewModel.loadState instanceof LoadState.NotLoading)}"
-                    tools:listitem="@layout/seller_basic_item" />
-
-                <ProgressBar
-                    android:id="@+id/progress_bar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    app:goneIf="@{!(viewModel.loadState instanceof LoadState.Loading)}"/>
-
-                <include
-                    layout="@layout/network_error"
-                    android:id="@+id/network_error_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:showRetry="@{true}"
-                    app:goneIf="@{!(viewModel.loadState instanceof LoadState.Error)}"/>
-
-            </FrameLayout>
-
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 

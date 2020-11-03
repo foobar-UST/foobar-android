@@ -1,5 +1,6 @@
 package com.foobarust.domain.usecases.user
 
+import com.foobarust.domain.common.UseCaseExceptions.ERROR_USER_NOT_SIGNED_IN
 import com.foobarust.domain.di.IoDispatcher
 import com.foobarust.domain.models.AuthProfile
 import com.foobarust.domain.repositories.AuthRepository
@@ -20,8 +21,6 @@ import javax.inject.Inject
  * [Resource.Error] will be emitted when the user is signed out.
  */
 
-private const val GET_USER_BASIC_INFO_NOT_SIGNED_IN = "User is not signed in."
-
 class GetAuthProfileObservableUseCase @Inject constructor(
     private val authRepository: AuthRepository,
     @IoDispatcher coroutineDispatcher: CoroutineDispatcher
@@ -30,7 +29,7 @@ class GetAuthProfileObservableUseCase @Inject constructor(
     override fun execute(parameters: Unit): Flow<Resource<AuthProfile>> = flow {
         // Check if user is signed in
         if (!authRepository.isSignedIn()) {
-            throw Exception(GET_USER_BASIC_INFO_NOT_SIGNED_IN)
+            throw Exception(ERROR_USER_NOT_SIGNED_IN)
         }
 
         emitAll(authRepository.getAuthProfileObservable())

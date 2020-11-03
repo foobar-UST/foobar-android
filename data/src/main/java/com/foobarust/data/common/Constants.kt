@@ -9,6 +9,9 @@ object Constants {
     // Common
     const val UPDATED_AT_FIELD = "updated_at"
 
+    // SharedPreferences
+    const val PREFS_NAME = "foobarust"
+
     // Users
     const val USERS_COLLECTION = "users"
     const val USERS_DELIVERY_COLLECTION = "users_delivery"
@@ -32,20 +35,25 @@ object Constants {
     const val SELLER_NAME_FIELD = "name"
     const val SELLER_DESCRIPTION_FIELD = "description"
     const val SELLER_IMGAE_URL_FIELD = "image_url"
-    const val SELLER_OPEN_TIME_FIELD = "open_time"
-    const val SELLER_CLOSE_TIME_FIELD = "close_time"
+    const val SELLER_OPENING_HOURS_FIELD = "opening_hours"
     const val SELLER_MIN_SPEND_FIELD = "min_spend"
     const val SELLER_RATING_FIELD = "rating"
     const val SELLER_TYPE_FIELD = "type"
     const val SELLER_EMAIL_FIELD = "email"
     const val SELLER_PHONE_NUM_FIELD = "phone_num"
     const val SELLER_LOCATION_FIELD = "location"
-    const val SELLER_ADDRESS_FIELD = "address"
+    const val SELLER_LOCATION_ADDRESS_FIELD = "address"
+    const val SELLER_LOCATION_GEOPOINT_FIELD = "geopoint"
     const val SELLER_CATALOGS_FIELD = "catalogs"
+    const val SELLER_ONLINE_FIELD = "online"
+    const val SELLER_NOTICE_FIELD = "notice"
 
     // Catalog
     const val SELLER_CATALOG_ID_FIELD = "id"
     const val SELLER_CATALOG_NAME_FIELD = "name"
+    const val SELLER_CATALOG_AVAILABLE_FIELD = "available"
+    const val SELLER_CATALOG_START_TIME_FIELD = "start_time"
+    const val SELLER_CATALOG_END_TIME_FIELD = "end_time"
 
     // Advertise
     const val ADVERTISES_COLLECTION = "advertises"
@@ -60,8 +68,13 @@ object Constants {
     const val ADVERTISE_CREATED_AT_FIELD = "created_at"
     const val ADVERTISE_IMAGE_URL_FIELD = "image_url"
 
-    // TODO: refactor suggest basic
     const val SUGGESTS_BASIC_COLLECTION = "suggests_basic"
+    const val SUGGESTS_BASIC_ID_FIELD = "id"
+    const val SUGGESTS_BASIC_ITEM_ID_FIELD = "item_id"
+    const val SUGGESTS_BASIC_ITEM_TITLE_FIELD = "item_title"
+    const val SUGGESTS_BASIC_SELLER_NAME_FIELD = "seller_name"
+    const val SUGGESTS_BASIC_IMAGE_URL_FIELD = "image_url"
+
 
     // Item
     const val SELLER_ITEMS_COLLECTION = "items"
@@ -75,4 +88,15 @@ object Constants {
     const val SELLER_ITEMS_PRICE_FIELD = "price"
     const val SELLER_ITEMS_COUNT_FIELD = "count"
     const val SELLER_ITEMS_IMAGE_URL_FIELD = "image_url"
+    const val SELLER_ITEMS_CHOICES_FIELD = "choices"
+    const val SELLER_ITEMS_EXTRA_ITEMS_FIELD = "extra_items"
+    const val SELLER_ITEMS_AVAILABLE_FIELD = "available"
+
+    const val ITEMS_CHOICE_ID_FIELD = "id"
+    const val ITEMS_CHOICE_TITLE_FIELD = "title"
+    const val ITEMS_CHOICE_EXTRA_PRICE_FIELD = "extra_price"
+
+    const val EXTRA_ITEM_ID_FIELD = "id"
+    const val EXTRA_ITEM_TITLE_FIELD = "title"
+    const val EXTRA_ITEM_PRICE_FIELD = "price"
 }

@@ -37,7 +37,7 @@ class OnboardingActivity : AppCompatActivity() {
             navigateTo(destination = it, finishEnd = true)
         }
 
-        // Toast
+        // Show toast message
         viewModel.toastMessage.observe(this) {
             showShortToast(it)
         }

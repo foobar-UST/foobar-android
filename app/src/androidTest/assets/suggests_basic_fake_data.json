@@ -1,0 +1,51 @@
+[
+  {
+    "id": "b4b95791-4257-420d-aa4a-03e14896473b",
+    "item_id": "2a284819-bdfe-4b96-bd14-ea1949b1387f",
+    "item_title": "Broccoli and buckwheat crepes",
+    "seller_name": "Happy Restaurant",
+    "image_url": "https://firebasestorage.googleapis.com/v0/b/foobar-group-delivery-app.appspot.com/o/test_images%2Fsample_image_3.jpg?alt=media&token=4c5e8ace-aa3e-40e5-81c1-46597e128b9b"
+  },
+  {
+    "id": "80e026bf-8a71-4b7d-8d6d-9e66b1e5acd8",
+    "item_id": "842a2f34-241a-40b7-9a4e-89095f485751",
+    "item_title": "Amchoor and pork vindaloo",
+    "seller_name": "Happy Restaurant",
+    "image_url": "https://firebasestorage.googleapis.com/v0/b/foobar-group-delivery-app.appspot.com/o/test_images%2Fsample_image_3.jpg?alt=media&token=4c5e8ace-aa3e-40e5-81c1-46597e128b9b"
+  },
+  {
+    "id": "925c365a-affb-42af-81e6-50d9b0d6e194",
+    "item_id": "75d63180-b78c-4ba1-a1e6-e2cb11bf5639",
+    "item_title": "Raisin and sultana buns",
+    "seller_name": "Happy Restaurant",
+    "image_url": "https://firebasestorage.googleapis.com/v0/b/foobar-group-delivery-app.appspot.com/o/test_images%2Fsample_image_4.jpg?alt=media&token=ccc9f16a-f2f1-4c8e-865a-89daeb49121d"
+  },
+  {
+    "id": "2fec3bcc-f82d-4754-86d9-3e616ecfafa0",
+    "item_id": "3593b9cd-06a1-45ee-b66e-5b2fb5a3a4ed",
+    "item_title": "Bacon and buffalo skewers",
+    "seller_name": "Happy Restaurant",
+    "image_url": "https://firebasestorage.googleapis.com/v0/b/foobar-group-delivery-app.appspot.com/o/test_images%2Fsample_image_1.jpg?alt=media&token=4453e3c8-de2e-4863-8e3f-e9347f73c2a0"
+  },
+  {
+    "id": "be3d69ba-6599-4bef-90a5-20842caecead",
+    "item_id": "be1b1812-f0aa-4e76-92c1-98594c606d0a",
+    "item_title": "Sesame and samphire salad",
+    "seller_name": "Happy Restaurant",
+    "image_url": "https://firebasestorage.googleapis.com/v0/b/foobar-group-delivery-app.appspot.com/o/test_images%2Fsample_image_4.jpg?alt=media&token=ccc9f16a-f2f1-4c8e-865a-89daeb49121d"
+  },
+  {
+    "id": "480d2504-224f-4e45-ace9-7a8244624c1b",
+    "item_id": "46cceaec-d62f-413c-aa47-d84d26689776",
+    "item_title": "Delicata and chandeau salad",
+    "seller_name": "Happy Restaurant",
+    "image_url": "https://firebasestorage.googleapis.com/v0/b/foobar-group-delivery-app.appspot.com/o/test_images%2Fsample_image_2.jpg?alt=media&token=3c16ab78-aa1b-4c59-b918-efac5e69f17b"
+  },
+  {
+    "id": "d6271e4d-0d90-4939-9e62-71b03749a4cb",
+    "item_id": "b3cc5224-5c89-4339-a092-6a929fd86838",
+    "item_title": "Broccoli and buckwheat crepes",
+    "seller_name": "Happy Restaurant",
+    "image_url": "https://firebasestorage.googleapis.com/v0/b/foobar-group-delivery-app.appspot.com/o/test_images%2Fsample_image_1.jpg?alt=media&token=4453e3c8-de2e-4863-8e3f-e9347f73c2a0"
+  }
+]

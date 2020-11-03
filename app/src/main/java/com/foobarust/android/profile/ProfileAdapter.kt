@@ -10,7 +10,6 @@ import com.foobarust.android.R
 import com.foobarust.android.databinding.ProfileEditItemBinding
 import com.foobarust.android.databinding.ProfileInfoItemBinding
 import com.foobarust.android.databinding.ProfileWarningItemBinding
-import com.foobarust.android.profile.ProfileAdapter.ProfileAdapterListener
 import com.foobarust.android.profile.ProfileListModel.*
 import com.foobarust.android.profile.ProfileViewHolder.*
 import com.foobarust.domain.models.UserDetail
@@ -24,13 +23,11 @@ class ProfileAdapter(
 
         return when (viewType) {
             R.layout.profile_info_item -> ProfileInfoViewHolder(
-                ProfileInfoItemBinding.inflate(inflater, parent, false),
-                listener
+                ProfileInfoItemBinding.inflate(inflater, parent, false)
             )
 
             R.layout.profile_edit_item -> ProfileEditViewHolder(
-                ProfileEditItemBinding.inflate(inflater, parent, false),
-                listener
+                ProfileEditItemBinding.inflate(inflater, parent, false)
             )
 
             R.layout.profile_warning_item -> ProfileWarningViewHolder(
@@ -44,19 +41,19 @@ class ProfileAdapter(
     override fun onBindViewHolder(holder: ProfileViewHolder, position: Int) {
         when (holder) {
             is ProfileInfoViewHolder -> holder.binding.run {
-                userModel = (getItem(position) as ProfileInfoModel).userDetail
+                infoModel = getItem(position) as ProfileInfoModel
                 listener = this@ProfileAdapter.listener
                 executePendingBindings()
             }
 
             is ProfileEditViewHolder -> holder.binding.run {
-                profileEditModel = getItem(position) as ProfileEditModel
+                editModel = getItem(position) as ProfileEditModel
                 listener = this@ProfileAdapter.listener
                 executePendingBindings()
             }
 
             is ProfileWarningViewHolder -> holder.binding.run {
-                message = (getItem(position) as ProfileWarningModel).message
+                warningModel = getItem(position) as ProfileWarningModel
                 executePendingBindings()
             }
         }
@@ -78,13 +75,11 @@ class ProfileAdapter(
 
 sealed class ProfileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     class ProfileInfoViewHolder(
-        val binding: ProfileInfoItemBinding,
-        val listener: ProfileAdapterListener
+        val binding: ProfileInfoItemBinding
     ) : ProfileViewHolder(binding.root)
 
     class ProfileEditViewHolder(
-        val binding: ProfileEditItemBinding,
-        val listener: ProfileAdapterListener
+        val binding: ProfileEditItemBinding
     ) : ProfileViewHolder(binding.root)
 
     class ProfileWarningViewHolder(

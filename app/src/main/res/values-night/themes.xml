@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Full screen dialog fragment -->
+    <style name="ThemeOverlay.Foobar.Dialog.Fullscreen.DayNight" parent="ThemeOverlay.Foobar.Dialog.Fullscreen.Dark"/>
+
+    <style name="ThemeOverlay.Foobar.Dialog.Fullscreen.Dark" parent="@style/ThemeOverlay.Foobar.Dialog.Fullscreen">
+        <item name="android:colorBackground">@color/background_dark</item>
+    </style>
+
+    <!-- Bottom sheet dialog -->
     <style name="ThemeOverlay.Foobar.BottomSheetDialog.DayNight" parent="@style/ThemeOverlay.Foobar.BottomSheetDialog.Dark"/>
 
     <style name="ThemeOverlay.Foobar.BottomSheetDialog.Dark" parent="@style/ThemeOverlay.Foobar.BottomSheetDialog">
         <item name="android:windowLightNavigationBar" tools:ignore="NewApi">false</item>
     </style>
 
+    <!-- Onboarding -->
     <style name="Theme.Foobar.Onboarding.DayNight" parent="Theme.Foobar.Onboarding.Dark"/>
 
     <style name="Theme.Foobar.Onboarding.Dark" parent="Theme.Foobar.Dark">
@@ -14,6 +23,7 @@
         <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
     </style>
 
+    <!-- Auth activity -->
     <style name="Theme.Foobar.Auth.DayNight" parent="Theme.Foobar.Auth.Dark"/>
 
     <style name="Theme.Foobar.Auth.Dark" parent="Theme.Foobar.Dark">
@@ -22,6 +32,7 @@
         <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
     </style>
 
+    <!-- Splash activity -->
     <style name="Theme.Foobar.Splash.DayNight" parent="Theme.Foobar.Splash.Dark"/>
 
     <style name="Theme.Foobar.Splash.Dark" parent="Theme.Foobar.Dark">
@@ -32,11 +43,12 @@
         <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
     </style>
 
+    <!-- Main theme -->
     <style name="Theme.Foobar.DayNight" parent="Theme.Foobar.Dark"/>
 
     <style name="Theme.Foobar.Dark" parent="Theme.Foobar">
-        <item name="colorPrimary">@color/maroon_300</item>
-        <item name="colorPrimaryVariant">@color/maroon_300</item>
+        <item name="colorPrimary">@color/maroon_400</item>
+        <item name="colorPrimaryVariant">@color/maroon_400</item>
         <item name="colorSecondary">@color/mint_400</item>
         <item name="colorSecondaryVariant">@color/mint_400</item>
         <item name="colorError">@color/red_400</item>
@@ -54,5 +66,7 @@
         <item name="elevationOverlayEnabled">true</item>
 
         <item name="android:windowLightStatusBar" tools:targetApi="23">false</item>
+
+        <item name="cartBackgroundColor">@color/grey</item>
     </style>
 </resources>

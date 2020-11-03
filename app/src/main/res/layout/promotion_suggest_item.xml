@@ -6,7 +6,7 @@
 
     <data>
         <variable
-            name="suggestBasicItem"
+            name="suggestBasic"
             type="com.foobarust.domain.models.SuggestBasic" />
         <variable
             name="listener"
@@ -15,12 +15,13 @@
     </data>
 
     <com.google.android.material.card.MaterialCardView
-        android:layout_width="200dp"
+        android:layout_width="240dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/spacing_xmedium"
         android:focusable="true"
         android:clickable="true"
-        android:onClick="@{() -> listener.onPromotionSuggestItemClicked(suggestBasicItem.id)}">
+        android:onClick="@{() -> listener.onPromotionSuggestItemClicked(suggestBasic)}"
+        app:cardElevation="@dimen/elevation_none">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -32,7 +33,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:scaleType="centerCrop"
-                app:glideUrl="@{suggestBasicItem.imageUrl}"
+                android:contentDescription="@{suggestBasic.itemTitle}"
+                app:glideUrl="@{suggestBasic.imageUrl}"
                 app:glideCenterCrop="@{true}"
                 app:glidePlaceholder="@{R.drawable.placeholder_card}"
                 tools:src="@sample/sample_image_5"/>
@@ -44,7 +46,7 @@
                 android:layout_marginTop="@dimen/spacing_xmedium"
                 android:layout_marginStart="@dimen/spacing_xmedium"
                 android:layout_marginEnd="@dimen/spacing_xmedium"
-                android:text="@{suggestBasicItem.itemTitle}"
+                android:text="@{suggestBasic.itemTitle}"
                 android:textAppearance="?attr/textAppearanceBody2"
                 android:maxLines="1"
                 android:ellipsize="end"
@@ -58,7 +60,7 @@
                 android:layout_marginStart="@dimen/spacing_xmedium"
                 android:layout_marginEnd="@dimen/spacing_xmedium"
                 android:layout_marginBottom="@dimen/spacing_xmedium"
-                android:text="@{suggestBasicItem.sellerName}"
+                android:text="@{suggestBasic.sellerName}"
                 android:textAppearance="?attr/textAppearanceOverline"
                 android:textColor="@color/material_on_surface_emphasis_medium"
                 android:maxLines="1"

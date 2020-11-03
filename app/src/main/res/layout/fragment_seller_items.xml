@@ -7,27 +7,15 @@
     <data>
         <variable
             name="viewModel"
-            type="com.foobarust.android.seller.SellerItemsViewModel" />
+            type="com.foobarust.android.sellerdetail.SellerItemsViewModel" />
         <import type="androidx.paging.LoadState" />
     </data>
 
     <FrameLayout
+        android:id="@+id/items_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:animateLayoutChanges="true">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:goneIf="@{!(viewModel.loadState instanceof LoadState.Loading)}">
-
-            <include layout="@layout/seller_item_info_shimmer" />
-            <include layout="@layout/seller_item_info_shimmer" />
-            <include layout="@layout/seller_item_info_shimmer" />
-            <include layout="@layout/seller_item_info_shimmer" />
-
-        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/items_recycler_view"
@@ -37,7 +25,21 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:goneIf="@{!(viewModel.loadState instanceof LoadState.NotLoading)}"
             app:paddingBottomSystemWindowInsets="@{true}"
-            tools:listitem="@layout/seller_item_info_content" />
+            tools:listitem="@layout/seller_items_basic_item" />
+
+        <ProgressBar
+            android:id="@+id/items_progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="64dp"
+            app:goneIf="@{!(viewModel.loadState instanceof LoadState.Loading)}"/>
+
+        <!--
+        <include
+            layout="@layout/fragment_seller_items_shimmer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        -->
 
     </FrameLayout>
 

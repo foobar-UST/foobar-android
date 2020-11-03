@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_seller_add_favorite"
+        android:title="@string/seller_action_add_favorite"
+        android:icon="@drawable/ic_favorite"/>
+
+    <item
+        android:id="@+id/action_seller_ratings"
+        android:title="@string/seller_action_ratings"
+        android:icon="@drawable/ic_star"/>
+
+    <item
+        android:id="@+id/action_seller_feedback"
+        android:title="@string/seller_action_feedback"
+        android:icon="@drawable/ic_email"/>
+
+</menu>

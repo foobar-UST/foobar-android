@@ -56,7 +56,8 @@ class OnboardingViewModel @ViewModelInject constructor(
 
         when (getOnboardingCompletedUseCase(Unit)) {
             is Resource.Success -> _navigateToMain.value = MainActivity::class
-            is Resource.Error -> showMessage(ERROR_ONBOARDING_COMPLETE)
+            is Resource.Error -> showToastMessage(ERROR_ONBOARDING_COMPLETE)
+            is Resource.Loading -> Unit
         }
     }
 }

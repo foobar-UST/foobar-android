@@ -3,6 +3,8 @@ package com.foobarust.android.main
 import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.common.BaseViewModel
 import com.foobarust.android.utils.SingleLiveEvent
@@ -23,15 +25,27 @@ class MainViewModel @ViewModelInject constructor(
     val scrollToTop: LiveData<Unit>
         get() = _scrollToTop
 
+    private val _showCartBottomBar = MutableLiveData(true)
+    val showCartBottomBar: LiveData<Boolean>
+        get() = _showCartBottomBar.distinctUntilChanged()
+
     fun onTabScrollToTop() {
         _scrollToTop.value = Unit
+    }
+
+    fun showCartBottomBar() {
+        _showCartBottomBar.value = true
+    }
+
+    fun hideCartBottomBar() {
+        _showCartBottomBar.value = false
     }
 
     fun updateUserPhoto(photoUriString: String) = viewModelScope.launch {
         updateUserPhotoUseCase(photoUriString).collect {
             when (it) {
-                is Resource.Success -> showMessage("Photo uploaded.")
-                is Resource.Error -> showMessage(it.message)
+                is Resource.Success -> showToastMessage("Photo uploaded.")
+                is Resource.Error -> showToastMessage(it.message)
                 is Resource.Loading -> Log.d("ProfileViewModel", "progress: ${it.progress}")
             }
         }

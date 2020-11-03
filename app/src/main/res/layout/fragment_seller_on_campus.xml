@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.foobarust.android.seller.SellerOnCampusViewModel" />
+        <import type="androidx.paging.LoadState" />
+    </data>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:animateLayoutChanges="true">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:goneIf="@{!(viewModel.loadState instanceof LoadState.NotLoading)}"
+                tools:listitem="@layout/seller_on_campus_item" />
+
+            <include
+                layout="@layout/fragment_seller_on_campus_shimmer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:goneIf="@{!(viewModel.loadState instanceof LoadState.Loading)}"/>
+
+            <include
+                layout="@layout/common_load_error_layout"
+                android:id="@+id/load_error_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:goneIf="@{!(viewModel.loadState instanceof LoadState.Error)}"/>
+
+        </FrameLayout>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+</layout>

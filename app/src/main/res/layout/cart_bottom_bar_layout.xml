@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="navBarPadding"
+            type="boolean" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cart_bottom_bar_card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardBackgroundColor="?attr/colorPrimary"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="@dimen/spacing_xmedium"
+        app:rippleColor="?attr/colorOnPrimary">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/spacing_large"
+            app:marginBottomSystemWindowInsets="@{navBarPadding}">
+
+            <TextView
+                android:id="@+id/cart_items_count_text_view"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:gravity="center"
+                android:background="@drawable/shape_circle"
+                android:backgroundTint="?attr/colorOnPrimarySurface"
+                android:text="4"
+                android:textColor="?attr/colorPrimary"
+                android:textStyle="bold"
+                android:textAppearance="?attr/textAppearanceSubtitle2"/>
+
+            <TextView
+                android:id="@+id/cart_title_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_large"
+                android:layout_toEndOf="@id/cart_items_count_text_view"
+                android:layout_centerVertical="true"
+                android:text="@string/cart_items_count_title"
+                android:textAppearance="?attr/textAppearanceSubtitle2"
+                android:textColor="?attr/colorOnPrimarySurface"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_expand_less"
+                android:contentDescription="@string/cart_open_content_desc"
+                app:tint="?attr/colorOnPrimarySurface"/>
+
+        </RelativeLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</layout>

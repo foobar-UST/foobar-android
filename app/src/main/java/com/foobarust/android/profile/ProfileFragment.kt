@@ -53,7 +53,7 @@ class ProfileFragment : Fragment(), ProfileAdapter.ProfileAdapterListener {
             profileAdapter.submitList(it)
         }
 
-        // Toast
+        // Show toast message
         profileViewModel.toastMessage.observe(viewLifecycleOwner) {
             showShortToast(it)
         }
@@ -63,6 +63,11 @@ class ProfileFragment : Fragment(), ProfileAdapter.ProfileAdapterListener {
             findNavController(R.id.profileFragment)?.navigate(
                 ProfileFragmentDirections.actionProfileFragmentToTextInputDialog(it)
             )
+        }
+
+        // Trigger reload on user detail
+        binding.profileNetworkErrorLayout.retryButton.setOnClickListener {
+            profileViewModel.fetchUserDetail()
         }
 
         return binding.root

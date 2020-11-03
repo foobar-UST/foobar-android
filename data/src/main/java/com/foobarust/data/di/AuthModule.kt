@@ -16,9 +16,7 @@ import javax.inject.Singleton
  * Created by kevin on 9/14/20
  */
 
-@Module(includes = [
-    PersistentModule::class
-])
+@Module(includes = [PersistentModule::class])
 @InstallIn(ApplicationComponent::class)
 abstract class AuthModule {
 

@@ -8,6 +8,7 @@
         <variable
             name="viewModel"
             type="com.foobarust.android.profile.ProfileViewModel" />
+        <import type="com.foobarust.android.states.UiFetchState"/>
     </data>
 
     <FrameLayout
@@ -23,17 +24,16 @@
             tools:listitem="@layout/profile_edit_item"/>
 
         <ProgressBar
-            android:id="@+id/profile_progress_bar"
+            android:id="@+id/progress_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            app:goneIf="@{!viewModel.loadingProgress}"/>
+            app:goneIf="@{!(viewModel.uiFetchState instanceof UiFetchState.Loading)}"/>
 
         <include
-            layout="@layout/network_error"
+            layout="@layout/common_load_error_layout"
             android:id="@+id/profile_network_error_layout"
-            app:showRetry="@{false}"
-            app:goneIf="@{!viewModel.networkError || viewModel.networkError == null}"/>
+            app:goneIf="@{!(viewModel.uiFetchState instanceof UiFetchState.Error)}"/>
 
     </FrameLayout>
 

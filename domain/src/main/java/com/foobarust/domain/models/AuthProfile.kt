@@ -9,7 +9,3 @@ data class AuthProfile(
     val email: String,
     val username: String
 )
-
-fun AuthProfile.asUserDetail(): UserDetail {
-    return UserDetail(username = username, email = email)
-}
