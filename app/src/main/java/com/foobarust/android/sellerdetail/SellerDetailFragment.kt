@@ -14,7 +14,7 @@ import com.foobarust.android.NavigationSellerDirections
 import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentSellerDetailBinding
 import com.foobarust.android.utils.*
-import com.foobarust.domain.models.getFormattedTitle
+import com.foobarust.domain.models.seller.getNormalizedTitle
 import com.google.android.material.chip.Chip
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,35 +42,34 @@ class SellerDetailFragment : DialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentSellerDetailBinding.inflate(inflater, container, false).apply {
-            // Load cached data from arguments
-            sellerName = args.sellerName
-            sellerImageUrl = args.sellerImageUrl
-
+            // Load cached data
+            sellerDetailProperty = args.sellerDetailProperty
             viewModel = this@SellerDetailFragment.viewModel
             lifecycleOwner = viewLifecycleOwner
         }
 
-        // TODO: Remove listener on CollapsingToolbarLayout, so that toolbar top padding can work properly
+        // Remove listener on CollapsingToolbarLayout, so that toolbar top padding can work properly
         // Issue: https://github.com/material-components/material-components-android/issues/1310
         ViewCompat.setOnApplyWindowInsetsListener(binding.collapsingToolbarLayout, null)
 
         // Receive seller id argument
-        viewModel.onFetchSellerDetail(sellerId = args.sellerId)
+        viewModel.onFetchSellerDetail(sellerId = args.sellerDetailProperty.id)
 
         // Set up tab layout and view pager when seller detail is successfully fetched
-        viewModel.sellerDetail.observe(viewLifecycleOwner) {
+        viewModel.sellerCatalogs.observe(viewLifecycleOwner) {
             val catalogPagerAdapter = SellerCatalogPagerAdapter(
                 fragmentManager = childFragmentManager,
                 lifecycle = viewLifecycleOwner.lifecycle,
-                sellerCatalogs = it.catalogs
+                sellerId = args.sellerDetailProperty.id,
+                sellerCatalogs = it
             )
 
             binding.itemsViewPager.adapter = catalogPagerAdapter
 
             TabLayoutMediator(binding.categoryTabLayout, binding.itemsViewPager) { tab, position ->
-                tab.text = it.catalogs[position].getFormattedTitle()
+                tab.text = it[position].getNormalizedTitle()
             }.attach()
         }
 
@@ -92,9 +91,7 @@ class SellerDetailFragment : DialogFragment() {
         }
 
         // Navigation back arrow button
-        binding.toolbar.setNavigationOnClickListener {
-            dismiss()
-        }
+        binding.toolbar.setNavigationOnClickListener { dismiss() }
 
         // Navigate to SellerMiscFragment
         binding.miscButton.setOnClickListener {
@@ -112,12 +109,7 @@ class SellerDetailFragment : DialogFragment() {
         // Navigate to ItemDetailDialog
         viewModel.navigateToItemDetail.observe(viewLifecycleOwner) {
             findNavController(R.id.sellerDetailFragment)?.navigate(
-                SellerDetailFragmentDirections.actionSellerDetailFragmentToSellerItemDetailDialog(
-                    itemId = it.id,
-                    itemTitle = it.title,
-                    itemDescription = it.description,
-                    itemPrice = it.price.toString()
-                )
+                SellerDetailFragmentDirections.actionSellerDetailFragmentToSellerItemDetailFragment(it)
             )
         }
 
@@ -128,8 +120,11 @@ class SellerDetailFragment : DialogFragment() {
                     hide()
 
                     text = action.title
-                    chipIcon = requireContext().getDrawableOrNull(action.drawableRes)
                     chipIconTint = requireContext().buildColorStateList(action.colorRes)
+
+                    action.drawableRes?.let {
+                        chipIcon = requireContext().getDrawableOrNull(it)
+                    }
 
                     setOnClickListener { setupChipActions(action.id) }
 
@@ -153,11 +148,9 @@ class SellerDetailFragment : DialogFragment() {
     }
 
     private fun setupChipActions(actionId: String) {
-        when (actionId) {
-            SELLER_DETAIL_ACTION_RATING -> showShortToast("Rating clicked.")
-            SELLER_DETAIL_ACTION_TYPE -> showShortToast("Type clicked.")
-            SELLER_DETAIL_ACTION_DELIVERY -> showShortToast("Delivery clicked.")
-            SELLER_DETAIL_ACTION_MIN_SPEND -> showShortToast("Min spend clicked.")
+        when {
+            actionId == SELLER_DETAIL_ACTION_RATING -> showShortToast("Rating clicked.")
+            actionId.contains(SELLER_DETAIL_ACTION_RATING) -> showShortToast("tag clicked.")
             else -> throw IllegalStateException("Invalid chip action id $actionId")
         }
     }

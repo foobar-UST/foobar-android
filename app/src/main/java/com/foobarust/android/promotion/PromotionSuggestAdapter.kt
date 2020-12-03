@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.foobarust.android.databinding.PromotionSuggestItemBinding
 import com.foobarust.android.promotion.PromotionSuggestAdapter.PromotionSuggestAdapterListener
-import com.foobarust.domain.models.SuggestBasic
+import com.foobarust.domain.models.promotion.SuggestBasic
 
 /**
  * Created by kevin on 9/29/20

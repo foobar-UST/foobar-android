@@ -11,13 +11,14 @@ import com.foobarust.android.R
 import com.foobarust.android.promotion.PromotionListModel
 import com.foobarust.android.promotion.PromotionListModel.*
 import com.foobarust.android.utils.SingleLiveEvent
-import com.foobarust.domain.models.AdvertiseBasic
-import com.foobarust.domain.models.SuggestBasic
+import com.foobarust.domain.models.promotion.AdvertiseBasic
+import com.foobarust.domain.models.promotion.SuggestBasic
+import com.foobarust.domain.models.seller.SellerType
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.states.getSuccessDataOr
-import com.foobarust.domain.usecases.promotion.GetAdvertiseBasicsUseCase
-import com.foobarust.domain.usecases.promotion.GetSuggestBasicsUseCase
-import com.foobarust.domain.usecases.seller.GetSellerListUseCase
+import com.foobarust.domain.usecases.promotion.GetAdvertisesUseCase
+import com.foobarust.domain.usecases.promotion.GetSuggestsUseCase
+import com.foobarust.domain.usecases.seller.GetSellersUseCase
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.*
@@ -25,9 +26,9 @@ import kotlinx.coroutines.launch
 
 class SellerOnCampusViewModel @ViewModelInject constructor(
     @ApplicationContext private val context: Context,
-    getAdvertiseBasicsUseCase: GetAdvertiseBasicsUseCase,
-    getSuggestBasicsUseCase: GetSuggestBasicsUseCase,
-    getSellerListUseCase: GetSellerListUseCase
+    getAdvertisesUseCase: GetAdvertisesUseCase,
+    getSuggestsUseCase: GetSuggestsUseCase,
+    getSellersUseCase: GetSellersUseCase
 ) : ViewModel() {
 
     // Loading state
@@ -38,13 +39,13 @@ class SellerOnCampusViewModel @ViewModelInject constructor(
     // Reload promotion items at launch
     private val reloadPromotionChannel = ConflatedBroadcastChannel(Unit)
 
-    val sellerModelItems: Flow<PagingData<SellerOnCampusListModel>> = getSellerListUseCase(Unit)
-        .map { pagingData -> pagingData.map { SellerOnCampusListModel.SellerOnCampusItemModel(it) as SellerOnCampusListModel } }
+    val sellerModelItems: Flow<PagingData<SellerOnCampusListModel>> = getSellersUseCase(SellerType.ON_CAMPUS)
+        .map { pagingData -> pagingData.map { SellerOnCampusListModel.SellerOnCampusItemModel(it) /* as SellerOnCampusListModel */ } }
         .map {
             it.insertSeparators { before, after ->
                 // Insert subtitle at the beginning
                 return@insertSeparators if (before == null) {
-                    SellerOnCampusListModel.SellerOnCampusSubtitleModel(context.getString(R.string.seller_list_subtitle))
+                    SellerOnCampusListModel.SellerOnCampusSubtitleModel(context.getString(R.string.seller_subtitle_restaurants))
                 } else {
                     null
                 }
@@ -54,14 +55,14 @@ class SellerOnCampusViewModel @ViewModelInject constructor(
 
     private val advertiseItemsFlow = reloadPromotionChannel.asFlow()
         .flatMapLatest {
-            getAdvertiseBasicsUseCase(Unit)
+            getAdvertisesUseCase(Unit)
                 .filterNot { it is Resource.Loading }
                 .flatMapLatest { flowOf(it.getSuccessDataOr(emptyList())) }
         }
 
     private val suggestItemsFlow = reloadPromotionChannel.asFlow()
         .flatMapLatest {
-            getSuggestBasicsUseCase(Unit)
+            getSuggestsUseCase(Unit)
                 .filterNot { it is Resource.Loading }
                 .flatMapLatest { flowOf(it.getSuccessDataOr(emptyList())) }
         }
@@ -107,7 +108,7 @@ class SellerOnCampusViewModel @ViewModelInject constructor(
             if (suggestBasics.isNotEmpty()) {
                 // Append suggestion row and subtitle
                 addAll(listOf(
-                    PromotionSubtitleModel(context.getString(R.string.promotion_suggest_subtitle)),
+                    PromotionSubtitleModel(context.getString(R.string.promotion_subtitle_suggest)),
                     PromotionSuggestModel(suggestBasics)
                 ))
             }

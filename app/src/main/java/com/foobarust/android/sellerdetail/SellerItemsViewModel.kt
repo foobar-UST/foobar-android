@@ -8,8 +8,9 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.foobarust.android.utils.SingleLiveEvent
-import com.foobarust.domain.models.SellerItemBasic
-import com.foobarust.domain.usecases.seller.GetSellerBasicsUseCase
+import com.foobarust.domain.models.seller.SellerItemBasic
+import com.foobarust.domain.usecases.seller.GetSellerItemsBasicsParameters
+import com.foobarust.domain.usecases.seller.GetSellerItemsUseCase
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -17,7 +18,7 @@ import kotlinx.coroutines.flow.Flow
  */
 
 class SellerItemsViewModel @ViewModelInject constructor(
-    private val getSellerBasicsUseCase: GetSellerBasicsUseCase
+    private val getSellerItemsUseCase: GetSellerItemsUseCase
 ) : ViewModel() {
 
     private val _loadState = SingleLiveEvent<LoadState>()
@@ -27,8 +28,13 @@ class SellerItemsViewModel @ViewModelInject constructor(
     lateinit var sellerItems: Flow<PagingData<SellerItemBasic>>
         private set
 
-    fun onFetchItemsForCategory(catalogId: String)  {
-        sellerItems = getSellerBasicsUseCase(catalogId).cachedIn(viewModelScope)
+    fun onFetchItemsForCategory(sellerId: String, catalogId: String)  {
+        sellerItems = getSellerItemsUseCase(
+            GetSellerItemsBasicsParameters(
+                sellerId = sellerId,
+                catalogId = catalogId
+            )
+        ).cachedIn(viewModelScope)
     }
 
     fun onLoadStateChanged(loadState: LoadState) {

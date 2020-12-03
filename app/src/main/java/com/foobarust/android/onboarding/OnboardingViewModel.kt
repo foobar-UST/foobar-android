@@ -51,7 +51,7 @@ class OnboardingViewModel @ViewModelInject constructor(
     val navigateToMain: LiveData<KClass<*>>
         get() = _navigateToMain
 
-    fun onboardingCompleted() = viewModelScope.launch {
+    fun onOnboardingCompleted() = viewModelScope.launch {
         saveOnboardingCompletedUseCase(true)
 
         when (getOnboardingCompletedUseCase(Unit)) {

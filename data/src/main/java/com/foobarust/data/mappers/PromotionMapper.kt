@@ -1,11 +1,9 @@
 package com.foobarust.data.mappers
 
-import com.foobarust.data.models.AdvertiseBasicEntity
-import com.foobarust.data.models.AdvertiseDetailEntity
-import com.foobarust.data.models.SuggestBasicEntity
-import com.foobarust.domain.models.AdvertiseBasic
-import com.foobarust.domain.models.AdvertiseDetail
-import com.foobarust.domain.models.SuggestBasic
+import com.foobarust.data.models.promotion.AdvertiseBasicEntity
+import com.foobarust.data.models.promotion.SuggestBasicEntity
+import com.foobarust.domain.models.promotion.AdvertiseBasic
+import com.foobarust.domain.models.promotion.SuggestBasic
 import javax.inject.Inject
 
 /**
@@ -14,31 +12,21 @@ import javax.inject.Inject
 
 class PromotionMapper @Inject constructor() {
 
-    fun toAdvertiseItem(advertiseBasicEntity: AdvertiseBasicEntity): AdvertiseBasic {
+    fun toAdvertiseBasic(entity: AdvertiseBasicEntity): AdvertiseBasic {
         return AdvertiseBasic(
-            id = advertiseBasicEntity.id!!,
-            imageUrl = advertiseBasicEntity.imageUrl
+            id = entity.id!!,
+            url = entity.url!!,
+            imageUrl = entity.imageUrl
         )
     }
 
-    fun toAdvertiseDetail(advertiseDetailEntity: AdvertiseDetailEntity): AdvertiseDetail {
-        return AdvertiseDetail(
-            id = advertiseDetailEntity.id!!,
-            sellerId = advertiseDetailEntity.sellerId!!,
-            sellerName = advertiseDetailEntity.sellerName!!,
-            title = advertiseDetailEntity.title!!,
-            content = advertiseDetailEntity.content!!,
-            imageUrl = advertiseDetailEntity.imageUrl
-        )
-    }
-
-    fun toSuggestItem(suggestBasicEntity: SuggestBasicEntity): SuggestBasic {
+    fun toSuggestBasic(entity: SuggestBasicEntity): SuggestBasic {
         return SuggestBasic(
-            id = suggestBasicEntity.id!!,
-            itemId = suggestBasicEntity.itemId!!,
-            itemTitle = suggestBasicEntity.itemTitle!!,
-            sellerName = suggestBasicEntity.sellerName!!,
-            imageUrl = suggestBasicEntity.imageUrl
+            id = entity.id!!,
+            itemId = entity.itemId!!,
+            itemTitle = entity.itemTitle!!,
+            sellerName = entity.sellerName!!,
+            imageUrl = entity.imageUrl
         )
     }
 }

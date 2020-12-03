@@ -11,6 +11,6 @@ import com.foobarust.android.R
 data class SellerDetailAction(
     val id: String,
     val title: String,
-    @DrawableRes val drawableRes: Int,
+    @DrawableRes val drawableRes: Int? = null,
     @ColorRes val colorRes: Int = R.color.material_on_background_emphasis_medium
 )

@@ -7,7 +7,7 @@
     <data>
         <variable
             name="sellerBasic"
-            type="com.foobarust.domain.models.SellerBasic" />
+            type="com.foobarust.domain.models.seller.SellerBasic" />
         <variable
             name="listener"
             type="com.foobarust.android.seller.SellerOnCampusAdapter.SellerOnCampusAdapterListener" />
@@ -84,7 +84,7 @@
                 android:layout_below="@id/description_text_view"
                 android:layout_toEndOf="@id/photo_image_view"
                 android:gravity="center_vertical"
-                android:text="@{@string/seller_rating_format(sellerBasic.rating)}"
+                android:text="@{@string/seller_data_format_rating(sellerBasic.rating)}"
                 android:textColor="@color/material_on_surface_emphasis_medium"
                 android:textAppearance="?attr/textAppearanceCaption"
                 android:drawablePadding="@dimen/spacing_medium"
@@ -101,7 +101,7 @@
                 android:layout_alignBottom="@id/title_text_view"
                 android:layout_alignParentEnd="true"
                 android:gravity="center_vertical"
-                android:text="@{sellerBasic.online ? @string/seller_status_available : @string/seller_status_closed}"
+                android:text="@{sellerBasic.online ? @string/seller_status_online : @string/seller_status_offline}"
                 android:textAppearance="?attr/textAppearanceCaption"
                 android:textColor="?attr/colorSecondary"
                 android:textAllCaps="true"

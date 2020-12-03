@@ -44,6 +44,7 @@ object Versions {
     const val ROOM = "2.2.5"
     const val SPINKIT = "1.4.0"
     const val SHIMMER = "0.5.0"
+    const val SERIALIZATION = "1.4.10"
     const val SWIPE_REFRESH_LAYOUT = "1.1.0"
     const val TEST_CORE = "1.0.0"
     const val TEST_RUNNER = "1.1.0"

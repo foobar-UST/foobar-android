@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="sellerInfoModel"
+            type="com.foobarust.android.cart.CartListModel.CartSellerInfoModel" />
+        <variable
+            name="listener"
+            type="com.foobarust.android.cart.CartAdapter.CartAdapterListener" />
+        <import type="com.foobarust.domain.models.seller.SellerBasicKt" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorSurface">
+
+       <TextView
+           android:id="@+id/seller_info_title_text_view"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_marginTop="@dimen/spacing_large"
+           android:text="@string/cart_seller_info_title"
+           android:textAppearance="?attr/textAppearanceHeadline6"
+           app:layout_constraintTop_toTopOf="parent"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintEnd_toEndOf="parent"/>
+
+        <TextView
+            android:id="@+id/seller_name_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:layout_marginStart="@dimen/spacing_large"
+            android:layout_marginEnd="@dimen/spacing_large"
+            android:text="@{SellerBasicKt.getNormalizedName(sellerInfoModel.sellerBasic)}"
+            android:textAppearance="?attr/textAppearanceBody1"
+            android:textColor="@color/material_on_surface_emphasis_medium"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/seller_info_title_text_view"
+            tools:text="Asia Pacific Catering 泛亞飲食"/>
+
+        <TextView
+            android:id="@+id/seller_menu_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:padding="@dimen/spacing_large"
+            android:gravity="center_vertical"
+            android:text="@string/cart_seller_info_menu_title"
+            android:textColor="@color/material_on_surface_emphasis_medium"
+            android:textAppearance="?attr/textAppearanceButton"
+            android:background="?attr/selectableItemBackground"
+            android:onClick="@{() -> listener.onNavigateToSellerDetail(sellerInfoModel.sellerBasic.id)}"
+            app:drawableEndCompat="@drawable/ic_navigate_next"
+            app:drawableTint="@color/material_on_surface_emphasis_medium"
+            app:layout_constraintTop_toBottomOf="@id/seller_name_text_view"/>
+
+        <TextView
+            android:id="@+id/seller_detail_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/spacing_large"
+            android:gravity="center_vertical"
+            android:text="@string/cart_seller_info_detail_title"
+            android:textColor="@color/material_on_surface_emphasis_medium"
+            android:textAppearance="?attr/textAppearanceButton"
+            android:background="?attr/selectableItemBackground"
+            android:onClick="@{() -> listener.onNavigateToSellerMisc(sellerInfoModel.sellerBasic.id)}"
+            app:drawableEndCompat="@drawable/ic_navigate_next"
+            app:drawableTint="@color/material_on_surface_emphasis_medium"
+            app:layout_constraintTop_toBottomOf="@id/seller_menu_button"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

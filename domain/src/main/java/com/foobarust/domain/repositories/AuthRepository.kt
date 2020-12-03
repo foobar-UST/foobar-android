@@ -1,6 +1,6 @@
 package com.foobarust.domain.repositories
 
-import com.foobarust.domain.models.AuthProfile
+import com.foobarust.domain.models.user.AuthProfile
 import com.foobarust.domain.states.Resource
 import kotlinx.coroutines.flow.Flow
 

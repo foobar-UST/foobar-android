@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/exploreFragment"
         android:name="com.foobarust.android.explore.ExploreFragment"
-        android:label="@string/explore_label"
+        android:label="@string/fragment_label_explore"
         tools:layout="@layout/fragment_explore">
         <deepLink app:uri="foobarust://navigation_explore" />
     </fragment>
@@ -16,7 +16,6 @@
     <dialog
         android:id="@+id/cartFragment"
         android:name="com.foobarust.android.cart.CartFragment"
-        android:label="@string/cart_label"
         tools:layout="@layout/fragment_cart"/>
 
     <action

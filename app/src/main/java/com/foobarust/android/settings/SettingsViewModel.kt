@@ -13,8 +13,8 @@ import com.foobarust.android.utils.SingleLiveEvent
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.auth.GetIsUserSignedInUseCase
 import com.foobarust.domain.usecases.auth.SignOutUseCase
-import com.foobarust.domain.usecases.user.GetAuthProfileObservableUseCase
-import com.foobarust.domain.usecases.user.GetUserDetailObservableUseCase
+import com.foobarust.domain.usecases.user.GetAuthProfileUseCase
+import com.foobarust.domain.usecases.user.GetUserDetailUseCase
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
@@ -31,8 +31,8 @@ const val SETTINGS_ORDER_HISTORY = "settings_order_history"
 class SettingsViewModel @ViewModelInject constructor(
     @ApplicationContext private val context: Context,
     private val getIsUserSignedInUseCase: GetIsUserSignedInUseCase,
-    private val getAuthProfileObservableUseCase: GetAuthProfileObservableUseCase,
-    private val getUserDetailObservableUseCase: GetUserDetailObservableUseCase,
+    private val getAuthProfileUseCase: GetAuthProfileUseCase,
+    private val getUserDetailUseCase: GetUserDetailUseCase,
     private val signOutUseCase: SignOutUseCase
 ) : BaseViewModel() {
 
@@ -53,7 +53,7 @@ class SettingsViewModel @ViewModelInject constructor(
     init {
         // Populate settings list
         viewModelScope.launch {
-            getAuthProfileObservableUseCase(Unit).collect {
+            getAuthProfileUseCase(Unit).collect {
                 when (it) {
                     is Resource.Success -> {
                         subscribeUserDetail()
@@ -77,7 +77,7 @@ class SettingsViewModel @ViewModelInject constructor(
         unsubscribeUserDetail()
 
         subscribeUserDetailJob = viewModelScope.launch {
-            getUserDetailObservableUseCase(Unit).collect {
+            getUserDetailUseCase(Unit).collect {
                 when (it) {
                     is Resource.Success -> buildSettingList(
                         SettingsProfile(

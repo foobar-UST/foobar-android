@@ -7,7 +7,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/spacing_large"
         android:layout_marginEnd="@dimen/spacing_large"
-        android:hint="@string/item_detail_notes_hint"
+        android:hint="@string/seller_item_hint_notes"
         android:textAppearance="?attr/textAppearanceBody2"
         android:textColor="@color/material_on_surface_emphasis_medium"
         android:inputType="text|textMultiLine"

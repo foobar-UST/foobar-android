@@ -1,6 +1,5 @@
 package com.foobarust.android.settings
 
-import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -101,11 +100,10 @@ class SettingsFragment : Fragment(), SettingsAdapter.SettingsAdapterListener {
             //putExtra(Intent.EXTRA_TEXT, "Email Content")
         }
 
-        // Start email intent and check for no app found exception
-        try {
+        if (intent.resolveActivity(requireContext().packageManager) != null) {
             startActivity(intent)
-        } catch (e: ActivityNotFoundException) {
-            showShortToast(getString(R.string.activity_not_found_error))
+        } else {
+            showShortToast(getString(R.string.error_resolve_activity_failed))
         }
     }
 

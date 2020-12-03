@@ -113,8 +113,9 @@
         <item name="alertDialogTheme">@style/ThemeOverlay.Foobar.AlertDialog</item>
 
         <!-- Styles -->
-        <item name="bottomSheetStyle">@style/Widget.Foobar.BottomSheet</item>
         <item name="radioButtonStyle">@style/Widget.Foobar.RadioButton</item>
+        <item name="checkboxStyle">@style/Widget.Foobar.CheckBox</item>
+        <item name="bottomSheetStyle">@style/Widget.Foobar.BottomSheet</item>
         <item name="sellerActionChipStyle">@style/Widget.Foobar.Chip.SellerAction</item>
 
         <item name="android:statusBarColor">?android:attr/colorBackground</item>

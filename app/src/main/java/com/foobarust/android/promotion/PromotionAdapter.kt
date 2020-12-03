@@ -15,8 +15,8 @@ import com.foobarust.android.promotion.PromotionAdvertiseAdapter.PromotionAdvert
 import com.foobarust.android.promotion.PromotionListModel.*
 import com.foobarust.android.promotion.PromotionSuggestAdapter.PromotionSuggestAdapterListener
 import com.foobarust.android.promotion.PromotionViewHolder.*
-import com.foobarust.domain.models.AdvertiseBasic
-import com.foobarust.domain.models.SuggestBasic
+import com.foobarust.domain.models.promotion.AdvertiseBasic
+import com.foobarust.domain.models.promotion.SuggestBasic
 
 /**
  * Created by kevin on 9/29/20

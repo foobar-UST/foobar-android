@@ -12,7 +12,7 @@ import com.foobarust.android.databinding.ProfileInfoItemBinding
 import com.foobarust.android.databinding.ProfileWarningItemBinding
 import com.foobarust.android.profile.ProfileListModel.*
 import com.foobarust.android.profile.ProfileViewHolder.*
-import com.foobarust.domain.models.UserDetail
+import com.foobarust.domain.models.user.UserDetail
 
 class ProfileAdapter(
     private val listener: ProfileAdapterListener

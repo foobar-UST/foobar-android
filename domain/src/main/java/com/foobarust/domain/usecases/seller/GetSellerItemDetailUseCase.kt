@@ -1,7 +1,7 @@
 package com.foobarust.domain.usecases.seller
 
 import com.foobarust.domain.di.IoDispatcher
-import com.foobarust.domain.models.SellerItemDetail
+import com.foobarust.domain.models.seller.SellerItemDetail
 import com.foobarust.domain.repositories.SellerRepository
 import com.foobarust.domain.usecases.CoroutineUseCase
 import kotlinx.coroutines.CoroutineDispatcher
@@ -14,9 +14,17 @@ import javax.inject.Inject
 class GetSellerItemDetailUseCase @Inject constructor(
     private val sellerRepository: SellerRepository,
     @IoDispatcher coroutineDispatcher: CoroutineDispatcher
-) : CoroutineUseCase<String, SellerItemDetail>(coroutineDispatcher) {
+) : CoroutineUseCase<GetSellerItemDetailParameters, SellerItemDetail>(coroutineDispatcher) {
 
-    override suspend fun execute(parameters: String): SellerItemDetail {
-        return sellerRepository.getSellerItemDetail(itemId = parameters)
+    override suspend fun execute(parameters: GetSellerItemDetailParameters): SellerItemDetail {
+        return sellerRepository.getSellerItemDetail(
+            sellerId = parameters.sellerId,
+            itemId = parameters.itemId
+        )
     }
 }
+
+data class GetSellerItemDetailParameters(
+    val sellerId: String,
+    val itemId: String
+)

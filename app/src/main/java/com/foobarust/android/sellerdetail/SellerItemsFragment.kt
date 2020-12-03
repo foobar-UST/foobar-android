@@ -12,7 +12,7 @@ import com.foobarust.android.databinding.FragmentSellerItemsBinding
 import com.foobarust.android.utils.AutoClearedValue
 import com.foobarust.android.utils.anyError
 import com.foobarust.android.utils.parentViewModels
-import com.foobarust.domain.models.SellerItemBasic
+import com.foobarust.domain.models.seller.SellerItemBasic
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -32,17 +32,17 @@ class SellerItemsFragment : Fragment(), SellerItemsAdapter.SellerItemsAdapterLis
         super.onCreate(savedInstanceState)
 
         // Receive category argument
-        val categoryId = requireArguments().getString(ARG_CATEGORY_ID) ?:
-            throw IllegalArgumentException("Category id not found.")
-
-        sellerItemsViewModel.onFetchItemsForCategory(categoryId)
+        sellerItemsViewModel.onFetchItemsForCategory(
+            sellerId = requireArguments().getString(ARG_SELLER_ID) ?: throw IllegalArgumentException("Seller id not found."),
+            catalogId = requireArguments().getString(ARG_CATEGORY_ID) ?: throw IllegalArgumentException("Category id not found.")
+        )
     }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentSellerItemsBinding.inflate(inflater, container, false).apply {
             viewModel = this@SellerItemsFragment.sellerItemsViewModel
             lifecycleOwner = viewLifecycleOwner
@@ -86,16 +86,21 @@ class SellerItemsFragment : Fragment(), SellerItemsAdapter.SellerItemsAdapterLis
 
     override fun onSellerItemClicked(sellerItemBasic: SellerItemBasic) {
         // Open item detail dialog
-        sellerDetailViewModel.onShowItemDetailDialog(sellerItemBasic)
+        sellerDetailViewModel.onShowItemDetailDialog(
+            sellerId = requireArguments().getString(ARG_SELLER_ID) ?: throw IllegalArgumentException("Seller id not found."),
+            itemId = sellerItemBasic.id
+        )
     }
 
     companion object {
+        const val ARG_SELLER_ID = "arg_seller_id"
         const val ARG_CATEGORY_ID = "arg_category_id"
 
         @JvmStatic
-        fun newInstance(categoryId: String): SellerItemsFragment {
+        fun newInstance(sellerId: String, categoryId: String): SellerItemsFragment {
             return SellerItemsFragment().apply {
                 arguments = Bundle().apply {
+                    putString(ARG_SELLER_ID, sellerId)
                     putString(ARG_CATEGORY_ID, categoryId)
                 }
             }

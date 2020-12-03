@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="totalPriceModel"
+            type="com.foobarust.android.cart.CartListModel.CartTotalPriceModel" />
+    </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -13,7 +21,7 @@
             android:layout_alignTop="@id/total_value_text_view"
             android:layout_alignBottom="@id/total_value_text_view"
             android:gravity="center_vertical"
-            android:text="Total"
+            android:text="@string/cart_total_price_total_title"
             android:textAllCaps="true"
             android:textAppearance="?attr/textAppearanceSubtitle2"/>
 
@@ -22,9 +30,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:text="$1,052.84"
+            android:text="@{@string/cart_total_price_format_cost(totalPriceModel.total)}"
             android:textColor="?attr/colorPrimary"
-            android:textAppearance="?attr/textAppearanceHeadline4"/>
+            android:textAppearance="?attr/textAppearanceHeadline4"
+            tools:text="$1,052.84"/>
 
         <TextView
             android:id="@+id/subtotal_title_text_view"
@@ -32,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_xmedium"
             android:layout_below="@id/total_title_text_view"
-            android:text="Subtotal"
+            android:text="@string/cart_total_price_subtotal_title"
             android:textAppearance="?attr/textAppearanceSubtitle2"/>
 
         <TextView
@@ -42,9 +51,10 @@
             android:layout_marginTop="@dimen/spacing_xmedium"
             android:layout_alignParentEnd="true"
             android:layout_below="@id/total_value_text_view"
-            android:text="$914.00"
+            android:text="@{@string/cart_total_price_format_cost(totalPriceModel.subtotal)}"
             android:textColor="?attr/colorPrimary"
-            android:textAppearance="?attr/textAppearanceSubtitle2"/>
+            android:textAppearance="?attr/textAppearanceSubtitle2"
+            tools:text="$914.00"/>
 
         <TextView
             android:id="@+id/delivery_fee_title_text_view"
@@ -52,7 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_xmedium"
             android:layout_below="@id/subtotal_title_text_view"
-            android:text="Delivery Fee"
+            android:text="@string/cart_total_price_delivery_fee_title"
             android:textAppearance="?attr/textAppearanceSubtitle2"/>
 
         <TextView
@@ -62,9 +72,10 @@
             android:layout_marginTop="@dimen/spacing_xmedium"
             android:layout_alignParentEnd="true"
             android:layout_below="@id/subtotal_value_text_view"
-            android:text="$84.00"
+            android:text="@{@string/cart_total_price_format_cost(totalPriceModel.deliveryFee)}"
             android:textColor="?attr/colorPrimary"
-            android:textAppearance="?attr/textAppearanceSubtitle2"/>
+            android:textAppearance="?attr/textAppearanceSubtitle2"
+            tools:text="$84.00"/>
 
     </RelativeLayout>
 

@@ -9,11 +9,11 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class SellerMiscProperty(
-    val sellerName: String,
-    val email: String,
-    val description: String,
-    val phoneNum: String,
+    val name: String,
+    val description: String?,
     val address: String,
+    val phoneNum: String,
+    val website: String?,
     val latitude: Double,
     val longitude: Double,
     val openingHours: String

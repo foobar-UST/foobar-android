@@ -33,7 +33,7 @@ class OnboardingFragment : Fragment() {
 
         if (property.showCompleteButton) {
             binding.completeButton.setOnClickListener {
-                viewModel.onboardingCompleted()
+                viewModel.onOnboardingCompleted()
             }
         }
 

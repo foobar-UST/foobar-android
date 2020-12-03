@@ -5,4 +5,5 @@
     <dimen name="signin_header_height">450dp</dimen>
     <dimen name="pager_indicator_size">4dp</dimen>
     <dimen name="shimmer_default_text_height">26dp</dimen>
+    <dimen name="shimmer_small_text_height">20dp</dimen>
 </resources>

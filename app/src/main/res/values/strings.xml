@@ -1,12 +1,36 @@
 <resources>
+    <!-- System -->
     <string name="app_name">Foobar++</string>
 
-    <!-- Common -->
-    <string name="cancel">Cancel</string>
-    <string name="save">Save</string>
+    <string name="shortcut_seller_short_label">Restaurants</string>
+    <string name="shortcut_seller_long_label">Restaurants</string>
+    <string name="shortcut_order_short_label">Order</string>
+    <string name="shortcut_order_long_label">Order</string>
+    <string name="shortcut_explore_short_label">Explore</string>
+    <string name="shortcut_explore_long_label">Explore</string>
 
-    <!-- System -->
-    <string name="open_url_no_resolve_activity">Failed to open link.</string>
+    <string name="notification_channel_default_id" translatable="false">default_notification_channel</string>
+    <string name="notification_channel_default_name">Default</string>
+    <string name="notification_channel_upload_id" translatable="false">upload_notification_channel</string>
+    <string name="notification_channel_upload_name">Upload</string>
+    <string name="notification_item_upload_user_photo_title">User Photo</string>
+    <string name="notification_item_upload_user_photo_body">Uploading in progress</string>
+
+    <!-- Actions -->
+    <string name="action_cancel">Cancel</string>
+    <string name="action_save">Save</string>
+    <string name="action_retry">Retry</string>
+    <string name="action_load_more">Load More</string>
+    <string name="action_clear_text">Clear Text</string>
+    <string name="action_search">Search</string>
+    <string name="action_detail">Detail</string>
+
+    <!-- Error -->
+    <string name="error_resolve_activity_failed">No app to handle this action.</string>
+
+    <!-- Loading Error -->
+    <string name="loading_error_title">No connection</string>
+    <string name="loading_error_content">Please check your internet connection and try again.</string>
 
     <!-- Sign in -->
     <string name="signin_input_title">Login</string>
@@ -35,21 +59,16 @@
     <string name="onboarding_pick_up_delivery_description">You can choose our fast delivery service or pick up your orders in person</string>
 
     <!-- Fragment Label -->
-    <string name="seller_label">Restaurants</string>
-    <string name="seller_search_label">Search Restaurants</string>
-    <string name="seller_detail_label">Seller</string>
-    <string name="seller_misc_label">Seller Misc</string>
-    <string name="seller_action_dialog_label">Seller Action</string>
-    <string name="order_label">Order</string>
-    <string name="order_history_label">My Orders</string>
-    <string name="explore_label">Explore</string>
-    <string name="settings_label">Settings</string>
-    <string name="notification_label">Notifications</string>
-    <string name="license_label">License</string>
-    <string name="favorite_label">Favourite</string>
-    <string name="profile_label">My Profile</string>
-    <string name="item_detail_label">Item Detail</string>
-    <string name="cart_label">My Cart</string>
+    <string name="fragment_label_seller">Restaurants</string>
+    <string name="fragment_label_seller_search">Search Restaurants</string>
+    <string name="fragment_label_order">Order</string>
+    <string name="fragment_label_order_history">My Orders</string>
+    <string name="fragment_label_explore">Explore</string>
+    <string name="fragment_label_settings">Settings</string>
+    <string name="fragment_label_notification">Notifications</string>
+    <string name="fragment_label_license">License</string>
+    <string name="fragment_label_favorite">Favourite</string>
+    <string name="fragment_label_profile">My Profile</string>
 
     <!-- Settings -->
     <string name="settings_account_edit_profile">View My Profile</string>
@@ -69,87 +88,66 @@
     <string name="profile_edit_field_null">Not Set</string>
     <string name="profile_require_data_for_ordering">Profile data have to be set before using ordering service.</string>
 
-    <!-- Sign out dialog -->
+    <!-- Sign out -->
     <string name="sign_out_dialog_title">Sign Out</string>
     <string name="sign_out_dialog_message">Do you want to sign out with the current account?</string>
 
     <!-- Input dialogs -->
-    <string name="text_input_dialog_title_prefix">Enter your&#160;</string>
+    <string name="text_input_title_prefix">Enter your&#160;</string>
 
     <!-- Seller -->
-    <string name="seller_on_campus_title">On Campus</string>
-    <string name="seller_off_campus_title">Off Campus</string>
-    <string name="seller_list_subtitle">Restaurants</string>
-    <string name="seller_min_spend_format">%.1f Min</string>
-    <string name="seller_pick_up">Pick Up</string>
-    <string name="seller_delivery">Delivery</string>
-    <string name="seller_status_available">Available</string>
-    <string name="seller_status_closed">Closed</string>
-    <string name="seller_rating_format">%.1f</string>
-    <string name="seller_search_hint">Find Restaurants</string>
-    <string name="seller_unavailable">Unavailable</string>
-    <string name="seller_features_format">$ %.1f Min &#183; Pick-Up</string>
+    <string name="seller_tab_on_campus">On Campus</string>
+    <string name="seller_tab_off_campus">Off Campus</string>
+    <string name="seller_subtitle_restaurants">Restaurants</string>
+    <string name="seller_deliver_type_pick_up">Pick-up at campus</string>
+    <string name="seller_deliver_type_delivery">Delivery</string>
     <string name="seller_status_online">Opening</string>
     <string name="seller_status_offline">Closed</string>
+    <string name="seller_data_format_min_spend_info">$ %.1f Min</string>
+    <string name="seller_data_format_min_spend">%.1f Minimum</string>
+    <string name="seller_data_format_rating">%.1f</string>
+
+    <!-- Seller Search -->
+    <string name="seller_search_hint_input">Find Restaurants</string>
 
     <!-- Seller Misc -->
-    <string name="seller_misc_opening_hours_title">Opening Hours</string>
-    <string name="seller_misc_contact_title">Contact Details</string>
-    <string name="seller_misc_description_title">Info</string>
-    <string name="seller_misc_contact_content">Phone: %s\nWebsite: %s</string>
+    <string name="seller_misc_title_opening_hours">Opening Hours</string>
+    <string name="seller_misc_title_contact_details">Contact Details</string>
+    <string name="seller_misc_title_description">Info</string>
+    <string name="seller_misc_data_format_phone">Tel: %s</string>
+    <string name="seller_misc_data_format_website">Website: %s</string>
 
     <!-- Seller Actions -->
     <string name="seller_action_add_favorite">Add to Favorite</string>
     <string name="seller_action_ratings">View Ratings</string>
     <string name="seller_action_feedback">Send Feedback</string>
 
-    <!-- Promotion -->
-    <string name="promotion_advertise_subtitle">What\'s New</string>
-    <string name="promotion_suggest_subtitle">Suggest For You</string>
+    <!-- Seller Item -->
+    <string name="seller_item_subtitle_notes">Special Notes</string>
+    <string name="seller_item_subtitle_amount">Amount</string>
+    <string name="seller_item_hint_notes">E.g. Add extra sauce</string>
+    <string name="seller_item_button_submit">Add to Cart</string>
+    <string name="seller_item_data_format_price">$ %.1f</string>
+    <string name="seller_item_data_format_topping">%s %s (+$ %.1f)</string>
+    <string name="seller_item_add_to_cart">Add To Cart ($ %.1f)</string>
 
-    <!-- Item -->
-    <string name="item_price_format">$ %.1f</string>
-    <string name="item_detail_price_format">$ %.1f\n(+$ %.1f)</string>
-    <string name="item_detail_notes_hint">E.g. Add extra sauce</string>
-    <string name="item_detail_submit">Add to Cart</string>
-    <string name="item_detail_choices_subtitle">Choices</string>
-    <string name="item_detail_choice_item_title">%s (+$ %.1f)</string>
-    <string name="item_detail_extra_items_subtitle">Add Extras</string>
-    <string name="item_detail_extra_item_title">%s ($ %.1f)</string>
-    <string name="item_detail_notes_subtitle">Special Notes</string>
+    <!-- Promotion -->
+    <string name="promotion_subtitle_advertise">What\'s New</string>
+    <string name="promotion_subtitle_suggest">Suggest For You</string>
 
     <!-- Cart -->
-    <string name="cart_items_count_title">Items in Cart</string>
-    <string name="cart_open_content_desc">Open Cart</string>
-
-    <!-- Notification -->
-    <string name="foobar_default_notification_channel_id" translatable="false">default_notification_channel</string>
-    <string name="foobar_default_notification_channel_name">Default</string>
-    <string name="foobar_upload_notification_channel_id" translatable="false">upload_notification_channel</string>
-    <string name="foobar_upload_notification_channel_name">Upload</string>
-    <string name="foobar_upload_user_photo_notification_title">User Photo</string>
-    <string name="foobar_upload_user_photo_notification_body">Uploading in progress</string>
-
-    <!-- Error Messages -->
-    <string name="activity_not_found_error">No app to handle this action.</string>
-    <string name="loading_retry_title">Retry</string>
-    <string name="loading_failed_title">No connection</string>
-    <string name="loading_failed_description">Please check your internet connection and try again.</string>
-
-    <!-- Shortcuts -->
-    <string name="shortcut_seller_short_label">Restaurants</string>
-    <string name="shortcut_seller_long_label">Restaurants</string>
-    <string name="shortcut_order_short_label">Order</string>
-    <string name="shortcut_order_long_label">Order</string>
-    <string name="shortcut_explore_short_label">Explore</string>
-    <string name="shortcut_explore_long_label">Explore</string>
-
-    <!-- Toolbar action button -->
-    <string name="toolbar_action_seller_search_title">Search Restaurants</string>
-    <string name="toolbar_action_seller_metadata_title">More seller details</string>
-
-    <!-- Content Descriptions -->
-    <string name="clear_text_button_content_description">Clear text</string>
-    <string name="title_activity_maps">Map</string>
+    <string name="cart_bottom_bar_items_count_title">Items in Cart</string>
+    <string name="cart_bottom_bar_open_cart_content_desc">Open Cart</string>
+    <string name="cart_seller_info_title">Order From</string>
+    <string name="cart_seller_info_menu_title">Menu</string>
+    <string name="cart_seller_info_detail_title">Seller Detail</string>
+    <string name="cart_total_price_total_title">Total</string>
+    <string name="cart_total_price_subtotal_title">Subtotal</string>
+    <string name="cart_total_price_delivery_fee_title">Delivery Fee</string>
+    <string name="cart_no_item_error">No Item in Cart</string>
+    <string name="cart_purchase_item_format_amount">Quantity: %d</string>
+    <string name="cart_purchase_item_format_notes">Notes: %s</string>
+    <string name="cart_purchase_item_format_total_price">x $%.1f</string>
+    <string name="cart_total_price_format_cost">$%.1f</string>
 
 </resources>

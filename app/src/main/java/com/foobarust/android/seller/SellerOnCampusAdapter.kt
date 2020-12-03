@@ -15,7 +15,7 @@ import com.foobarust.android.seller.SellerOnCampusListModel.SellerOnCampusItemMo
 import com.foobarust.android.seller.SellerOnCampusListModel.SellerOnCampusSubtitleModel
 import com.foobarust.android.seller.SellerOnCampusViewHolder.SellerOnCampusItemViewHolder
 import com.foobarust.android.seller.SellerOnCampusViewHolder.SellerOnCampusSubtitleViewHolder
-import com.foobarust.domain.models.SellerBasic
+import com.foobarust.domain.models.seller.SellerBasic
 
 /**
  * Created by kevin on 9/28/20
@@ -58,6 +58,17 @@ class SellerOnCampusAdapter(
                         }
                     }
                     clipToOutline = true
+                }
+
+                // Set info
+                sellerBasic?.let {
+                    val context = infoTextView.context
+                    val infoItemsList = buildList {
+                        add(context.getString(R.string.seller_data_format_min_spend_info, it.minSpend))
+                        addAll(it.tags)
+                    }
+
+                    infoTextView.text = infoItemsList.joinToString(separator = " · ")
                 }
 
                 executePendingBindings()

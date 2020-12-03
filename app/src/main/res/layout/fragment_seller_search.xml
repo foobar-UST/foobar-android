@@ -27,12 +27,12 @@
                 android:background="@null"
                 android:gravity="center_vertical"
                 android:inputType="textCapWords"
-                android:hint="@string/seller_search_hint"
+                android:hint="@string/seller_search_hint_input"
                 android:textAppearance="?attr/textAppearanceSubtitle1"
                 android:textColor="@color/material_on_surface_emphasis_medium"
                 android:importantForAutofill="no"
                 app:requestFocus="@{true}"
-                tools:text="@string/seller_search_hint"/>
+                tools:text="@string/seller_search_hint_input"/>
             
             <ImageButton
                 android:id="@+id/clear_text_button"
@@ -43,7 +43,7 @@
                 android:padding="@dimen/min_icon_touch_padding"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_clear"
-                android:contentDescription="@string/clear_text_button_content_description"
+                android:contentDescription="@string/action_clear_text"
                 app:tint="@color/material_on_surface_emphasis_medium"/>
 
         </LinearLayout>

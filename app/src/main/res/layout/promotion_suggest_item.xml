@@ -7,7 +7,7 @@
     <data>
         <variable
             name="suggestBasic"
-            type="com.foobarust.domain.models.SuggestBasic" />
+            type="com.foobarust.domain.models.promotion.SuggestBasic" />
         <variable
             name="listener"
             type="com.foobarust.android.promotion.PromotionSuggestAdapter.PromotionSuggestAdapterListener" />

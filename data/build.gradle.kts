@@ -5,7 +5,7 @@ plugins {
     id(Plugins.KOTLIN_KAPT)
     id(Plugins.HILT_ANDROID)
     id(Plugins.GOOGLE_SERVICES)
-    id(Plugins.CHECK_DEPENDENCY_UPDATES) version "1.0.211"
+    id(Plugins.CHECK_DEPENDENCY_UPDATES) version Versions.CHECK_DEPENDENCY_UPDATES
 }
 
 android {
@@ -27,7 +27,7 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
         getByName("debug") {
-            buildConfigField("Boolean", "USE_FIREBASE_EMULATOR", "false")
+            buildConfigField("Boolean", "USE_FIREBASE_EMULATOR", "true")
             buildConfigField("String", "FIREBASE_EMULATOR_HOST", "\"192.168.128.106:8080\"")
         }
     }
@@ -77,12 +77,11 @@ dependencies {
     // Play Services
     implementation(Dependencies.PLAY_SERVICES_AUTH)
 
+    implementation(Dependencies.GSON)
+
     // Annotation Processors
     kapt(Annotation.ROOM_COMPILER)
     kapt(Annotation.HILT_ANDROID_COMPILER)
-
-    // Other Dependencies
-    implementation(Dependencies.GSON)
 
     // Unit Test
     testImplementation(Dependencies.ARCH_CORE_TESTING)

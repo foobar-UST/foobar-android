@@ -20,16 +20,17 @@ class ObjectPreference<T>(
 
     @WorkerThread
     override fun getValue(thisRef: Any, property: KProperty<*>): T? {
-        val jsonString = preferences.getString(key, null)
+        val encodedString = preferences.getString(key, null)
 
-        return if (jsonString == null)
+        return if (encodedString == null) {
             null
-        else
-            gson.fromJson(jsonString, object : TypeToken<T>() {}.type)
+        } else {
+            gson.fromJson(encodedString, object : TypeToken<T>() {}.type)
+        }
     }
 
     override fun setValue(thisRef: Any, property: KProperty<*>, value: T?) {
-        val jsonString = gson.toJson(value)
-        preferences.edit { putString(key, jsonString) }
+        val encodedString = gson.toJson(value)
+        preferences.edit { putString(key, encodedString) }
     }
 }

@@ -20,7 +20,7 @@
             android:id="@+id/title_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{@string/text_input_dialog_title_prefix + property.title}"
+            android:text="@{@string/text_input_title_prefix + property.title}"
             android:textColor="?attr/colorPrimary"
             android:textAppearance="?attr/textAppearanceSubtitle1"
             app:layout_constraintTop_toTopOf="parent"
@@ -51,7 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_xmedium"
-            android:text="@string/save"
+            android:text="@string/action_save"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/value_text_input_layout"/>
 
@@ -61,7 +61,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_xmedium"
-            android:text="@string/cancel"
+            android:text="@string/action_cancel"
             app:layout_constraintEnd_toStartOf="@id/save_button"
             app:layout_constraintTop_toBottomOf="@id/value_text_input_layout"/>
 

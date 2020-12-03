@@ -2,7 +2,7 @@ package com.foobarust.domain.usecases.user
 
 import com.foobarust.domain.common.UseCaseExceptions.ERROR_USER_NOT_SIGNED_IN
 import com.foobarust.domain.di.IoDispatcher
-import com.foobarust.domain.models.UserDetail
+import com.foobarust.domain.models.user.UserDetail
 import com.foobarust.domain.repositories.AuthRepository
 import com.foobarust.domain.repositories.UserRepository
 import com.foobarust.domain.usecases.CoroutineUseCase

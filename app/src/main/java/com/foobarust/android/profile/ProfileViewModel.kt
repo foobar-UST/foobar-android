@@ -13,10 +13,10 @@ import com.foobarust.android.common.TextInputType.PHONE_NUM
 import com.foobarust.android.profile.ProfileListModel.*
 import com.foobarust.android.states.UiFetchState
 import com.foobarust.android.utils.SingleLiveEvent
-import com.foobarust.domain.models.UserDetail
-import com.foobarust.domain.models.isFieldsFulfilledForOrdering
+import com.foobarust.domain.models.user.UserDetail
+import com.foobarust.domain.models.user.isFieldsFulfilledForOrdering
 import com.foobarust.domain.states.Resource
-import com.foobarust.domain.usecases.user.GetUserDetailObservableUseCase
+import com.foobarust.domain.usecases.user.GetUserDetailUseCase
 import com.foobarust.domain.usecases.user.UpdateUserDetailUseCase
 import com.foobarust.domain.utils.PhoneUtil
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -31,7 +31,7 @@ const val EDIT_PROFILE_PHONE_NUMBER = "profile_phone_number"
 
 class ProfileViewModel @ViewModelInject constructor(
     @ApplicationContext private val context: Context,
-    getUserDetailObservableUseCase: GetUserDetailObservableUseCase,
+    getUserDetailUseCase: GetUserDetailUseCase,
     private val updateUserDetailUseCase: UpdateUserDetailUseCase,
     private val phoneUtil: PhoneUtil,
 ) : BaseViewModel() {
@@ -41,7 +41,7 @@ class ProfileViewModel @ViewModelInject constructor(
 
     val profileItems = fetchUserDetailChannel
         .asFlow()
-        .flatMapLatest { getUserDetailObservableUseCase(Unit) }
+        .flatMapLatest { getUserDetailUseCase(Unit) }
         .mapLatest {
             when (it) {
                 is Resource.Success -> {

@@ -30,13 +30,13 @@ class SplashViewModel @ViewModelInject constructor(
     // TODO: Create a list of notification channels
     private val notificationChannels: List<NotificationChannel> = listOf(
         NotificationChannel(
-            channelId = context.getString(R.string.foobar_default_notification_channel_id),
-            channelName = context.getString(R.string.foobar_default_notification_channel_name),
+            channelId = context.getString(R.string.notification_channel_default_id),
+            channelName = context.getString(R.string.notification_channel_default_name),
             importance = NotificationManagerCompat.IMPORTANCE_DEFAULT
         ),
         NotificationChannel(
-            channelId = context.getString(R.string.foobar_upload_notification_channel_id),
-            channelName = context.getString(R.string.foobar_upload_notification_channel_name),
+            channelId = context.getString(R.string.notification_channel_upload_id),
+            channelName = context.getString(R.string.notification_channel_upload_name),
             importance = NotificationManagerCompat.IMPORTANCE_DEFAULT
         ),
     )

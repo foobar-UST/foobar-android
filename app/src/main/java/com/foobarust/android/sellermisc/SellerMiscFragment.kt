@@ -12,6 +12,7 @@ import androidx.navigation.fragment.navArgs
 import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentSellerMiscBinding
 import com.foobarust.android.utils.AutoClearedValue
+import com.foobarust.android.utils.drawDivider
 import com.foobarust.android.utils.themeColor
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.SupportMapFragment
@@ -49,7 +50,7 @@ class SellerMiscFragment : DialogFragment() {
         }
 
         // Receive property from nav args and pass to view model
-        viewModel.setMiscProperty(args.sellerMiscProperty)
+        viewModel.onUpdateMiscProperty(args.sellerMiscProperty)
 
         // Setup toolbar
         binding.toolbar.setNavigationOnClickListener { dismiss() }
@@ -83,11 +84,23 @@ class SellerMiscFragment : DialogFragment() {
 
                 addMarker {
                     position(targetLocation)
-                    title("Here!")
                 }
 
                 moveCamera(CameraUpdateFactory.newLatLngZoom(targetLocation, 15f))
             }
+        }
+
+        // Setup property list
+        val sellerMiscAdapter = SellerMiscAdapter()
+
+        binding.recyclerView.run {
+            adapter = sellerMiscAdapter
+            drawDivider(forViewType = R.layout.seller_misc_address_item)
+            setHasFixedSize(true)
+        }
+
+        viewModel.sellerMiscListModels.observe(viewLifecycleOwner) {
+            sellerMiscAdapter.submitList(it)
         }
 
         return binding.root

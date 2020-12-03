@@ -1,22 +1,27 @@
 [
     {
         "id": "5f7a21d9712fc6f32817e55d",
+        "url": "https://foobar-group-delivery-app.web.app/",
         "image_url": "https://firebasestorage.googleapis.com/v0/b/foobar-group-delivery-app.appspot.com/o/test_images%2Fsample_image_3.jpg?alt=media&token=4c5e8ace-aa3e-40e5-81c1-46597e128b9b"
     },
     {
         "id": "TO7faqKnyI1g6BLl5EOR",
+        "url": "https://foobar-group-delivery-app.web.app/",
         "image_url": "https://firebasestorage.googleapis.com/v0/b/foobar-group-delivery-app.appspot.com/o/test_images%2Fsample_image_1.jpg?alt=media&token=4453e3c8-de2e-4863-8e3f-e9347f73c2a0"
     },
     {
         "id": "VJtZxRBIwL1Tz79lrAPk",
+        "url": "https://foobar-group-delivery-app.web.app/",
         "image_url": "https://firebasestorage.googleapis.com/v0/b/foobar-group-delivery-app.appspot.com/o/test_images%2Fsample_image_4.jpg?alt=media&token=ccc9f16a-f2f1-4c8e-865a-89daeb49121d"
     },
     {
         "id": "XPYI0SjEQTJ03Pc7w27p",
+        "url": "https://foobar-group-delivery-app.web.app/",
         "image_url": "https://firebasestorage.googleapis.com/v0/b/foobar-group-delivery-app.appspot.com/o/test_images%2Fsample_image_2.jpg?alt=media&token=3c16ab78-aa1b-4c59-b918-efac5e69f17b"
     },
     {
         "id": "tCaTUuEEiIkXUbOIRCEh",
+        "url": "https://foobar-group-delivery-app.web.app/",
         "image_url": "https://firebasestorage.googleapis.com/v0/b/foobar-group-delivery-app.appspot.com/o/test_images%2Fsample_image_3.jpg?alt=media&token=4c5e8ace-aa3e-40e5-81c1-46597e128b9b"
     }
 ]

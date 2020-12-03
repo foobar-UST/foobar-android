@@ -69,9 +69,9 @@ class SplashViewModelTest {
     private fun createSplashViewModel(isOnboardingCompleted: Boolean): SplashViewModel {
         return SplashViewModel(
             context = mock(Context::class.java).apply {
-                `when`(getString(R.string.foobar_default_notification_channel_id))
+                `when`(getString(R.string.notification_channel_default_id))
                     .thenReturn("default_notification_channel")
-                `when`(getString(R.string.foobar_default_notification_channel_name))
+                `when`(getString(R.string.notification_channel_default_name))
                     .thenReturn("Default")
             },
             notificationManager = mock(NotificationManager::class.java),

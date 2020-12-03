@@ -1,94 +1,161 @@
 package com.foobarust.android.sellerdetail
 
-import android.content.Context
+import android.os.Parcelable
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.foobarust.android.R
 import com.foobarust.android.common.BaseViewModel
-import com.foobarust.android.sellerdetail.SellerItemDetailListModel.*
 import com.foobarust.android.states.UiFetchState
 import com.foobarust.android.utils.SingleLiveEvent
-import com.foobarust.domain.models.SellerItemDetail
+import com.foobarust.domain.models.seller.SellerItemDetail
+import com.foobarust.domain.models.user.UserCartItem
 import com.foobarust.domain.states.Resource
+import com.foobarust.domain.usecases.seller.GetSellerItemDetailParameters
 import com.foobarust.domain.usecases.seller.GetSellerItemDetailUseCase
-import dagger.hilt.android.qualifiers.ApplicationContext
+import com.foobarust.domain.usecases.user.AddUserCartItemUseCase
+import kotlinx.android.parcel.Parcelize
+import kotlinx.coroutines.channels.ConflatedBroadcastChannel
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import java.util.*
 
 /**
  * Created by kevin on 10/13/20
  */
 
 class SellerItemDetailViewModel @ViewModelInject constructor(
-    @ApplicationContext private val context: Context,
-    private val getSellerItemDetailUseCase: GetSellerItemDetailUseCase
+    private val getSellerItemDetailUseCase: GetSellerItemDetailUseCase,
+    private val addUserCartItemUseCase: AddUserCartItemUseCase
 ) : BaseViewModel() {
 
+    private val itemDetailChannel = ConflatedBroadcastChannel<SellerItemDetail?>()
+    private val amountInputChannel = ConflatedBroadcastChannel(1)
+    private val isSubmittingToCartChannel = ConflatedBroadcastChannel(false)
+
+    val itemDetail: LiveData<SellerItemDetail?> = itemDetailChannel.asFlow()
+        .asLiveData(viewModelScope.coroutineContext)
+
+    val amountInput: LiveData<Int> = amountInputChannel.asFlow()
+        .asLiveData(viewModelScope.coroutineContext)
+
+    val isSubmittingToCart: LiveData<Boolean> = isSubmittingToCartChannel.asFlow()
+        .asLiveData(viewModelScope.coroutineContext)
+
+    val finalPrice: LiveData<Double> = itemDetailChannel.asFlow()
+        .combine(amountInputChannel.asFlow()) { itemDetail, amount ->
+            itemDetail?.let { it.price * amount } ?: 0.toDouble()
+        }
+        .asLiveData(viewModelScope.coroutineContext)
+
+    var notesInput: String? = null
+
+    private val _dismissDialog = SingleLiveEvent<Unit>()
+    val closeDialog: LiveData<Unit>
+        get() = _dismissDialog
+
+    /*
     private val _itemDetailModels = MutableLiveData<List<SellerItemDetailListModel>>()
     val itemDetailModels: LiveData<List<SellerItemDetailListModel>>
         get() = _itemDetailModels
 
-    private val _submittedToCart = SingleLiveEvent<Unit>()
-    val submittedToCart: LiveData<Unit>
-        get() = _submittedToCart
+     */
 
-    fun onReceiveItemInfo(title: String, description: String?, price: Double) {
-        _itemDetailModels.value = listOf(
-            SellerItemDetailInfoModel(
-                itemTitle = title,
-                itemDescription = description,
-                itemPrice = price
+    fun onFetchItemDetail(property: SellerItemDetailProperty) = viewModelScope.launch {
+        when (val resource = getSellerItemDetailUseCase(
+            GetSellerItemDetailParameters(
+                sellerId = property.sellerId,
+                itemId = property.itemId
             )
-        )
-    }
-
-    fun onFetchItemDetail(itemId: String) = viewModelScope.launch {
-        when (val resource = getSellerItemDetailUseCase(itemId)) {
+        )) {
             is Resource.Success -> {
-                buildItemDetailList(resource.data)
+                itemDetailChannel.offer(resource.data)
+                //buildItemDetailList()
                 setUiFetchState(UiFetchState.Success)
             }
-            is Resource.Error -> setUiFetchState(UiFetchState.Error(resource.message))
+            is Resource.Error -> {
+                setUiFetchState(UiFetchState.Error(resource.message))
+                _dismissDialog.value = Unit
+            }
             is Resource.Loading -> setUiFetchState(UiFetchState.Loading)
         }
     }
 
-    fun onSubmitToCart() = viewModelScope.launch {
-        _submittedToCart.value = Unit
+    fun onAmountIncremented() {
+        amountInputChannel.run {
+            // TODO: set maximum amount
+            offer(value + 1)
+        }
     }
 
-    private fun buildItemDetailList(itemDetail: SellerItemDetail) {
-        _itemDetailModels.value = buildList {
-            // Add info item
-            add(SellerItemDetailInfoModel(
+    fun onAmountDecremented() {
+        amountInputChannel.run {
+            if (value > 1) offer(value - 1)
+        }
+    }
+
+    fun onNotesChanged(notes: String) {
+        notesInput = notes
+    }
+
+    fun onSubmitItemToCart() = viewModelScope.launch {
+        // TODO: Migrate to backend, also fix id
+        itemDetailChannel.valueOrNull?.let { itemDetail ->
+            isSubmittingToCartChannel.offer(true)
+
+            val newCartItem = UserCartItem(
+                id = UUID.randomUUID().toString(),
+                itemId = itemDetail.id,
                 itemTitle = itemDetail.title,
-                itemDescription = itemDetail.description,
-                itemPrice = itemDetail.price
-            ))
+                itemTitleZh = itemDetail.titleZh,
+                itemPrice = itemDetail.price,
+                itemImageUrl = itemDetail.imageUrl,
+                amounts = amountInputChannel.value,
+                totalPrice = itemDetail.price * amountInputChannel.value,
+                notes = notesInput,
+                updatedAt = null
+            )
 
-            // Add choices subtitle and radio group
-            if (itemDetail.choices.isNotEmpty()) {
-                addAll(listOf(
-                    SellerItemDetailSubtitleModel(subtitle = context.getString(R.string.item_detail_choices_subtitle)),
-                    SellerItemDetailChoicesModel(choices = itemDetail.choices)
-                ))
+            when (val result = addUserCartItemUseCase(newCartItem)) {
+                is Resource.Success -> {
+                    _dismissDialog.value = Unit
+                    isSubmittingToCartChannel.offer(false)
+                    showToastMessage("Added to Cart.")
+                }
+                is Resource.Error -> {
+                    isSubmittingToCartChannel.offer(false)
+                    showToastMessage(result.message)
+                }
+
             }
+        }
+    }
 
-            // Add extra items subtitle and check boxes
-            if (itemDetail.extraItems.isNotEmpty()) {
-                add(SellerItemDetailSubtitleModel(subtitle = context.getString(R.string.item_detail_extra_items_subtitle)))
-                addAll(itemDetail.extraItems.map { SellerItemDetailExtraItemModel(it) })
-            }
+    fun isSubmittingToCart(): Boolean = isSubmittingToCartChannel.value
 
+    /*
+    private fun buildItemDetailList() {
+        _itemDetailModels.value = buildList {
             // Add special notes
             addAll(listOf(
-                SellerItemDetailSubtitleModel(subtitle = context.getString(R.string.item_detail_notes_subtitle)),
+                SellerItemDetailSubtitleModel(subtitle = context.getString(R.string.seller_item_subtitle_notes)),
                 SellerItemDetailNotesModel
             ))
 
-            // Add submit button
-            add(SellerItemDetailSubmitModel())
+            // Add amount widget
+            addAll(listOf(
+                SellerItemDetailSubtitleModel(subtitle = context.getString(R.string.seller_item_subtitle_amount)),
+                SellerItemDetailAmountModel()
+            ))
         }
     }
+
+     */
 }
+
+@Parcelize
+data class SellerItemDetailProperty(
+    val sellerId: String,
+    val itemId: String
+) : Parcelable

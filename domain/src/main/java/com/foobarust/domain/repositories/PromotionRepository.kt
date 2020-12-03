@@ -1,7 +1,7 @@
 package com.foobarust.domain.repositories
 
-import com.foobarust.domain.models.AdvertiseBasic
-import com.foobarust.domain.models.SuggestBasic
+import com.foobarust.domain.models.promotion.AdvertiseBasic
+import com.foobarust.domain.models.promotion.SuggestBasic
 import com.foobarust.domain.states.Resource
 import kotlinx.coroutines.flow.Flow
 
@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface PromotionRepository {
 
-    fun getAdvertiseBasicsObservable(): Flow<Resource<List<AdvertiseBasic>>>
+    fun getAdvertisesObservable(): Flow<Resource<List<AdvertiseBasic>>>
 
-    fun getSuggestBasicsObservable(userId: String): Flow<Resource<List<SuggestBasic>>>
+    fun getSuggestsObservable(userId: String): Flow<Resource<List<SuggestBasic>>>
 }

@@ -1,10 +1,7 @@
 package com.foobarust.domain.repositories
 
 import androidx.paging.PagingData
-import com.foobarust.domain.models.SellerBasic
-import com.foobarust.domain.models.SellerDetail
-import com.foobarust.domain.models.SellerItemBasic
-import com.foobarust.domain.models.SellerItemDetail
+import com.foobarust.domain.models.seller.*
 import com.foobarust.domain.states.Resource
 import kotlinx.coroutines.flow.Flow
 
@@ -14,11 +11,15 @@ import kotlinx.coroutines.flow.Flow
 
 interface SellerRepository {
 
-    fun getSellerPagedBasics(): Flow<PagingData<SellerBasic>>
+    fun getSellers(sellerType: SellerType): Flow<PagingData<SellerBasic>>
+
+    suspend fun getSellerBasic(sellerId: String): SellerBasic
 
     fun getSellerDetailObservable(sellerId: String): Flow<Resource<SellerDetail>>
 
-    fun getSellerPagedItems(catalogId: String): Flow<PagingData<SellerItemBasic>>
+    fun getSellerCatalogsObservable(sellerId: String): Flow<Resource<List<SellerCatalog>>>
 
-    suspend fun getSellerItemDetail(itemId: String): SellerItemDetail
+    fun getSellerItems(sellerId: String, catalogId: String): Flow<PagingData<SellerItemBasic>>
+
+    suspend fun getSellerItemDetail(sellerId: String, itemId: String): SellerItemDetail
 }

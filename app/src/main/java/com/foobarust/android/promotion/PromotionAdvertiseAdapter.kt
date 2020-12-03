@@ -5,7 +5,7 @@ import android.widget.ImageView
 import com.foobarust.android.R
 import com.foobarust.android.promotion.PromotionAdvertiseAdapter.PromotionAdvertiseAdapterListener
 import com.foobarust.android.utils.bindGlideUrl
-import com.foobarust.domain.models.AdvertiseBasic
+import com.foobarust.domain.models.promotion.AdvertiseBasic
 import com.google.android.material.card.MaterialCardView
 import com.zhpan.bannerview.BaseBannerAdapter
 import com.zhpan.bannerview.BaseViewHolder

@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/loading_retry_title"
+            android:text="@string/action_load_more"
             android:onClick="@{() -> retryAction.invoke()}"
             app:icon="@drawable/ic_refresh"
             app:goneIf="@{loadState instanceof LoadState.Loading}" />

@@ -5,8 +5,8 @@ import com.foobarust.data.common.Constants.SUGGESTS_BASIC_COLLECTION
 import com.foobarust.data.common.Constants.USERS_COLLECTION
 import com.foobarust.data.mappers.PromotionMapper
 import com.foobarust.data.utils.snapshotFlow
-import com.foobarust.domain.models.AdvertiseBasic
-import com.foobarust.domain.models.SuggestBasic
+import com.foobarust.domain.models.promotion.AdvertiseBasic
+import com.foobarust.domain.models.promotion.SuggestBasic
 import com.foobarust.domain.repositories.PromotionRepository
 import com.foobarust.domain.states.Resource
 import com.google.firebase.firestore.FirebaseFirestore
@@ -22,14 +22,14 @@ class PromotionRepositoryImpl @Inject constructor(
     private val promotionMapper: PromotionMapper
 ) : PromotionRepository {
 
-    override fun getAdvertiseBasicsObservable(): Flow<Resource<List<AdvertiseBasic>>> {
+    override fun getAdvertisesObservable(): Flow<Resource<List<AdvertiseBasic>>> {
        return firestore.collection(ADVERTISES_BASIC_COLLECTION)
-           .snapshotFlow(promotionMapper::toAdvertiseItem)
+           .snapshotFlow(promotionMapper::toAdvertiseBasic)
     }
 
-    override fun getSuggestBasicsObservable(userId: String): Flow<Resource<List<SuggestBasic>>> {
+    override fun getSuggestsObservable(userId: String): Flow<Resource<List<SuggestBasic>>> {
         return firestore.collection(USERS_COLLECTION).document(userId)
             .collection(SUGGESTS_BASIC_COLLECTION)
-            .snapshotFlow(promotionMapper::toSuggestItem)
+            .snapshotFlow(promotionMapper::toSuggestBasic)
     }
 }

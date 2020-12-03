@@ -3,7 +3,7 @@ package com.foobarust.android.emulator
 import androidx.test.ext.junit.rules.activityScenarioRule
 import com.foobarust.android.InsertFakeDataActivity
 import com.foobarust.data.common.Constants.USERS_COLLECTION
-import com.foobarust.data.models.UserDetailEntity
+import com.foobarust.data.models.user.UserDetailEntity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -31,6 +31,7 @@ class InsertUserFakeData {
 
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
+
     @Inject
     lateinit var firestore: FirebaseFirestore
 
@@ -41,14 +42,17 @@ class InsertUserFakeData {
 
     @Test
     fun insert_users_fake_data() = runBlocking(Dispatchers.IO) {
-        firestore.collection(USERS_COLLECTION).document(firebaseAuth.currentUser!!.uid)
-            .set(UserDetailEntity(
-                name = "Kevin Hon",
-                email = "kthon@connect.ust.hk",
-                username = "kthon",
-                phoneNum = "67681436",
-                photoUrl = "https://firebasestorage.googleapis.com/v0/b/foobar-group-delivery-app.appspot.com/o/user_photos%2FfFFdrdmz9zeyw7rWNjhrJaXnVOh2?alt=media&token=3dad277a-bd1a-402a-87e0-d557bc5dee07",
-            ))
+        firestore.collection(USERS_COLLECTION)
+            .document(firebaseAuth.currentUser!!.uid)
+            .set(
+                UserDetailEntity(
+                    name = "Kevin Hon",
+                    username = "kthon",
+                    email = "kthon@connect.ust.hk",
+                    phoneNum = "67681436",
+                    photoUrl = "https://firebasestorage.googleapis.com/v0/b/foobar-group-delivery-app.appspot.com/o/user_photos%2FfFFdrdmz9zeyw7rWNjhrJaXnVOh2?alt=media&token=3dad277a-bd1a-402a-87e0-d557bc5dee07"
+                )
+            )
             .await()
 
         assertTrue(true)

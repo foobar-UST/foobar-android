@@ -11,39 +11,32 @@
         <import type="androidx.paging.LoadState" />
     </data>
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_refresh_layout"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true">
 
-        <FrameLayout
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:animateLayoutChanges="true">
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:goneIf="@{!(viewModel.loadState instanceof LoadState.NotLoading)}"
+            tools:listitem="@layout/seller_on_campus_item" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:goneIf="@{!(viewModel.loadState instanceof LoadState.NotLoading)}"
-                tools:listitem="@layout/seller_on_campus_item" />
+        <include
+            layout="@layout/fragment_seller_on_campus_shimmer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:goneIf="@{!(viewModel.loadState instanceof LoadState.Loading)}"/>
 
-            <include
-                layout="@layout/fragment_seller_on_campus_shimmer"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:goneIf="@{!(viewModel.loadState instanceof LoadState.Loading)}"/>
+        <include
+            layout="@layout/common_load_error_layout"
+            android:id="@+id/load_error_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:goneIf="@{!(viewModel.loadState instanceof LoadState.Error)}"/>
 
-            <include
-                layout="@layout/common_load_error_layout"
-                android:id="@+id/load_error_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:goneIf="@{!(viewModel.loadState instanceof LoadState.Error)}"/>
-
-        </FrameLayout>
-
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </FrameLayout>
 
 </layout>

@@ -5,10 +5,17 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <variable
+            name="purchaseItemModel"
+            type="com.foobarust.android.cart.CartListModel.CartPurchaseItemModel" />
+        <variable
+            name="listener"
+            type="com.foobarust.android.cart.CartAdapter.CartAdapterListener" />
         <import type="com.foobarust.android.R"/>
+        <import type="com.foobarust.domain.models.user.UserCartItemKt" />
     </data>
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingStart="@dimen/spacing_xmedium"
@@ -24,31 +31,41 @@
             android:padding="@dimen/min_icon_touch_padding"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_remove_circle_outline"
-            app:tint="@color/material_on_surface_disabled"/>
+            android:onClick="@{() -> listener.onRemoveCartItem(purchaseItemModel.userCartItem)}"
+            app:tint="@color/material_on_surface_disabled"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/item_image_view"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginStart="@dimen/spacing_xmedium"
-            android:layout_toEndOf="@id/remove_button"
             android:scaleType="centerCrop"
-            app:glideUrl="@{`https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?ixlib=rb-1.2.1&amp;w=1000&amp;q=80`}"
+            app:glideUrl="@{purchaseItemModel.userCartItem.itemImageUrl}"
             app:glideCenterCrop="@{true}"
             app:glidePlaceholder="@{R.drawable.placeholder_card}"
             app:shapeAppearance="@style/ShapeAppearance.Foobar.SmallComponent"
-            app:goneIf="@{false}"
+            app:goneIf="@{purchaseItemModel.userCartItem.itemImageUrl == null}"
+            app:layout_constraintStart_toEndOf="@id/remove_button"
+            app:layout_constraintTop_toTopOf="parent"
             tools:src="@sample/sample_image_5"/>
 
         <TextView
             android:id="@+id/title_text_view"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_large"
-            android:layout_toEndOf="@id/item_image_view"
-            android:text="Chicken Tikka masala"
+            android:layout_marginEnd="@dimen/spacing_xmedium"
+            android:text="@{UserCartItemKt.getNormalizedTitle(purchaseItemModel.userCartItem)}"
             android:textAppearance="?attr/textAppearanceSubtitle2"
-            android:textColor="@color/material_on_surface_emphasis_high_type"/>
+            android:textColor="@color/material_on_surface_emphasis_high_type"
+            android:lineSpacingMultiplier="1.2"
+            app:layout_constraintStart_toEndOf="@id/item_image_view"
+            app:layout_constraintTop_toTopOf="@+id/item_image_view"
+            app:layout_constraintBottom_toTopOf="@id/quantity_text_view"
+            app:layout_constraintEnd_toStartOf="@id/price_text_view"
+            tools:text="Chicken Tikka Masala" />
 
         <TextView
             android:id="@+id/quantity_text_view"
@@ -56,21 +73,43 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_large"
             android:layout_marginTop="@dimen/spacing_xmedium"
-            android:layout_toEndOf="@id/item_image_view"
-            android:layout_below="@id/title_text_view"
-            android:text="Quantity: 1"
+            android:text="@{@string/cart_purchase_item_format_amount(purchaseItemModel.userCartItem.amounts)}"
             android:textAppearance="?attr/textAppearanceCaption"
-            android:textColor="@color/material_on_surface_emphasis_medium"/>
+            android:textColor="@color/material_on_surface_emphasis_medium"
+            app:layout_constraintBottom_toBottomOf="@+id/item_image_view"
+            app:layout_constraintStart_toEndOf="@id/item_image_view"
+            app:layout_constraintTop_toBottomOf="@+id/title_text_view"
+            tools:text="Quantity: 1" />
+
+        <TextView
+            android:id="@+id/notes_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_large"
+            android:layout_marginEnd="@dimen/spacing_xmedium"
+            android:layout_marginTop="@dimen/spacing_xmedium"
+            android:text="@{@string/cart_purchase_item_format_notes(purchaseItemModel.userCartItem.notes)}"
+            android:textAppearance="?attr/textAppearanceCaption"
+            android:textColor="@color/material_on_surface_emphasis_medium"
+            android:lineSpacingMultiplier="1.15"
+            app:layout_constraintStart_toEndOf="@id/item_image_view"
+            app:layout_constraintEnd_toStartOf="@id/price_text_view"
+            app:layout_constraintTop_toBottomOf="@+id/quantity_text_view"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:goneIf="@{purchaseItemModel.userCartItem.notes.empty || purchaseItemModel.userCartItem.notes == null}"
+            tools:text="Notes: Add more sauce, please." />
 
         <TextView
             android:id="@+id/price_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:text="x $120"
+            android:text="@{@string/cart_purchase_item_format_total_price(purchaseItemModel.userCartItem.totalPrice)}"
             android:textAppearance="?attr/textAppearanceBody2"
-            android:textColor="?attr/colorPrimary"/>
+            android:textColor="?attr/colorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/title_text_view"
+            tools:text="x $36.9"/>
 
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

@@ -7,7 +7,7 @@ import com.foobarust.data.common.Constants.USERS_COLLECTION
 import com.foobarust.data.mappers.AuthMapper
 import com.foobarust.data.preferences.PreferencesKeys.PREF_KEY_EMAIL_VERIFY
 import com.foobarust.data.utils.getStringFlow
-import com.foobarust.domain.models.AuthProfile
+import com.foobarust.domain.models.user.AuthProfile
 import com.foobarust.domain.repositories.AuthRepository
 import com.foobarust.domain.states.Resource
 import com.google.firebase.auth.FirebaseAuth
@@ -116,7 +116,8 @@ class AuthRepositoryImpl @Inject constructor(
         // Insert a new user document into firestore
         val userDetail = authMapper.toUserDetailEntity(currentUser)
 
-        firestore.collection(USERS_COLLECTION).document(currentUser.uid)
+        firestore.collection(USERS_COLLECTION)
+            .document(currentUser.uid)
             .set(userDetail, SetOptions.merge())
             .await()
     }

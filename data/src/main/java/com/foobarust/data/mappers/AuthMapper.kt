@@ -2,8 +2,8 @@ package com.foobarust.data.mappers
 
 import com.foobarust.data.common.Constants.USER_EMAIL_FIELD
 import com.foobarust.data.common.Constants.USER_USERNAME_FIELD
-import com.foobarust.data.models.UserDetailEntity
-import com.foobarust.domain.models.AuthProfile
+import com.foobarust.data.models.user.UserDetailEntity
+import com.foobarust.domain.models.user.AuthProfile
 import com.google.firebase.auth.FirebaseUser
 import javax.inject.Inject
 

@@ -87,7 +87,9 @@ class ProfileFragment : Fragment(), ProfileAdapter.ProfileAdapterListener {
 
     override fun onProfileAvatarClicked() {
         requireActivity().registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            uri?.let { mainViewModel.updateUserPhoto(it.toString()) }
+            uri?.let {
+                mainViewModel.updateUserPhoto(it.toString())
+            }
         }.launch("image/*")
     }
 

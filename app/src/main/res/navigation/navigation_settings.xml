@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.foobarust.android.settings.SettingsFragment"
-        android:label="@string/settings_label"
+        android:label="@string/fragment_label_settings"
         tools:layout="@layout/fragment_settings">
         <action
             android:id="@+id/action_settingsFragment_to_licenseFragment"
@@ -56,31 +56,31 @@
     <fragment
         android:id="@+id/notificationFragment"
         android:name="com.foobarust.android.settings.NotificationFragment"
-        android:label="@string/notification_label"
+        android:label="@string/fragment_label_notification"
         tools:layout="@layout/fragment_notification"/>
 
     <fragment
         android:id="@+id/licenseFragment"
         android:name="com.foobarust.android.settings.LicenseFragment"
-        android:label="@string/license_label"
+        android:label="@string/fragment_label_license"
         tools:layout="@layout/fragment_license"/>
 
     <fragment
         android:id="@+id/favoriteFragment"
         android:name="com.foobarust.android.settings.FavoriteFragment"
-        android:label="@string/favorite_label"
+        android:label="@string/fragment_label_favorite"
         tools:layout="@layout/fragment_favorite"/>
 
     <fragment
         android:id="@+id/orderHistoryFragment"
         android:name="com.foobarust.android.order.OrderHistoryFragment"
-        android:label="@string/order_history_label"
+        android:label="@string/fragment_label_order_history"
         tools:layout="@layout/fragment_order_history"/>
 
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.foobarust.android.profile.ProfileFragment"
-        android:label="@string/profile_label"
+        android:label="@string/fragment_label_profile"
         tools:layout="@layout/fragment_profile">
         <action
             android:id="@+id/action_profileFragment_to_textInputDialog"

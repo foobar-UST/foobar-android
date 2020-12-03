@@ -12,7 +12,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/loading_failed_title"
+            android:text="@string/loading_error_title"
             android:textStyle="bold"
             android:textAppearance="?attr/textAppearanceSubtitle1" />
 
@@ -20,7 +20,7 @@
             android:layout_width="280dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_large"
-            android:text="@string/loading_failed_description"
+            android:text="@string/loading_error_content"
             android:textAppearance="?attr/textAppearanceSubtitle2"
             android:textColor="@color/material_on_background_emphasis_medium"
             android:lineSpacingMultiplier="1.2"
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_xlarge"
             android:layout_gravity="center"
-            android:text="@string/loading_retry_title"
+            android:text="@string/action_retry"
             app:icon="@drawable/ic_refresh" />
 
     </LinearLayout>

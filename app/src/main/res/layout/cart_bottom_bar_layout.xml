@@ -45,7 +45,7 @@
                 android:layout_marginStart="@dimen/spacing_large"
                 android:layout_toEndOf="@id/cart_items_count_text_view"
                 android:layout_centerVertical="true"
-                android:text="@string/cart_items_count_title"
+                android:text="@string/cart_bottom_bar_items_count_title"
                 android:textAppearance="?attr/textAppearanceSubtitle2"
                 android:textColor="?attr/colorOnPrimarySurface"/>
 
@@ -55,7 +55,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:src="@drawable/ic_expand_less"
-                android:contentDescription="@string/cart_open_content_desc"
+                android:contentDescription="@string/cart_bottom_bar_open_cart_content_desc"
                 app:tint="?attr/colorOnPrimarySurface"/>
 
         </RelativeLayout>

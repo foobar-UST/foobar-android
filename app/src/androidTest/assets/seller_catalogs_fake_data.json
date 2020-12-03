@@ -1,0 +1,23 @@
+[
+  {
+    "id": "1c8ea1f8-c05b-4504-8446-9eccf635afa9",
+    "seller_id": "5f71cda2707b81823b4f80d8",
+    "title": "Western Style Rice",
+    "title_zh": "西式扒飯",
+    "available": true
+  },
+  {
+    "id": "d89ffa47-1c13-4e19-ba53-1fc6def395f9",
+    "seller_id": "5f71cda2707b81823b4f80d8",
+    "title": "Baked Dishes",
+    "title_zh": "焗類",
+    "available": true
+  },
+  {
+    "id": "16f7606d-e36b-4c39-9601-adfcf0806cd8",
+    "seller_id": "5f71cda2707b81823b4f80d8",
+    "title": "Curry Series",
+    "title_zh": "咖喱類",
+    "available": true
+  }
+]

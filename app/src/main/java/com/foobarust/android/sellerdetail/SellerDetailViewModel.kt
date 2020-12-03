@@ -1,6 +1,7 @@
 package com.foobarust.android.sellerdetail
 
 import android.content.Context
+import android.os.Parcelable
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,13 +11,14 @@ import com.foobarust.android.common.BaseViewModel
 import com.foobarust.android.sellermisc.SellerMiscProperty
 import com.foobarust.android.states.UiFetchState
 import com.foobarust.android.utils.SingleLiveEvent
-import com.foobarust.domain.models.SellerDetail
-import com.foobarust.domain.models.SellerItemBasic
-import com.foobarust.domain.models.SellerType
+import com.foobarust.domain.models.seller.*
 import com.foobarust.domain.states.Resource
+import com.foobarust.domain.usecases.seller.GetSellerCatalogsUseCase
 import com.foobarust.domain.usecases.seller.GetSellerDetailUseCase
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.collect
+import kotlinx.android.parcel.Parcelize
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 /**
@@ -24,18 +26,21 @@ import kotlinx.coroutines.launch
  */
 
 const val SELLER_DETAIL_ACTION_RATING = "action_rating"
-const val SELLER_DETAIL_ACTION_TYPE = "action_type"
-const val SELLER_DETAIL_ACTION_DELIVERY = "action_delivery"
-const val SELLER_DETAIL_ACTION_MIN_SPEND = "action_min_spend"
+const val SELLER_DETAIL_ACTION_TAG = "action_tag"
 
 class SellerDetailViewModel @ViewModelInject constructor(
     @ApplicationContext private val context: Context,
-    private val getSellerDetailUseCase: GetSellerDetailUseCase
+    private val getSellerDetailUseCase: GetSellerDetailUseCase,
+    private val getSellerCatalogsUseCase: GetSellerCatalogsUseCase
 ) : BaseViewModel() {
 
     private val _sellerDetail = MutableLiveData<SellerDetail>()
     val sellerDetail: LiveData<SellerDetail>
         get() = _sellerDetail
+
+    private val _sellerCatalogs = MutableLiveData<List<SellerCatalog>>()
+    val sellerCatalogs: LiveData<List<SellerCatalog>>
+        get() = _sellerCatalogs
 
     private val _showToolbarTitle = MutableLiveData<Boolean>()
     val showToolbarTitle: LiveData<Boolean>
@@ -45,8 +50,8 @@ class SellerDetailViewModel @ViewModelInject constructor(
     val navigateToSellerMisc: LiveData<SellerMiscProperty>
         get() = _navigateToSellerMisc
 
-    private val _navigateToItemDetail = SingleLiveEvent<SellerItemBasic>()
-    val navigateToItemDetail: LiveData<SellerItemBasic>
+    private val _navigateToItemDetail = SingleLiveEvent<SellerItemDetailProperty>()
+    val navigateToItemDetail: LiveData<SellerItemDetailProperty>
         get() = _navigateToItemDetail
 
     private val _detailActions = MutableLiveData<List<SellerDetailAction>>()
@@ -54,17 +59,29 @@ class SellerDetailViewModel @ViewModelInject constructor(
         get() = _detailActions
 
     fun onFetchSellerDetail(sellerId: String) = viewModelScope.launch {
-        getSellerDetailUseCase(sellerId).collect {
+        // Fetch seller detail
+        getSellerDetailUseCase(sellerId).onEach {
             when (it) {
                 is Resource.Success -> {
-                    setUiFetchState(UiFetchState.Success)
                     _sellerDetail.value = it.data
                     buildActionList(it.data)
+                    setUiFetchState(UiFetchState.Success)
                 }
                 is Resource.Loading -> setUiFetchState(UiFetchState.Loading)
                 is Resource.Error -> setUiFetchState(UiFetchState.Error(it.message))
             }
-        }
+        }.launchIn(this)
+
+        // Fetch seller catalogs
+        getSellerCatalogsUseCase(sellerId).onEach {
+            when (it) {
+                is Resource.Success -> {
+                    _sellerCatalogs.value = it.data
+                }
+                is Resource.Loading -> setUiFetchState(UiFetchState.Loading)
+                is Resource.Error -> setUiFetchState(UiFetchState.Error(it.message))
+            }
+        }.launchIn(this)
     }
 
     fun onShowToolbarTitleChanged(isShow: Boolean) {
@@ -74,20 +91,23 @@ class SellerDetailViewModel @ViewModelInject constructor(
     fun onShowSellerMisc() {
         _navigateToSellerMisc.value = _sellerDetail.value!!.let {
             SellerMiscProperty(
-                sellerName = it.name,
-                email = it.email,
-                description = it.description,
+                name = it.getNormalizedName(),
+                description = it.getNormalizedDescription(),
+                address = it.getNormalizedAddress(),
                 phoneNum = it.phoneNum,
-                address = it.location.address,
-                latitude = it.location.geoLocation.latitude,
-                longitude = it.location.geoLocation.longitude,
+                website = it.website,
+                latitude = it.location.geolocation.latitude,
+                longitude = it.location.geolocation.longitude,
                 openingHours = it.openingHours
             )
         }
     }
 
-    fun onShowItemDetailDialog(sellerItemBasic: SellerItemBasic) {
-        _navigateToItemDetail.value = sellerItemBasic
+    fun onShowItemDetailDialog(sellerId: String, itemId: String) {
+        _navigateToItemDetail.value = SellerItemDetailProperty(
+            sellerId = sellerId,
+            itemId = itemId
+        )
     }
 
     private fun buildActionList(sellerDetail: SellerDetail) {
@@ -95,45 +115,25 @@ class SellerDetailViewModel @ViewModelInject constructor(
             // Rating
             add(SellerDetailAction(
                 id = SELLER_DETAIL_ACTION_RATING,
-                title = context.getString(R.string.seller_rating_format, sellerDetail.rating),
+                title = context.getString(R.string.seller_data_format_rating, sellerDetail.rating),
                 drawableRes = R.drawable.ic_star,
                 colorRes = R.color.yellow
             ))
 
-            // Min spend
-            sellerDetail.minSpend?.let {
-                add(SellerDetailAction(
-                    id = SELLER_DETAIL_ACTION_MIN_SPEND,
-                    title = context.getString(R.string.seller_min_spend_format, it),
-                    drawableRes = R.drawable.ic_attach_money
-                ))
-            }
-
-            // On-campus or off-campus
-            add(SellerDetailAction(
-                id = SELLER_DETAIL_ACTION_TYPE,
-                title = context.getString(
-                    if (sellerDetail.type == SellerType.ON_CAMPUS)
-                        R.string.seller_on_campus_title
-                    else
-                        R.string.seller_off_campus_title
-                ),
-                drawableRes = if (sellerDetail.type == SellerType.ON_CAMPUS) R.drawable.ic_school
-                    else R.drawable.ic_local_dining
-            ))
-
-            // Delivery type
-            add(SellerDetailAction(
-                id = SELLER_DETAIL_ACTION_DELIVERY,
-                title = context.getString(
-                    if (sellerDetail.type == SellerType.ON_CAMPUS)
-                        R.string.seller_pick_up
-                    else
-                        R.string.seller_delivery
-                ),
-                drawableRes = if (sellerDetail.type == SellerType.ON_CAMPUS) R.drawable.ic_directions_run
-                    else R.drawable.ic_local_shipping
-            ))
+            // Tags
+            addAll(sellerDetail.tags.map {
+                SellerDetailAction(
+                    id = "${SELLER_DETAIL_ACTION_RATING}_$it",
+                    title = it
+                )
+            })
         }
     }
 }
+
+@Parcelize
+data class SellerDetailProperty(
+    val id: String,
+    val name: String,
+    val imageUrl: String?
+) : Parcelable

@@ -6,17 +6,14 @@
 
     <data>
         <variable
-            name="sellerName"
-            type="String" />
-        <variable
-            name="sellerImageUrl"
-            type="String" />
+            name="sellerDetailProperty"
+            type="com.foobarust.android.sellerdetail.SellerDetailProperty"/>
         <variable
             name="viewModel"
             type="com.foobarust.android.sellerdetail.SellerDetailViewModel" />
-
         <import type="com.foobarust.android.R" />
         <import type="com.foobarust.android.states.UiFetchState" />
+        <import type="com.foobarust.domain.models.seller.SellerDetailKt" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -61,7 +58,7 @@
                             android:layout_height="match_parent"
                             android:scaleType="centerCrop"
                             android:contentDescription="@{viewModel.sellerDetail.name}"
-                            app:glideUrl="@{viewModel.sellerDetail.imageUrl ?? sellerImageUrl}"
+                            app:glideUrl="@{viewModel.sellerDetail.imageUrl ?? sellerDetailProperty.imageUrl}"
                             app:glideCenterCrop="@{true}"
                             app:glidePlaceholder="@{R.drawable.placeholder_card}"
                             tools:src="@sample/sample_image_5" />
@@ -92,43 +89,66 @@
 
                     <TextView
                         android:id="@+id/name_text_view"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/spacing_large"
                         android:layout_marginTop="@dimen/spacing_large"
-                        android:layout_marginEnd="@dimen/spacing_large"
+                        android:layout_marginEnd="@dimen/spacing_xmedium"
                         android:ellipsize="end"
                         android:maxLines="2"
-                        android:text="@{viewModel.sellerDetail.name ?? sellerName}"
-                        android:textAppearance="?attr/textAppearanceHeadline5"
+                        android:text="@{viewModel.sellerDetail != null ? SellerDetailKt.getNormalizedName(viewModel.sellerDetail) : sellerDetailProperty.name}"
+                        android:textAppearance="?attr/textAppearanceHeadline6"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/notice_text_view"
+                        app:layout_constraintEnd_toStartOf="@id/misc_button"
                         tools:text="Happy Restaurant" />
 
                     <TextView
-                        android:id="@+id/address_text_view"
-                        android:layout_width="0dp"
+                        android:id="@+id/min_spend_text_view"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/spacing_xmedium"
                         android:layout_marginStart="@dimen/spacing_large"
-                        android:layout_marginEnd="@dimen/spacing_large"
-                        android:text="@{viewModel.sellerDetail.location.address}"
+                        android:text="@{@string/seller_data_format_min_spend(viewModel.sellerDetail.minSpend)}"
                         android:textColor="@color/material_on_background_emphasis_medium"
-                        android:textAppearance="?attr/textAppearanceBody2"
+                        android:textAppearance="?attr/textAppearanceCaption"
                         android:maxLines="2"
                         android:ellipsize="end"
                         android:lineSpacingMultiplier="1.2"
                         android:gravity="center_vertical"
+                        android:drawablePadding="@dimen/spacing_small"
+                        app:drawableStartCompat="@drawable/ic_attach_money"
+                        app:drawableTint="@color/material_on_surface_emphasis_medium"
+                        app:drawableScale="@{0.8}"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/name_text_view"
-                        app:layout_constraintEnd_toStartOf="@id/misc_button"
-                        tools:text="Address will be shown here."/>
+                        tools:text="30 Min Spend"/>
+
+                    <TextView
+                        android:id="@+id/deliver_type_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_xmedium"
+                        android:layout_marginStart="@dimen/spacing_large"
+                        android:text="@string/seller_deliver_type_pick_up"
+                        android:textColor="@color/material_on_background_emphasis_medium"
+                        android:textAppearance="?attr/textAppearanceCaption"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:lineSpacingMultiplier="1.2"
+                        android:gravity="center_vertical"
+                        android:drawablePadding="@dimen/spacing_small"
+                        app:drawableStartCompat="@drawable/ic_directions_run"
+                        app:drawableTint="@color/material_on_surface_emphasis_medium"
+                        app:drawableScale="@{0.8}"
+                        app:layout_constraintStart_toEndOf="@id/min_spend_text_view"
+                        app:layout_constraintTop_toBottomOf="@id/name_text_view" />
 
                     <HorizontalScrollView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/spacing_mlarge"
+                        android:layout_marginTop="@dimen/spacing_large"
                         android:layout_marginBottom="@dimen/spacing_large"
                         android:paddingStart="@dimen/spacing_large"
                         android:paddingEnd="@dimen/spacing_large"
@@ -136,7 +156,7 @@
                         android:scrollbars="none"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/address_text_view"
+                        app:layout_constraintTop_toBottomOf="@id/min_spend_text_view"
                         app:layout_constraintBottom_toBottomOf="parent">
 
                         <com.google.android.material.chip.ChipGroup
@@ -155,7 +175,7 @@
                         android:padding="@dimen/min_icon_touch_padding"
                         android:src="@drawable/ic_info"
                         android:background="?attr/selectableItemBackgroundBorderless"
-                        android:contentDescription="@{sellerName}"
+                        android:contentDescription="@string/action_detail"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="@id/name_text_view"
                         app:layout_constraintBottom_toBottomOf="@id/name_text_view"

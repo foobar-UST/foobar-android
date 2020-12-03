@@ -7,9 +7,9 @@ plugins {
     id(Plugins.KOTLIN_KAPT)
     id(Plugins.HILT_ANDROID)
     id(Plugins.NAVIGATION_SAFEARGS)
-    id(Plugins.CHECK_DEPENDENCY_UPDATES) version "1.0.211"
+    id(Plugins.CHECK_DEPENDENCY_UPDATES) version Versions.CHECK_DEPENDENCY_UPDATES
     id(Plugins.FIREBASE_CRASHLYTICS)
-    kotlin(Plugins.KOTLIN_SERIALIZATION) version "1.4.10"
+    kotlin(Plugins.KOTLIN_SERIALIZATION) version Versions.SERIALIZATION
 }
 
 android {
@@ -30,7 +30,6 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             //manifestPlaceholders = mapOf("crashlyticsCollectionEnabled" to true)
         }
-
         /*
         getByName("debug") {
             manifestPlaceholders = mapOf("crashlyticsCollectionEnabled" to false)
@@ -74,10 +73,10 @@ dependencies {
 
     // Kotlin
     implementation(Dependencies.KOTLIN_STDLIB)
+    implementation(Dependencies.KOTLIN_SERIALIZATION)
     implementation(Dependencies.COROUTINE_CORE)
     implementation(Dependencies.COROUTINE_ANDROID)
     implementation(Dependencies.COROUTINE_PLAY_SERVICES)
-    implementation(Dependencies.KOTLIN_SERIALIZATION)
 
     // Android
     implementation(Dependencies.CORE)

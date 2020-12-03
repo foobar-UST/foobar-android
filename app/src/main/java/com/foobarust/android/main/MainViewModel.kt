@@ -41,8 +41,8 @@ class MainViewModel @ViewModelInject constructor(
         _showCartBottomBar.value = false
     }
 
-    fun updateUserPhoto(photoUriString: String) = viewModelScope.launch {
-        updateUserPhotoUseCase(photoUriString).collect {
+    fun updateUserPhoto(uriString: String) = viewModelScope.launch {
+        updateUserPhotoUseCase(uriString).collect {
             when (it) {
                 is Resource.Success -> showToastMessage("Photo uploaded.")
                 is Resource.Error -> showToastMessage(it.message)

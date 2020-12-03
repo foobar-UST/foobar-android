@@ -23,7 +23,7 @@ class SellerFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentSellerBinding.inflate(inflater, container, false)
 
         // Setup on-campus and off-campus tabs
@@ -47,11 +47,7 @@ class SellerFragment : Fragment() {
         // Navigate to seller detail
         viewModel.navigateToSellerDetail.observe(viewLifecycleOwner) {
             findNavController(R.id.sellerFragment)?.navigate(
-                SellerFragmentDirections.actionSellerFragmentToSellerDetailFragment(
-                    sellerId = it.id,
-                    sellerName = it.name,
-                    sellerImageUrl = it.imageUrl
-                )
+                SellerFragmentDirections.actionSellerFragmentToSellerDetailFragment(it)
             )
         }
 
@@ -65,11 +61,7 @@ class SellerFragment : Fragment() {
         // Navigate to suggest item
         viewModel.navigateToSuggestItem.observe(viewLifecycleOwner) {
             findNavController(R.id.sellerFragment)?.navigate(
-                SellerFragmentDirections.actionSellerFragmentToItemDetailDialog(
-                    itemId = it.itemId,
-                    itemTitle = it.itemTitle,
-                    itemPrice = 0.toString()
-                )
+                SellerFragmentDirections.actionSellerFragmentToSellerItemDetailFragment(it)
             )
         }
 

@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.foobarust.android.databinding.SellerItemsBasicItemBinding
 import com.foobarust.android.sellerdetail.SellerItemsAdapter.SellerItemsAdapterListener
-import com.foobarust.domain.models.SellerItemBasic
+import com.foobarust.domain.models.seller.SellerItemBasic
 
 /**
  * Created by kevin on 10/4/20

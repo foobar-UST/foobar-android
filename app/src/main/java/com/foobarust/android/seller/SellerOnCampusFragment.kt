@@ -17,9 +17,9 @@ import com.foobarust.android.promotion.PromotionAdapter
 import com.foobarust.android.promotion.PromotionAdvertiseAdapter
 import com.foobarust.android.promotion.PromotionSuggestAdapter
 import com.foobarust.android.utils.*
-import com.foobarust.domain.models.AdvertiseBasic
-import com.foobarust.domain.models.SellerBasic
-import com.foobarust.domain.models.SuggestBasic
+import com.foobarust.domain.models.promotion.AdvertiseBasic
+import com.foobarust.domain.models.promotion.SuggestBasic
+import com.foobarust.domain.models.seller.SellerBasic
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -27,8 +27,6 @@ import kotlinx.coroutines.launch
 /**
  * Created by kevin on 10/11/20
  */
-
-private const val ADVERTISE_DETAIL_URL = "https://foobar-group-delivery-app.web.app/"
 
 @AndroidEntryPoint
 class SellerOnCampusFragment : Fragment(),
@@ -45,7 +43,7 @@ class SellerOnCampusFragment : Fragment(),
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentSellerOnCampusBinding.inflate(inflater, container, false).apply {
             viewModel = this@SellerOnCampusFragment.sellerOnCampusViewModel
             lifecycleOwner = viewLifecycleOwner
@@ -84,7 +82,7 @@ class SellerOnCampusFragment : Fragment(),
         viewLifecycleOwner.lifecycleScope.launch {
             sellerOnCampusViewModel.sellerModelItems.collectLatest {
                 sellerAdapter.submitData(it)
-                binding.swipeRefreshLayout.isRefreshing = false
+                //binding.swipeRefreshLayout.isRefreshing = false
             }
         }
 
@@ -103,12 +101,14 @@ class SellerOnCampusFragment : Fragment(),
             }
         }
 
+        /*
         // Swipe to refresh
         binding.swipeRefreshLayout.setOnRefreshListener {
             sellerOnCampusViewModel.reloadPromotionItems()
             sellerAdapter.refresh()
             scrollToTopWhenNewItemsInserted(promotionAdapter)
         }
+         */
 
         // Scroll to top when the tab is reselected
         mainViewModel.scrollToTop.observe(viewLifecycleOwner) {
@@ -119,8 +119,8 @@ class SellerOnCampusFragment : Fragment(),
     }
 
     override fun onPromotionAdvertiseItemClicked(advertiseBasic: AdvertiseBasic) {
-        if (!requireActivity().launchCustomTab(ADVERTISE_DETAIL_URL)) {
-            showShortToast(getString(R.string.open_url_no_resolve_activity))
+        if (!requireActivity().launchCustomTab(advertiseBasic.url)) {
+            showShortToast(getString(R.string.error_resolve_activity_failed))
         }
     }
 
