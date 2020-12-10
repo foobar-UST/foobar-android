@@ -10,11 +10,12 @@ import com.foobarust.android.R
 import com.foobarust.android.cart.CartAdapter.*
 import com.foobarust.android.cart.CartListModel.*
 import com.foobarust.android.cart.CartViewHolder.*
+import com.foobarust.android.databinding.CartActionsItemBinding
 import com.foobarust.android.databinding.CartPurchaseItemBinding
 import com.foobarust.android.databinding.CartSellerInfoItemBinding
 import com.foobarust.android.databinding.CartTotalPriceItemBinding
+import com.foobarust.domain.models.cart.UserCartItem
 import com.foobarust.domain.models.seller.SellerBasic
-import com.foobarust.domain.models.user.UserCartItem
 
 /**
  * Created by kevin on 12/1/20
@@ -39,6 +40,10 @@ class CartAdapter(
                 CartTotalPriceItemBinding.inflate(inflater, parent, false)
             )
 
+            R.layout.cart_actions_item -> CartActionsViewHolder(
+                CartActionsItemBinding.inflate(inflater, parent, false)
+            )
+
             else -> throw IllegalStateException("Unknown view type $viewType")
         }
     }
@@ -48,20 +53,23 @@ class CartAdapter(
             is CartSellerInfoViewHolder -> holder.binding.run {
                 sellerInfoModel = getItem(position) as CartSellerInfoModel
                 listener = this@CartAdapter.listener
-
                 executePendingBindings()
             }
 
             is CartPurchaseItemViewHolder -> holder.binding.run {
                 purchaseItemModel = getItem(position) as CartPurchaseItemModel
                 listener = this@CartAdapter.listener
-
                 executePendingBindings()
             }
 
             is CartTotalPriceViewHolder -> holder.binding.run {
                 totalPriceModel = getItem(position) as CartTotalPriceModel
+                executePendingBindings()
+            }
 
+            is CartActionsViewHolder -> holder.binding.run {
+                actionsModel = getItem(position) as CartActionsModel
+                listener = this@CartAdapter.listener
                 executePendingBindings()
             }
         }
@@ -72,6 +80,7 @@ class CartAdapter(
             is CartSellerInfoModel -> R.layout.cart_seller_info_item
             is CartPurchaseItemModel -> R.layout.cart_purchase_item
             is CartTotalPriceModel -> R.layout.cart_total_price_item
+            is CartActionsModel -> R.layout.cart_actions_item
         }
     }
 
@@ -79,6 +88,8 @@ class CartAdapter(
         fun onNavigateToSellerDetail(sellerId: String)
         fun onNavigateToSellerMisc(sellerId: String)
         fun onRemoveCartItem(userCartItem: UserCartItem)
+        fun onClearCart()
+        fun onPlaceOrder()
     }
 }
 
@@ -93,6 +104,10 @@ sealed class CartViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
 
     class CartTotalPriceViewHolder(
         val binding: CartTotalPriceItemBinding
+    ) : CartViewHolder(binding.root)
+
+    class CartActionsViewHolder(
+        val binding: CartActionsItemBinding
     ) : CartViewHolder(binding.root)
 }
 
@@ -110,6 +125,10 @@ sealed class CartListModel {
         val deliveryFee: Double,
         val total: Double
     ) : CartListModel()
+
+    data class CartActionsModel(
+        val allowOrder: Boolean
+    ) : CartListModel()
 }
 
 object CartListModelDiff : DiffUtil.ItemCallback<CartListModel>() {
@@ -119,6 +138,7 @@ object CartListModelDiff : DiffUtil.ItemCallback<CartListModel>() {
             oldItem is CartPurchaseItemModel && newItem is CartPurchaseItemModel ->
                 oldItem.userCartItem.id == newItem.userCartItem.id
             oldItem is CartTotalPriceModel && newItem is CartTotalPriceModel -> true
+            oldItem is CartActionsModel && newItem is CartActionsModel -> true
             else -> false
         }
     }
@@ -130,6 +150,8 @@ object CartListModelDiff : DiffUtil.ItemCallback<CartListModel>() {
             oldItem is CartPurchaseItemModel && newItem is CartPurchaseItemModel ->
                 oldItem.userCartItem == newItem.userCartItem
             oldItem is CartTotalPriceModel && newItem is CartTotalPriceModel ->
+                oldItem == newItem
+            oldItem is CartActionsModel && newItem is CartActionsModel ->
                 oldItem == newItem
             else -> false
         }

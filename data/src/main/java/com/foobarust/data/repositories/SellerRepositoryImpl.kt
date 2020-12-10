@@ -51,10 +51,10 @@ class SellerRepositoryImpl @Inject constructor(
             .getAwaitResult(sellerMapper::toSellerBasic)
     }
 
-    override fun getSellerDetailObservable(sellerId: String): Flow<Resource<SellerDetail>> {
+    override suspend fun getSellerDetail(sellerId: String): SellerDetail {
         return firestore.collection(SELLERS_COLLECTION)
             .document(sellerId)
-            .snapshotFlow(sellerMapper::toSellerDetail)
+            .getAwaitResult(sellerMapper::toSellerDetail)
     }
 
     override fun getSellerCatalogsObservable(sellerId: String): Flow<Resource<List<SellerCatalog>>> {

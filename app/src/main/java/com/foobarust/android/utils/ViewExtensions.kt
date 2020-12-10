@@ -13,7 +13,6 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.annotation.LayoutRes
-import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -127,7 +126,8 @@ private class DividerDecoration(
 
     private var paint: Paint = Paint().apply {
         style = Paint.Style.FILL
-        color = ContextCompat.getColor(context, R.color.material_on_surface_stroke)
+        color = context.themeColor(R.attr.colorOnSurface)
+        alpha = (context.themeFloat(R.attr.dividerAlphaRatio) * 255).toInt()
     }
 
     private var height = TypedValue.applyDimension(

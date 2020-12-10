@@ -1,5 +1,6 @@
 package com.foobarust.domain.models.user
 
+import com.foobarust.domain.models.seller.SellerType
 import java.util.*
 
 
@@ -14,10 +15,16 @@ data class UserDetail(
     val email: String,
     val phoneNum: String? = null,
     val photoUrl: String? = null,
-    val dataCompleted: Boolean,
+    val cartSellerId: String? = null,
+    val cartSellerType: SellerType? = null,
+    val cartItemsCount: Int? = null,
+    val cartSubtotalCost: Double? = null,
+    val cartDeliveryCost: Double? = null,
+    val cartTotalCost: Double? = null,
+    val cartUpdatedAt: Date? = null,
     val updatedAt: Date?
 )
 
-fun UserDetail.isFieldsFulfilledForOrdering(): Boolean {
+fun UserDetail.isDataCompletedForOrdering(): Boolean {
     return !name.isNullOrEmpty() && !phoneNum.isNullOrEmpty()
 }

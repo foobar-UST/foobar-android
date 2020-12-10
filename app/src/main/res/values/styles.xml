@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="Widget.Foobar.RatingBar" parent="Widget.AppCompat.RatingBar.Small"/>
+
     <style name="Widget.Foobar.Chip.SellerAction" parent="Widget.MaterialComponents.Chip.Action">
         <item name="android:textAppearance">?attr/textAppearanceCaption</item>
         <item name="iconStartPadding">@dimen/spacing_xmedium</item>

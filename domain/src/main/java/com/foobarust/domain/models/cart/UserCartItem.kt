@@ -1,4 +1,4 @@
-package com.foobarust.domain.models.user
+package com.foobarust.domain.models.cart
 
 import java.util.*
 
@@ -8,13 +8,14 @@ import java.util.*
 data class UserCartItem(
     val id: String,
     val itemId: String,
+    val itemSellerId: String,
     val itemTitle: String,
     val itemTitleZh: String?,
     val itemPrice: Double,
     val itemImageUrl: String?,
     val amounts: Int,
     val totalPrice: Double,
-    val notes: String?,
+    val updatePriceRequired: Boolean,
     val updatedAt: Date?
 )
 

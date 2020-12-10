@@ -8,18 +8,18 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.R
 import com.foobarust.android.common.BaseViewModel
-import com.foobarust.android.sellermisc.SellerMiscProperty
 import com.foobarust.android.states.UiFetchState
 import com.foobarust.android.utils.SingleLiveEvent
-import com.foobarust.domain.models.seller.*
+import com.foobarust.domain.models.seller.SellerCatalog
+import com.foobarust.domain.models.seller.SellerDetail
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.seller.GetSellerCatalogsUseCase
 import com.foobarust.domain.usecases.seller.GetSellerDetailUseCase
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.android.parcel.Parcelize
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.parcelize.Parcelize
 
 /**
  * Created by kevin on 10/4/20
@@ -46,8 +46,8 @@ class SellerDetailViewModel @ViewModelInject constructor(
     val showToolbarTitle: LiveData<Boolean>
         get() = _showToolbarTitle
 
-    private val _navigateToSellerMisc = SingleLiveEvent<SellerMiscProperty>()
-    val navigateToSellerMisc: LiveData<SellerMiscProperty>
+    private val _navigateToSellerMisc = SingleLiveEvent<Unit>()
+    val navigateToSellerMisc: LiveData<Unit>
         get() = _navigateToSellerMisc
 
     private val _navigateToItemDetail = SingleLiveEvent<SellerItemDetailProperty>()
@@ -60,23 +60,23 @@ class SellerDetailViewModel @ViewModelInject constructor(
 
     fun onFetchSellerDetail(sellerId: String) = viewModelScope.launch {
         // Fetch seller detail
-        getSellerDetailUseCase(sellerId).onEach {
-            when (it) {
-                is Resource.Success -> {
-                    _sellerDetail.value = it.data
-                    buildActionList(it.data)
-                    setUiFetchState(UiFetchState.Success)
-                }
-                is Resource.Loading -> setUiFetchState(UiFetchState.Loading)
-                is Resource.Error -> setUiFetchState(UiFetchState.Error(it.message))
+        setUiFetchState(UiFetchState.Loading)
+
+        when (val result = getSellerDetailUseCase(sellerId)) {
+            is Resource.Success -> {
+                _sellerDetail.value = result.data
+                buildActionList(result.data)
             }
-        }.launchIn(this)
+            is Resource.Error -> setUiFetchState(UiFetchState.Error(result.message))
+        }
 
         // Fetch seller catalogs
+        // Require observable as the seller may disable the catalog at any time
         getSellerCatalogsUseCase(sellerId).onEach {
             when (it) {
                 is Resource.Success -> {
                     _sellerCatalogs.value = it.data
+                    setUiFetchState(UiFetchState.Success)
                 }
                 is Resource.Loading -> setUiFetchState(UiFetchState.Loading)
                 is Resource.Error -> setUiFetchState(UiFetchState.Error(it.message))
@@ -89,18 +89,7 @@ class SellerDetailViewModel @ViewModelInject constructor(
     }
 
     fun onShowSellerMisc() {
-        _navigateToSellerMisc.value = _sellerDetail.value!!.let {
-            SellerMiscProperty(
-                name = it.getNormalizedName(),
-                description = it.getNormalizedDescription(),
-                address = it.getNormalizedAddress(),
-                phoneNum = it.phoneNum,
-                website = it.website,
-                latitude = it.location.geolocation.latitude,
-                longitude = it.location.geolocation.longitude,
-                openingHours = it.openingHours
-            )
-        }
+        _navigateToSellerMisc.value = Unit
     }
 
     fun onShowItemDetailDialog(sellerId: String, itemId: String) {
@@ -134,6 +123,6 @@ class SellerDetailViewModel @ViewModelInject constructor(
 @Parcelize
 data class SellerDetailProperty(
     val id: String,
-    val name: String,
-    val imageUrl: String?
+    val name: String? = null,
+    val imageUrl: String? = null
 ) : Parcelable

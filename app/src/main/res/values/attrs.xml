@@ -5,6 +5,6 @@
     <attr name="motionInterpolatorOutgoing" format="float"/>
 
     <attr name="sellerActionChipStyle" format="reference"/>
-
     <attr name="cartBackgroundColor" format="color"/>
+    <attr name="dividerAlphaRatio" format="float"/>
 </resources>

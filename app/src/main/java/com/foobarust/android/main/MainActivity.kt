@@ -11,8 +11,6 @@ import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
-import com.foobarust.android.NavigationExploreDirections
-import com.foobarust.android.NavigationOrderDirections
 import com.foobarust.android.NavigationSellerDirections
 import com.foobarust.android.R
 import com.foobarust.android.databinding.ActivityMainBinding
@@ -29,13 +27,20 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+
+        binding = DataBindingUtil.setContentView<ActivityMainBinding>(
+            this,
+            R.layout.activity_main
+        ).apply {
+            viewModel = this@MainActivity.viewModel
+            lifecycleOwner = this@MainActivity
+        }
 
         if (savedInstanceState == null) {
             setupBottomNavigation()
         }
 
-        // Setup toobar item
+        // Setup toolbar item
         binding.toolbar.setOnMenuItemClickListener(this)
 
         // Show toast message
@@ -43,12 +48,11 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
             showShortToast(it)
         }
 
-        // Open cart
-        binding.cartBottomBar.cartBottomBarCardView.setOnClickListener { showExpandedCart() }
-
-        // Show or hide cart bottom bar
-        viewModel.showCartBottomBar.observe(this) {
-            if (it) showCartBottomBar() else hideCartBottomBar()
+        // Navigate to cart
+        binding.cartBottomBar.cartBottomBarCardView.setOnClickListener {
+            currentNavController?.value?.navigate(
+                NavigationSellerDirections.actionGlobalCartFragment()
+            )
         }
     }
 
@@ -135,10 +139,10 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
 
     private fun setupViewsForNavGraph(currentGraphId: Int?) {
         // Hide cart bottom bar in settings graph
-        if (currentGraphId == R.id.navigation_settings) {
-            viewModel.hideCartBottomBar()
-        } else {
+        if (currentGraphId == R.id.navigation_seller) {
             viewModel.showCartBottomBar()
+        } else {
+            viewModel.hideCartBottomBar()
         }
     }
 
@@ -160,26 +164,5 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
         currentNavController?.value?.navigate(
             SellerFragmentDirections.actionSellerFragmentToSellerSearchFragment()
         )
-    }
-
-    private fun showCartBottomBar() {
-        //binding.cartBottomBar.cartBottomBarCardView.slideUp()
-        binding.cartBottomBar.cartBottomBarCardView.show()
-    }
-
-    private fun hideCartBottomBar() {
-        //binding.cartBottomBar.cartBottomBarCardView.slideDown()
-        binding.cartBottomBar.cartBottomBarCardView.hide()
-    }
-
-    private fun showExpandedCart() {
-        val direction = when (currentNavController?.value?.graph?.id) {
-            R.id.navigation_seller -> NavigationSellerDirections.actionGlobalCartFragment()
-            R.id.navigation_order -> NavigationOrderDirections.actionGlobalCartFragment()
-            R.id.navigation_explore -> NavigationExploreDirections.actionGlobalCartFragment()
-            else -> throw IllegalStateException("Invalid direction for opening cart.")
-        }
-
-        currentNavController?.value?.navigate(direction)
     }
 }

@@ -106,6 +106,8 @@
     <string name="seller_data_format_min_spend_info">$ %.1f Min</string>
     <string name="seller_data_format_min_spend">%.1f Minimum</string>
     <string name="seller_data_format_rating">%.1f</string>
+    <string name="seller_type_on_campus">On-Campus</string>
+    <string name="seller_type_off_campus">Off-Campus</string>
 
     <!-- Seller Search -->
     <string name="seller_search_hint_input">Find Restaurants</string>
@@ -131,23 +133,37 @@
     <string name="seller_item_data_format_topping">%s %s (+$ %.1f)</string>
     <string name="seller_item_add_to_cart">Add To Cart ($ %.1f)</string>
 
+    <!-- Seller Item Detail -->
+    <string name="seller_item_detail_increment_content_desc">Add Item</string>
+    <string name="seller_item_detail_decrement_content_desc">Remove Item</string>
+
     <!-- Promotion -->
     <string name="promotion_subtitle_advertise">What\'s New</string>
     <string name="promotion_subtitle_suggest">Suggest For You</string>
 
     <!-- Cart -->
+    <string name="cart_app_bar_title">%d Items in Cart</string>
     <string name="cart_bottom_bar_items_count_title">Items in Cart</string>
     <string name="cart_bottom_bar_open_cart_content_desc">Open Cart</string>
     <string name="cart_seller_info_title">Order From</string>
     <string name="cart_seller_info_menu_title">Menu</string>
-    <string name="cart_seller_info_detail_title">Seller Detail</string>
+    <string name="cart_seller_info_detail_title">Detail</string>
     <string name="cart_total_price_total_title">Total</string>
     <string name="cart_total_price_subtotal_title">Subtotal</string>
-    <string name="cart_total_price_delivery_fee_title">Delivery Fee</string>
+    <string name="cart_total_price_delivery_fee_title">Delivery</string>
     <string name="cart_no_item_error">No Item in Cart</string>
+    <string name="cart_actions_button_clear_cart">Clear Cart</string>
+    <string name="cart_actions_button_purchase">Proceed Payment</string>
+    <string name="cart_purchase_item_remove_item_content_desc">Remove Item</string>
     <string name="cart_purchase_item_format_amount">Quantity: %d</string>
     <string name="cart_purchase_item_format_notes">Notes: %s</string>
     <string name="cart_purchase_item_format_total_price">x $%.1f</string>
+    <string name="cart_bottom_bar_format_total_price">$ %.1f</string>
     <string name="cart_total_price_format_cost">$%.1f</string>
-
+    <string name="cart_clear_cart_dialog_title">Clear Cart</string>
+    <string name="cart_clear_Cart_dialog_message">Do you want to remove all cart items?</string>
+    <string name="cart_sync_required_message">One or more cart items are updated.</string>
+    <string name="cart_sync_required_action_refresh">Refresh</string>
+    <string name="cart_timeout_message">Cart items are timeout and cleared.</string>
+    
 </resources>

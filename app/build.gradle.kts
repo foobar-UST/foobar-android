@@ -3,8 +3,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id(Plugins.ANDROID_APPLICATION)
     id(Plugins.KOTLIN_ANDROID)
-    id(Plugins.KOTLIN_ANDROID_EXTENSIONS)
     id(Plugins.KOTLIN_KAPT)
+    id(Plugins.KOTLIN_PARCELIZE)
     id(Plugins.HILT_ANDROID)
     id(Plugins.NAVIGATION_SAFEARGS)
     id(Plugins.CHECK_DEPENDENCY_UPDATES) version Versions.CHECK_DEPENDENCY_UPDATES
@@ -59,10 +59,13 @@ android {
     }
 
     sourceSets {
+        /*
         val test by getting
         val androidTest by getting
         test.java.srcDirs("src/sharedTest/java")
         androidTest.java.srcDirs("src/sharedTest/java")
+
+         */
     }
 }
 

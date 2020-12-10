@@ -6,26 +6,89 @@
     android:id="@+id/navigation_seller"
     app:startDestination="@id/sellerFragment">
 
+    <!-- Seller Fragment -->
     <fragment
         android:id="@+id/sellerFragment"
         android:name="com.foobarust.android.seller.SellerFragment"
         android:label="@string/app_name"
         tools:layout="@layout/fragment_seller_on_campus">
+
         <deepLink app:uri="foobarust://navigation_seller" />
+
         <action
             android:id="@+id/action_sellerFragment_to_sellerSearchFragment"
             app:destination="@id/sellerSearchFragment" />
+
         <action
             android:id="@+id/action_sellerFragment_to_sellerDetailFragment"
             app:destination="@id/sellerDetailFragment" />
+
         <action
             android:id="@+id/action_sellerFragment_to_sellerItemDetailFragment"
             app:destination="@id/sellerItemDetailFragment" />
+
         <action
             android:id="@+id/action_sellerFragment_to_sellerActionDialog"
             app:destination="@id/sellerActionDialog" />
     </fragment>
 
+    <!-- Seller Detail -->
+    <dialog
+        android:id="@+id/sellerDetailFragment"
+        android:name="com.foobarust.android.sellerdetail.SellerDetailFragment"
+        tools:layout="@layout/fragment_seller_detail">
+
+        <argument
+            android:name="sellerDetailProperty"
+            app:argType="com.foobarust.android.sellerdetail.SellerDetailProperty" />
+
+        <action
+            android:id="@+id/action_sellerDetailFragment_to_sellerMiscFragment"
+            app:destination="@id/sellerMiscFragment" />
+
+        <action
+            android:id="@+id/action_sellerDetailFragment_to_sellerItemDetailFragment"
+            app:destination="@id/sellerItemDetailFragment" />
+    </dialog>
+
+    <!-- Item Detail -->
+    <dialog
+        android:id="@+id/sellerItemDetailFragment"
+        android:name="com.foobarust.android.sellerdetail.SellerItemDetailFragment"
+        tools:layout="@layout/fragment_seller_item_detail">
+
+        <argument
+            android:name="sellerItemDetailProperty"
+            app:argType="com.foobarust.android.sellerdetail.SellerItemDetailProperty" />
+    </dialog>
+
+    <!-- Seller Misc -->
+    <dialog
+        android:id="@+id/sellerMiscFragment"
+        android:name="com.foobarust.android.sellermisc.SellerMiscFragment"
+        tools:layout="@layout/fragment_seller_misc">
+
+        <argument
+            android:name="sellerId"
+            app:argType="string"/>
+    </dialog>
+
+    <!-- Cart -->
+    <dialog
+        android:id="@+id/cartFragment"
+        android:name="com.foobarust.android.cart.CartFragment"
+        tools:layout="@layout/fragment_cart">
+
+        <action
+            android:id="@+id/action_cartFragment_to_sellerDetailFragment"
+            app:destination="@id/sellerDetailFragment" />
+
+        <action
+            android:id="@+id/action_cartFragment_to_sellerMiscFragment"
+            app:destination="@id/sellerMiscFragment" />
+    </dialog>
+
+    <!-- Seller Search -->
     <dialog
         android:id="@+id/sellerSearchFragment"
         android:name="com.foobarust.android.seller.SellerSearchFragment"
@@ -33,48 +96,9 @@
         tools:layout="@layout/fragment_seller_search"/>
 
     <dialog
-        android:id="@+id/sellerDetailFragment"
-        android:name="com.foobarust.android.sellerdetail.SellerDetailFragment"
-        tools:layout="@layout/fragment_seller_detail">
-        <argument
-            android:name="sellerDetailProperty"
-            app:argType="com.foobarust.android.sellerdetail.SellerDetailProperty" />
-        <action
-            android:id="@+id/action_sellerDetailFragment_to_sellerMiscFragment"
-            app:destination="@id/sellerMiscFragment" />
-        <action
-            android:id="@+id/action_sellerDetailFragment_to_sellerItemDetailFragment"
-            app:destination="@id/sellerItemDetailFragment" />
-    </dialog>
-
-    <dialog
-        android:id="@+id/sellerMiscFragment"
-        android:name="com.foobarust.android.sellermisc.SellerMiscFragment"
-        tools:layout="@layout/fragment_seller_misc">
-        <argument
-            android:name="sellerMiscProperty"
-            app:argType="com.foobarust.android.sellermisc.SellerMiscProperty"
-            app:nullable="false"/>
-    </dialog>
-
-    <dialog
-        android:id="@+id/sellerItemDetailFragment"
-        android:name="com.foobarust.android.sellerdetail.SellerItemDetailFragment"
-        tools:layout="@layout/fragment_seller_item_detail">
-        <argument
-            android:name="sellerItemDetailProperty"
-            app:argType="com.foobarust.android.sellerdetail.SellerItemDetailProperty" />
-    </dialog>
-
-    <dialog
         android:id="@+id/sellerActionDialog"
         android:name="com.foobarust.android.seller.SellerActionDialog"
         tools:layout="@layout/dialog_seller_action"/>
-
-    <dialog
-        android:id="@+id/cartFragment"
-        android:name="com.foobarust.android.cart.CartFragment"
-        tools:layout="@layout/fragment_cart"/>
 
     <action
         android:id="@+id/action_global_cartFragment"

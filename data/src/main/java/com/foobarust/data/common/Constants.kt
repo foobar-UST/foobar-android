@@ -21,22 +21,33 @@ object Constants {
     const val USER_NAME_FIELD = "name"
     const val USER_PHOTO_URL_FIELD = "photo_url"
     const val USER_PHONE_NUM_FIELD = "phone_num"
-    const val USER_DATA_COMPLETED_FIELD = "data_completed"
     const val USER_ROLES_FIELD = "roles"
+
     const val USER_UPDATED_AT_FIELD = "update_at"
 
     // Cart
+    const val USER_CARTS_COLLECTION = "user_carts"
     const val USER_CART_ITEMS_SUB_COLLECTION = "cart_items"
+
+    const val USER_CARTS_SELLER_ID_FIELD = "seller_id"
+    const val USER_CARTS_SELLER_TYPE_FIELD = "seller_type"
+    const val USER_CARTS_ITEMS_COUNT_FIELD = "items_count"
+    const val USER_CARTS_SUBTOTAL_COST_FIELD = "subtotal_cost"
+    const val USER_CARTS_DELIVERY_COST_FIELD = "delivery_cost"
+    const val USER_CARTS_TOTAL_COST_FIELD = "total_cost"
+    const val USER_CARTS_SYNC_REQUIRED_FIELD = "sync_required"
+    const val USER_CARTS_UPDATED_AT_FIELD = "updated_at"
 
     const val USER_CART_ITEMS_ID_FIELD = "id"
     const val USER_CART_ITEMS_ITEM_ID_FIELD = "item_id"
+    const val USER_CART_ITEMS_ITEM_SELLER_ID_FIELD = "item_seller_id"
     const val USER_CART_ITEMS_ITEM_TITLE_FIELD = "item_title"
     const val USER_CART_ITEMS_ITEM_TITLE_ZH_FIELD = "item_title_zh"
     const val USER_CART_ITEMS_ITEM_PRICE_FIELD = "item_price"
     const val USER_CART_ITEMS_ITEM_IMAGE_URL_FIELD = "item_image_url"
     const val USER_CART_ITEMS_AMOUNTS_FIELD = "amounts"
     const val USER_CART_ITEMS_TOTAL_PRICE_FIELD = "total_price"
-    const val USER_CART_ITEMS_NOTES_FIELD = "notes"
+    const val USER_CART_ITEMS_UPDATE_PRICE_REQUIRED_FIELD = "update_price_required"
     const val USER_CART_ITEMS_UPDATED_AT_FIELD = "updated_at"
 
     // Sellers

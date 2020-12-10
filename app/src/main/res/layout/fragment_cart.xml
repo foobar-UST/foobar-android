@@ -12,6 +12,7 @@
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinator_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layoutFullscreen="@{true}">
@@ -30,15 +31,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?android:attr/colorBackground"
-                app:title="4 Items in Cart"
+                app:title="@{@string/cart_app_bar_title(viewModel.cartItemsLiveData.size)}"
                 app:layout_scrollFlags="noScroll"
-                app:navigationIcon="@drawable/ic_close" />
+                app:navigationIcon="@drawable/ic_close"
+                tools:title="4 Items in Cart"/>
 
         </com.google.android.material.appbar.AppBarLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:animateLayoutChanges="true"
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
             <androidx.recyclerview.widget.RecyclerView
@@ -46,6 +49,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:goneIf="@{!(viewModel.uiFetchState instanceof UiFetchState.Success)}"
                 tools:listitem="@layout/cart_purchase_item"/>
 
             <LinearLayout
@@ -54,8 +58,7 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:gravity="center"
-                app:goneIf="@{!viewModel.cartListModels.empty}"
-                app:marginBottomSystemWindowInsets="@{true}"
+                app:goneIf="@{!((viewModel.uiFetchState instanceof UiFetchState.Success &amp;&amp; viewModel.cartItemsLiveData.empty) || viewModel.uiFetchState instanceof UiFetchState.Error)}"
                 tools:ignore="UseCompoundDrawables">
 
                 <ImageView
@@ -80,31 +83,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                app:goneIf="@{!(viewModel.uiFetchState instanceof UiFetchState.Loading)}"
-                app:marginBottomSystemWindowInsets="@{true}" />
-
-            <include
-                layout="@layout/common_load_error_layout"
-                android:id="@+id/profile_network_error_layout"
-                app:goneIf="@{!(viewModel.uiFetchState instanceof UiFetchState.Error)}" />
+                app:goneIf="@{!(viewModel.uiFetchState instanceof UiFetchState.Loading)}" />
 
         </FrameLayout>
-
-
-        <!--
-        <com.google.android.material.button.MaterialButton
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:id="@+id/submit_cart_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_large"
-            android:layout_marginStart="@dimen/spacing_large"
-            android:layout_marginEnd="@dimen/spacing_large"
-            android:layout_marginBottom="@dimen/spacing_xmedium"
-            android:layout_gravity="bottom"
-            android:text="Submit Cart"
-            app:marginBottomSystemWindowInsets="@{true}"/>
-        -->
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

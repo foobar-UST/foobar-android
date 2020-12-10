@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <variable
-            name="navBarPadding"
-            type="boolean" />
+            name="userCart"
+            type="com.foobarust.domain.models.cart.UserCart" />
+        <import type="com.foobarust.android.utils.BindingConverters" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -15,16 +17,15 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:focusable="true"
-        app:cardBackgroundColor="?attr/colorPrimary"
+        app:cardBackgroundColor="?attr/colorPrimarySurface"
         app:cardCornerRadius="0dp"
         app:cardElevation="@dimen/spacing_xmedium"
         app:rippleColor="?attr/colorOnPrimary">
 
-        <RelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/spacing_large"
-            app:marginBottomSystemWindowInsets="@{navBarPadding}">
+            android:padding="@dimen/spacing_large">
 
             <TextView
                 android:id="@+id/cart_items_count_text_view"
@@ -33,32 +34,40 @@
                 android:gravity="center"
                 android:background="@drawable/shape_circle"
                 android:backgroundTint="?attr/colorOnPrimarySurface"
-                android:text="4"
+                android:text="@{BindingConverters.intToString(userCart.itemsCount)}"
                 android:textColor="?attr/colorPrimary"
                 android:textStyle="bold"
-                android:textAppearance="?attr/textAppearanceSubtitle2"/>
+                android:textAppearance="?attr/textAppearanceSubtitle2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:text="4"/>
 
             <TextView
                 android:id="@+id/cart_title_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/spacing_large"
-                android:layout_toEndOf="@id/cart_items_count_text_view"
-                android:layout_centerVertical="true"
                 android:text="@string/cart_bottom_bar_items_count_title"
                 android:textAppearance="?attr/textAppearanceSubtitle2"
-                android:textColor="?attr/colorOnPrimarySurface"/>
+                android:textColor="?attr/colorOnPrimarySurface"
+                app:layout_constraintStart_toEndOf="@id/cart_items_count_text_view"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
-            <ImageView
+            <TextView
+                android:id="@+id/cart_total_price_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_expand_less"
-                android:contentDescription="@string/cart_bottom_bar_open_cart_content_desc"
-                app:tint="?attr/colorOnPrimarySurface"/>
+                android:text="@{@string/cart_bottom_bar_format_total_price(userCart.totalCost)}"
+                android:textAppearance="?attr/textAppearanceBody1"
+                android:textColor="?attr/colorSecondary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:text="$ 234.5"/>
 
-        </RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.card.MaterialCardView>
 

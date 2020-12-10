@@ -21,11 +21,9 @@
             android:id="@+id/items_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:clipToPadding="false"
             android:scrollbars="none"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:goneIf="@{!(viewModel.loadState instanceof LoadState.NotLoading)}"
-            app:paddingBottomSystemWindowInsets="@{true}"
             tools:listitem="@layout/seller_items_basic_item" />
 
         <ProgressBar

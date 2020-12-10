@@ -10,6 +10,7 @@ import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.MetadataChanges
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.OnProgressListener
 import com.google.firebase.storage.StorageReference
@@ -45,20 +46,24 @@ suspend inline fun <reified T, R> Query.getAwaitResult(mapper: (T) -> R): List<R
         .map { mapper(it) }
 }
 
-inline fun <reified T, R> CollectionReference.snapshotFlow(crossinline mapper: (T) -> R): Flow<Resource<List<R>>> {
+inline fun <reified T, R> CollectionReference.snapshotFlow(
+    crossinline mapper: (T) -> R
+): Flow<Resource<List<R>>> {
     return channelFlow {
         channel.offer(Resource.Loading())
 
-        val subscription = this@snapshotFlow.addSnapshotListener { value, error ->
+        val subscription = this@snapshotFlow.addSnapshotListener(
+            MetadataChanges.INCLUDE
+        ) { snapshot, error ->
             if (error != null) {
                 // Close the channel if there is error
                 channel.offer(Resource.Error(error.message))
                 channel.close(CancellationException(error.message))
             } else {
-                value?.let { snapshot ->
-                    if (!snapshot.metadata.hasPendingWrites()) {
-                        val results = value.toObjects(T::class.java)
-                        channel.offer(Resource.Success(results.map { mapper(it) }))
+                snapshot?.let {
+                    if (!it.metadata.hasPendingWrites()) {
+                        val results = it.toObjects(T::class.java)
+                        channel.offer(Resource.Success(results.map { result -> mapper(result) }))
                     }
                 } ?: channel.close(CancellationException(ERROR_DOCUMENT_NOT_EXIST))
             }
@@ -68,17 +73,19 @@ inline fun <reified T, R> CollectionReference.snapshotFlow(crossinline mapper: (
     }
 }
 
-inline fun <reified T, R> DocumentReference.snapshotFlow(crossinline mapper: (T) -> R): Flow<Resource<R>> {
+inline fun <reified T, R> DocumentReference.snapshotFlow(
+    crossinline mapper: (T) -> R
+): Flow<Resource<R>> {
     return channelFlow {
         channel.offer(Resource.Loading())
 
-        val subscription = this@snapshotFlow.addSnapshotListener { value, error ->
+        val subscription = this@snapshotFlow.addSnapshotListener { snapshot, error ->
             if (error != null) {
                 // Close the channel if there is error
                 channel.offer(Resource.Error(error.message))
                 channel.close(CancellationException(error.message))
             } else {
-                value?.let {
+                snapshot?.let {
                     if (!it.metadata.hasPendingWrites()) {
                         val result = it.toObject(T::class.java)
 
@@ -97,20 +104,22 @@ inline fun <reified T, R> DocumentReference.snapshotFlow(crossinline mapper: (T)
     }
 }
 
-inline fun <reified T, R> Query.snapshotFlow(crossinline mapper: (T) -> R): Flow<Resource<List<R>>> {
+inline fun <reified T, R> Query.snapshotFlow(
+    crossinline mapper: (T) -> R
+): Flow<Resource<List<R>>> {
     return channelFlow {
         channel.offer(Resource.Loading())
 
-        val subscription = this@snapshotFlow.addSnapshotListener { value, error ->
+        val subscription = this@snapshotFlow.addSnapshotListener { snapshot, error ->
             if (error != null) {
                 // Close the channel if there is error
                 channel.offer(Resource.Error(error.message))
                 channel.close(CancellationException(error.message))
             } else {
-                value?.let { snapshot ->
-                    if (!snapshot.metadata.hasPendingWrites()) {
-                        val results = value.toObjects(T::class.java)
-                        channel.offer(Resource.Success(results.map { mapper(it) }))
+                snapshot?.let {
+                    if (!it.metadata.hasPendingWrites()) {
+                        val results = it.toObjects(T::class.java)
+                        channel.offer(Resource.Success(results.map { result -> mapper(result) }))
                     }
                 } ?: channel.close(CancellationException(ERROR_DOCUMENT_NOT_EXIST))
             }

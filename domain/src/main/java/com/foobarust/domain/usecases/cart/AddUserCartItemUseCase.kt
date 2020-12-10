@@ -1,13 +1,12 @@
-package com.foobarust.domain.usecases.user
+package com.foobarust.domain.usecases.cart
 
 import com.foobarust.domain.common.UseCaseExceptions.ERROR_USER_NOT_SIGNED_IN
 import com.foobarust.domain.di.IoDispatcher
-import com.foobarust.domain.models.user.UserCartItem
+import com.foobarust.domain.models.cart.UserCartItem
 import com.foobarust.domain.repositories.AuthRepository
-import com.foobarust.domain.repositories.UserRepository
+import com.foobarust.domain.repositories.CartRepository
 import com.foobarust.domain.usecases.CoroutineUseCase
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 /**
@@ -15,7 +14,7 @@ import javax.inject.Inject
  */
 class AddUserCartItemUseCase @Inject constructor(
     private val authRepository: AuthRepository,
-    private val userRepository: UserRepository,
+    private val cartRepository: CartRepository,
     @IoDispatcher coroutineDispatcher: CoroutineDispatcher
 ) : CoroutineUseCase<UserCartItem, Unit>(coroutineDispatcher) {
 
@@ -26,10 +25,7 @@ class AddUserCartItemUseCase @Inject constructor(
 
         val userId = authRepository.getAuthUserId()
 
-        // TODO: Add some delay for testing
-        delay(3000)
-
-        userRepository.addUserCartItem(
+        cartRepository.addUserCartItem(
             userId = userId,
             userCartItem = parameters
         )

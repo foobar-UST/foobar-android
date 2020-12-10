@@ -22,7 +22,6 @@
             android:layout_alignBottom="@id/total_value_text_view"
             android:gravity="center_vertical"
             android:text="@string/cart_total_price_total_title"
-            android:textAllCaps="true"
             android:textAppearance="?attr/textAppearanceSubtitle2"/>
 
         <TextView

@@ -1,6 +1,5 @@
 package com.foobarust.domain.repositories
 
-import com.foobarust.domain.models.user.UserCartItem
 import com.foobarust.domain.models.user.UserDetail
 import com.foobarust.domain.states.Resource
 import kotlinx.coroutines.flow.Flow
@@ -29,9 +28,5 @@ interface UserRepository {
 
     fun updateUserPhoto(userId: String, uriString: String): Flow<Resource<Unit>>
 
-    fun getUserCartItemsObservable(userId: String): Flow<Resource<List<UserCartItem>>>
 
-    suspend fun addUserCartItem(userId: String, userCartItem: UserCartItem)
-
-    suspend fun removeUserCartItem(userId: String, userCartItem: UserCartItem)
 }

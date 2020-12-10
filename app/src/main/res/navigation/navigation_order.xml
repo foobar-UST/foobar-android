@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_order"
@@ -12,15 +13,5 @@
         tools:layout="@layout/fragment_order">
         <deepLink app:uri="foobarust://navigation_order" />
     </fragment>
-
-    <dialog
-        android:id="@+id/cartFragment"
-        android:name="com.foobarust.android.cart.CartFragment"
-        tools:layout="@layout/fragment_cart"/>
-
-    <action
-        android:id="@+id/action_global_cartFragment"
-        app:destination="@id/cartFragment"/>
-
 
 </navigation>

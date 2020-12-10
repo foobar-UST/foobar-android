@@ -74,11 +74,9 @@ class SellerOnCampusViewModel @ViewModelInject constructor(
     init {
         // Collect promotion items at launch
         viewModelScope.launch {
-            advertiseItemsFlow
-                .zip(suggestItemsFlow) { advertises, suggests ->
-                    buildPromotionModelList(advertises, suggests)
-                }
-                .collect { _promotionModelItems.value = it }
+            advertiseItemsFlow.zip(suggestItemsFlow) { advertises, suggests ->
+                buildPromotionModelList(advertises, suggests)
+            }.collect { _promotionModelItems.value = it }
         }
     }
 

@@ -1,7 +1,6 @@
 plugins {
     id(Plugins.ANDROID_LIBRARY)
     id(Plugins.KOTLIN_ANDROID)
-    id(Plugins.KOTLIN_ANDROID_EXTENSIONS)
     id(Plugins.KOTLIN_KAPT)
     id(Plugins.HILT_ANDROID)
     id(Plugins.GOOGLE_SERVICES)
@@ -28,7 +27,7 @@ android {
         }
         getByName("debug") {
             buildConfigField("Boolean", "USE_FIREBASE_EMULATOR", "true")
-            buildConfigField("String", "FIREBASE_EMULATOR_HOST", "\"192.168.128.106:8080\"")
+            buildConfigField("String", "FIREBASE_EMULATOR_HOST", "\"192.168.128.66:8080\"")
         }
     }
 

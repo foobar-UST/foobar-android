@@ -16,7 +16,6 @@ import com.foobarust.android.utils.drawDivider
 import com.foobarust.android.utils.themeColor
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.maps.android.ktx.addMarker
 import com.google.maps.android.ktx.awaitMap
@@ -43,14 +42,14 @@ class SellerMiscFragment : DialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentSellerMiscBinding.inflate(inflater, container, false).apply {
             viewModel = this@SellerMiscFragment.viewModel
             lifecycleOwner = viewLifecycleOwner
         }
 
         // Receive property from nav args and pass to view model
-        viewModel.onUpdateMiscProperty(args.sellerMiscProperty)
+        viewModel.onFetchSellerDetail(sellerId = args.sellerId)
 
         // Setup toolbar
         binding.toolbar.setNavigationOnClickListener { dismiss() }
@@ -72,24 +71,6 @@ class SellerMiscFragment : DialogFragment() {
 
         binding.bottomSheetLayout.background = backgroundShapeDrawable
 
-        // Setup map view
-        val mapFragment = childFragmentManager.findFragmentById(R.id.map_view) as SupportMapFragment
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            mapFragment.awaitMap().run {
-                val targetLocation = LatLng(
-                    viewModel.miscProperty.latitude,
-                    viewModel.miscProperty.longitude
-                )
-
-                addMarker {
-                    position(targetLocation)
-                }
-
-                moveCamera(CameraUpdateFactory.newLatLngZoom(targetLocation, 15f))
-            }
-        }
-
         // Setup property list
         val sellerMiscAdapter = SellerMiscAdapter()
 
@@ -103,6 +84,27 @@ class SellerMiscFragment : DialogFragment() {
             sellerMiscAdapter.submitList(it)
         }
 
+        // Retry fetching
+        binding.loadErrorLayout.retryButton.setOnClickListener {
+            viewModel.onFetchSellerDetail(sellerId = args.sellerId)
+        }
+
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Setup map view
+        val mapFragment = childFragmentManager.findFragmentById(R.id.map_view) as SupportMapFragment
+
+        viewModel.latLng.observe(viewLifecycleOwner) { latLng ->
+            viewLifecycleOwner.lifecycleScope.launch {
+                mapFragment.awaitMap().run {
+                    addMarker { position(latLng) }
+                    moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
+                }
+            }
+        }
     }
 }

@@ -14,8 +14,8 @@ import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.onboarding.GetOnboardingCompletedUseCase
 import com.foobarust.domain.usecases.onboarding.SaveOnboardingCompletedUseCase
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.android.parcel.Parcelize
 import kotlinx.coroutines.launch
+import kotlinx.parcelize.Parcelize
 import kotlin.reflect.KClass
 
 private const val ERROR_ONBOARDING_COMPLETE = "Error completing onboarding."

@@ -24,6 +24,17 @@ tailrec fun Context?.getActivity(): Activity? = when (this) {
 }
 
 /**
+ * Retrieve a float from the current [android.content.res.Resources.Theme].
+ */
+fun Context.themeFloat(
+    @AttrRes attr: Int
+): Float {
+    val tv = TypedValue()
+    theme.resolveAttribute(attr, tv, true)
+    return tv.float
+}
+
+/**
  * Retrieve a color from the current [android.content.res.Resources.Theme].
  */
 @ColorInt
@@ -59,10 +70,11 @@ fun Context.themeInterpolator(@AttrRes attr: Int): Interpolator {
 }
 
 fun Context.getDrawableOrNull(@DrawableRes id: Int?): Drawable? {
-    return if (id == null || id == 0)
+    return if (id == null || id == 0) {
         null
-    else
+    } else {
         AppCompatResources.getDrawable(this, id)
+    }
 }
 
 @ColorInt

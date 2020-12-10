@@ -6,9 +6,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:paddingBottomSystemWindowInsets="@{true}"
-        tools:paddingBottom="48dp">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:id="@+id/header_layout"

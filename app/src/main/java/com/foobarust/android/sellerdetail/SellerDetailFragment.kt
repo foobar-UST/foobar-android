@@ -8,9 +8,7 @@ import androidx.core.view.ViewCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.foobarust.android.NavigationSellerDirections
 import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentSellerDetailBinding
 import com.foobarust.android.utils.*
@@ -101,7 +99,7 @@ class SellerDetailFragment : DialogFragment() {
         viewModel.navigateToSellerMisc.observe(viewLifecycleOwner) {
             findNavController(R.id.sellerDetailFragment)?.navigate(
                 SellerDetailFragmentDirections.actionSellerDetailFragmentToSellerMiscFragment(
-                    sellerMiscProperty = it
+                    sellerId = args.sellerDetailProperty.id
                 )
             )
         }
@@ -118,7 +116,6 @@ class SellerDetailFragment : DialogFragment() {
             val chips = detailActions.map { action ->
                 Chip(requireContext(), null, R.attr.sellerActionChipStyle).apply {
                     hide()
-
                     text = action.title
                     chipIconTint = requireContext().buildColorStateList(action.colorRes)
 
@@ -138,11 +135,14 @@ class SellerDetailFragment : DialogFragment() {
         }
 
         // Cart bottom bar
+        /*
         binding.cartBottomBar.cartBottomBarCardView.setOnClickListener {
             findNavController().navigate(
                 NavigationSellerDirections.actionGlobalCartFragment()
             )
         }
+
+         */
 
         return binding.root
     }

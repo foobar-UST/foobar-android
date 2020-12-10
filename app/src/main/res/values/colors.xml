@@ -46,6 +46,4 @@
     <color name="red_900">#B24749</color>
 
     <color name="yellow">#EFC32D</color>
-
-    <color name="nav_bar">@color/white_alpha_20</color>
 </resources>

@@ -53,8 +53,8 @@ class SellerOnCampusFragment : Fragment(),
         val concatAdapter = ConcatAdapter()
         val promotionAdapter = PromotionAdapter(
             lifecycle = viewLifecycleOwner.lifecycle,
-            promotionAdvertiseAdapterListener = this,
-            promotionSuggestAdapterListener = this
+            advertiseAdapterListener = this,
+            suggestAdapterListener = this
         )
         val sellerAdapter = SellerOnCampusAdapter(this)
 
@@ -71,7 +71,6 @@ class SellerOnCampusFragment : Fragment(),
         // Fixed the issue when the promotion banner is inserted after the suggestion list,
         // and got hidden at the top of the recycler view
         scrollToTopWhenNewItemsInserted(promotionAdapter)
-
 
         // Subscribe for promotion items
         sellerOnCampusViewModel.promotionModelItems.observe(viewLifecycleOwner) {

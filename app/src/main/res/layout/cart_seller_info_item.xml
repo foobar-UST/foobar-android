@@ -12,70 +12,108 @@
             name="listener"
             type="com.foobarust.android.cart.CartAdapter.CartAdapterListener" />
         <import type="com.foobarust.domain.models.seller.SellerBasicKt" />
+        <import type="com.foobarust.domain.models.seller.SellerType" />
+        <import type="com.foobarust.android.R" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorSurface">
+        android:layout_marginTop="@dimen/spacing_xmedium"
+        android:layout_marginBottom="@dimen/spacing_xmedium"
+        android:background="?attr/colorSurface"
+        android:paddingTop="@dimen/spacing_large"
+        android:paddingBottom="@dimen/spacing_large">
 
-       <TextView
-           android:id="@+id/seller_info_title_text_view"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_marginTop="@dimen/spacing_large"
-           android:text="@string/cart_seller_info_title"
-           android:textAppearance="?attr/textAppearanceHeadline6"
-           app:layout_constraintTop_toTopOf="parent"
-           app:layout_constraintStart_toStartOf="parent"
-           app:layout_constraintEnd_toEndOf="parent"/>
+        <TextView
+            android:id="@+id/seller_info_title_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cart_seller_info_title"
+            android:textAppearance="?attr/textAppearanceHeadline6"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/seller_name_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_large"
-            android:layout_marginStart="@dimen/spacing_large"
-            android:layout_marginEnd="@dimen/spacing_large"
+            android:layout_marginTop="@dimen/spacing_xmedium"
             android:text="@{SellerBasicKt.getNormalizedName(sellerInfoModel.sellerBasic)}"
-            android:textAppearance="?attr/textAppearanceBody1"
+            android:textAppearance="?attr/textAppearanceBody2"
             android:textColor="@color/material_on_surface_emphasis_medium"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/seller_info_title_text_view"
-            tools:text="Asia Pacific Catering 泛亞飲食"/>
+            tools:text="Asia Pacific Catering 泛亞飲食" />
 
         <TextView
-            android:id="@+id/seller_menu_button"
-            android:layout_width="match_parent"
+            android:id="@+id/seller_type_text_view"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_large"
-            android:padding="@dimen/spacing_large"
-            android:gravity="center_vertical"
-            android:text="@string/cart_seller_info_menu_title"
-            android:textColor="@color/material_on_surface_emphasis_medium"
-            android:textAppearance="?attr/textAppearanceButton"
-            android:background="?attr/selectableItemBackground"
-            android:onClick="@{() -> listener.onNavigateToSellerDetail(sellerInfoModel.sellerBasic.id)}"
-            app:drawableEndCompat="@drawable/ic_navigate_next"
-            app:drawableTint="@color/material_on_surface_emphasis_medium"
-            app:layout_constraintTop_toBottomOf="@id/seller_name_text_view"/>
+            android:layout_gravity="end"
+            android:paddingTop="@dimen/spacing_medium"
+            android:paddingBottom="@dimen/spacing_medium"
+            android:paddingStart="@dimen/spacing_xmedium"
+            android:paddingEnd="@dimen/spacing_xmedium"
+            android:text="@{sellerInfoModel.sellerBasic.type == SellerType.ON_CAMPUS ? @string/seller_type_on_campus : @string/seller_type_off_campus }"
+            android:textColor="?attr/colorOnSecondary"
+            android:textAppearance="?attr/textAppearanceOverline"
+            android:background="@drawable/shape_seller_type"
+            android:backgroundTint="@color/mint_100"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/seller_name_text_view"
+            tools:text="On-Campus"/>
 
-        <TextView
-            android:id="@+id/seller_detail_button"
+        <ImageView
+            android:id="@+id/seller_image_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/spacing_large"
-            android:gravity="center_vertical"
-            android:text="@string/cart_seller_info_detail_title"
-            android:textColor="@color/material_on_surface_emphasis_medium"
-            android:textAppearance="?attr/textAppearanceButton"
-            android:background="?attr/selectableItemBackground"
-            android:onClick="@{() -> listener.onNavigateToSellerMisc(sellerInfoModel.sellerBasic.id)}"
-            app:drawableEndCompat="@drawable/ic_navigate_next"
-            app:drawableTint="@color/material_on_surface_emphasis_medium"
-            app:layout_constraintTop_toBottomOf="@id/seller_menu_button"/>
+            android:layout_height="150dp"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:contentDescription="@{sellerInfoModel.sellerBasic.name}"
+            android:scaleType="centerCrop"
+            app:glideCenterCrop="@{true}"
+            app:glidePlaceholder="@{R.drawable.placeholder_card}"
+            app:glideUrl="@{sellerInfoModel.sellerBasic.imageUrl}"
+            app:layout_constraintTop_toBottomOf="@id/seller_type_text_view"
+            tools:src="@sample/sample_image_5" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/seller_menu_button"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_xmedium"
+            android:onClick="@{() -> listener.onNavigateToSellerDetail(sellerInfoModel.sellerBasic.id)}"
+            android:text="@string/cart_seller_info_menu_title"
+            android:textAppearance="?attr/textAppearanceBody2"
+            app:icon="@drawable/ic_fastfood"
+            app:iconPadding="@dimen/spacing_large"
+            app:iconSize="18dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/seller_detail_button"
+            app:layout_constraintStart_toStartOf="@id/seller_name_text_view"
+            app:layout_constraintTop_toBottomOf="@id/seller_image_view" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/seller_detail_button"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_xmedium"
+            android:onClick="@{() -> listener.onNavigateToSellerMisc(sellerInfoModel.sellerBasic.id)}"
+            android:text="@string/cart_seller_info_detail_title"
+            android:textAppearance="?attr/textAppearanceBody2"
+            app:icon="@drawable/ic_live_help"
+            app:iconPadding="@dimen/spacing_large"
+            app:iconSize="18dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/seller_name_text_view"
+            app:layout_constraintStart_toEndOf="@id/seller_menu_button"
+            app:layout_constraintTop_toBottomOf="@id/seller_image_view" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

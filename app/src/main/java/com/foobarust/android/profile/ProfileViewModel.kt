@@ -14,7 +14,7 @@ import com.foobarust.android.profile.ProfileListModel.*
 import com.foobarust.android.states.UiFetchState
 import com.foobarust.android.utils.SingleLiveEvent
 import com.foobarust.domain.models.user.UserDetail
-import com.foobarust.domain.models.user.isFieldsFulfilledForOrdering
+import com.foobarust.domain.models.user.isDataCompletedForOrdering
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.user.GetUserDetailUseCase
 import com.foobarust.domain.usecases.user.UpdateUserDetailUseCase
@@ -70,33 +70,32 @@ class ProfileViewModel @ViewModelInject constructor(
     }
 
     private fun buildProfileList(userDetail: UserDetail): List<ProfileListModel> {
-        val infoItem = ProfileInfoModel(userDetail = userDetail)
-        val orderingWarningItem = ProfileWarningModel(
-            message = context.getString(R.string.profile_require_data_for_ordering)
-        )
-        val editItems = listOf(
-            ProfileEditModel(
-                id = EDIT_PROFILE_NAME,
-                title = context.getString(R.string.profile_edit_field_name),
-                value = userDetail.name,
-                displayValue = userDetail.name.takeIf {
-                    !it.isNullOrEmpty()
-                } ?: context.getString(R.string.profile_edit_field_null)
-            ),
-            ProfileEditModel(
-                id = EDIT_PROFILE_PHONE_NUMBER,
-                title = context.getString(R.string.profile_edit_field_phone_number),
-                value = userDetail.phoneNum,
-                displayValue = userDetail.phoneNum?.let {
-                    phoneUtil.getFormattedPhoneNumString(it)
-                } ?: context.getString(R.string.profile_edit_field_null)
-            )
-        )
-
         return buildList {
-            if (!userDetail.isFieldsFulfilledForOrdering()) add(orderingWarningItem)
-            add(infoItem)
-            addAll(editItems)
+            if (!userDetail.isDataCompletedForOrdering()) {
+                add(ProfileWarningModel(
+                    message = context.getString(R.string.profile_require_data_for_ordering)
+                ))
+            }
+
+            add(ProfileInfoModel(userDetail = userDetail))
+            addAll(listOf(
+                ProfileEditModel(
+                    id = EDIT_PROFILE_NAME,
+                    title = context.getString(R.string.profile_edit_field_name),
+                    value = userDetail.name,
+                    displayValue = userDetail.name.takeIf {
+                        !it.isNullOrEmpty()
+                    } ?: context.getString(R.string.profile_edit_field_null)
+                ),
+                ProfileEditModel(
+                    id = EDIT_PROFILE_PHONE_NUMBER,
+                    title = context.getString(R.string.profile_edit_field_phone_number),
+                    value = userDetail.phoneNum,
+                    displayValue = userDetail.phoneNum?.let {
+                        phoneUtil.getFormattedPhoneNumString(it)
+                    } ?: context.getString(R.string.profile_edit_field_null)
+                )
+            ))
         }
     }
 

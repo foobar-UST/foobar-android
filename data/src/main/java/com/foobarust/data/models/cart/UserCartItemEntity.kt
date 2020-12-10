@@ -1,15 +1,16 @@
-package com.foobarust.data.models.user
+package com.foobarust.data.models.cart
 
 import com.foobarust.data.common.Constants.USER_CART_ITEMS_AMOUNTS_FIELD
 import com.foobarust.data.common.Constants.USER_CART_ITEMS_ID_FIELD
 import com.foobarust.data.common.Constants.USER_CART_ITEMS_ITEM_ID_FIELD
 import com.foobarust.data.common.Constants.USER_CART_ITEMS_ITEM_IMAGE_URL_FIELD
 import com.foobarust.data.common.Constants.USER_CART_ITEMS_ITEM_PRICE_FIELD
+import com.foobarust.data.common.Constants.USER_CART_ITEMS_ITEM_SELLER_ID_FIELD
 import com.foobarust.data.common.Constants.USER_CART_ITEMS_ITEM_TITLE_FIELD
 import com.foobarust.data.common.Constants.USER_CART_ITEMS_ITEM_TITLE_ZH_FIELD
-import com.foobarust.data.common.Constants.USER_CART_ITEMS_NOTES_FIELD
 import com.foobarust.data.common.Constants.USER_CART_ITEMS_TOTAL_PRICE_FIELD
 import com.foobarust.data.common.Constants.USER_CART_ITEMS_UPDATED_AT_FIELD
+import com.foobarust.data.common.Constants.USER_CART_ITEMS_UPDATE_PRICE_REQUIRED_FIELD
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.PropertyName
 import com.google.firebase.firestore.ServerTimestamp
@@ -25,6 +26,10 @@ data class UserCartItemEntity(
     @JvmField
     @PropertyName(USER_CART_ITEMS_ITEM_ID_FIELD)
     val itemId: String? = null,
+
+    @JvmField
+    @PropertyName(USER_CART_ITEMS_ITEM_SELLER_ID_FIELD)
+    val itemSellerId: String? = null,
 
     @JvmField
     @PropertyName(USER_CART_ITEMS_ITEM_TITLE_FIELD)
@@ -51,8 +56,8 @@ data class UserCartItemEntity(
     val totalPrice: Double? = null,
 
     @JvmField
-    @PropertyName(USER_CART_ITEMS_NOTES_FIELD)
-    val notes: String? = null,
+    @PropertyName(USER_CART_ITEMS_UPDATE_PRICE_REQUIRED_FIELD)
+    val updatePriceRequired: Boolean? = null,
 
     @JvmField
     @ServerTimestamp

@@ -11,13 +11,15 @@ import com.foobarust.android.settings.SettingsListModel.SettingsProfileModel
 import com.foobarust.android.settings.SettingsListModel.SettingsSectionModel
 import com.foobarust.android.utils.SingleLiveEvent
 import com.foobarust.domain.states.Resource
+import com.foobarust.domain.usecases.auth.GetAuthProfileUseCase
 import com.foobarust.domain.usecases.auth.GetIsUserSignedInUseCase
 import com.foobarust.domain.usecases.auth.SignOutUseCase
-import com.foobarust.domain.usecases.user.GetAuthProfileUseCase
 import com.foobarust.domain.usecases.user.GetUserDetailUseCase
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 const val SETTINGS_NOTIFICATIONS = "settings_notifications"
@@ -29,11 +31,11 @@ const val SETTINGS_FAVORITE = "setting_favorite"
 const val SETTINGS_ORDER_HISTORY = "settings_order_history"
 
 class SettingsViewModel @ViewModelInject constructor(
-    @ApplicationContext private val context: Context,
-    private val getIsUserSignedInUseCase: GetIsUserSignedInUseCase,
-    private val getAuthProfileUseCase: GetAuthProfileUseCase,
-    private val getUserDetailUseCase: GetUserDetailUseCase,
-    private val signOutUseCase: SignOutUseCase
+        @ApplicationContext private val context: Context,
+        private val getIsUserSignedInUseCase: GetIsUserSignedInUseCase,
+        getAuthProfileUseCase: GetAuthProfileUseCase,
+        private val getUserDetailUseCase: GetUserDetailUseCase,
+        private val signOutUseCase: SignOutUseCase
 ) : BaseViewModel() {
 
     private var subscribeUserDetailJob: Job? = null
@@ -52,25 +54,21 @@ class SettingsViewModel @ViewModelInject constructor(
 
     init {
         // Populate settings list
-        viewModelScope.launch {
-            getAuthProfileUseCase(Unit).collect {
-                when (it) {
-                    is Resource.Success -> {
-                        subscribeUserDetail()
-                        buildSettingList(
-                            SettingsProfile(username = it.data.username)
-                        )
-                    }
-                    is Resource.Error -> {
-                        unsubscribeUserDetail()
-                        buildSettingList(SettingsProfile())
-                    }
-                    is Resource.Loading -> {
-                        _settingsItems.value = emptyList()
-                    }
+        getAuthProfileUseCase(Unit).onEach {
+            when (it) {
+                is Resource.Success -> {
+                    subscribeUserDetail()
+                    buildSettingList(SettingsProfile(username = it.data.username))
+                }
+                is Resource.Error -> {
+                    unsubscribeUserDetail()
+                    buildSettingList(SettingsProfile())
+                }
+                is Resource.Loading -> {
+                    _settingsItems.value = emptyList()
                 }
             }
-        }
+        }.launchIn(viewModelScope)
     }
 
     private fun subscribeUserDetail() {

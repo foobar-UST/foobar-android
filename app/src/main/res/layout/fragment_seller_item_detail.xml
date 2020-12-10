@@ -85,27 +85,6 @@
             android:layout_marginTop="@dimen/spacing_large"
             android:layout_marginBottom="@dimen/spacing_xmedium"
             android:layout_marginStart="@dimen/spacing_large"
-            android:text="@string/seller_item_subtitle_notes"
-            android:textAppearance="?attr/textAppearanceSubtitle1" />
-
-        <EditText
-            android:id="@+id/notes_edit_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/spacing_large"
-            android:layout_marginEnd="@dimen/spacing_large"
-            android:hint="@string/seller_item_hint_notes"
-            android:textAppearance="?attr/textAppearanceBody2"
-            android:textColor="@color/material_on_surface_emphasis_medium"
-            android:inputType="text|textMultiLine"
-            android:importantForAutofill="no"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_large"
-            android:layout_marginBottom="@dimen/spacing_xmedium"
-            android:layout_marginStart="@dimen/spacing_large"
             android:text="@string/seller_item_subtitle_amount"
             android:textAppearance="?attr/textAppearanceSubtitle1" />
 
@@ -126,6 +105,7 @@
                 android:padding="@dimen/min_icon_touch_padding"
                 android:src="@drawable/ic_add"
                 android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/seller_item_detail_increment_content_desc"
                 app:tint="@color/material_on_surface_disabled"/>
 
             <TextView
@@ -146,6 +126,7 @@
                 android:padding="@dimen/min_icon_touch_padding"
                 android:src="@drawable/ic_remove"
                 android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/seller_item_detail_decrement_content_desc"
                 app:tint="@color/material_on_surface_disabled"/>
 
         </LinearLayout>
@@ -154,8 +135,7 @@
             android:id="@+id/submit_to_cart_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            app:marginBottomSystemWindowInsets="@{true}">
+            android:layout_gravity="bottom">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/submit_to_cart_button"

@@ -1,4 +1,4 @@
-package com.foobarust.domain.usecases.user
+package com.foobarust.domain.usecases.auth
 
 import com.foobarust.domain.common.UseCaseExceptions.ERROR_USER_NOT_SIGNED_IN
 import com.foobarust.domain.di.IoDispatcher

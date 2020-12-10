@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ThemeOverlay.Foobar.Dialog.Fullscreen.DayNight.v23" parent="ThemeOverlay.Foobar.Dialog.Fullscreen.Dark.v23"/>
+    <style name="ThemeOverlay.Foobar.Dialog.Fullscreen.Dark.v23">
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <style name="Theme.Foobar.Onboarding.DayNight.v23" parent="Theme.Foobar.Onboarding.Dark.v23"/>
+    <style name="Theme.Foobar.Onboarding.Dark.v23">
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <style name="Theme.Foobar.Auth.DayNight.v23" parent="Theme.Foobar.Auth.Dark.v23"/>
+    <style name="Theme.Foobar.Auth.Dark.v23">
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <style name="Theme.Foobar.Splash.DayNight.v23" parent="Theme.Foobar.Splash.Dark.v23"/>
+    <style name="Theme.Foobar.Splash.Dark.v23">
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <style name="Theme.Foobar.DayNight" parent="Theme.Foobar.Dark.v23"/>
+    <style name="Theme.Foobar.Dark.v23">
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+</resources>

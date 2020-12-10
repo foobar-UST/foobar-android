@@ -52,6 +52,7 @@
             android:layout_marginTop="@dimen/spacing_medium"
             android:text="@{profileModel.settingsProfile.signedIn ? @string/settings_account_edit_profile : @string/settings_account_sign_in}"
             android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="?attr/colorPrimary"
             app:layout_constraintStart_toEndOf="@id/avatar_image_view"
             app:layout_constraintTop_toBottomOf="@id/username_text_view"
             app:layout_constraintBottom_toBottomOf="@id/avatar_image_view"

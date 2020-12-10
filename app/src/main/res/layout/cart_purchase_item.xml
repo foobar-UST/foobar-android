@@ -12,7 +12,7 @@
             name="listener"
             type="com.foobarust.android.cart.CartAdapter.CartAdapterListener" />
         <import type="com.foobarust.android.R"/>
-        <import type="com.foobarust.domain.models.user.UserCartItemKt" />
+        <import type="com.foobarust.domain.models.cart.UserCartItemKt" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -32,6 +32,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_remove_circle_outline"
             android:onClick="@{() -> listener.onRemoveCartItem(purchaseItemModel.userCartItem)}"
+            android:contentDescription="@string/cart_purchase_item_remove_item_content_desc"
             app:tint="@color/material_on_surface_disabled"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -80,24 +81,6 @@
             app:layout_constraintStart_toEndOf="@id/item_image_view"
             app:layout_constraintTop_toBottomOf="@+id/title_text_view"
             tools:text="Quantity: 1" />
-
-        <TextView
-            android:id="@+id/notes_text_view"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/spacing_large"
-            android:layout_marginEnd="@dimen/spacing_xmedium"
-            android:layout_marginTop="@dimen/spacing_xmedium"
-            android:text="@{@string/cart_purchase_item_format_notes(purchaseItemModel.userCartItem.notes)}"
-            android:textAppearance="?attr/textAppearanceCaption"
-            android:textColor="@color/material_on_surface_emphasis_medium"
-            android:lineSpacingMultiplier="1.15"
-            app:layout_constraintStart_toEndOf="@id/item_image_view"
-            app:layout_constraintEnd_toStartOf="@id/price_text_view"
-            app:layout_constraintTop_toBottomOf="@+id/quantity_text_view"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:goneIf="@{purchaseItemModel.userCartItem.notes.empty || purchaseItemModel.userCartItem.notes == null}"
-            tools:text="Notes: Add more sauce, please." />
 
         <TextView
             android:id="@+id/price_text_view"

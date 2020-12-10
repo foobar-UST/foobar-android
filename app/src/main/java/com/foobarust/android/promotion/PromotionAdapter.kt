@@ -24,8 +24,8 @@ import com.foobarust.domain.models.promotion.SuggestBasic
 
 class PromotionAdapter(
     private val lifecycle: Lifecycle,
-    private val promotionAdvertiseAdapterListener: PromotionAdvertiseAdapterListener,
-    private val promotionSuggestAdapterListener: PromotionSuggestAdapterListener
+    private val advertiseAdapterListener: PromotionAdvertiseAdapterListener,
+    private val suggestAdapterListener: PromotionSuggestAdapterListener
 ) : ListAdapter<PromotionListModel, PromotionViewHolder>(PromotionListModelDiff) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PromotionViewHolder {
@@ -51,11 +51,12 @@ class PromotionAdapter(
     override fun onBindViewHolder(holder: PromotionViewHolder, position: Int) {
         when (holder) {
             is PromotionAdvertiseViewHolder -> holder.binding.run {
-                val promotionAdapter = PromotionAdvertiseAdapter(promotionAdvertiseAdapterListener)
-                val promotionItems = (getItem(position) as PromotionAdvertiseModel).advertiseBasics
+                val advertiseAdapter = PromotionAdvertiseAdapter(advertiseAdapterListener)
+                val advertiseItemModels = (getItem(position) as PromotionAdvertiseModel).advertiseBasics
+                    .map { PromotionAdvertiseItemModel(advertiseBasic = it) }
 
                 viewPager.apply {
-                    setAdapter(promotionAdapter)
+                    setAdapter(advertiseAdapter)
                     setLifecycleRegistry(lifecycle)
 
                     // Banner item margin
@@ -67,14 +68,14 @@ class PromotionAdapter(
                     setIndicatorView(scrollIndicator)
 
                     removeDefaultPageTransformer()
-                }.create(promotionItems)
+                }.create(advertiseItemModels)
 
                 executePendingBindings()
             }
 
             is PromotionSuggestViewHolder -> holder.binding.run {
                 val suggestItems = (getItem(position) as PromotionSuggestModel).suggestBasics
-                val suggestAdapter = PromotionSuggestAdapter(promotionSuggestAdapterListener)
+                val suggestAdapter = PromotionSuggestAdapter(suggestAdapterListener)
 
                 suggestRecyclerView.run {
                     adapter = suggestAdapter

@@ -15,7 +15,7 @@ interface SellerRepository {
 
     suspend fun getSellerBasic(sellerId: String): SellerBasic
 
-    fun getSellerDetailObservable(sellerId: String): Flow<Resource<SellerDetail>>
+    suspend fun getSellerDetail(sellerId: String): SellerDetail
 
     fun getSellerCatalogsObservable(sellerId: String): Flow<Resource<List<SellerCatalog>>>
 

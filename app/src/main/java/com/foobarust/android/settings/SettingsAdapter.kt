@@ -3,7 +3,6 @@ package com.foobarust.android.settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -15,10 +14,7 @@ import com.foobarust.android.settings.SettingsListModel.SettingsProfileModel
 import com.foobarust.android.settings.SettingsListModel.SettingsSectionModel
 import com.foobarust.android.settings.SettingsViewHolder.SettingsProfileViewHolder
 import com.foobarust.android.settings.SettingsViewHolder.SettingsSectionViewHolder
-import com.foobarust.android.utils.bindGlideSrc
-import com.foobarust.android.utils.bindGlideUrl
-import com.foobarust.android.utils.getColorCompat
-import com.foobarust.android.utils.themeColor
+import com.foobarust.android.utils.*
 
 class SettingsAdapter(
     private val listener: SettingsAdapterListener
@@ -62,12 +58,6 @@ class SettingsAdapter(
                     )
                 }
 
-                // Set description text color
-                setDescriptionTextColor(
-                    textView = descriptionTextView,
-                    isSignedIn = currentItem.settingsProfile.isSignedIn()
-                )
-
                 executePendingBindings()
             }
 
@@ -83,16 +73,6 @@ class SettingsAdapter(
         return when (getItem(position)) {
             is SettingsProfileModel -> R.layout.settings_profile_item
             is SettingsSectionModel -> R.layout.settings_section_item
-        }
-    }
-
-    private fun setDescriptionTextColor(textView: TextView, isSignedIn: Boolean) {
-        val context = textView.context
-
-        if (isSignedIn) {
-            textView.setTextColor(context.themeColor(R.attr.colorPrimary))
-        } else {
-            textView.setTextColor(context.getColorCompat(R.color.material_on_background_emphasis_medium))
         }
     }
 

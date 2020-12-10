@@ -66,7 +66,7 @@ class ProfileFragment : Fragment(), ProfileAdapter.ProfileAdapterListener {
         }
 
         // Trigger reload on user detail
-        binding.profileNetworkErrorLayout.retryButton.setOnClickListener {
+        binding.loadErrorLayout.retryButton.setOnClickListener {
             profileViewModel.fetchUserDetail()
         }
 

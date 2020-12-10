@@ -4,7 +4,9 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.browser.customtabs.CustomTabsIntent.SHARE_STATE_ON
 import com.foobarust.android.R
 
 /**
@@ -68,8 +70,12 @@ private fun getCustomTabPackageNameToUse(context: Context): String? {
 
 private fun buildCustomTabsIntent(context: Context): CustomTabsIntent {
     return CustomTabsIntent.Builder()
-        .setToolbarColor(context.themeColor(R.attr.colorPrimarySurface))
-        .addDefaultShareMenuItem()
+        .setDefaultColorSchemeParams(
+            CustomTabColorSchemeParams.Builder()
+                .setToolbarColor(context.themeColor(R.attr.colorPrimarySurface))
+                .build()
+        )
+        .setShareState(SHARE_STATE_ON)
         .setShowTitle(true)
         .build()
 }

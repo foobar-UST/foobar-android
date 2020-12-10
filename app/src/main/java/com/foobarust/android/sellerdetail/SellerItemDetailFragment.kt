@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.foobarust.android.databinding.FragmentSellerItemDetailBinding
@@ -54,11 +53,6 @@ class SellerItemDetailFragment : BottomSheetDialogFragment() {
             lifecycleOwner = viewLifecycleOwner
         }
 
-        // Setup special notes
-        binding.notesEditText.doOnTextChanged { text, _, _, _ ->
-            viewModel.onNotesChanged(text.toString())
-        }
-
         // Setup amount widget
         binding.amountIncrementButton.setOnClickListener {
             viewModel.onAmountIncremented()
@@ -87,28 +81,6 @@ class SellerItemDetailFragment : BottomSheetDialogFragment() {
         viewModel.toastMessage.observe(viewLifecycleOwner) {
             showShortToast(it)
         }
-
-        // Setup recycler view
-        /*
-        val itemDetailAdapter = SellerItemDetailAdapter(this)
-
-        binding.recyclerView.run {
-            adapter = itemDetailAdapter
-            isNestedScrollingEnabled = true
-        }
-
-        viewModel.itemDetailModels.observe(viewLifecycleOwner) {
-            itemDetailAdapter.submitList(it)
-        }
-
-        */
-
-        /*
-        // Set bottom sheet fixed peek height
-        val bottomSheetBehavior = (requireDialog() as BottomSheetDialog).behavior
-        bottomSheetBehavior.peekHeight = (getScreenHeightPixels() * 0.4).toInt()
-
-         */
 
         return binding.root
     }

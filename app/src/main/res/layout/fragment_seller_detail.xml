@@ -176,10 +176,11 @@
                         android:src="@drawable/ic_info"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="@string/action_detail"
+                        app:tint="@color/material_on_surface_emphasis_medium"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="@id/name_text_view"
                         app:layout_constraintBottom_toBottomOf="@id/name_text_view"
-                        app:goneIf="@{!(viewModel.uiFetchState instanceof UiFetchState.Success)}"/>
+                        app:goneIf="@{viewModel.sellerDetail == null}"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -219,14 +220,6 @@
                 android:layout_height="match_parent"/>
 
         </LinearLayout>
-
-        <include
-            layout="@layout/cart_bottom_bar_layout"
-            android:id="@+id/cart_bottom_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            app:navBarPadding="@{true}"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

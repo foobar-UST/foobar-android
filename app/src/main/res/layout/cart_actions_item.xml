@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="actionsModel"
+            type="com.foobarust.android.cart.CartListModel.CartActionsModel" />
+        <variable
+            name="listener"
+            type="com.foobarust.android.cart.CartAdapter.CartAdapterListener" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_xmedium"
+        android:layout_marginBottom="@dimen/spacing_xmedium"
+        android:orientation="vertical">
+
+        <Button
+            style="@style/Widget.MaterialComponents.Button"
+            android:id="@+id/purchase_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_xmedium"
+            android:layout_marginStart="@dimen/spacing_large"
+            android:layout_marginEnd="@dimen/spacing_large"
+            android:text="@string/cart_actions_button_purchase"
+            android:onClick="@{() -> listener.onPlaceOrder()}"
+            app:goneIf="@{!actionsModel.allowOrder}"/>
+
+        <Button
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:id="@+id/clear_cart_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_xmedium"
+            android:layout_marginStart="@dimen/spacing_large"
+            android:layout_marginEnd="@dimen/spacing_large"
+            android:layout_marginBottom="@dimen/spacing_xmedium"
+            android:text="@string/cart_actions_button_clear_cart"
+            android:onClick="@{() -> listener.onClearCart()}"/>
+
+    </LinearLayout>
+
+</layout>

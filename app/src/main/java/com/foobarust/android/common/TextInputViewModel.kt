@@ -3,7 +3,7 @@ package com.foobarust.android.common
 import android.os.Parcelable
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 class TextInputViewModel @ViewModelInject constructor() : ViewModel() {
 

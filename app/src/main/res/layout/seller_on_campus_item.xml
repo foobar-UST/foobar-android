@@ -95,7 +95,7 @@
                 tools:text="Opening"/>
 
             <RatingBar
-                style="@style/Widget.AppCompat.RatingBar.Small"
+                style="@style/Widget.Foobar.RatingBar"
                 android:id="@+id/rating_bar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

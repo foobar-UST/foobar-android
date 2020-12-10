@@ -21,6 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:goneIf="@{!(viewModel.uiFetchState instanceof UiFetchState.Success)}"
             tools:listitem="@layout/profile_edit_item"/>
 
         <ProgressBar
@@ -32,7 +33,7 @@
 
         <include
             layout="@layout/common_load_error_layout"
-            android:id="@+id/profile_network_error_layout"
+            android:id="@+id/load_error_layout"
             app:goneIf="@{!(viewModel.uiFetchState instanceof UiFetchState.Error)}"/>
 
     </FrameLayout>

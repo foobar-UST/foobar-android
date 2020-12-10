@@ -1,26 +1,35 @@
 package com.foobarust.android.promotion
 
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.ImageView
+import android.view.ViewGroup
 import com.foobarust.android.R
+import com.foobarust.android.databinding.PromotionAdvertiseItemBinding
 import com.foobarust.android.promotion.PromotionAdvertiseAdapter.PromotionAdvertiseAdapterListener
-import com.foobarust.android.utils.bindGlideUrl
 import com.foobarust.domain.models.promotion.AdvertiseBasic
-import com.google.android.material.card.MaterialCardView
 import com.zhpan.bannerview.BaseBannerAdapter
 import com.zhpan.bannerview.BaseViewHolder
 
 class PromotionAdvertiseAdapter(
     private val listener: PromotionAdvertiseAdapterListener
-) : BaseBannerAdapter<AdvertiseBasic, PromotionCardViewHolder>() {
+) : BaseBannerAdapter<PromotionAdvertiseItemModel, PromotionAdvertiseItemViewHolder>() {
 
-    override fun createViewHolder(itemView: View, viewType: Int): PromotionCardViewHolder {
-        return PromotionCardViewHolder(itemView, listener)
+    override fun createViewHolder(
+        parent: ViewGroup,
+        itemView: View?,
+        viewType: Int
+    ): PromotionAdvertiseItemViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+
+        return PromotionAdvertiseItemViewHolder(
+            PromotionAdvertiseItemBinding.inflate(inflater, parent, false),
+            listener
+        )
     }
 
     override fun onBind(
-        holder: PromotionCardViewHolder?,
-        data: AdvertiseBasic?,
+        holder: PromotionAdvertiseItemViewHolder?,
+        data: PromotionAdvertiseItemModel?,
         position: Int,
         pageSize: Int
     ) {
@@ -36,28 +45,21 @@ class PromotionAdvertiseAdapter(
     }
 }
 
-class PromotionCardViewHolder(
-    itemView: View,
+class PromotionAdvertiseItemViewHolder(
+    private val binding: PromotionAdvertiseItemBinding,
     private val listener: PromotionAdvertiseAdapterListener
-) : BaseViewHolder<AdvertiseBasic>(itemView) {
+) : BaseViewHolder<PromotionAdvertiseItemModel>(binding.root) {
 
-    override fun bindData(data: AdvertiseBasic?, position: Int, pageSize: Int) {
-        val promotionCard = findView<MaterialCardView>(R.id.promotion_card_view)
-        val promotionImage = findView<ImageView>(R.id.promotion_image_view)
-
-        // Promotion card
-        promotionCard.setOnClickListener {
-            listener.onPromotionAdvertiseItemClicked(data!!)
+    override fun bindData(data: PromotionAdvertiseItemModel?, position: Int, pageSize: Int) {
+        binding.run {
+            advertiseItemModel = data
+            listener = this@PromotionAdvertiseItemViewHolder.listener
+            executePendingBindings()
         }
-
-        // Load the user image
-        promotionImage.bindGlideUrl(
-            imageUrl = data?.imageUrl,
-            placeholder = R.drawable.placeholder_card,
-            centerCrop = true
-        )
     }
 }
+
+data class PromotionAdvertiseItemModel(val advertiseBasic: AdvertiseBasic)
 
 
 

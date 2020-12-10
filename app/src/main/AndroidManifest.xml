@@ -31,7 +31,6 @@
             android:theme="@style/Theme.Foobar.Splash.DayNight">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
@@ -64,10 +63,8 @@
             <!-- Email link handler -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data
                     android:host="foobarust.page.link"
                     android:scheme="https" />
