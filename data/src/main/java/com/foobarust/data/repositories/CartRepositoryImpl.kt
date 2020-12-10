@@ -61,7 +61,7 @@ class CartRepositoryImpl @Inject constructor(
         if (networkCartItem.amounts > 1) {
             networkDocument.update(mapOf(
                 USER_CART_ITEMS_AMOUNTS_FIELD to networkCartItem.amounts - 1,
-                USER_CART_ITEMS_UPDATE_PRICE_REQUIRED_FIELD to false
+                USER_CART_ITEMS_UPDATE_PRICE_REQUIRED_FIELD to true
             ))
         } else {
             networkDocument.delete().await()
