@@ -10,7 +10,6 @@ data class SellerItemBasic(
     val id: String,
     val title: String,
     val titleZh: String?,
-    val catalogId: String,
     val price: Double,
     val imageUrl: String?,
     val count: Int,

@@ -6,7 +6,6 @@
     android:id="@+id/navigation_seller"
     app:startDestination="@id/sellerFragment">
 
-    <!-- Seller Fragment -->
     <fragment
         android:id="@+id/sellerFragment"
         android:name="com.foobarust.android.seller.SellerFragment"
@@ -32,15 +31,14 @@
             app:destination="@id/sellerActionDialog" />
     </fragment>
 
-    <!-- Seller Detail -->
     <dialog
         android:id="@+id/sellerDetailFragment"
         android:name="com.foobarust.android.sellerdetail.SellerDetailFragment"
         tools:layout="@layout/fragment_seller_detail">
 
         <argument
-            android:name="sellerDetailProperty"
-            app:argType="com.foobarust.android.sellerdetail.SellerDetailProperty" />
+            android:name="sellerId"
+            app:argType="string" />
 
         <action
             android:id="@+id/action_sellerDetailFragment_to_sellerMiscFragment"
@@ -51,7 +49,6 @@
             app:destination="@id/sellerItemDetailFragment" />
     </dialog>
 
-    <!-- Item Detail -->
     <dialog
         android:id="@+id/sellerItemDetailFragment"
         android:name="com.foobarust.android.sellerdetail.SellerItemDetailFragment"
@@ -62,7 +59,6 @@
             app:argType="com.foobarust.android.sellerdetail.SellerItemDetailProperty" />
     </dialog>
 
-    <!-- Seller Misc -->
     <dialog
         android:id="@+id/sellerMiscFragment"
         android:name="com.foobarust.android.sellermisc.SellerMiscFragment"
@@ -73,7 +69,6 @@
             app:argType="string"/>
     </dialog>
 
-    <!-- Cart -->
     <dialog
         android:id="@+id/cartFragment"
         android:name="com.foobarust.android.cart.CartFragment"
@@ -88,7 +83,6 @@
             app:destination="@id/sellerMiscFragment" />
     </dialog>
 
-    <!-- Seller Search -->
     <dialog
         android:id="@+id/sellerSearchFragment"
         android:name="com.foobarust.android.seller.SellerSearchFragment"

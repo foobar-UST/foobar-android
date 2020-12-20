@@ -1,10 +1,12 @@
 package com.foobarust.android.cart
 
+import android.content.Context
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.foobarust.android.R
 import com.foobarust.android.cart.CartListModel.*
 import com.foobarust.android.common.BaseViewModel
 import com.foobarust.android.states.UiFetchState
@@ -13,8 +15,12 @@ import com.foobarust.domain.models.cart.UserCart
 import com.foobarust.domain.models.cart.UserCartItem
 import com.foobarust.domain.models.seller.SellerBasic
 import com.foobarust.domain.states.Resource
-import com.foobarust.domain.usecases.cart.*
+import com.foobarust.domain.usecases.cart.GetUserCartItemsUseCase
+import com.foobarust.domain.usecases.cart.GetUserCartUseCase
+import com.foobarust.domain.usecases.cart.RemoveUserCartItemUseCase
+import com.foobarust.domain.usecases.cart.SyncUserCartUseCase
 import com.foobarust.domain.usecases.seller.GetSellerBasicUseCase
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
@@ -22,12 +28,12 @@ import kotlinx.coroutines.launch
  * Created by kevin on 12/1/20
  */
 class CartViewModel @ViewModelInject constructor(
+    @ApplicationContext private val context: Context,
     private val getSellerBasicUseCase: GetSellerBasicUseCase,
     private val getUserCartUseCase: GetUserCartUseCase,
     private val getUserCartItemsUseCase: GetUserCartItemsUseCase,
     private val removeUserCartItemUseCase: RemoveUserCartItemUseCase,
-    private val checkCartTimeOutUseCase: CheckCartTimeOutUseCase,
-    private val clearUserCartUseCase: ClearUserCartUseCase
+    private val syncUserCartUseCase: SyncUserCartUseCase
 ) : BaseViewModel() {
 
     private val _userCart = MutableStateFlow<UserCart?>(null)
@@ -44,13 +50,26 @@ class CartViewModel @ViewModelInject constructor(
     val cartListModels: LiveData<List<CartListModel>>
         get() = _cartListModels
 
-    private val _showCartTimeoutMessage = SingleLiveEvent<Unit>()
-    val showCartTimeoutMessage: LiveData<Unit>
-        get() = _showCartTimeoutMessage
+    private val _showTimeoutMessage = SingleLiveEvent<Unit>()
+    val showTimeoutMessage: LiveData<Unit>
+        get() = _showTimeoutMessage
 
-    val showSyncAction: LiveData<Boolean> = _userCart.asStateFlow()
+    private val _showSnackBarMessage = SingleLiveEvent<String>()
+    val showSnackBarMessage: LiveData<String>
+        get() = _showSnackBarMessage
+
+    private val _isUpdatingProgress = MutableStateFlow(false)
+    val isUpdatingProgress: LiveData<Boolean>
+        get() = _isUpdatingProgress.asStateFlow().asLiveData(viewModelScope.coroutineContext)
+
+    private var blockAction: Boolean = false
+
+    val showSyncRequiredAction: LiveData<Boolean> = _userCart.asStateFlow()
         .filterNotNull()
-        .map { it.syncRequired }
+        .map {
+            blockAction = it.syncRequired
+            it.syncRequired
+        }
         .distinctUntilChanged()
         .asLiveData(viewModelScope.coroutineContext)
 
@@ -58,7 +77,6 @@ class CartViewModel @ViewModelInject constructor(
         fetchUserCart()
         fetchSellerBasic()
         fetchUserCartItems()
-        clearCartWhenTimeout()
         buildCartList()
     }
 
@@ -90,36 +108,40 @@ class CartViewModel @ViewModelInject constructor(
             when (it) {
                 is Resource.Success -> _cartItems.value = it.data
                 is Resource.Loading -> setUiFetchState(UiFetchState.Loading)
-                is Resource.Error -> setUiFetchState(UiFetchState.Error(it.message))
+                is Resource.Error -> {
+                    _cartItems.value = emptyList()
+                    setUiFetchState(UiFetchState.Error(it.message))
+                }
             }
         }
     }
 
     private fun buildCartList() {
-        // Merge the seller info and cart items sections first,
-        // then add the cost section.
+        // Merge the CartSellerInfo and CartPurchaseItems first, then add CartTotalPrice
         cartItemsFlow.combine(sellerBasicFlow) { cartItems, sellerBasic ->
             if (cartItems.isNotEmpty()) {
-                buildList {
-                    add(CartSellerInfoModel(sellerBasic = sellerBasic))
-                    addAll(cartItems.map { CartPurchaseItemModel(userCartItem = it) })
-                }
+                Pair(cartItems, sellerBasic)
             } else {
-                emptyList()
+                null
             }
-        }.combine(userCartFlow) { mergedList, userCart ->
+        }.combine(userCartFlow) { pairResult, userCart ->
             setUiFetchState(UiFetchState.Success)
-            _cartListModels.value = if (mergedList.isNotEmpty()) {
+
+            _cartListModels.value = if (pairResult != null) {
                 buildList {
-                    addAll(mergedList)
+                    val (cartItems, sellerBasic) = pairResult
+                    val allowOrder = !userCart.syncRequired && !cartItems.any { !it.available }
+
+                    add(CartSellerInfoModel(sellerBasic = sellerBasic))
+                    addAll(cartItems.map {
+                        CartPurchaseItemModel(userCartItem = it)
+                    })
                     add(CartTotalPriceModel(
                         subtotal = userCart.subtotalCost,
                         deliveryFee = userCart.deliveryCost,
                         total = userCart.totalCost
                     ))
-                    add(CartActionsModel(
-                        allowOrder = !userCart.syncRequired
-                    ))
+                    add(CartActionsModel(allowOrder = allowOrder))
                 }
             } else {
                 emptyList()
@@ -127,32 +149,37 @@ class CartViewModel @ViewModelInject constructor(
         }.launchIn(viewModelScope)
     }
 
-    private fun clearCartWhenTimeout() = viewModelScope.launch {
-        userCartFlow.collect { userCart ->
-            when (val result = checkCartTimeOutUseCase(userCart)) {
-                is Resource.Success -> {
-                    val isTimeout = result.data
-                    if (isTimeout) {
-                        onClearCart()
-                        _showCartTimeoutMessage.value = Unit
+    fun onRemoveCartItem(userCartItem: UserCartItem) = viewModelScope.launch {
+        if (!blockAction) {
+            blockAction = true
+            removeUserCartItemUseCase(userCartItem.id).collect {
+                when (it) {
+                    is Resource.Success -> {
+                        blockAction = false
+                        _isUpdatingProgress.value = false
                     }
+                    is Resource.Error -> {
+                        blockAction = false
+                        _isUpdatingProgress.value = false
+                        showToastMessage(it.message)
+                    }
+                    is Resource.Loading -> _isUpdatingProgress.value = true
                 }
-                is Resource.Error -> showToastMessage("Error checking cart timeout.")
             }
         }
     }
 
-    fun onRemoveCartItem(userCartItem: UserCartItem) = viewModelScope.launch {
-        when (val result = removeUserCartItemUseCase(userCartItem.id)) {
-            is Resource.Success -> Unit
-            is Resource.Error -> showToastMessage(result.message)
-        }
-    }
-
-    fun onClearCart() = viewModelScope.launch {
-        when (val result = clearUserCartUseCase(Unit)) {
-            is Resource.Success -> Unit
-            is Resource.Error -> showToastMessage(result.message)
+    fun onSyncUserCart() = viewModelScope.launch {
+        syncUserCartUseCase(Unit).collect {
+            when (it) {
+                is Resource.Success -> {
+                    _showSnackBarMessage.value = context.getString(
+                        R.string.cart_sync_required_complete_message
+                    )
+                }
+                is Resource.Error -> showToastMessage(it.message)
+                is Resource.Loading -> Unit
+            }
         }
     }
 }

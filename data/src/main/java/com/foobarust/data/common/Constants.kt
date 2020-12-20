@@ -5,9 +5,11 @@ package com.foobarust.data.common
  */
 
 object Constants {
-
-    // SharedPreferences
+    // Shared Preferences
     const val PREFS_NAME = "foobarust"
+
+    // Backend
+    const val REMOTE_URL = "https://us-central1-foobar-group-delivery-app.cloudfunctions.net/api/"
 
     // Users
     const val USERS_COLLECTION = "users"
@@ -22,8 +24,7 @@ object Constants {
     const val USER_PHOTO_URL_FIELD = "photo_url"
     const val USER_PHONE_NUM_FIELD = "phone_num"
     const val USER_ROLES_FIELD = "roles"
-
-    const val USER_UPDATED_AT_FIELD = "update_at"
+    const val USER_UPDATED_AT_FIELD = "updated_at"
 
     // Cart
     const val USER_CARTS_COLLECTION = "user_carts"
@@ -47,7 +48,7 @@ object Constants {
     const val USER_CART_ITEMS_ITEM_IMAGE_URL_FIELD = "item_image_url"
     const val USER_CART_ITEMS_AMOUNTS_FIELD = "amounts"
     const val USER_CART_ITEMS_TOTAL_PRICE_FIELD = "total_price"
-    const val USER_CART_ITEMS_UPDATE_PRICE_REQUIRED_FIELD = "update_price_required"
+    const val USER_CART_ITEMS_AVAILABLE_FIELD = "available"
     const val USER_CART_ITEMS_UPDATED_AT_FIELD = "updated_at"
 
     // Sellers
@@ -60,7 +61,7 @@ object Constants {
     const val SELLER_NAME_ZH_FIELD = "name_zh"
     const val SELLER_DESCRIPTION_FIELD = "description"
     const val SELLER_DESCRIPTION_ZH_FIELD = "description_zh"
-    const val SELLER_IMGAE_URL_FIELD = "image_url"
+    const val SELLER_IMAGE_URL_FIELD = "image_url"
     const val SELLER_OPENING_HOURS_FIELD = "opening_hours"
     const val SELLER_MIN_SPEND_FIELD = "min_spend"
     const val SELLER_RATING_FIELD = "rating"
@@ -72,6 +73,7 @@ object Constants {
     const val SELLER_ONLINE_FIELD = "online"
     const val SELLER_NOTICE_FIELD = "notice"
     const val SELLER_TAGS_FIELD = "tags"
+    const val SELLER_BY_USER_ID = "by_user_id"
 
     // Seller Location
     const val SELLER_LOCATION_ADDRESS_FIELD = "address"
@@ -112,6 +114,7 @@ object Constants {
     const val SELLER_ITEM_TITLE_FIELD = "title"
     const val SELLER_ITEM_TITLE_ZH_FIELD = "title_zh"
     const val SELLER_ITEM_CATALOG_ID_FIELD = "catalog_id"
+    const val SELLER_ITEM_SELLER_ID_FIELD = "seller_id"
     const val SELLER_ITEM_DESCRIPTION_FIELD = "description"
     const val SELLER_ITEM_DESCRIPTION_ZH_FIELD = "description_zh"
     const val SELLER_ITEM_IMAGE_URL_FIELD = "image_url"
@@ -119,4 +122,19 @@ object Constants {
     const val SELLER_ITEM_COUNT_FIELD = "count"
     const val SELLER_ITEM_AVAILABLE_FIELD = "available"
     const val SELLER_ITEM_UPDATED_AT_FIELD = "updated_at"
+
+    // Request Parameters
+    const val AUTHORIZATION_HEADER = "Authorization"
+
+    const val ADD_USER_CART_ITEM_REQUEST_SELLER_ID = "seller_id"
+    const val ADD_USER_CART_ITEM_REQUEST_ITEM_ID = "item_id"
+    const val ADD_USER_CART_ITEM_REQUEST_AMOUNTS = "amounts"
+
+    const val REMOVE_USER_CART_ITEM_REQUEST_CART_ITEM_ID = "cart_item_id"
+
+    // Responses
+    const val SUCCESS_RESPONSE_DATA_OBJECT = "data"
+    const val ERROR_RESPONSE_ERROR_OBJECT = "error"
+    const val ERROR_RESPONSE_CODE_FIELD = "code"
+    const val ERROR_RESPONSE_MESSAGE_FIELD = "message"
 }

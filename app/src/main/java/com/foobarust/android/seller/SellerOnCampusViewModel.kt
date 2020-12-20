@@ -13,39 +13,44 @@ import com.foobarust.android.promotion.PromotionListModel.*
 import com.foobarust.android.utils.SingleLiveEvent
 import com.foobarust.domain.models.promotion.AdvertiseBasic
 import com.foobarust.domain.models.promotion.SuggestBasic
-import com.foobarust.domain.models.seller.SellerType
+import com.foobarust.domain.models.seller.SellerType.*
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.states.getSuccessDataOr
-import com.foobarust.domain.usecases.promotion.GetAdvertisesUseCase
+import com.foobarust.domain.usecases.promotion.GetAdvertiseBasicsUseCase
 import com.foobarust.domain.usecases.promotion.GetSuggestsUseCase
 import com.foobarust.domain.usecases.seller.GetSellersUseCase
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class SellerOnCampusViewModel @ViewModelInject constructor(
     @ApplicationContext private val context: Context,
-    getAdvertisesUseCase: GetAdvertisesUseCase,
+    getAdvertiseBasicsUseCase: GetAdvertiseBasicsUseCase,
     getSuggestsUseCase: GetSuggestsUseCase,
     getSellersUseCase: GetSellersUseCase
 ) : ViewModel() {
 
-    // Loading state
     private val _loadState = SingleLiveEvent<LoadState>()
     val loadState: LiveData<LoadState>
         get() = _loadState
 
-    // Reload promotion items at launch
-    private val reloadPromotionChannel = ConflatedBroadcastChannel(Unit)
+    private val _reloadPromotion = MutableStateFlow(Unit)
 
-    val sellerModelItems: Flow<PagingData<SellerOnCampusListModel>> = getSellersUseCase(SellerType.ON_CAMPUS)
-        .map { pagingData -> pagingData.map { SellerOnCampusListModel.SellerOnCampusItemModel(it) /* as SellerOnCampusListModel */ } }
-        .map {
-            it.insertSeparators { before, after ->
-                // Insert subtitle at the beginning
+    private val _promotionListModels = MutableLiveData<List<PromotionListModel>>()
+    val promotionModelItems: LiveData<List<PromotionListModel>>
+        get() = _promotionListModels
+
+    val sellerListModels: Flow<PagingData<SellerOnCampusListModel>> = getSellersUseCase(ON_CAMPUS)
+        .map { pagingData ->
+            pagingData.map { SellerOnCampusListModel.SellerOnCampusItemModel(it) }
+        }
+        .map { pagingData ->
+            pagingData.insertSeparators { before, _ ->
+                // Insert subtitle before sellers list
                 return@insertSeparators if (before == null) {
-                    SellerOnCampusListModel.SellerOnCampusSubtitleModel(context.getString(R.string.seller_subtitle_restaurants))
+                    SellerOnCampusListModel.SellerOnCampusSubtitleModel(
+                        context.getString(R.string.seller_subtitle)
+                    )
                 } else {
                     null
                 }
@@ -53,36 +58,34 @@ class SellerOnCampusViewModel @ViewModelInject constructor(
         }
         .cachedIn(viewModelScope)
 
-    private val advertiseItemsFlow = reloadPromotionChannel.asFlow()
+    // Ignore Loading or Error state when loading promotion items
+    private val advertiseBasicsFlow = _reloadPromotion.asStateFlow()
         .flatMapLatest {
-            getAdvertisesUseCase(Unit)
+            getAdvertiseBasicsUseCase(Unit)
                 .filterNot { it is Resource.Loading }
                 .flatMapLatest { flowOf(it.getSuccessDataOr(emptyList())) }
         }
 
-    private val suggestItemsFlow = reloadPromotionChannel.asFlow()
+    private val suggestItemsFlow = _reloadPromotion.asStateFlow()
         .flatMapLatest {
             getSuggestsUseCase(Unit)
                 .filterNot { it is Resource.Loading }
                 .flatMapLatest { flowOf(it.getSuccessDataOr(emptyList())) }
         }
 
-    private val _promotionModelItems = MutableLiveData<List<PromotionListModel>>()
-    val promotionModelItems: LiveData<List<PromotionListModel>>
-        get() = _promotionModelItems
-
     init {
-        // Collect promotion items at launch
+        // Fetch promotion items (advertises row + user suggests row)
         viewModelScope.launch {
-            advertiseItemsFlow.zip(suggestItemsFlow) { advertises, suggests ->
+            advertiseBasicsFlow.zip(suggestItemsFlow) { advertises, suggests ->
                 buildPromotionModelList(advertises, suggests)
-            }.collect { _promotionModelItems.value = it }
+            }.collect {
+                _promotionListModels.value = it
+            }
         }
     }
 
-    fun reloadPromotionItems() {
-        // Trigger reload
-        reloadPromotionChannel.offer(Unit)
+    fun onReloadPromotion() {
+        _reloadPromotion.value = Unit
     }
 
     fun onLoadStateChanged(loadState: LoadState) {
@@ -97,14 +100,12 @@ class SellerOnCampusViewModel @ViewModelInject constructor(
             // Append advertise row
             if (advertiseBasics.isNotEmpty()) {
                 addAll(listOf(
-                    //PromotionSubtitleModel(context.getString(R.string.promotion_advertise_subtitle)),
                     PromotionAdvertiseModel(advertiseBasics)
                 ))
             }
 
             // Append suggest row
             if (suggestBasics.isNotEmpty()) {
-                // Append suggestion row and subtitle
                 addAll(listOf(
                     PromotionSubtitleModel(context.getString(R.string.promotion_subtitle_suggest)),
                     PromotionSuggestModel(suggestBasics)

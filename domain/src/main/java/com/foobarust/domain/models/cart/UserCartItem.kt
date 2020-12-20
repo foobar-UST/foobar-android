@@ -15,7 +15,7 @@ data class UserCartItem(
     val itemImageUrl: String?,
     val amounts: Int,
     val totalPrice: Double,
-    val updatePriceRequired: Boolean,
+    val available: Boolean,
     val updatedAt: Date?
 )
 

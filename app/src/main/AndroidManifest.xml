@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.foobarust.android">
 
     <!--
@@ -16,6 +18,7 @@
         </intent>
     </queries>
 
+    <!-- TODO: Remove usesCleartextTraffic -->
     <application
         android:name=".FoobarUST"
         android:allowBackup="true"
@@ -23,7 +26,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="false"
-        android:theme="@style/Theme.Foobar.DayNight">
+        android:theme="@style/Theme.Foobar.DayNight"
+        android:usesCleartextTraffic="true" tools:targetApi="23">
 
         <activity
             android:name=".splash.SplashActivity"
@@ -68,6 +72,9 @@
                 <data
                     android:host="foobarust.page.link"
                     android:scheme="https" />
+                <data
+                    android:host="localhost"
+                    android:scheme="http" />
             </intent-filter>
         </activity>
 

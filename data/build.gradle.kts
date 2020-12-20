@@ -26,8 +26,11 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
         getByName("debug") {
-            buildConfigField("Boolean", "USE_FIREBASE_EMULATOR", "false")
-            buildConfigField("String", "FIREBASE_EMULATOR_HOST", "\"192.168.128.66:8080\"")
+            buildConfigField("Boolean", "USE_FIREBASE_EMULATOR", "true")
+            buildConfigField("String", "FIREBASE_EMULATOR_HOST", "\"192.168.128.66\"")
+            buildConfigField("String", "FIREBASE_EMULATOR_FIRESTORE_PORT", "\"8080\"")
+            buildConfigField("String", "FIREBASE_EMULATOR_FUNCTIONS_PORT", "\"5001\"")
+            buildConfigField("int", "FIREBASE_EMULATOR_AUTH_PORT", "9099")
         }
     }
 
@@ -50,33 +53,26 @@ android {
 
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
-    api(project(":domain"))
+    implementation(project(":domain"))
 
-    // Kotlin
     implementation(Dependencies.KOTLIN_STDLIB)
     implementation(Dependencies.COROUTINE_CORE)
     implementation(Dependencies.COROUTINE_ANDROID)
     implementation(Dependencies.COROUTINE_PLAY_SERVICES)
-
-    // Android
     implementation(Dependencies.CORE)
     implementation(Dependencies.APPCOMPAT)
     implementation(Dependencies.ROOM_RUNTIME)
     implementation(Dependencies.ROOM_KTX)
     implementation(Dependencies.HILT)
     implementation(Dependencies.PAGING_RUNTIME)
-    //implementation(Dependencies.PREFERENCES_DATASTORE)
-    //implementation(Dependencies.PROTO_DATASTORE)
-
-    // Firebase
+    // TODO: fix api exposure
     api(Dependencies.FIREBASE_AUTH)
     api(Dependencies.FIREBASE_FIRESTORE)
     api(Dependencies.FIREBASE_STORAGE)
-
-    // Play Services
     implementation(Dependencies.PLAY_SERVICES_AUTH)
-
-    implementation(Dependencies.GSON)
+    implementation(Dependencies.RETROFIT)
+    implementation(Dependencies.RETROFIT_CONVERTER_GSON)
+    implementation(Dependencies.OKHTTP_LOGGING_INTERCEPTOR)
 
     // Annotation Processors
     kapt(Annotation.ROOM_COMPILER)

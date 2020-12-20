@@ -79,7 +79,7 @@ class SellerOnCampusFragment : Fragment(),
 
         // Subscribe for seller items
         viewLifecycleOwner.lifecycleScope.launch {
-            sellerOnCampusViewModel.sellerModelItems.collectLatest {
+            sellerOnCampusViewModel.sellerListModels.collectLatest {
                 sellerAdapter.submitData(it)
                 //binding.swipeRefreshLayout.isRefreshing = false
             }
@@ -87,7 +87,7 @@ class SellerOnCampusFragment : Fragment(),
 
         // Retry button
         binding.loadErrorLayout.retryButton.setOnClickListener {
-            sellerOnCampusViewModel.reloadPromotionItems()
+            sellerOnCampusViewModel.onReloadPromotion()
             sellerAdapter.retry()
         }
 

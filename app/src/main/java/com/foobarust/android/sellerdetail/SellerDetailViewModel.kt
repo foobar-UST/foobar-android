@@ -1,7 +1,6 @@
 package com.foobarust.android.sellerdetail
 
 import android.content.Context
-import android.os.Parcelable
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,16 +9,13 @@ import com.foobarust.android.R
 import com.foobarust.android.common.BaseViewModel
 import com.foobarust.android.states.UiFetchState
 import com.foobarust.android.utils.SingleLiveEvent
-import com.foobarust.domain.models.seller.SellerCatalog
 import com.foobarust.domain.models.seller.SellerDetail
+import com.foobarust.domain.models.seller.SellerDetailWithCatalogs
 import com.foobarust.domain.states.Resource
-import com.foobarust.domain.usecases.seller.GetSellerCatalogsUseCase
-import com.foobarust.domain.usecases.seller.GetSellerDetailUseCase
+import com.foobarust.domain.usecases.seller.GetSellerDetailWithCatalogsUseCase
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlinx.parcelize.Parcelize
 
 /**
  * Created by kevin on 10/4/20
@@ -30,17 +26,12 @@ const val SELLER_DETAIL_ACTION_TAG = "action_tag"
 
 class SellerDetailViewModel @ViewModelInject constructor(
     @ApplicationContext private val context: Context,
-    private val getSellerDetailUseCase: GetSellerDetailUseCase,
-    private val getSellerCatalogsUseCase: GetSellerCatalogsUseCase
+    private val getSellerDetailWithCatalogsUseCase: GetSellerDetailWithCatalogsUseCase
 ) : BaseViewModel() {
 
-    private val _sellerDetail = MutableLiveData<SellerDetail>()
-    val sellerDetail: LiveData<SellerDetail>
-        get() = _sellerDetail
-
-    private val _sellerCatalogs = MutableLiveData<List<SellerCatalog>>()
-    val sellerCatalogs: LiveData<List<SellerCatalog>>
-        get() = _sellerCatalogs
+    private val _sellerDetailWithCatalogs = MutableLiveData<SellerDetailWithCatalogs?>()
+    val sellerDetailWithCatalogs: LiveData<SellerDetailWithCatalogs?>
+        get() = _sellerDetailWithCatalogs
 
     private val _showToolbarTitle = MutableLiveData<Boolean>()
     val showToolbarTitle: LiveData<Boolean>
@@ -58,30 +49,22 @@ class SellerDetailViewModel @ViewModelInject constructor(
     val detailActions: LiveData<List<SellerDetailAction>>
         get() = _detailActions
 
+    private val _showSnackBarMessage = SingleLiveEvent<String>()
+    val showSnackBarMessage: LiveData<String>
+        get() = _showSnackBarMessage
+
     fun onFetchSellerDetail(sellerId: String) = viewModelScope.launch {
-        // Fetch seller detail
-        setUiFetchState(UiFetchState.Loading)
-
-        when (val result = getSellerDetailUseCase(sellerId)) {
-            is Resource.Success -> {
-                _sellerDetail.value = result.data
-                buildActionList(result.data)
-            }
-            is Resource.Error -> setUiFetchState(UiFetchState.Error(result.message))
-        }
-
-        // Fetch seller catalogs
-        // Require observable as the seller may disable the catalog at any time
-        getSellerCatalogsUseCase(sellerId).onEach {
+        getSellerDetailWithCatalogsUseCase(sellerId).collect {
             when (it) {
                 is Resource.Success -> {
-                    _sellerCatalogs.value = it.data
+                    _sellerDetailWithCatalogs.value = it.data
+                    buildActionList(sellerDetail = it.data.sellerDetail)
                     setUiFetchState(UiFetchState.Success)
                 }
-                is Resource.Loading -> setUiFetchState(UiFetchState.Loading)
                 is Resource.Error -> setUiFetchState(UiFetchState.Error(it.message))
+                is Resource.Loading -> setUiFetchState(UiFetchState.Loading)
             }
-        }.launchIn(this)
+        }
     }
 
     fun onShowToolbarTitleChanged(isShow: Boolean) {
@@ -93,10 +76,19 @@ class SellerDetailViewModel @ViewModelInject constructor(
     }
 
     fun onShowItemDetailDialog(sellerId: String, itemId: String) {
-        _navigateToItemDetail.value = SellerItemDetailProperty(
-            sellerId = sellerId,
-            itemId = itemId
-        )
+        val sellerDetail = _sellerDetailWithCatalogs.value?.sellerDetail
+        sellerDetail?.let {
+            if (it.online) {
+                _navigateToItemDetail.value = SellerItemDetailProperty(
+                    sellerId = sellerId,
+                    itemId = itemId
+                )
+            } else {
+                _showSnackBarMessage.value = context.getString(
+                    R.string.seller_status_offline_message
+                )
+            }
+        }
     }
 
     private fun buildActionList(sellerDetail: SellerDetail) {
@@ -119,10 +111,3 @@ class SellerDetailViewModel @ViewModelInject constructor(
         }
     }
 }
-
-@Parcelize
-data class SellerDetailProperty(
-    val id: String,
-    val name: String? = null,
-    val imageUrl: String? = null
-) : Parcelable

@@ -51,10 +51,9 @@ class InsertSellerItemFakeData {
             val sellerId = it.seller_id
             val sellerItemBasicEntity = it.toSellerItemBasicEntity()
 
-            firestore.collection(SELLERS_COLLECTION)
-                .document(sellerId)
-                .collection(SELLER_ITEMS_BASIC_SUB_COLLECTION)
-                .document(it.id)
+            firestore.document(
+                "$SELLERS_COLLECTION/$sellerId/$SELLER_ITEMS_BASIC_SUB_COLLECTION/${it.id}"
+            )
                 .set(sellerItemBasicEntity)
                 .await()
         }
@@ -70,12 +69,12 @@ class InsertSellerItemFakeData {
             val sellerId = it.seller_id
             val sellerItemDetailEntity = it.toSellerItemDetailEntity()
 
-            firestore.collection(SELLERS_COLLECTION)
-                .document(sellerId)
-                .collection(SELLER_ITEMS_SUB_COLLECTION)
-                .document(it.id)
+            firestore.document(
+                "$SELLERS_COLLECTION/$sellerId/$SELLER_ITEMS_SUB_COLLECTION/${it.id}"
+            )
                 .set(sellerItemDetailEntity)
                 .await()
+
         }
 
         assertTrue(true)
@@ -93,12 +92,12 @@ class InsertSellerItemFakeData {
 @Serializable
 private data class SellerItemSerialized(
     val id: String,
-    val seller_id: String,
     val title: String,
     val title_zh: String? = null,
     val description: String? = null,
     val description_zh: String? = null,
     val catalog_id: String,
+    val seller_id: String,
     val price: Double,
     val image_url: String? = null,
     val count: Int,
@@ -112,6 +111,7 @@ private data class SellerItemSerialized(
             description = description,
             descriptionZh = description_zh,
             catalogId = catalog_id,
+            sellerId = seller_id,
             price = price,
             imageUrl = image_url,
             count = count,

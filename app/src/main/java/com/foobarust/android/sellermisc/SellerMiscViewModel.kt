@@ -37,10 +37,12 @@ class SellerMiscViewModel @ViewModelInject constructor(
         when (val result = getSellerDetailUseCase(sellerId)) {
             is Resource.Success -> {
                 val sellerDetail = result.data
+
                 _latLng.value = LatLng(
                     sellerDetail.location.geolocation.latitude,
                     sellerDetail.location.geolocation.longitude
                 )
+
                 setUiFetchState(UiFetchState.Success)
                 buildSellerMiscList(sellerDetail)
             }

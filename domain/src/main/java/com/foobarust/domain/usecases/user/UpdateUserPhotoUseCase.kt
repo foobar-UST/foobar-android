@@ -23,14 +23,13 @@ class UpdateUserPhotoUseCase @Inject constructor(
 ) : FlowUseCase<String, Unit>(coroutineDispatcher) {
 
     override fun execute(parameters: String): Flow<Resource<Unit>> = flow {
-        // Check if user is signed in
         if (!authRepository.isSignedIn()) {
             emit(Resource.Error(ERROR_USER_NOT_SIGNED_IN))
             return@flow
         }
 
         emitAll(userRepository.updateUserPhoto(
-            userId = authRepository.getAuthUserId(),
+            userId = authRepository.getUserId(),
             uriString = parameters
         ))
     }

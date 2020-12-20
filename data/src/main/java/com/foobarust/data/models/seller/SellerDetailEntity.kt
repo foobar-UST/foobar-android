@@ -1,9 +1,10 @@
 package com.foobarust.data.models.seller
 
+import com.foobarust.data.common.Constants.SELLER_BY_USER_ID
 import com.foobarust.data.common.Constants.SELLER_DESCRIPTION_FIELD
 import com.foobarust.data.common.Constants.SELLER_DESCRIPTION_ZH_FIELD
 import com.foobarust.data.common.Constants.SELLER_ID_FIELD
-import com.foobarust.data.common.Constants.SELLER_IMGAE_URL_FIELD
+import com.foobarust.data.common.Constants.SELLER_IMAGE_URL_FIELD
 import com.foobarust.data.common.Constants.SELLER_LOCATION_FIELD
 import com.foobarust.data.common.Constants.SELLER_MIN_SPEND_FIELD
 import com.foobarust.data.common.Constants.SELLER_NAME_FIELD
@@ -59,7 +60,7 @@ data class SellerDetailEntity(
     val location: SellerLocationEntity? = null,
 
     @JvmField
-    @PropertyName(SELLER_IMGAE_URL_FIELD)
+    @PropertyName(SELLER_IMAGE_URL_FIELD)
     val image_url: String? = null,
 
     @JvmField
@@ -92,5 +93,9 @@ data class SellerDetailEntity(
 
     @JvmField
     @PropertyName(SELLER_TAGS_FIELD)
-    val tags: List<String>? = null
+    val tags: List<String>? = null,
+
+    @JvmField
+    @PropertyName(SELLER_BY_USER_ID)
+    val byUserId: String? = null
 )

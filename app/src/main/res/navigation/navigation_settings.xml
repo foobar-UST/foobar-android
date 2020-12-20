@@ -100,7 +100,7 @@
     <dialog
         android:id="@+id/textInputDialog"
         android:name="com.foobarust.android.common.TextInputDialog"
-        tools:layout="@layout/dialog_text_input">
+        tools:layout="@layout/dialog_text_input_entry">
         <argument
             android:name="property"
             app:argType="com.foobarust.android.common.TextInputProperty"

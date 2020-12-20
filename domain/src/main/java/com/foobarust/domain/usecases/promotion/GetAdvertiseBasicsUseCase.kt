@@ -13,7 +13,7 @@ import javax.inject.Inject
  * Created by kevin on 9/28/20
  */
 
-class GetAdvertisesUseCase @Inject constructor(
+class GetAdvertiseBasicsUseCase @Inject constructor(
     private val promotionRepository: PromotionRepository,
     @IoDispatcher coroutineDispatcher: CoroutineDispatcher
 ) : FlowUseCase<Unit, List<AdvertiseBasic>>(coroutineDispatcher) {

@@ -13,9 +13,12 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.foobarust.android.NavigationSellerDirections
 import com.foobarust.android.R
+import com.foobarust.android.cart.CartTimeoutDialog
+import com.foobarust.android.cart.CartTimeoutProperty
 import com.foobarust.android.databinding.ActivityMainBinding
 import com.foobarust.android.seller.SellerFragmentDirections
 import com.foobarust.android.utils.*
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -48,17 +51,26 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
             showShortToast(it)
         }
 
+        // Show snack bar
+        viewModel.showSnackBarMessage.observe(this) {
+            showMessageSnackBar(message = it)
+        }
+
         // Navigate to cart
         binding.cartBottomBar.cartBottomBarCardView.setOnClickListener {
             currentNavController?.value?.navigate(
                 NavigationSellerDirections.actionGlobalCartFragment()
             )
         }
+
+        // Navigate to cart timeout dialog
+        viewModel.navigateToTimeoutDialog.observe(this) {
+            showCartTimeoutDialog(property = it)
+        }
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-
         // BottomNavigationBar has restored its instance state
         // and its selectedItemId, we can proceed with setting up the
         // BottomNavigationBar with Navigation
@@ -67,7 +79,6 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-
         // When the user is signed in, restart MainActivity to reload the data.
         finish()
         startActivity(intent)
@@ -107,7 +118,6 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
         val listener =
             NavController.OnDestinationChangedListener { controller, destination, arguments ->
                 setupViewsForNavGraph(controller.graph.id)
-
                 if (controller.currentDestination?.id in topLevelDestinations) {
                     setupViewsForTopLevelDestinations(controller.currentDestination?.id)
                 } else {
@@ -121,10 +131,8 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
                 navController = it,
                 configuration = AppBarConfiguration(setOf(it.graph.startDestination))
             )
-
             // Setup views for different tab navigation
             it.registerOnDestinationChangedListener(listener)
-
             // Restore app bar height
             binding.appBarLayout.setExpanded(true, true)
         }
@@ -157,12 +165,22 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
 
     private fun setupViewsForInnerDestinations() {
         binding.toolbar.menu.clear()
-        //viewModel.hideCartBottomBar()
     }
 
     private fun showSellerSearch() {
         currentNavController?.value?.navigate(
             SellerFragmentDirections.actionSellerFragmentToSellerSearchFragment()
+        )
+    }
+
+    private fun showMessageSnackBar(message: String) {
+        Snackbar.make(binding.coordinatorLayout, message, Snackbar.LENGTH_SHORT).show()
+    }
+
+    private fun showCartTimeoutDialog(property: CartTimeoutProperty) {
+        CartTimeoutDialog.newInstance(property).show(
+            supportFragmentManager,
+            CartTimeoutDialog.TAG
         )
     }
 }

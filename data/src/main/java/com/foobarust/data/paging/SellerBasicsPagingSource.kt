@@ -1,4 +1,4 @@
-package com.foobarust.data.pagesource
+package com.foobarust.data.paging
 
 import androidx.paging.PagingSource
 import com.foobarust.data.common.Constants.SELLERS_BASIC_COLLECTION
@@ -15,7 +15,7 @@ import kotlinx.coroutines.tasks.await
  * Created by kevin on 9/27/20
  */
 
-class SellerBasicPagingSource(
+class SellerBasicsPagingSource(
     private val firestore: FirebaseFirestore,
     private val sellerType: SellerType,
     private val sellerMapper: SellerMapper

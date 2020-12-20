@@ -33,7 +33,7 @@
             android:src="@drawable/ic_remove_circle_outline"
             android:onClick="@{() -> listener.onRemoveCartItem(purchaseItemModel.userCartItem)}"
             android:contentDescription="@string/cart_purchase_item_remove_item_content_desc"
-            app:tint="@color/material_on_surface_disabled"
+            app:tint="@color/material_on_surface_emphasis_medium"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -92,6 +92,24 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/title_text_view"
             tools:text="x $36.9"/>
+
+        <TextView
+            android:id="@+id/unavailable_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:gravity="center_vertical"
+            android:text="@string/cart_purchase_item_unavailable_message"
+            android:textColor="@color/material_on_surface_emphasis_medium"
+            android:textAppearance="?attr/textAppearanceCaption"
+            android:drawablePadding="@dimen/spacing_xmedium"
+            app:drawableStartCompat="@drawable/ic_info"
+            app:drawableTint="@color/material_on_surface_emphasis_medium"
+            app:drawableScale="@{0.98}"
+            app:layout_constraintStart_toStartOf="@id/item_image_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/quantity_text_view"
+            app:goneIf="@{purchaseItemModel.userCartItem.available}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

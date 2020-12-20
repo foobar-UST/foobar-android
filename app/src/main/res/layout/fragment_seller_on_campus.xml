@@ -24,14 +24,15 @@
             app:goneIf="@{!(viewModel.loadState instanceof LoadState.NotLoading)}"
             tools:listitem="@layout/seller_on_campus_item" />
 
-        <include
-            layout="@layout/fragment_seller_on_campus_shimmer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
             app:goneIf="@{!(viewModel.loadState instanceof LoadState.Loading)}"/>
 
         <include
-            layout="@layout/common_load_error_layout"
+            layout="@layout/load_error_layout"
             android:id="@+id/load_error_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

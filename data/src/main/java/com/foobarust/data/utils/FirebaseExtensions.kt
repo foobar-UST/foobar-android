@@ -10,7 +10,6 @@ import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.MetadataChanges
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.OnProgressListener
 import com.google.firebase.storage.StorageReference
@@ -22,6 +21,7 @@ import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.tasks.await
 
 const val ERROR_DOCUMENT_NOT_EXIST = "Document does not exist."
+const val ERROR_COLLECTION_EMPTY = "Collection is empty."
 
 suspend inline fun <reified T, R> CollectionReference.getAwaitResult(mapper: (T) -> R): List<R> {
     return this.get()
@@ -47,13 +47,14 @@ suspend inline fun <reified T, R> Query.getAwaitResult(mapper: (T) -> R): List<R
 }
 
 inline fun <reified T, R> CollectionReference.snapshotFlow(
-    crossinline mapper: (T) -> R
+    crossinline mapper: (T) -> R,
+    keepAliveUntilCreated: Boolean = false
 ): Flow<Resource<List<R>>> {
     return channelFlow {
         channel.offer(Resource.Loading())
 
         val subscription = this@snapshotFlow.addSnapshotListener(
-            MetadataChanges.INCLUDE
+            //MetadataChanges.INCLUDE
         ) { snapshot, error ->
             if (error != null) {
                 // Close the channel if there is error
@@ -61,9 +62,18 @@ inline fun <reified T, R> CollectionReference.snapshotFlow(
                 channel.close(CancellationException(error.message))
             } else {
                 snapshot?.let {
+                    // doc.metadata.hasPendingWrites ? "Local" : "Server";
                     if (!it.metadata.hasPendingWrites()) {
                         val results = it.toObjects(T::class.java)
-                        channel.offer(Resource.Success(results.map { result -> mapper(result) }))
+                        
+                        if (results.isEmpty()) {
+                            channel.offer(Resource.Error(ERROR_COLLECTION_EMPTY))
+                            if (!keepAliveUntilCreated) {
+                                channel.close(CancellationException(ERROR_COLLECTION_EMPTY))
+                            }
+                        } else {
+                            channel.offer(Resource.Success(results.map { result -> mapper(result) }))
+                        }
                     }
                 } ?: channel.close(CancellationException(ERROR_DOCUMENT_NOT_EXIST))
             }
@@ -74,7 +84,8 @@ inline fun <reified T, R> CollectionReference.snapshotFlow(
 }
 
 inline fun <reified T, R> DocumentReference.snapshotFlow(
-    crossinline mapper: (T) -> R
+    crossinline mapper: (T) -> R,
+    keepAliveUntilCreated: Boolean = false
 ): Flow<Resource<R>> {
     return channelFlow {
         channel.offer(Resource.Loading())
@@ -91,7 +102,9 @@ inline fun <reified T, R> DocumentReference.snapshotFlow(
 
                         if (result == null) {
                             channel.offer(Resource.Error(ERROR_DOCUMENT_NOT_EXIST))
-                            channel.close(CancellationException(ERROR_DOCUMENT_NOT_EXIST))
+                            if (!keepAliveUntilCreated) {
+                                channel.close(CancellationException(ERROR_DOCUMENT_NOT_EXIST))
+                            }
                         } else {
                             channel.offer(Resource.Success(mapper(result)))
                         }
@@ -105,7 +118,8 @@ inline fun <reified T, R> DocumentReference.snapshotFlow(
 }
 
 inline fun <reified T, R> Query.snapshotFlow(
-    crossinline mapper: (T) -> R
+    crossinline mapper: (T) -> R,
+    keepAliveUntilCreated: Boolean = false
 ): Flow<Resource<List<R>>> {
     return channelFlow {
         channel.offer(Resource.Loading())
@@ -119,7 +133,15 @@ inline fun <reified T, R> Query.snapshotFlow(
                 snapshot?.let {
                     if (!it.metadata.hasPendingWrites()) {
                         val results = it.toObjects(T::class.java)
-                        channel.offer(Resource.Success(results.map { result -> mapper(result) }))
+
+                        if (results.isEmpty()) {
+                            channel.offer(Resource.Error(ERROR_COLLECTION_EMPTY))
+                            if (!keepAliveUntilCreated) {
+                                channel.close(CancellationException(ERROR_COLLECTION_EMPTY))
+                            }
+                        } else {
+                            channel.offer(Resource.Success(results.map { result -> mapper(result) }))
+                        }
                     }
                 } ?: channel.close(CancellationException(ERROR_DOCUMENT_NOT_EXIST))
             }

@@ -48,7 +48,7 @@ class SellerFragment : Fragment() {
         viewModel.navigateToSellerDetail.observe(viewLifecycleOwner) {
             findNavController(R.id.sellerFragment)?.navigate(
                 SellerFragmentDirections.actionSellerFragmentToSellerDetailFragment(
-                    sellerDetailProperty = it
+                    sellerId = it
                 )
             )
         }

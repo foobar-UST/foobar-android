@@ -7,7 +7,7 @@
     </style>
 
     <style name="ThemeOverlay.Foobar.BottomSheetDialog.DayNight" parent="@style/ThemeOverlay.Foobar.BottomSheetDialog.v27"/>
-    <style name="ThemeOverlay.Foobar.BottomSheetDialog.v27">
+    <style name="ThemeOverlay.Foobar.BottomSheetDialog.v27" parent="ThemeOverlay.Foobar.BottomSheetDialog">
         <item name="android:navigationBarColor">?attr/colorSurface</item>
         <item name="android:windowLightNavigationBar">true</item>
     </style>

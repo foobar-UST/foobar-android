@@ -42,17 +42,13 @@ class InsertUserFakeData {
 
     @Test
     fun insert_users_fake_data() = runBlocking(Dispatchers.IO) {
-        firestore.collection(USERS_COLLECTION)
-            .document(firebaseAuth.currentUser!!.uid)
-            .set(
-                UserDetailEntity(
-                    name = "Kevin Hon",
-                    username = "kthon",
-                    email = "kthon@connect.ust.hk",
-                    phoneNum = "67681436",
-                    photoUrl = "https://firebasestorage.googleapis.com/v0/b/foobar-group-delivery-app.appspot.com/o/user_photos%2FfFFdrdmz9zeyw7rWNjhrJaXnVOh2?alt=media&token=3dad277a-bd1a-402a-87e0-d557bc5dee07"
-                )
-            )
+        val userDetail = UserDetailEntity(
+            username = "kthon",
+            email = "kthon@connect.ust.hk"
+        )
+
+        firestore.document("$USERS_COLLECTION/${firebaseAuth.currentUser!!.uid}")
+            .set(userDetail)
             .await()
 
         assertTrue(true)

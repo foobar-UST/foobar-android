@@ -67,7 +67,6 @@ class SellerItemsFragment : Fragment(), SellerItemsAdapter.SellerItemsAdapterLis
         // Control views corresponding to load states
         sellerItemsAdapter.addLoadStateListener { loadStates ->
             sellerItemsViewModel.onLoadStateChanged(loadStates.source.refresh)
-
             loadStates.anyError()?.let {
                 sellerDetailViewModel.showToastMessage(it.error.message)
             }
@@ -85,9 +84,9 @@ class SellerItemsFragment : Fragment(), SellerItemsAdapter.SellerItemsAdapterLis
     }
 
     override fun onSellerItemClicked(sellerItemBasic: SellerItemBasic) {
-        // Open item detail dialog
         sellerDetailViewModel.onShowItemDetailDialog(
-            sellerId = requireArguments().getString(ARG_SELLER_ID) ?: throw IllegalArgumentException("Seller id not found."),
+            sellerId = requireArguments().getString(ARG_SELLER_ID)
+                ?: throw IllegalArgumentException("Seller id not found."),
             itemId = sellerItemBasic.id
         )
     }

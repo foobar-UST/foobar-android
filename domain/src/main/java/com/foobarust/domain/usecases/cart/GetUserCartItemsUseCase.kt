@@ -1,6 +1,6 @@
 package com.foobarust.domain.usecases.cart
 
-import com.foobarust.domain.common.UseCaseExceptions
+import com.foobarust.domain.common.UseCaseExceptions.ERROR_USER_NOT_SIGNED_IN
 import com.foobarust.domain.di.IoDispatcher
 import com.foobarust.domain.models.cart.UserCartItem
 import com.foobarust.domain.repositories.AuthRepository
@@ -24,10 +24,10 @@ class GetUserCartItemsUseCase @Inject constructor(
 
     override fun execute(parameters: Unit): Flow<Resource<List<UserCartItem>>> = flow {
         if (!authRepository.isSignedIn()) {
-            throw Exception(UseCaseExceptions.ERROR_USER_NOT_SIGNED_IN)
+            throw Exception(ERROR_USER_NOT_SIGNED_IN)
         }
 
-        val userId = authRepository.getAuthUserId()
+        val userId = authRepository.getUserId()
 
         emitAll(cartRepository.getUserCartItemsObservable(userId))
     }

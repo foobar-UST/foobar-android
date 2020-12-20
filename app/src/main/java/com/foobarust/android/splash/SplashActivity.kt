@@ -16,7 +16,7 @@ class SplashActivity : AppCompatActivity() {
 
         // Observe for navigation
         viewModel.startNavigation.observe(this) {
-            navigateTo(destination = it, fadeAnim = true, finishEnd = true)
+            navigateTo(destination = it, fadeAnim = true, finishSelf = true)
         }
     }
 }

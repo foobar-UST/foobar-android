@@ -33,22 +33,8 @@ class CartMapper @Inject constructor() {
             itemImageUrl = entity.itemImageUrl,
             amounts = entity.amounts!!,
             totalPrice = entity.totalPrice!!,
-            updatePriceRequired = entity.updatePriceRequired ?: true,
+            available = entity.available ?: true,
             updatedAt = entity.updatedAt?.toDate()
-        )
-    }
-
-    fun toUserCartItemEntity(userCartItem: UserCartItem): UserCartItemEntity {
-        return UserCartItemEntity(
-            id = userCartItem.id,
-            itemId = userCartItem.itemId,
-            itemSellerId = userCartItem.itemSellerId,
-            itemTitle = userCartItem.itemTitle,
-            itemTitleZh = userCartItem.itemTitleZh,
-            itemPrice = userCartItem.itemPrice,
-            itemImageUrl = userCartItem.itemImageUrl,
-            totalPrice = userCartItem.totalPrice,
-            amounts = userCartItem.amounts,
         )
     }
 }

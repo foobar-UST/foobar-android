@@ -31,11 +31,11 @@ const val SETTINGS_FAVORITE = "setting_favorite"
 const val SETTINGS_ORDER_HISTORY = "settings_order_history"
 
 class SettingsViewModel @ViewModelInject constructor(
-        @ApplicationContext private val context: Context,
-        private val getIsUserSignedInUseCase: GetIsUserSignedInUseCase,
-        getAuthProfileUseCase: GetAuthProfileUseCase,
-        private val getUserDetailUseCase: GetUserDetailUseCase,
-        private val signOutUseCase: SignOutUseCase
+    @ApplicationContext private val context: Context,
+    private val getIsUserSignedInUseCase: GetIsUserSignedInUseCase,
+    getAuthProfileUseCase: GetAuthProfileUseCase,
+    private val getUserDetailUseCase: GetUserDetailUseCase,
+    private val signOutUseCase: SignOutUseCase
 ) : BaseViewModel() {
 
     private var subscribeUserDetailJob: Job? = null
@@ -54,11 +54,15 @@ class SettingsViewModel @ViewModelInject constructor(
 
     init {
         // Populate settings list
+        // Use UserDetail to display profile section when online,
+        // use AuthProfile to display profile section when offline
         getAuthProfileUseCase(Unit).onEach {
             when (it) {
                 is Resource.Success -> {
                     subscribeUserDetail()
-                    buildSettingList(SettingsProfile(username = it.data.username))
+                    buildSettingList(
+                        SettingsProfile(username = it.data.username)
+                    )
                 }
                 is Resource.Error -> {
                     unsubscribeUserDetail()

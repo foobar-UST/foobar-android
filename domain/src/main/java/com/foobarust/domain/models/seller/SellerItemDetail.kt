@@ -12,7 +12,6 @@ data class SellerItemDetail(
     val titleZh: String?,
     val description: String?,
     val descriptionZh: String?,
-    val catalogId: String,
     val price: Double,
     val imageUrl: String?,
     val count: Int,

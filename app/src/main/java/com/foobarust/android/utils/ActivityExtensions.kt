@@ -12,7 +12,7 @@ import kotlin.reflect.KClass
 fun Activity.navigateTo(
     destination: KClass<*>,
     fadeAnim: Boolean = false,
-    finishEnd: Boolean = false
+    finishSelf: Boolean = false
 ) {
     val intent = Intent(this, destination.java)
     startActivity(intent)
@@ -24,5 +24,7 @@ fun Activity.navigateTo(
         )
     }
 
-    if (finishEnd) finish()
+    if (finishSelf) {
+        finish()
+    }
 }

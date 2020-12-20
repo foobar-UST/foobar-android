@@ -5,15 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.foobarust.android.R
+import com.foobarust.android.common.FullScreenDialogFragment
 import com.foobarust.android.databinding.FragmentSellerDetailBinding
 import com.foobarust.android.utils.*
 import com.foobarust.domain.models.seller.getNormalizedTitle
 import com.google.android.material.chip.Chip
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -25,7 +26,7 @@ import kotlinx.coroutines.launch
  */
 
 @AndroidEntryPoint
-class SellerDetailFragment : DialogFragment() {
+class SellerDetailFragment : FullScreenDialogFragment() {
 
     private var binding: FragmentSellerDetailBinding by AutoClearedValue(this)
     private val viewModel: SellerDetailViewModel by viewModels()
@@ -33,7 +34,9 @@ class SellerDetailFragment : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(STYLE_NORMAL, R.style.ThemeOverlay_Foobar_Dialog_Fullscreen_DayNight)
+
+        // Receive seller id argument
+        viewModel.onFetchSellerDetail(sellerId = args.sellerId)
     }
 
     override fun onCreateView(
@@ -42,8 +45,6 @@ class SellerDetailFragment : DialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSellerDetailBinding.inflate(inflater, container, false).apply {
-            // Load cached data
-            sellerDetailProperty = args.sellerDetailProperty
             viewModel = this@SellerDetailFragment.viewModel
             lifecycleOwner = viewLifecycleOwner
         }
@@ -52,23 +53,22 @@ class SellerDetailFragment : DialogFragment() {
         // Issue: https://github.com/material-components/material-components-android/issues/1310
         ViewCompat.setOnApplyWindowInsetsListener(binding.collapsingToolbarLayout, null)
 
-        // Receive seller id argument
-        viewModel.onFetchSellerDetail(sellerId = args.sellerDetailProperty.id)
-
         // Set up tab layout and view pager when seller detail is successfully fetched
-        viewModel.sellerCatalogs.observe(viewLifecycleOwner) {
-            val catalogPagerAdapter = SellerCatalogPagerAdapter(
-                fragmentManager = childFragmentManager,
-                lifecycle = viewLifecycleOwner.lifecycle,
-                sellerId = args.sellerDetailProperty.id,
-                sellerCatalogs = it
-            )
+        viewModel.sellerDetailWithCatalogs.observe(viewLifecycleOwner) { sellerDetailWithCatalogs ->
+            sellerDetailWithCatalogs?.let {
+                val catalogPagerAdapter = SellerCatalogPagerAdapter(
+                    fragmentManager = childFragmentManager,
+                    lifecycle = viewLifecycleOwner.lifecycle,
+                    sellerId = args.sellerId,
+                    sellerCatalogs = it.catalogs
+                )
 
-            binding.itemsViewPager.adapter = catalogPagerAdapter
+                binding.itemsViewPager.adapter = catalogPagerAdapter
 
-            TabLayoutMediator(binding.categoryTabLayout, binding.itemsViewPager) { tab, position ->
-                tab.text = it[position].getNormalizedTitle()
-            }.attach()
+                TabLayoutMediator(binding.categoryTabLayout, binding.itemsViewPager) { tab, position ->
+                    tab.text = it.catalogs[position].getNormalizedTitle()
+                }.attach()
+            }
         }
 
         // Show toast message
@@ -76,8 +76,13 @@ class SellerDetailFragment : DialogFragment() {
             showShortToast(it)
         }
 
+        // Retry
+        binding.loadErrorLayout.retryButton.setOnClickListener {
+            viewModel.onFetchSellerDetail(sellerId = args.sellerId)
+        }
+
         // Load at most two consecutive pages for view pager
-        binding.itemsViewPager.offscreenPageLimit = 1
+        binding.itemsViewPager.offscreenPageLimit = 2
 
         // Show toolbar title only when collapsed
         viewLifecycleOwner.lifecycleScope.launch {
@@ -99,7 +104,7 @@ class SellerDetailFragment : DialogFragment() {
         viewModel.navigateToSellerMisc.observe(viewLifecycleOwner) {
             findNavController(R.id.sellerDetailFragment)?.navigate(
                 SellerDetailFragmentDirections.actionSellerDetailFragmentToSellerMiscFragment(
-                    sellerId = args.sellerDetailProperty.id
+                    sellerId = args.sellerId
                 )
             )
         }
@@ -117,14 +122,11 @@ class SellerDetailFragment : DialogFragment() {
                 Chip(requireContext(), null, R.attr.sellerActionChipStyle).apply {
                     hide()
                     text = action.title
-                    chipIconTint = requireContext().buildColorStateList(action.colorRes)
-
+                    chipIconTint = requireContext().getColorStateListFrom(action.colorRes)
                     action.drawableRes?.let {
                         chipIcon = requireContext().getDrawableOrNull(it)
                     }
-
                     setOnClickListener { setupChipActions(action.id) }
-
                     // Fix chip flicker when changing typeface
                     // See: https://github.com/material-components/material-components-android/issues/675
                     post { show() }
@@ -134,15 +136,10 @@ class SellerDetailFragment : DialogFragment() {
             chips.forEach { binding.actionChipGroup.addView(it) }
         }
 
-        // Cart bottom bar
-        /*
-        binding.cartBottomBar.cartBottomBarCardView.setOnClickListener {
-            findNavController().navigate(
-                NavigationSellerDirections.actionGlobalCartFragment()
-            )
+        // SnackBar
+        viewModel.showSnackBarMessage.observe(viewLifecycleOwner) {
+            showMessageSnackBar(message = it)
         }
-
-         */
 
         return binding.root
     }
@@ -153,5 +150,9 @@ class SellerDetailFragment : DialogFragment() {
             actionId.contains(SELLER_DETAIL_ACTION_RATING) -> showShortToast("tag clicked.")
             else -> throw IllegalStateException("Invalid chip action id $actionId")
         }
+    }
+
+    private fun showMessageSnackBar(message: String) {
+        Snackbar.make(binding.coordinatorLayout, message, Snackbar.LENGTH_SHORT).show()
     }
 }

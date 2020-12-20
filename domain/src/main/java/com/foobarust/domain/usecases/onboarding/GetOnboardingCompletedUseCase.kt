@@ -16,6 +16,6 @@ class GetOnboardingCompletedUseCase @Inject constructor(
 ) : CoroutineUseCase<Unit, Boolean>(coroutineDispatcher) {
 
     override suspend fun execute(parameters: Unit): Boolean {
-        return userRepository.getIsOnboardingCompleted()
+        return userRepository.getOnboardingCompleted()
     }
 }

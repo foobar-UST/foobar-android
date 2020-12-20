@@ -8,18 +8,15 @@ import androidx.lifecycle.viewModelScope
 import com.foobarust.android.common.BaseViewModel
 import com.foobarust.android.states.UiFetchState
 import com.foobarust.android.utils.SingleLiveEvent
-import com.foobarust.domain.models.cart.UserCartItem
 import com.foobarust.domain.models.seller.SellerItemDetail
 import com.foobarust.domain.states.Resource
+import com.foobarust.domain.usecases.cart.AddUserCartItemParameters
 import com.foobarust.domain.usecases.cart.AddUserCartItemUseCase
 import com.foobarust.domain.usecases.seller.GetSellerItemDetailParameters
 import com.foobarust.domain.usecases.seller.GetSellerItemDetailUseCase
-import kotlinx.coroutines.channels.ConflatedBroadcastChannel
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
-import java.util.*
 
 /**
  * Created by kevin on 10/13/20
@@ -30,100 +27,89 @@ class SellerItemDetailViewModel @ViewModelInject constructor(
     private val addUserCartItemUseCase: AddUserCartItemUseCase
 ) : BaseViewModel() {
 
-    private val itemDetailChannel = ConflatedBroadcastChannel<SellerItemDetail?>()
-    private val amountInputChannel = ConflatedBroadcastChannel(1)
-    private val isSubmittingToCartChannel = ConflatedBroadcastChannel(false)
+    lateinit var property: SellerItemDetailProperty
 
-    lateinit var sellerId: String
+    private val _itemDetail = MutableStateFlow<SellerItemDetail?>(null)
+    val itemDetail: LiveData<SellerItemDetail?>
+        get() = _itemDetail.asStateFlow().asLiveData(viewModelScope.coroutineContext)
 
-    val itemDetail: LiveData<SellerItemDetail?> = itemDetailChannel.asFlow()
-        .asLiveData(viewModelScope.coroutineContext)
+    private val _amountsInput = MutableStateFlow(1)
+    val amountsInput: LiveData<Int>
+        get() = _amountsInput.asStateFlow().asLiveData(viewModelScope.coroutineContext)
 
-    val amountInput: LiveData<Int> = amountInputChannel.asFlow()
-        .asLiveData(viewModelScope.coroutineContext)
+    private val _isSubmitting = MutableStateFlow(false)
+    val isSubmitting: LiveData<Boolean>
+        get() = _isSubmitting.asStateFlow().asLiveData(viewModelScope.coroutineContext)
 
-    val isSubmittingToCart: LiveData<Boolean> = isSubmittingToCartChannel.asFlow()
-        .asLiveData(viewModelScope.coroutineContext)
-
-    val finalPrice: LiveData<Double> = itemDetailChannel.asFlow()
-        .combine(amountInputChannel.asFlow()) { itemDetail, amount ->
+    val finalPrice: LiveData<Double> = _itemDetail.asStateFlow()
+        .combine(_amountsInput.asStateFlow()) { itemDetail, amount ->
             itemDetail?.let { it.price * amount } ?: 0.toDouble()
         }
         .asLiveData(viewModelScope.coroutineContext)
 
     private val _dismissDialog = SingleLiveEvent<Unit>()
-    val closeDialog: LiveData<Unit>
+    val dismissDialog: LiveData<Unit>
         get() = _dismissDialog
 
     fun onFetchItemDetail(property: SellerItemDetailProperty) = viewModelScope.launch {
-        sellerId = property.sellerId
+        this@SellerItemDetailViewModel.property = property
 
-        when (val resource = getSellerItemDetailUseCase(
-            GetSellerItemDetailParameters(
-                sellerId = property.sellerId,
-                itemId = property.itemId
-            )
-        )) {
+        val parameters = GetSellerItemDetailParameters(
+            sellerId = property.sellerId,
+            itemId = property.itemId
+        )
+
+        when (val resource = getSellerItemDetailUseCase(parameters)) {
             is Resource.Success -> {
-                itemDetailChannel.offer(resource.data)
+                _itemDetail.value = resource.data
                 setUiFetchState(UiFetchState.Success)
             }
             is Resource.Error -> {
-                setUiFetchState(UiFetchState.Error(resource.message))
                 _dismissDialog.value = Unit
+                setUiFetchState(UiFetchState.Error(resource.message))
             }
             is Resource.Loading -> setUiFetchState(UiFetchState.Loading)
         }
     }
 
     fun onAmountIncremented() {
-        amountInputChannel.run {
-            // TODO: set maximum amount
-            offer(value + 1)
-        }
+        // TODO: set maximum amount
+        _amountsInput.value++
     }
 
     fun onAmountDecremented() {
-        amountInputChannel.run {
-            if (value > 1) offer(value - 1)
+        if (_amountsInput.value > 1) {
+            _amountsInput.value--
         }
     }
 
     fun onSubmitItemToCart() = viewModelScope.launch {
-        // TODO: Migrate to backend, also fix id
-        itemDetailChannel.valueOrNull?.let { itemDetail ->
-            isSubmittingToCartChannel.offer(true)
+        _itemDetail.value?.let { itemDetail ->
+            _isSubmitting.value = true
 
-            val newCartItem = UserCartItem(
-                id = UUID.randomUUID().toString(),
+            val params = AddUserCartItemParameters(
+                sellerId = property.sellerId,
                 itemId = itemDetail.id,
-                itemSellerId = sellerId,
-                itemTitle = itemDetail.title,
-                itemTitleZh = itemDetail.titleZh,
-                itemPrice = itemDetail.price,
-                itemImageUrl = itemDetail.imageUrl,
-                amounts = amountInputChannel.value,
-                totalPrice = itemDetail.price * amountInputChannel.value,
-                updatePriceRequired = true,
-                updatedAt = null
+                amounts = _amountsInput.value
             )
-
-            when (val result = addUserCartItemUseCase(newCartItem)) {
-                is Resource.Success -> {
-                    _dismissDialog.value = Unit
-                    isSubmittingToCartChannel.offer(false)
-                    showToastMessage("Added to Cart.")
+            addUserCartItemUseCase(params).collect {
+                when (it) {
+                    is Resource.Success -> {
+                        _dismissDialog.value = Unit
+                        _isSubmitting.value = false
+                        showToastMessage("Added to Cart.")
+                    }
+                    is Resource.Error -> {
+                        _isSubmitting.value = false
+                        showToastMessage(it.message)
+                    }
+                    is Resource.Loading -> Unit
                 }
-                is Resource.Error -> {
-                    isSubmittingToCartChannel.offer(false)
-                    showToastMessage(result.message)
-                }
-
             }
         }
     }
 
-    fun isSubmittingToCart(): Boolean = isSubmittingToCartChannel.value
+    //fun isSubmittingToCart(): Boolean = _isSubmitting.value
 }
 
 @Parcelize

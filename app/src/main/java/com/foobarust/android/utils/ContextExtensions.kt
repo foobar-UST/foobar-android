@@ -82,13 +82,6 @@ fun Context.getColorCompat(@ColorRes color: Int): Int {
     return ContextCompat.getColor(this, color)
 }
 
-fun Context.getColorStateListCompat(@ColorRes color: Int): ColorStateList? {
+fun Context.getColorStateListFrom(@ColorRes color: Int): ColorStateList? {
     return ContextCompat.getColorStateList(this, color)
-}
-
-fun Context.buildColorStateList(@ColorRes color: Int): ColorStateList {
-    val states = arrayOf(intArrayOf(android.R.attr.state_enabled))
-    val colors = intArrayOf(getColorCompat(color))
-
-    return ColorStateList(states, colors)
 }

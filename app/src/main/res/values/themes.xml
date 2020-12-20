@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <!-- Full screen dialog fragment -->
     <style name="ThemeOverlay.Foobar.Dialog.Fullscreen.DayNight.Search" parent="ThemeOverlay.Foobar.Dialog.Fullscreen.DayNight">
         <item name="android:windowSoftInputMode">stateAlwaysVisible</item>
         <item name="android:windowBackground">?attr/scrimBackground</item>
@@ -13,12 +11,10 @@
         <item name="android:windowBackground">?android:colorBackground</item>
     </style>
 
-    <!-- Alert dialog -->
     <style name="ThemeOverlay.Foobar.AlertDialog" parent="@style/ThemeOverlay.MaterialComponents.MaterialAlertDialog">
         <item name="dialogCornerRadius">@dimen/medium_component_corner_radius</item>
     </style>
 
-    <!-- Bottom sheet dialog -->
     <style name="ThemeOverlay.Foobar.BottomSheetDialog.DayNight" parent="@style/ThemeOverlay.Foobar.BottomSheetDialog"/>
     <style name="ThemeOverlay.Foobar.BottomSheetDialog" parent="@style/ThemeOverlay.MaterialComponents.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/Widget.Foobar.BottomSheet</item>
@@ -27,21 +23,17 @@
         <!--item name="android:windowBackground">?attr/scrimBackground</item-->
     </style>
 
-    <!-- Onboarding -->
     <style name="Theme.Foobar.Onboarding.DayNight" parent="Theme.Foobar.Onboarding"/>
     <style name="Theme.Foobar.Onboarding" parent="Theme.Foobar"/>
 
-    <!-- Auth -->
     <style name="Theme.Foobar.Auth.DayNight" parent="Theme.Foobar.Auth"/>
     <style name="Theme.Foobar.Auth" parent="Theme.Foobar"/>
 
-    <!-- Splash activity -->
     <style name="Theme.Foobar.Splash.DayNight" parent="Theme.Foobar.Splash"/>
     <style name="Theme.Foobar.Splash" parent="Theme.Foobar">
         <item name="android:windowBackground">@drawable/splash_background</item>
     </style>
 
-    <!-- Main theme -->
     <style name="Theme.Foobar.DayNight" parent="Theme.Foobar"/>
     <style name="Theme.Foobar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/maroon_500</item>
@@ -83,7 +75,6 @@
 
         <item name="scrimBackground">@color/white_alpha_20</item>
 
-        <!-- Theme Overlay -->
         <item name="bottomSheetDialogTheme">@style/ThemeOverlay.Foobar.BottomSheetDialog.DayNight</item>
         <item name="alertDialogTheme">@style/ThemeOverlay.Foobar.AlertDialog</item>
 

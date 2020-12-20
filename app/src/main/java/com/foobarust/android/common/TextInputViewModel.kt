@@ -3,21 +3,38 @@ package com.foobarust.android.common
 import android.os.Parcelable
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
+import com.foobarust.domain.usecases.common.GetFormattedPhoneNumUseCase
 import kotlinx.parcelize.Parcelize
 
 class TextInputViewModel @ViewModelInject constructor() : ViewModel() {
 
-    var inputValue: String? = null
+    private var _textInputProperty: TextInputProperty? = null
+    var inputValue: String = ""
+
+    fun onUpdateTextInputProperty(property: TextInputProperty) {
+        _textInputProperty = property
+    }
+
+    fun isInputValid(): Boolean {
+        return when (_textInputProperty?.type) {
+            TextInputType.NORMAL -> inputValue.isNotBlank()
+            TextInputType.NAME -> inputValue.isNotBlank()
+            TextInputType.PHONE_NUM -> inputValue.length == GetFormattedPhoneNumUseCase.LENGTH
+            null -> false
+        }
+    }
 }
 
 @Parcelize
 data class TextInputProperty(
-    val editId: String,
+    val id: String,
     val title: String,
-    var value: String?,
-    val type: TextInputType,
+    var value: String? = null,
+    val type: TextInputType
 ) : Parcelable
 
 enum class TextInputType {
-    NORMAL, NAME, PHONE_NUM
+    NORMAL,                 // Normal text
+    NAME,                   // Capitalize words
+    PHONE_NUM               // 8 digits
 }

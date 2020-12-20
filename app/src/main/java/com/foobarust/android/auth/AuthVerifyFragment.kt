@@ -64,7 +64,7 @@ class AuthVerifyFragment : Fragment(), OnTextViewClickableSpanListener {
 
     override fun onClickableSpanEndClicked(view: View) {
         when (view.id) {
-            R.id.no_email_text_view -> viewModel.requestAuthEmail()
+            R.id.no_email_text_view -> viewModel.onRequestAuthEmail()
         }
     }
 }

@@ -14,6 +14,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.fragment.findNavController
 import com.foobarust.android.R
+import com.foobarust.android.common.TextInputType.*
 import com.foobarust.android.databinding.FragmentProfileBinding
 import com.foobarust.android.main.MainViewModel
 import com.foobarust.android.profile.ProfileListModel.ProfileEditModel
@@ -26,15 +27,15 @@ import dagger.hilt.android.AndroidEntryPoint
 class ProfileFragment : Fragment(), ProfileAdapter.ProfileAdapterListener {
 
     private var binding: FragmentProfileBinding by AutoClearedValue(this)
-    private var currentEditResultObserver: LifecycleEventObserver? = null
     private val mainViewModel: MainViewModel by activityViewModels()
     private val profileViewModel: ProfileViewModel by viewModels()
+    private var textInputResultObserver: LifecycleEventObserver? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentProfileBinding.inflate(inflater, container, false).apply {
             viewModel = this@ProfileFragment.profileViewModel
             lifecycleOwner = viewLifecycleOwner
@@ -49,8 +50,18 @@ class ProfileFragment : Fragment(), ProfileAdapter.ProfileAdapterListener {
             setHasFixedSize(true)
         }
 
-        profileViewModel.profileItems.observe(viewLifecycleOwner) {
+        profileViewModel.profileListModels.observe(viewLifecycleOwner) {
             profileAdapter.submitList(it)
+        }
+
+        // Navigate to text input bottom sheet
+        profileViewModel.navigateToTextInput.observe(viewLifecycleOwner) {
+            // Observe for edit result once the text input dialog is opened
+            subscribeTextInputResult(editItemId = it.id)
+
+            findNavController(R.id.profileFragment)?.navigate(
+                ProfileFragmentDirections.actionProfileFragmentToTextInputDialog(it)
+            )
         }
 
         // Show toast message
@@ -58,16 +69,9 @@ class ProfileFragment : Fragment(), ProfileAdapter.ProfileAdapterListener {
             showShortToast(it)
         }
 
-        // Navigate to text input bottom sheet
-        profileViewModel.navigateToTextInput.observe(viewLifecycleOwner) {
-            findNavController(R.id.profileFragment)?.navigate(
-                ProfileFragmentDirections.actionProfileFragmentToTextInputDialog(it)
-            )
-        }
-
-        // Trigger reload on user detail
+        // Retry
         binding.loadErrorLayout.retryButton.setOnClickListener {
-            profileViewModel.fetchUserDetail()
+            profileViewModel.onFetchUserDetail()
         }
 
         return binding.root
@@ -80,7 +84,7 @@ class ProfileFragment : Fragment(), ProfileAdapter.ProfileAdapterListener {
         val navBackStackEntry = findNavController().getBackStackEntry(R.id.profileFragment)
         viewLifecycleOwner.lifecycle.addObserver(LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_DESTROY) {
-                removeEditResultObserver(navBackStackEntry)
+                unsubscribeTextInputResult(navBackStackEntry)
             }
         })
     }
@@ -88,45 +92,55 @@ class ProfileFragment : Fragment(), ProfileAdapter.ProfileAdapterListener {
     override fun onProfileAvatarClicked() {
         requireActivity().registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             uri?.let {
-                mainViewModel.updateUserPhoto(it.toString())
+                mainViewModel.onUpdateUserPhoto(it.toString())
             }
         }.launch("image/*")
     }
 
     override fun onProfileEditItemClicked(editModel: ProfileEditModel) {
-        subscribeForEditResult(editId = editModel.id)
         profileViewModel.onNavigateToTextInput(editModel)
     }
 
-    private fun subscribeForEditResult(editId: String) {
+    private fun subscribeTextInputResult(editItemId: String) {
+        // After a configuration change or process death, the currentBackStackEntry
+        // points to the dialog destination, so you must use getBackStackEntry()
+        // with the specific ID of your destination to ensure we always
+        // get the right NavBackStackEntry
         val navBackStackEntry = findNavController().getBackStackEntry(R.id.profileFragment)
-        removeEditResultObserver(navBackStackEntry)
 
-        // Attach new observer
-        currentEditResultObserver = LifecycleEventObserver { _, event ->
+        // Remove existing observer
+        unsubscribeTextInputResult(navBackStackEntry)
+
+        // Attach new result observer
+        textInputResultObserver = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
-                if (navBackStackEntry.savedStateHandle.contains(editId)) {
-                    val result = navBackStackEntry.savedStateHandle.get<String>(editId)
-                    result?.let { updateEditResult(editId, it) }
-
-                    navBackStackEntry.savedStateHandle.remove<String>(editId)
+                if (navBackStackEntry.savedStateHandle.contains(editItemId)) {
+                    val result = navBackStackEntry.savedStateHandle.get<String>(editItemId)
+                    result?.let {
+                        updateInputResult(
+                            editItemId = editItemId,
+                            result = it
+                        )
+                    }
+                    navBackStackEntry.savedStateHandle.remove<String>(editItemId)
                 }
 
-                removeEditResultObserver(navBackStackEntry)
+                // Remove observer after obtaining the result
+                unsubscribeTextInputResult(navBackStackEntry)
             }
         }.also {
             navBackStackEntry.lifecycle.addObserver(it)
         }
     }
 
-    private fun removeEditResultObserver(navBackStackEntry: NavBackStackEntry) {
-        currentEditResultObserver?.let {
+    private fun unsubscribeTextInputResult(navBackStackEntry: NavBackStackEntry) {
+        textInputResultObserver?.let {
             navBackStackEntry.lifecycle.removeObserver(it)
         }
     }
 
-    private fun updateEditResult(editId: String, result: String) {
-        when (editId) {
+    private fun updateInputResult(editItemId: String, result: String) {
+        when (editItemId) {
             EDIT_PROFILE_NAME -> profileViewModel.updateUserName(result)
             EDIT_PROFILE_PHONE_NUMBER -> profileViewModel.updateUserPhoneNum(result)
         }

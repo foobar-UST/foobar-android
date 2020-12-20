@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="property"
+            type="com.foobarust.android.cart.CartTimeoutProperty" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/spacing_large"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/cart_timeout_dialog_title"
+            android:textAppearance="?attr/textAppearanceHeadline6"
+            android:lineSpacingMultiplier="1.2"/>
+
+        <TextView
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:gravity="center_horizontal"
+            android:text="@{@string/cart_timeout_dialog_message(property.cartItemsCount)}"
+            android:textColor="@color/material_on_surface_emphasis_medium"
+            android:textAppearance="?attr/textAppearanceBody2"
+            tools:text="You still have 6 items left in your cart." />
+
+        <Button
+            android:id="@+id/continue_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_mxlarge"
+            android:text="@string/cart_timeout_dialog_button_continue"/>
+
+        <Button
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:id="@+id/clear_cart_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_xmedium"
+            android:text="@string/cart_timeout_dialog_button_clear_cart"/>
+
+    </LinearLayout>
+
+</layout>

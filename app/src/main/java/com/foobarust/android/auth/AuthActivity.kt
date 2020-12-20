@@ -39,7 +39,10 @@ class AuthActivity : AppCompatActivity() {
         // navigate to MainActivity
         viewModel.signInState.observe(this) { state ->
             if (state == COMPLETED) {
-                navigateTo(destination = MainActivity::class, finishEnd = true)
+                navigateTo(
+                    destination = MainActivity::class,
+                    finishSelf = true
+                )
             }
         }
 
@@ -58,7 +61,7 @@ class AuthActivity : AppCompatActivity() {
         val emailLink = intent?.data?.toString()
 
         emailLink?.let {
-            viewModel.verifyEmailLinkAndSignIn(it)
+            viewModel.onVerifyEmailLinkAndSignIn(it)
         }
     }
 }

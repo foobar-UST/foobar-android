@@ -4,12 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.foobarust.android.R
+import com.foobarust.android.common.FullScreenDialogFragment
 import com.foobarust.android.databinding.FragmentCartBinding
-import com.foobarust.android.sellerdetail.SellerDetailProperty
+import com.foobarust.android.main.MainViewModel
 import com.foobarust.android.utils.AutoClearedValue
 import com.foobarust.android.utils.findNavController
 import com.foobarust.android.utils.firstItemInsertedScrollTop
@@ -25,17 +26,16 @@ import kotlinx.coroutines.launch
  */
 
 @AndroidEntryPoint
-class CartFragment : DialogFragment(), CartAdapter.CartAdapterListener {
+class CartFragment : FullScreenDialogFragment(), CartAdapter.CartAdapterListener {
 
     private var binding: FragmentCartBinding by AutoClearedValue(this)
-    private val viewModel: CartViewModel by viewModels()
+    private val mainViewModel: MainViewModel by activityViewModels()
+    private val cartViewModel: CartViewModel by viewModels()
     private var syncActionSnackBar: Snackbar? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(STYLE_NORMAL, R.style.ThemeOverlay_Foobar_Dialog_Fullscreen_DayNight)
-
-        viewModel.onFetchCartItems()
+        cartViewModel.onFetchCartItems()
     }
 
     override fun onCreateView(
@@ -44,7 +44,7 @@ class CartFragment : DialogFragment(), CartAdapter.CartAdapterListener {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentCartBinding.inflate(inflater, container, false).apply {
-            viewModel = this@CartFragment.viewModel
+            viewModel = this@CartFragment.cartViewModel
             lifecycleOwner = viewLifecycleOwner
         }
 
@@ -56,7 +56,7 @@ class CartFragment : DialogFragment(), CartAdapter.CartAdapterListener {
             setHasFixedSize(true)
         }
 
-        viewModel.cartListModels.observe(viewLifecycleOwner) {
+        cartViewModel.cartListModels.observe(viewLifecycleOwner) {
             cartAdapter.submitList(it)
         }
 
@@ -69,7 +69,7 @@ class CartFragment : DialogFragment(), CartAdapter.CartAdapterListener {
         binding.toolbar.setNavigationOnClickListener { dismiss() }
 
         // Show sync snack bar
-        viewModel.showSyncAction.observe(viewLifecycleOwner) { syncRequired ->
+        cartViewModel.showSyncRequiredAction.observe(viewLifecycleOwner) { syncRequired ->
             if (syncRequired) {
                 showSyncRequiredSnackBar()
             } else {
@@ -78,13 +78,18 @@ class CartFragment : DialogFragment(), CartAdapter.CartAdapterListener {
         }
 
         // Show cart timeout snack bar
-        viewModel.showCartTimeoutMessage.observe(viewLifecycleOwner) {
+        cartViewModel.showTimeoutMessage.observe(viewLifecycleOwner) {
             showCartTimeoutSnackBar()
         }
 
         // Toast
-        viewModel.toastMessage.observe(viewLifecycleOwner) {
+        cartViewModel.toastMessage.observe(viewLifecycleOwner) {
             showShortToast(it)
+        }
+
+        // SnackBar
+        cartViewModel.showSnackBarMessage.observe(viewLifecycleOwner) {
+            showMessageSnackBar(message = it)
         }
 
         return binding.root
@@ -97,9 +102,7 @@ class CartFragment : DialogFragment(), CartAdapter.CartAdapterListener {
 
     override fun onNavigateToSellerDetail(sellerId: String) {
         findNavController(R.id.cartFragment)?.navigate(
-            CartFragmentDirections.actionCartFragmentToSellerDetailFragment(
-                sellerDetailProperty = SellerDetailProperty(id = sellerId)
-            )
+            CartFragmentDirections.actionCartFragmentToSellerDetailFragment(sellerId)
         )
     }
 
@@ -110,7 +113,7 @@ class CartFragment : DialogFragment(), CartAdapter.CartAdapterListener {
     }
 
     override fun onRemoveCartItem(userCartItem: UserCartItem) {
-        viewModel.onRemoveCartItem(userCartItem)
+        cartViewModel.onRemoveCartItem(userCartItem)
     }
 
     override fun onClearCart() {
@@ -118,7 +121,7 @@ class CartFragment : DialogFragment(), CartAdapter.CartAdapterListener {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(getString(R.string.cart_clear_cart_dialog_title))
             .setMessage(getString(R.string.cart_clear_Cart_dialog_message))
-            .setPositiveButton(android.R.string.ok) { _, _ -> viewModel.onClearCart() }
+            .setPositiveButton(android.R.string.ok) { _, _ -> mainViewModel.onClearUsersCart() }
             .setNegativeButton(android.R.string.cancel) { dialog, _ -> dialog.dismiss() }
             .show()
     }
@@ -134,7 +137,7 @@ class CartFragment : DialogFragment(), CartAdapter.CartAdapterListener {
             Snackbar.LENGTH_INDEFINITE
         ).apply {
             setAction(R.string.cart_sync_required_action_refresh) {
-                // TODO: sync action
+                cartViewModel.onSyncUserCart()
                 dismiss()
             }
             show()
@@ -152,5 +155,9 @@ class CartFragment : DialogFragment(), CartAdapter.CartAdapterListener {
     private fun hideSyncRequiredSnackBar() {
         syncActionSnackBar?.dismiss()
         syncActionSnackBar = null
+    }
+
+    private fun showMessageSnackBar(message: String) {
+        Snackbar.make(binding.coordinatorLayout, message, Snackbar.LENGTH_SHORT).show()
     }
 }

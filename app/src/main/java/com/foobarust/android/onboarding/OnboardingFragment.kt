@@ -16,15 +16,15 @@ private const val ONBOARDING_PROPERTY = "onboarding_property"
 class OnboardingFragment : Fragment() {
 
     private var binding: FragmentOnboardingBinding by AutoClearedValue(this)
-
     private val viewModel: OnboardingViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val property = requireArguments().getParcelable<OnboardingProperty>(ONBOARDING_PROPERTY)!!
+    ): View {
+        val property = requireArguments().getParcelable<OnboardingProperty>(ONBOARDING_PROPERTY) ?:
+            throw IllegalArgumentException("Onboarding property not found.")
 
         binding = FragmentOnboardingBinding.inflate(inflater, container, false).apply {
             lifecycleOwner = viewLifecycleOwner
@@ -41,10 +41,10 @@ class OnboardingFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(onboardingProperty: OnboardingProperty): OnboardingFragment {
+        fun newInstance(property: OnboardingProperty): OnboardingFragment {
             return OnboardingFragment().apply {
                 arguments = Bundle().apply {
-                    putParcelable(ONBOARDING_PROPERTY, onboardingProperty)
+                    putParcelable(ONBOARDING_PROPERTY, property)
                 }
             }
         }

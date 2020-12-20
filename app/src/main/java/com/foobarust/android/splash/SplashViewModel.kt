@@ -57,8 +57,14 @@ class SplashViewModel @ViewModelInject constructor(
 
             // Navigate to MainActivity if onboarding has been completed.
             // Otherwise, navigate to OnboardingActivity to complete the onboarding process.
-            when (getOnboardingCompletedUseCase(Unit)) {
-                is Resource.Success -> _startNavigation.value = MainActivity::class
+            when (val result = getOnboardingCompletedUseCase(Unit)) {
+                is Resource.Success -> {
+                    _startNavigation.value = if (result.data) {
+                        MainActivity::class
+                    } else {
+                        OnboardingActivity::class
+                    }
+                }
                 is Resource.Error -> _startNavigation.value = OnboardingActivity::class
                 is Resource.Loading -> Unit
             }

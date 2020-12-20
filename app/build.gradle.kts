@@ -64,7 +64,6 @@ android {
         val androidTest by getting
         test.java.srcDirs("src/sharedTest/java")
         androidTest.java.srcDirs("src/sharedTest/java")
-
          */
     }
 }
@@ -72,16 +71,13 @@ android {
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     implementation(project(":data"))
-    api(project(":domain"))
+    implementation(project(":domain"))
 
-    // Kotlin
     implementation(Dependencies.KOTLIN_STDLIB)
     implementation(Dependencies.KOTLIN_SERIALIZATION)
     implementation(Dependencies.COROUTINE_CORE)
     implementation(Dependencies.COROUTINE_ANDROID)
     implementation(Dependencies.COROUTINE_PLAY_SERVICES)
-
-    // Android
     implementation(Dependencies.CORE)
     implementation(Dependencies.APPCOMPAT)
     implementation(Dependencies.CONSTRAINT_LAYOUT)
@@ -98,19 +94,12 @@ dependencies {
     implementation(Dependencies.HILT_VIEWMODEL)
     implementation(Dependencies.PAGING_RUNTIME)
     implementation(Dependencies.PREFERENCES)
-    //implementation(Dependencies.WORK)
     implementation(Dependencies.SWIPE_REFRESH_LAYOUT)
     implementation(Dependencies.BROWSER)
-
-    // Firebase
     implementation(Dependencies.FIREBASE_CRASHLYTICS)
     implementation(Dependencies.FIREBASE_MESSAGING)
     implementation(Dependencies.FIREBASE_ANALYTICS)
-
-    // Play Services
     implementation(Dependencies.PLAY_SERVICES_MAP)
-
-    // Others
     implementation(Dependencies.BANNER_VIEW_PAGER)
     implementation(Dependencies.MATERIAL)
     implementation(Dependencies.GLIDE)
@@ -141,7 +130,5 @@ dependencies {
 
     kaptAndroidTest(Annotation.HILT_ANDROID_COMPILER)
 
-
-    // Android Test Annotation Processors
     androidTestAnnotationProcessor(Annotation.HILT_ANDROID_COMPILER)
 }

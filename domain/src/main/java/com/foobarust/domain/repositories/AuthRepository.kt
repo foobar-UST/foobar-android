@@ -6,13 +6,17 @@ import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
 
-    fun getAuthRequestedEmail(): Flow<Resource<String?>>
+    suspend fun getAuthRequestedEmail(): String
 
-    suspend fun updateAuthRequestedEmail(email: String?)
+    suspend fun updateAuthRequestedEmail(email: String)
+
+    suspend fun removeAuthRequestedEmail()
 
     suspend fun isSignedIn(): Boolean
 
-    suspend fun getAuthUserId(): String
+    suspend fun getUserId(): String
+
+    suspend fun getIdToken(): String
 
     fun getAuthProfileObservable(): Flow<Resource<AuthProfile>>
 

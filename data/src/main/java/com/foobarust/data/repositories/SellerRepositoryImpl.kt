@@ -9,13 +9,11 @@ import com.foobarust.data.common.Constants.SELLERS_COLLECTION
 import com.foobarust.data.common.Constants.SELLER_CATALOG_AVAILABLE_FIELD
 import com.foobarust.data.common.Constants.SELLER_ITEMS_SUB_COLLECTION
 import com.foobarust.data.mappers.SellerMapper
-import com.foobarust.data.pagesource.SellerBasicPagingSource
-import com.foobarust.data.pagesource.SellerItemsPagingSource
+import com.foobarust.data.paging.SellerBasicsPagingSource
+import com.foobarust.data.paging.SellerItemBasicsPagingSource
 import com.foobarust.data.utils.getAwaitResult
-import com.foobarust.data.utils.snapshotFlow
 import com.foobarust.domain.models.seller.*
 import com.foobarust.domain.repositories.SellerRepository
-import com.foobarust.domain.states.Resource
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -40,7 +38,7 @@ class SellerRepositoryImpl @Inject constructor(
                 enablePlaceholders = false
             ),
             pagingSourceFactory = {
-                SellerBasicPagingSource(firestore, sellerType, sellerMapper)
+                SellerBasicsPagingSource(firestore, sellerType, sellerMapper)
             }
         ).flow
     }
@@ -57,12 +55,12 @@ class SellerRepositoryImpl @Inject constructor(
             .getAwaitResult(sellerMapper::toSellerDetail)
     }
 
-    override fun getSellerCatalogsObservable(sellerId: String): Flow<Resource<List<SellerCatalog>>> {
-        return firestore.collection(SELLERS_COLLECTION)
-            .document(sellerId)
-            .collection(SELLERS_CATALOGS_SUB_COLLECTION)
+    override suspend fun getSellerCatalogs(sellerId: String): List<SellerCatalog> {
+        return firestore.collection(
+            "$SELLERS_COLLECTION/$sellerId/$SELLERS_CATALOGS_SUB_COLLECTION"
+        )
             .whereEqualTo(SELLER_CATALOG_AVAILABLE_FIELD, true)     // Get available catalogs only
-            .snapshotFlow(sellerMapper::toSellerCatalog)
+            .getAwaitResult(sellerMapper::toSellerCatalog)
     }
 
     override fun getSellerItems(sellerId: String, catalogId: String): Flow<PagingData<SellerItemBasic>> {
@@ -72,7 +70,7 @@ class SellerRepositoryImpl @Inject constructor(
                 pageSize = SELLER_ITEMS_LIST_PAGE_SIZE
             ),
             pagingSourceFactory = {
-                SellerItemsPagingSource(firestore, sellerMapper, sellerId, catalogId)
+                SellerItemBasicsPagingSource(firestore, sellerMapper, sellerId, catalogId)
             }
         ).flow
     }

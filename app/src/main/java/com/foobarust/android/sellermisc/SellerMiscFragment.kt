@@ -1,22 +1,19 @@
 package com.foobarust.android.sellermisc
 
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.foobarust.android.R
+import com.foobarust.android.common.FullScreenDialogFragment
 import com.foobarust.android.databinding.FragmentSellerMiscBinding
 import com.foobarust.android.utils.AutoClearedValue
 import com.foobarust.android.utils.drawDivider
-import com.foobarust.android.utils.themeColor
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.maps.android.ktx.addMarker
 import com.google.maps.android.ktx.awaitMap
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,7 +24,7 @@ import kotlinx.coroutines.launch
  */
 
 @AndroidEntryPoint
-class SellerMiscFragment : DialogFragment() {
+class SellerMiscFragment : FullScreenDialogFragment() {
 
     private var binding: FragmentSellerMiscBinding by AutoClearedValue(this)
     private val viewModel: SellerMiscViewModel by viewModels()
@@ -35,7 +32,8 @@ class SellerMiscFragment : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(STYLE_NORMAL, R.style.ThemeOverlay_Foobar_Dialog_Fullscreen_DayNight)
+
+        viewModel.onFetchSellerDetail(sellerId = args.sellerId)
     }
 
     override fun onCreateView(
@@ -48,28 +46,8 @@ class SellerMiscFragment : DialogFragment() {
             lifecycleOwner = viewLifecycleOwner
         }
 
-        // Receive property from nav args and pass to view model
-        viewModel.onFetchSellerDetail(sellerId = args.sellerId)
-
         // Setup toolbar
         binding.toolbar.setNavigationOnClickListener { dismiss() }
-
-        // Setup background
-        val backgroundShapeDrawable = MaterialShapeDrawable(
-            requireContext(),
-            null,
-            R.attr.bottomSheetStyle,
-            0
-        ).apply {
-            fillColor = ColorStateList.valueOf(
-                requireContext().themeColor(R.attr.colorSurface)
-            )
-            elevation = resources.getDimension(R.dimen.elevation_xmedium)
-
-            initializeElevationOverlay(requireContext())
-        }
-
-        binding.bottomSheetLayout.background = backgroundShapeDrawable
 
         // Setup property list
         val sellerMiscAdapter = SellerMiscAdapter()
@@ -84,7 +62,7 @@ class SellerMiscFragment : DialogFragment() {
             sellerMiscAdapter.submitList(it)
         }
 
-        // Retry fetching
+        // Retry
         binding.loadErrorLayout.retryButton.setOnClickListener {
             viewModel.onFetchSellerDetail(sellerId = args.sellerId)
         }

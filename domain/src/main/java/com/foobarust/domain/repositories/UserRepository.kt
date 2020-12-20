@@ -10,23 +10,13 @@ import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
 
-    suspend fun getIsOnboardingCompleted(): Boolean
+    suspend fun getOnboardingCompleted(): Boolean
 
-    suspend fun saveIsOnboardingCompleted(isCompleted: Boolean)
-
-    suspend fun getLocalUserDetail(userId: String): UserDetail?
-
-    suspend fun updateLocalUserDetail(userId: String, userDetail: UserDetail)
-
-    suspend fun removeLocalUserDetail(userId: String)
-
-    suspend fun getRemoteUserDetail(userId: String): UserDetail?
+    suspend fun updateOnboardingCompleted(completed: Boolean)
 
     fun getRemoteUserDetailObservable(userId: String): Flow<Resource<UserDetail>>
 
     suspend fun updateRemoteUserDetail(userId: String, userDetail: UserDetail)
 
     fun updateUserPhoto(userId: String, uriString: String): Flow<Resource<Unit>>
-
-
 }

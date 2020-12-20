@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
     
     <data>
@@ -18,6 +17,7 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/spacing_large"
         android:background="?attr/selectableItemBackground"
+        android:enabled="@{sellerItemBasic.available &amp;&amp; sellerItemBasic.count > 0}"
         android:onClick="@{() -> listener.onSellerItemClicked(sellerItemBasic)}">
 
         <TextView
@@ -28,10 +28,11 @@
             android:layout_marginEnd="@dimen/spacing_large"
             android:text="@{SellerItemBasicKt.getNormalizedTitle(sellerItemBasic)}"
             android:textAppearance="?attr/textAppearanceSubtitle2"
-            android:textColor="@color/material_on_surface_emphasis_high_type"
+            android:textColor="@color/material_on_surface_emphasis_high_disabled"
             android:minLines="2"
             android:ellipsize="end"
             android:lineSpacingMultiplier="1.2"
+            android:enabled="@{sellerItemBasic.available &amp;&amp; sellerItemBasic.count > 0}"
             tools:text="Item Title"/>
 
         <TextView
@@ -41,7 +42,8 @@
             android:layout_alignParentEnd="true"
             android:text="@{@string/seller_item_data_format_price(sellerItemBasic.price)}"
             android:textAppearance="?attr/textAppearanceSubtitle1"
-            android:textColor="?attr/colorSecondary"
+            android:textColor="@color/material_secondary_emphasis_high_disabled"
+            android:enabled="@{sellerItemBasic.available &amp;&amp; sellerItemBasic.count > 0}"
             tools:text="$ 35.8"/>
 
     </RelativeLayout>

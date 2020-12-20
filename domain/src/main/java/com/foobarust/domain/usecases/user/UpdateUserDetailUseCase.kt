@@ -20,13 +20,12 @@ class UpdateUserDetailUseCase @Inject constructor(
 ) : CoroutineUseCase<UserDetail, Unit>(coroutineDispatcher) {
 
     override suspend fun execute(parameters: UserDetail) {
-        // Check if user is signed in
         if (!authRepository.isSignedIn()) {
             throw Exception(ERROR_USER_NOT_SIGNED_IN)
         }
 
         userRepository.updateRemoteUserDetail(
-            userId = authRepository.getAuthUserId(),
+            userId = authRepository.getUserId(),
             userDetail = parameters
         )
     }

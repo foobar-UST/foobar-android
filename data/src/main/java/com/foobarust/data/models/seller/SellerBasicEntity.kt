@@ -3,7 +3,7 @@ package com.foobarust.data.models.seller
 
 import com.foobarust.data.common.Constants
 import com.foobarust.data.common.Constants.SELLER_ID_FIELD
-import com.foobarust.data.common.Constants.SELLER_IMGAE_URL_FIELD
+import com.foobarust.data.common.Constants.SELLER_IMAGE_URL_FIELD
 import com.foobarust.data.common.Constants.SELLER_MIN_SPEND_FIELD
 import com.foobarust.data.common.Constants.SELLER_NAME_FIELD
 import com.foobarust.data.common.Constants.SELLER_NAME_ZH_FIELD
@@ -33,7 +33,7 @@ data class SellerBasicEntity(
     val nameZh: String? = null,
 
     @JvmField
-    @PropertyName(SELLER_IMGAE_URL_FIELD)
+    @PropertyName(SELLER_IMAGE_URL_FIELD)
     val imageUrl: String? = null,
 
     @JvmField

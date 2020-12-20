@@ -36,6 +36,14 @@
                 app:navigationIcon="@drawable/ic_close"
                 tools:title="4 Items in Cart"/>
 
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                app:showAnimationBehavior="outward"
+                app:hideAnimationBehavior="outward"
+                app:progressHideIf="@{!viewModel.isUpdatingProgress}"/>
+
         </com.google.android.material.appbar.AppBarLayout>
 
         <FrameLayout

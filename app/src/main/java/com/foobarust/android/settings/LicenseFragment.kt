@@ -16,7 +16,7 @@ class LicenseFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentLicenseBinding.inflate(inflater, container, false)
 
         return binding.root

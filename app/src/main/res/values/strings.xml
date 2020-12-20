@@ -26,7 +26,7 @@
     <string name="action_detail">Detail</string>
 
     <!-- Error -->
-    <string name="error_resolve_activity_failed">No app to handle this action.</string>
+    <string name="error_resolve_activity_failed">No application to handle this action.</string>
 
     <!-- Loading Error -->
     <string name="loading_error_title">No connection</string>
@@ -85,8 +85,10 @@
     <!-- Profile -->
     <string name="profile_edit_field_name">Name</string>
     <string name="profile_edit_field_phone_number">Phone Number</string>
-    <string name="profile_edit_field_null">Not Set</string>
+    <string name="profile_edit_field_input_not_set">Not Set</string>
+    <string name="profile_edit_field_input_invalid">Invalid input.</string>
     <string name="profile_require_data_for_ordering">Profile data have to be set before using ordering service.</string>
+    <string name="profile_user_photo_uploaded_message">Photo uploaded.</string>
 
     <!-- Sign out -->
     <string name="sign_out_dialog_title">Sign Out</string>
@@ -98,11 +100,12 @@
     <!-- Seller -->
     <string name="seller_tab_on_campus">On Campus</string>
     <string name="seller_tab_off_campus">Off Campus</string>
-    <string name="seller_subtitle_restaurants">Restaurants</string>
+    <string name="seller_subtitle">Restaurants</string>
     <string name="seller_deliver_type_pick_up">Pick-up at campus</string>
     <string name="seller_deliver_type_delivery">Delivery</string>
     <string name="seller_status_online">Opening</string>
     <string name="seller_status_offline">Closed</string>
+    <string name="seller_status_offline_message">Seller is currently closed.</string>
     <string name="seller_data_format_min_spend_info">$ %.1f Min</string>
     <string name="seller_data_format_min_spend">%.1f Minimum</string>
     <string name="seller_data_format_rating">%.1f</string>
@@ -154,6 +157,7 @@
     <string name="cart_no_item_error">No Item in Cart</string>
     <string name="cart_actions_button_clear_cart">Clear Cart</string>
     <string name="cart_actions_button_purchase">Proceed Payment</string>
+    <string name="cart_purchase_item_unavailable_message">Item unavailable. Consider remove it from your cart.</string>
     <string name="cart_purchase_item_remove_item_content_desc">Remove Item</string>
     <string name="cart_purchase_item_format_amount">Quantity: %d</string>
     <string name="cart_purchase_item_format_notes">Notes: %s</string>
@@ -162,8 +166,14 @@
     <string name="cart_total_price_format_cost">$%.1f</string>
     <string name="cart_clear_cart_dialog_title">Clear Cart</string>
     <string name="cart_clear_Cart_dialog_message">Do you want to remove all cart items?</string>
-    <string name="cart_sync_required_message">One or more cart items are updated.</string>
-    <string name="cart_sync_required_action_refresh">Refresh</string>
+    <string name="cart_sync_required_message">One or more cart items need update.</string>
+    <string name="cart_sync_required_action_refresh">Update</string>
+    <string name="cart_sync_required_complete_message">Cart is updated.</string>
     <string name="cart_timeout_message">Cart items are timeout and cleared.</string>
-    
+    <string name="cart_cleared_message">Your cart is cleared.</string>
+    <string name="cart_timeout_dialog_title">Continue with your previous order?</string>
+    <string name="cart_timeout_dialog_message">You still have %d items left in your cart.</string>
+    <string name="cart_timeout_dialog_button_continue">Continue</string>
+    <string name="cart_timeout_dialog_button_clear_cart">Clear Cart</string>
+
 </resources>

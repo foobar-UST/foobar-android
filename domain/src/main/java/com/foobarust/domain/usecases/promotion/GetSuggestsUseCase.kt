@@ -29,7 +29,7 @@ class GetSuggestsUseCase @Inject constructor(
             throw Exception(ERROR_USER_NOT_SIGNED_IN)
         }
 
-        val userId = authRepository.getAuthUserId()
+        val userId = authRepository.getUserId()
 
         emitAll(promotionRepository.getSuggestsObservable(userId))
     }

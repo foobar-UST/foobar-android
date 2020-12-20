@@ -13,9 +13,9 @@ import javax.inject.Inject
 class UpdateRequestedEmailUseCase @Inject constructor(
     private val authRepository: AuthRepository,
     @IoDispatcher coroutineDispatcher: CoroutineDispatcher
-) : CoroutineUseCase<String?, Unit>(coroutineDispatcher) {
+) : CoroutineUseCase<String, Unit>(coroutineDispatcher) {
 
-    override suspend fun execute(parameters: String?) {
+    override suspend fun execute(parameters: String) {
         authRepository.updateAuthRequestedEmail(parameters)
     }
 }

@@ -34,7 +34,7 @@ class OnboardingActivity : AppCompatActivity() {
 
         // Navigate to OverviewActivity
         viewModel.navigateToMain.observe(this) {
-            navigateTo(destination = it, finishEnd = true)
+            navigateTo(destination = it, finishSelf = true)
         }
 
         // Show toast message

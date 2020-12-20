@@ -3,7 +3,7 @@ package com.foobarust.android.profile
 import android.content.Context
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.asLiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.R
 import com.foobarust.android.common.BaseViewModel
@@ -14,16 +14,15 @@ import com.foobarust.android.profile.ProfileListModel.*
 import com.foobarust.android.states.UiFetchState
 import com.foobarust.android.utils.SingleLiveEvent
 import com.foobarust.domain.models.user.UserDetail
-import com.foobarust.domain.models.user.isDataCompletedForOrdering
+import com.foobarust.domain.models.user.isOrderingAllowed
 import com.foobarust.domain.states.Resource
+import com.foobarust.domain.states.getSuccessDataOr
+import com.foobarust.domain.usecases.common.GetFormattedPhoneNumUseCase
 import com.foobarust.domain.usecases.user.GetUserDetailUseCase
 import com.foobarust.domain.usecases.user.UpdateUserDetailUseCase
-import com.foobarust.domain.utils.PhoneUtil
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.channels.ConflatedBroadcastChannel
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 const val EDIT_PROFILE_NAME = "profile_name"
@@ -31,76 +30,78 @@ const val EDIT_PROFILE_PHONE_NUMBER = "profile_phone_number"
 
 class ProfileViewModel @ViewModelInject constructor(
     @ApplicationContext private val context: Context,
-    getUserDetailUseCase: GetUserDetailUseCase,
+    private val getUserDetailUseCase: GetUserDetailUseCase,
     private val updateUserDetailUseCase: UpdateUserDetailUseCase,
-    private val phoneUtil: PhoneUtil,
+    private val getFormattedPhoneNumUseCase: GetFormattedPhoneNumUseCase
 ) : BaseViewModel() {
 
-    private val fetchUserDetailChannel = ConflatedBroadcastChannel<Unit>()
     private var userDetailCache: UserDetail? = null
 
-    val profileItems = fetchUserDetailChannel
-        .asFlow()
-        .flatMapLatest { getUserDetailUseCase(Unit) }
-        .mapLatest {
-            when (it) {
-                is Resource.Success -> {
-                    setUiFetchState(UiFetchState.Success)
-                    userDetailCache = it.data
-                    buildProfileList(it.data)
-                }
-                is Resource.Loading -> {
-                    setUiFetchState(UiFetchState.Loading)
-                    emptyList()
-                }
-                is Resource.Error -> {
-                    setUiFetchState(UiFetchState.Error(it.message))
-                    emptyList()
-                }
-            }
-        }
-        .asLiveData(viewModelScope.coroutineContext)
+    private val _profileListModels = MutableLiveData<List<ProfileListModel>>()
+    val profileListModels: LiveData<List<ProfileListModel>>
+        get() = _profileListModels
 
     private val _navigateToTextInput = SingleLiveEvent<TextInputProperty>()
     val navigateToTextInput: LiveData<TextInputProperty>
         get() = _navigateToTextInput
 
+    private var fetchUserDetailJob: Job? = null
+
     init {
-        fetchUserDetail()
+        onFetchUserDetail()
     }
 
-    private fun buildProfileList(userDetail: UserDetail): List<ProfileListModel> {
-        return buildList {
-            if (!userDetail.isDataCompletedForOrdering()) {
+    fun onFetchUserDetail() {
+        fetchUserDetailJob?.cancel()
+        fetchUserDetailJob = viewModelScope.launch {
+            getUserDetailUseCase(Unit).collect {
+                when (it) {
+                    is Resource.Success -> {
+                        setUiFetchState(UiFetchState.Success)
+                        buildProfileList(userDetail = it.data)
+                        userDetailCache = it.data
+                    }
+                    is Resource.Error -> setUiFetchState(UiFetchState.Error(it.message))
+                    is Resource.Loading -> setUiFetchState(UiFetchState.Loading)
+                }
+            }
+        }
+    }
+
+    private fun buildProfileList(userDetail: UserDetail) = viewModelScope.launch {
+        _profileListModels.value = buildList {
+            // Add warning message section
+            if (!userDetail.isOrderingAllowed()) {
                 add(ProfileWarningModel(
                     message = context.getString(R.string.profile_require_data_for_ordering)
                 ))
             }
 
+            // Add user avatar section
             add(ProfileInfoModel(userDetail = userDetail))
-            addAll(listOf(
-                ProfileEditModel(
-                    id = EDIT_PROFILE_NAME,
-                    title = context.getString(R.string.profile_edit_field_name),
-                    value = userDetail.name,
-                    displayValue = userDetail.name.takeIf {
-                        !it.isNullOrEmpty()
-                    } ?: context.getString(R.string.profile_edit_field_null)
-                ),
-                ProfileEditModel(
-                    id = EDIT_PROFILE_PHONE_NUMBER,
-                    title = context.getString(R.string.profile_edit_field_phone_number),
-                    value = userDetail.phoneNum,
-                    displayValue = userDetail.phoneNum?.let {
-                        phoneUtil.getFormattedPhoneNumString(it)
-                    } ?: context.getString(R.string.profile_edit_field_null)
-                )
+
+            // Add user name section
+            add(ProfileEditModel(
+                id = EDIT_PROFILE_NAME,
+                title = context.getString(R.string.profile_edit_field_name),
+                value = userDetail.name,
+                displayValue = userDetail.name.takeIf { !it.isNullOrEmpty() } ?:
+                    context.getString(R.string.profile_edit_field_input_not_set)
+            ))
+
+            // Add user phone number section
+            val formattedPhoneNum = userDetail.phoneNum?.let {
+                getFormattedPhoneNumUseCase(it).getSuccessDataOr(null)
+            }
+
+            add(ProfileEditModel(
+                id = EDIT_PROFILE_PHONE_NUMBER,
+                title = context.getString(R.string.profile_edit_field_phone_number),
+                value = userDetail.phoneNum,
+                displayValue = formattedPhoneNum ?:
+                    context.getString(R.string.profile_edit_field_input_not_set)
             ))
         }
-    }
-
-    fun fetchUserDetail() {
-        fetchUserDetailChannel.offer(Unit)
     }
 
     fun updateUserName(name: String) = viewModelScope.launch {
@@ -128,14 +129,14 @@ class ProfileViewModel @ViewModelInject constructor(
     fun onNavigateToTextInput(editModel: ProfileEditModel) {
         _navigateToTextInput.value = when (editModel.id) {
             EDIT_PROFILE_NAME -> TextInputProperty(
-                editId = editModel.id,
+                id = editModel.id,
                 title = editModel.title,
                 value = editModel.value,
                 type = NAME
             )
 
             EDIT_PROFILE_PHONE_NUMBER -> TextInputProperty(
-                editId = editModel.id,
+                id = editModel.id,
                 title = editModel.title,
                 value = editModel.value,
                 type = PHONE_NUM

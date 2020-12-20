@@ -1,27 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="ThemeOverlay.Foobar.Dialog.Fullscreen.DayNight.v23" parent="ThemeOverlay.Foobar.Dialog.Fullscreen.Dark.v23"/>
-    <style name="ThemeOverlay.Foobar.Dialog.Fullscreen.Dark.v23">
+    <style name="ThemeOverlay.Foobar.Dialog.Fullscreen.DayNight" parent="ThemeOverlay.Foobar.Dialog.Fullscreen.Dark.v23"/>
+    <style name="ThemeOverlay.Foobar.Dialog.Fullscreen.Dark.v23" parent="ThemeOverlay.Foobar.Dialog.Fullscreen.Dark">
+        <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">false</item>
     </style>
 
-    <style name="Theme.Foobar.Onboarding.DayNight.v23" parent="Theme.Foobar.Onboarding.Dark.v23"/>
-    <style name="Theme.Foobar.Onboarding.Dark.v23">
+    <style name="Theme.Foobar.Onboarding.DayNight" parent="Theme.Foobar.Onboarding.Dark.v23"/>
+    <style name="Theme.Foobar.Onboarding.Dark.v23" parent="Theme.Foobar.Onboarding.Dark">
+        <item name="android:statusBarColor">?android:attr/colorBackground</item>
         <item name="android:windowLightStatusBar">false</item>
     </style>
 
-    <style name="Theme.Foobar.Auth.DayNight.v23" parent="Theme.Foobar.Auth.Dark.v23"/>
-    <style name="Theme.Foobar.Auth.Dark.v23">
+    <style name="Theme.Foobar.Auth.DayNight" parent="Theme.Foobar.Auth.Dark.v23"/>
+    <style name="Theme.Foobar.Auth.Dark.v23" parent="Theme.Foobar.Auth.Dark">
+        <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">false</item>
     </style>
 
-    <style name="Theme.Foobar.Splash.DayNight.v23" parent="Theme.Foobar.Splash.Dark.v23"/>
-    <style name="Theme.Foobar.Splash.Dark.v23">
+    <style name="Theme.Foobar.Splash.DayNight" parent="Theme.Foobar.Splash.Dark.v23"/>
+    <style name="Theme.Foobar.Splash.Dark.v23" parent="Theme.Foobar.Splash.Dark">
+        <item name="android:statusBarColor">?attr/colorPrimarySurface</item>
         <item name="android:windowLightStatusBar">false</item>
     </style>
 
     <style name="Theme.Foobar.DayNight" parent="Theme.Foobar.Dark.v23"/>
-    <style name="Theme.Foobar.Dark.v23">
+    <style name="Theme.Foobar.Dark.v23" parent="Theme.Foobar.Dark">
+        <item name="android:statusBarColor">?android:attr/colorBackground</item>
         <item name="android:windowLightStatusBar">false</item>
     </style>
 

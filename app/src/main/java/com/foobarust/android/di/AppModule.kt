@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import com.foobarust.domain.di.DispatcherModule
-import com.foobarust.domain.utils.PhoneUtil
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
@@ -45,11 +44,5 @@ object AppModule {
     @Singleton
     fun provideCrashlytics(): FirebaseCrashlytics {
         return Firebase.crashlytics
-    }
-
-    @Provides
-    @Singleton
-    fun providePhoneUtil(): PhoneUtil {
-        return PhoneUtil()
     }
 }

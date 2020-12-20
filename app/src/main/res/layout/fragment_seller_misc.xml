@@ -40,6 +40,7 @@
             android:orientation="vertical"
             app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
             app:marginTopSystemWindowInsets="@{true}"
+            app:bottomSheetBackground="@{true}"
             tools:background="?attr/colorSurface">
 
             <include layout="@layout/bottom_sheet_pill"/>
@@ -66,7 +67,7 @@
                     app:goneIf="@{!(viewModel.uiFetchState instanceof UiFetchState.Loading)}" />
 
                 <include
-                    layout="@layout/common_load_error_layout"
+                    layout="@layout/load_error_layout"
                     android:id="@+id/load_error_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

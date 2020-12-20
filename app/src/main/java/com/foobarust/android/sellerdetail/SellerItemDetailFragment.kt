@@ -1,6 +1,5 @@
 package com.foobarust.android.sellerdetail
 
-import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +9,6 @@ import androidx.navigation.fragment.navArgs
 import com.foobarust.android.databinding.FragmentSellerItemDetailBinding
 import com.foobarust.android.utils.AutoClearedValue
 import com.foobarust.android.utils.showShortToast
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -27,7 +25,6 @@ class SellerItemDetailFragment : BottomSheetDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         // Receive itemId argument and start fetching ItemDetail
         viewModel.onFetchItemDetail(property = args.sellerItemDetailProperty)
     }
@@ -35,6 +32,7 @@ class SellerItemDetailFragment : BottomSheetDialogFragment() {
     // Block back button when submitting to cart
     // OnBackPressedCallback doesn't work for dialog,
     // have to override the method instead.
+    /*
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return object : BottomSheetDialog(requireContext(), theme) {
             override fun onBackPressed() {
@@ -42,6 +40,8 @@ class SellerItemDetailFragment : BottomSheetDialogFragment() {
             }
         }
     }
+
+     */
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -68,12 +68,12 @@ class SellerItemDetailFragment : BottomSheetDialogFragment() {
         }
 
         // Dismiss dialog when there is network error
-        viewModel.closeDialog.observe(viewLifecycleOwner) {
+        viewModel.dismissDialog.observe(viewLifecycleOwner) {
             dismiss()
         }
 
         // Prevent dismissing dialog when submitting to cart
-        viewModel.isSubmittingToCart.observe(viewLifecycleOwner) { submitting ->
+        viewModel.isSubmitting.observe(viewLifecycleOwner) { submitting ->
             requireDialog().setCancelable(!submitting)
         }
 

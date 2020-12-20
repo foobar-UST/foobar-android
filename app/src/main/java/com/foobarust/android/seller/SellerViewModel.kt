@@ -6,12 +6,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import com.foobarust.android.R
 import com.foobarust.android.common.BaseViewModel
-import com.foobarust.android.sellerdetail.SellerDetailProperty
 import com.foobarust.android.sellerdetail.SellerItemDetailProperty
 import com.foobarust.android.utils.SingleLiveEvent
 import com.foobarust.domain.models.promotion.SuggestBasic
 import com.foobarust.domain.models.seller.SellerBasic
-import com.foobarust.domain.models.seller.getNormalizedName
 import dagger.hilt.android.qualifiers.ApplicationContext
 
 class SellerViewModel @ViewModelInject constructor(
@@ -31,8 +29,8 @@ class SellerViewModel @ViewModelInject constructor(
         ))
     }
 
-    private val _navigateToSellerDetail = SingleLiveEvent<SellerDetailProperty>()
-    val navigateToSellerDetail: LiveData<SellerDetailProperty>
+    private val _navigateToSellerDetail = SingleLiveEvent<String>()
+    val navigateToSellerDetail: LiveData<String>
         get() = _navigateToSellerDetail
 
     private val _navigateToSellerAction = SingleLiveEvent<Unit>()
@@ -44,11 +42,7 @@ class SellerViewModel @ViewModelInject constructor(
         get() = _navigateToSuggestItem
 
     fun onNavigateToSellerDetail(sellerBasic: SellerBasic) {
-        _navigateToSellerDetail.value = SellerDetailProperty(
-            id = sellerBasic.id,
-            name = sellerBasic.getNormalizedName(),
-            imageUrl = sellerBasic.imageUrl
-        )
+        _navigateToSellerDetail.value = sellerBasic.id
     }
 
     fun onNavigateToSellerAction() {

@@ -8,6 +8,7 @@ import com.foobarust.data.common.Constants.SELLER_ITEM_DESCRIPTION_ZH_FIELD
 import com.foobarust.data.common.Constants.SELLER_ITEM_ID_FIELD
 import com.foobarust.data.common.Constants.SELLER_ITEM_IMAGE_URL_FIELD
 import com.foobarust.data.common.Constants.SELLER_ITEM_PRICE_FIELD
+import com.foobarust.data.common.Constants.SELLER_ITEM_SELLER_ID_FIELD
 import com.foobarust.data.common.Constants.SELLER_ITEM_TITLE_FIELD
 import com.foobarust.data.common.Constants.SELLER_ITEM_TITLE_ZH_FIELD
 import com.foobarust.data.common.Constants.SELLER_ITEM_UPDATED_AT_FIELD
@@ -43,6 +44,10 @@ data class SellerItemDetailEntity(
     @JvmField
     @PropertyName(SELLER_ITEM_CATALOG_ID_FIELD)
     val catalogId: String? = null,
+
+    @JvmField
+    @PropertyName(SELLER_ITEM_SELLER_ID_FIELD)
+    val sellerId: String? = null,
 
     @JvmField
     @PropertyName(SELLER_ITEM_PRICE_FIELD)

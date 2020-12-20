@@ -30,12 +30,12 @@ class AuthInputFragment : Fragment() {
 
         // Pass username input to view model
         binding.usernameEditText.doOnTextChanged { text, _, _, _ ->
-            viewModel.onUsernameChanged(text.toString())
+            viewModel.onUsernameUpdated(text.toString())
         }
 
         // Sign-in button
         binding.confirmButton.setOnClickListener {
-            viewModel.requestAuthEmail()
+            viewModel.onRequestAuthEmail()
         }
 
         // Skip login button
@@ -54,7 +54,7 @@ class AuthInputFragment : Fragment() {
             binding.domainsAutoCompleteTextView.run {
                 setAdapter(adapter)
                 setOnItemClickListener { _, _, position, _ ->
-                    viewModel.onAuthEmailDomainChanged(domains[position])
+                    viewModel.onAuthEmailDomainUpdated(domains[position])
                 }
 
                 // Select first item

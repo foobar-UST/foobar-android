@@ -11,8 +11,7 @@ import com.foobarust.android.common.BaseViewModel
 import com.foobarust.android.main.MainActivity
 import com.foobarust.android.utils.SingleLiveEvent
 import com.foobarust.domain.states.Resource
-import com.foobarust.domain.usecases.onboarding.GetOnboardingCompletedUseCase
-import com.foobarust.domain.usecases.onboarding.SaveOnboardingCompletedUseCase
+import com.foobarust.domain.usecases.onboarding.UpdateOnboardingCompletedUseCase
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
@@ -22,8 +21,7 @@ private const val ERROR_ONBOARDING_COMPLETE = "Error completing onboarding."
 
 class OnboardingViewModel @ViewModelInject constructor(
     @ApplicationContext context: Context,
-    private val getOnboardingCompletedUseCase: GetOnboardingCompletedUseCase,
-    private val saveOnboardingCompletedUseCase: SaveOnboardingCompletedUseCase
+    private val updateOnboardingCompletedUseCase: UpdateOnboardingCompletedUseCase
 ) : BaseViewModel() {
 
     val onboardingProperties = listOf(
@@ -52,9 +50,7 @@ class OnboardingViewModel @ViewModelInject constructor(
         get() = _navigateToMain
 
     fun onOnboardingCompleted() = viewModelScope.launch {
-        saveOnboardingCompletedUseCase(true)
-
-        when (getOnboardingCompletedUseCase(Unit)) {
+        when (updateOnboardingCompletedUseCase(true)) {
             is Resource.Success -> _navigateToMain.value = MainActivity::class
             is Resource.Error -> showToastMessage(ERROR_ONBOARDING_COMPLETE)
             is Resource.Loading -> Unit

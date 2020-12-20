@@ -1,6 +1,7 @@
 package com.foobarust.android.utils
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.Typeface.BOLD
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
@@ -30,10 +31,37 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.imageview.ShapeableImageView
+import com.google.android.material.progressindicator.LinearProgressIndicator
+import com.google.android.material.shape.MaterialShapeDrawable
 import kotlin.math.round
 
 interface OnTextViewClickableSpanListener {
     fun onClickableSpanEndClicked(view: View)
+}
+
+@BindingAdapter("progressHideIf")
+fun LinearProgressIndicator.bindProgressHideIf(hide: Boolean) {
+    if (hide) hide() else show()
+}
+
+@BindingAdapter("bottomSheetBackground")
+fun ViewGroup.bindBottomSheetBackground(
+    bottomSheetBackground: Boolean
+) {
+    if (!bottomSheetBackground) return
+
+    background = MaterialShapeDrawable(
+        context,
+        null,
+        R.attr.bottomSheetStyle,
+        0
+    ).apply {
+        fillColor = ColorStateList.valueOf(
+            context.themeColor(R.attr.colorSurface)
+        )
+        elevation = resources.getDimension(R.dimen.elevation_xmedium)
+        initializeElevationOverlay(context)
+    }
 }
 
 @BindingAdapter(
@@ -408,20 +436,12 @@ private fun createGlideRequest(
 
 @BindingAdapter("goneIf")
 fun View.bindGoneIf(gone: Boolean) {
-    visibility = if (gone) {
-        GONE
-    } else {
-        VISIBLE
-    }
+    visibility = if (gone) GONE else VISIBLE
 }
 
 @BindingAdapter("hideIf")
 fun View.bindHideIf(hide: Boolean) {
-    visibility = if (hide) {
-        INVISIBLE
-    } else {
-        VISIBLE
-    }
+    visibility = if (hide) INVISIBLE else VISIBLE
 }
 
 @BindingAdapter("layoutFullscreen")

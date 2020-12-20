@@ -26,7 +26,6 @@
         android:clickable="true"
         android:onClick="@{() -> listener.onSellerListItemClicked(sellerBasic)}"
         android:onLongClick="@{(view) -> listener.onSellerListItemLongClicked(view, sellerBasic)}"
-        android:enabled="@{sellerBasic.online}"
         app:cardBackgroundColor="?attr/colorSurface"
         app:cardElevation="@dimen/elevation_none"
         app:cardCornerRadius="0dp">
