@@ -13,7 +13,7 @@ import com.foobarust.android.databinding.FragmentCartBinding
 import com.foobarust.android.main.MainViewModel
 import com.foobarust.android.utils.AutoClearedValue
 import com.foobarust.android.utils.findNavController
-import com.foobarust.android.utils.firstItemInsertedScrollTop
+import com.foobarust.android.utils.scrollToTopWhenFirstItemInserted
 import com.foobarust.android.utils.showShortToast
 import com.foobarust.domain.models.cart.UserCartItem
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -62,7 +62,7 @@ class CartFragment : FullScreenDialogFragment(), CartAdapter.CartAdapterListener
 
         // Scroll to top when item inserted
         viewLifecycleOwner.lifecycleScope.launch {
-            cartAdapter.firstItemInsertedScrollTop(binding.recyclerView)
+            cartAdapter.scrollToTopWhenFirstItemInserted(binding.recyclerView)
         }
 
         // Close cart button

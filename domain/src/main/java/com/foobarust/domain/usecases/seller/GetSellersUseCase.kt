@@ -20,6 +20,6 @@ class GetSellersUseCase @Inject constructor(
 ) : PagingUseCase<SellerType, SellerBasic>(coroutineDispatcher) {
 
     override fun execute(parameters: SellerType): Flow<PagingData<SellerBasic>> {
-        return sellerRepository.getSellers(sellerType = parameters)
+        return sellerRepository.getSellerBasics(sellerType = parameters)
     }
 }

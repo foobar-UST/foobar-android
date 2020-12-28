@@ -57,22 +57,24 @@ fun AppBarLayout.doOnOffsetChanged(): Flow<AppBarStateChangedListener.State> = c
     awaitClose { removeOnOffsetChangedListener(listener) }
 }
 
-fun RecyclerView.scrollToTop() = smoothScrollToPosition(0)
+fun RecyclerView.scrollToTop() = scrollToPosition(0)
 
-suspend fun <VH : RecyclerView.ViewHolder> RecyclerView.Adapter<VH>.firstItemInsertedScrollTop(
+fun RecyclerView.smoothScrollToTop() = smoothScrollToPosition(0)
+
+suspend fun <VH : RecyclerView.ViewHolder> RecyclerView.Adapter<VH>.scrollToTopWhenFirstItemInserted(
     recyclerView: RecyclerView
 ) {
     return suspendCancellableCoroutine { continuation ->
         val observer = object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                 super.onItemRangeInserted(positionStart, itemCount)
-
                 val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-
+                // Check if the new item is inserted in the first position
                 if (positionStart == 0 &&
                     positionStart == layoutManager.findFirstCompletelyVisibleItemPosition()
                 ) {
-                    recyclerView.smoothScrollToPosition(0)
+                    // Flicking if using the smooth version, async list animation will do the rest
+                    recyclerView.scrollToTop()
                     unregisterAdapterDataObserver(this)
                     continuation.resume(Unit)
                 }

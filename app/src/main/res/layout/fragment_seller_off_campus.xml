@@ -1,29 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ScrollView
+    <data>
+        <variable
+            name="viewModel"
+            type="com.foobarust.android.seller.SellerOffCampusViewModel" />
+        <import type="androidx.paging.LoadState" />
+    </data>
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true">
 
-        <LinearLayout
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:goneIf="@{!(viewModel.loadState instanceof LoadState.NotLoading)}"
+            tools:listitem="@layout/seller_off_campus_item_upcoming" />
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_gravity="center"
+            app:goneIf="@{!(viewModel.loadState instanceof LoadState.Loading)}"/>
 
-            <include
-                layout="@layout/seller_subtitle_item"
-                app:subtitle="@{`Today - 11 Oct`}"/>
+        <include
+            layout="@layout/load_error_layout"
+            android:id="@+id/load_error_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:goneIf="@{!(viewModel.loadState instanceof LoadState.Error)}"/>
 
-            <include layout="@layout/seller_off_campus_item"/>
-            <include layout="@layout/seller_off_campus_item"/>
-            <include layout="@layout/seller_off_campus_item"/>
-            <include layout="@layout/seller_off_campus_item"/>
-            <include layout="@layout/seller_off_campus_item"/>
-
-        </LinearLayout>
-
-    </ScrollView>
+    </FrameLayout>
 
 </layout>

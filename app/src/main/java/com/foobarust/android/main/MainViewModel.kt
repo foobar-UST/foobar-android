@@ -3,8 +3,7 @@ package com.foobarust.android.main
 import android.content.Context
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.distinctUntilChanged
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.R
 import com.foobarust.android.cart.CartTimeoutProperty
@@ -17,10 +16,12 @@ import com.foobarust.domain.usecases.auth.GetAuthProfileUseCase
 import com.foobarust.domain.usecases.cart.CheckCartTimeOutUseCase
 import com.foobarust.domain.usecases.cart.ClearUserCartUseCase
 import com.foobarust.domain.usecases.cart.GetUserCartUseCase
+import com.foobarust.domain.usecases.onboarding.GetOnboardingCompletedUseCase
+import com.foobarust.domain.usecases.onboarding.UpdateOnboardingCompletedUseCase
 import com.foobarust.domain.usecases.user.UpdateUserPhotoUseCase
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 /**
@@ -33,20 +34,29 @@ class MainViewModel @ViewModelInject constructor(
     private val getUserCartUseCase: GetUserCartUseCase,
     private val updateUserPhotoUseCase: UpdateUserPhotoUseCase,
     private val checkCartTimeOutUseCase: CheckCartTimeOutUseCase,
-    private val clearUserCartUseCase: ClearUserCartUseCase
+    private val clearUserCartUseCase: ClearUserCartUseCase,
+    private val getOnboardingCompletedUseCase: GetOnboardingCompletedUseCase,
+    private val updateOnboardingCompletedUseCase: UpdateOnboardingCompletedUseCase
 ) : BaseViewModel() {
 
     private val _scrollToTop = SingleLiveEvent<Unit>()
     val scrollToTop: LiveData<Unit>
         get() = _scrollToTop
 
-    private val _showCartBottomBar = MutableLiveData(true)
-    val showCartBottomBar: LiveData<Boolean>
-        get() = _showCartBottomBar.distinctUntilChanged()
+    private val _currentGraphId = MutableStateFlow<Int?>(null)
 
-    private val _userCart = MutableLiveData<UserCart?>(null)
+    private val _userCart = MutableStateFlow<UserCart?>(null)
     val userCart: LiveData<UserCart?>
-        get() = _userCart
+        get() = _userCart.asStateFlow().asLiveData(viewModelScope.coroutineContext)
+
+    val showCartBottomBar: LiveData<Boolean> = _currentGraphId.asStateFlow()
+        .combine(_userCart.asStateFlow()) { currentGraphId, userCart ->
+            currentGraphId == R.id.navigation_seller &&
+                userCart != null &&
+                userCart.itemsCount > 0
+        }
+        .distinctUntilChanged()
+        .asLiveData(viewModelScope.coroutineContext)
 
     private val _showSnackBarMessage = SingleLiveEvent<String>()
     val showSnackBarMessage: LiveData<String>
@@ -56,12 +66,24 @@ class MainViewModel @ViewModelInject constructor(
     val navigateToTimeoutDialog: LiveData<CartTimeoutProperty>
         get() = _navigateToTimeoutDialog
 
+    private val _showOnboardingTutorial = SingleLiveEvent<Unit>()
+    val showOnboardingTutorial: LiveData<Unit>
+        get() = _showOnboardingTutorial
+
     private var hasCheckedCartTimeout: Boolean = false
 
     private var getUserCartJob: Job? = null
 
     init {
+        showOnboardingTutorial()
         fetchUserAuthStatus()
+    }
+
+    private fun showOnboardingTutorial() = viewModelScope.launch {
+        val onBoardingCompleted = getOnboardingCompletedUseCase(Unit).getSuccessDataOr(false)
+        if (!onBoardingCompleted) {
+            _showOnboardingTutorial.value = Unit
+        }
     }
 
     private fun fetchUserAuthStatus() = viewModelScope.launch {
@@ -104,22 +126,18 @@ class MainViewModel @ViewModelInject constructor(
         val isTimeout = checkCartTimeOutUseCase(userCart).getSuccessDataOr(false)
         if (isTimeout) {
             _navigateToTimeoutDialog.value = CartTimeoutProperty(
-                cartItemsCount = userCart.itemsCount ?: 0
+                cartItemsCount = userCart.itemsCount
             )
         }
         hasCheckedCartTimeout = true
     }
 
+    fun onCurrentGraphChanged(currentGraphId: Int?) {
+        _currentGraphId.value = currentGraphId
+    }
+
     fun onTabScrollToTop() {
         _scrollToTop.value = Unit
-    }
-
-    fun showCartBottomBar() {
-        _showCartBottomBar.value = true
-    }
-
-    fun hideCartBottomBar() {
-        _showCartBottomBar.value = false
     }
 
     fun onUpdateUserPhoto(uriString: String) = viewModelScope.launch {
@@ -143,6 +161,13 @@ class MainViewModel @ViewModelInject constructor(
                 is Resource.Error -> showToastMessage(it.message)
                 is Resource.Loading -> Unit
             }
+        }
+    }
+
+    fun onTutorialDismissed() = viewModelScope.launch {
+        val onboardingCompleted = getOnboardingCompletedUseCase(Unit).getSuccessDataOr(false)
+        if (!onboardingCompleted) {
+            updateOnboardingCompletedUseCase(true)
         }
     }
 }

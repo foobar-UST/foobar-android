@@ -142,7 +142,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:layout_margin="@dimen/spacing_large"
-                android:text="@{viewModel.isSubmitting == false ? @string/seller_item_add_to_cart(viewModel.finalPrice) : ``}"
+                android:text="@{viewModel.cartItemSubmitting == false ? @string/seller_item_add_to_cart(viewModel.finalPrice) : ``}"
                 app:iconGravity="textStart"
                 app:iconPadding="@dimen/spacing_large"
                 tools:text="Add to Cart"/>
@@ -154,7 +154,7 @@
                 android:layout_gravity="center"
                 android:indeterminateTint="?attr/colorOnPrimary"
                 android:elevation="3dp"
-                app:goneIf="@{viewModel.isSubmitting == false}" />
+                app:goneIf="@{viewModel.cartItemSubmitting == false}" />
 
         </FrameLayout>
 

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="counterItem"
+            type="com.foobarust.android.sellersection.SellerSectionDetailListModel.SellerSectionDetailCounterItemModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_xmedium"
+        android:background="?attr/colorSurface"
+        android:padding="@dimen/spacing_large"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/counter_value_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textColor="?attr/colorPrimary"
+            android:textAppearance="?attr/textAppearanceHeadline4"
+            tools:text="01 : 12 : 20"/>
+
+        <TextView
+            android:id="@+id/counter_subtitle_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_medium"
+            android:layout_gravity="center_horizontal"
+            android:text="@{counterItem.recentSection ? @string/seller_section_detail_counter_on_subtitle : @string/seller_section_detail_counter_off_subtitle}"
+            android:textAppearance="?attr/textAppearanceCaption"
+            android:textColor="@color/material_on_surface_emphasis_medium"
+            tools:text="@string/seller_section_detail_counter_on_subtitle"/>
+
+    </LinearLayout>
+
+</layout>

@@ -33,10 +33,8 @@ class SellerItemBasicsPagingSource(
                 .limit(params.loadSize.toLong())
 
             val currentPageQuery = params.key ?: requestQuery
-
             val currentPageData = currentPageQuery.get().await()
             val lastVisible = currentPageData.documents[currentPageData.size() - 1]
-
             val nextPageQuery = requestQuery.startAfter(lastVisible)
 
             LoadResult.Page(

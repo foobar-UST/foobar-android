@@ -21,6 +21,8 @@ class CheckCartTimeOutUseCase @Inject constructor(
         val currentTime = Date().time
         val timeDiffMinutes = TimeUnit.MILLISECONDS.toMinutes(currentTime - cartTime)
 
-        return timeDiffMinutes >= TIMEOUT_MINUTES
+        val itemsNotEmpty = parameters.itemsCount > 0
+
+        return timeDiffMinutes >= TIMEOUT_MINUTES && itemsNotEmpty
     }
 }

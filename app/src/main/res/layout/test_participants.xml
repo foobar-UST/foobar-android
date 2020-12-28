@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="com.foobarust.android.R" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/spacing_large"
+        android:background="?attr/colorPrimarySurface">
+
+        <TextView
+            android:id="@+id/subtitle_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Participants (12)"
+            android:textColor="?attr/colorOnPrimarySurface"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/user_avatar_image_view_1"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_marginTop="@dimen/spacing_mlarge"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Foobar.Circle"
+            app:glideUrl="@{`https://specials-images.forbesimg.com/imageserve/5f7b5df3cae62ef2095c8950/960x0.jpg?fit=scale`}"
+            app:glideCenterCrop="@{true}"
+            app:glidePlaceholder="@{R.drawable.ic_user}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/subtitle_text_view"/>
+
+        <TextView
+            android:id="@+id/user_avatar_text_view_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_xmedium"
+            android:text="User1"
+            android:textColor="?attr/colorOnPrimarySurface"
+            android:textAppearance="?attr/textAppearanceCaption"
+            app:layout_constraintStart_toStartOf="@id/user_avatar_image_view_1"
+            app:layout_constraintEnd_toEndOf="@id/user_avatar_image_view_1"
+            app:layout_constraintTop_toBottomOf="@id/user_avatar_image_view_1"/>
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/user_avatar_image_view_2"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_marginTop="@dimen/spacing_mlarge"
+            android:layout_marginStart="@dimen/spacing_mxlarge"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Foobar.Circle"
+            app:glideUrl="@{`https://specials-images.forbesimg.com/imageserve/5f7b5df3cae62ef2095c8950/960x0.jpg?fit=scale`}"
+            app:glideCenterCrop="@{true}"
+            app:glidePlaceholder="@{R.drawable.ic_user}"
+            app:layout_constraintStart_toEndOf="@id/user_avatar_image_view_1"
+            app:layout_constraintTop_toBottomOf="@id/subtitle_text_view"/>
+
+        <TextView
+            android:id="@+id/user_avatar_text_view_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_xmedium"
+            android:text="User1"
+            android:textColor="?attr/colorOnPrimarySurface"
+            android:textAppearance="?attr/textAppearanceCaption"
+            app:layout_constraintStart_toStartOf="@id/user_avatar_image_view_2"
+            app:layout_constraintEnd_toEndOf="@id/user_avatar_image_view_2"
+            app:layout_constraintTop_toBottomOf="@id/user_avatar_image_view_2"/>
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/user_avatar_image_view_3"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_marginTop="@dimen/spacing_mlarge"
+            android:layout_marginStart="@dimen/spacing_mxlarge"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Foobar.Circle"
+            app:glideUrl="@{`https://specials-images.forbesimg.com/imageserve/5f7b5df3cae62ef2095c8950/960x0.jpg?fit=scale`}"
+            app:glideCenterCrop="@{true}"
+            app:glidePlaceholder="@{R.drawable.ic_user}"
+            app:layout_constraintStart_toEndOf="@id/user_avatar_image_view_2"
+            app:layout_constraintTop_toBottomOf="@id/subtitle_text_view"/>
+
+        <TextView
+            android:id="@+id/user_avatar_text_view_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_xmedium"
+            android:text="User1"
+            android:textColor="?attr/colorOnPrimarySurface"
+            android:textAppearance="?attr/textAppearanceCaption"
+            app:layout_constraintStart_toStartOf="@id/user_avatar_image_view_3"
+            app:layout_constraintEnd_toEndOf="@id/user_avatar_image_view_3"
+            app:layout_constraintTop_toBottomOf="@id/user_avatar_image_view_3"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

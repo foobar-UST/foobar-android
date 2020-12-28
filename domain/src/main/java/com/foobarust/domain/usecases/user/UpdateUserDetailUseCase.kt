@@ -24,7 +24,7 @@ class UpdateUserDetailUseCase @Inject constructor(
             throw Exception(ERROR_USER_NOT_SIGNED_IN)
         }
 
-        userRepository.updateRemoteUserDetail(
+        userRepository.updateUserDetail(
             userId = authRepository.getUserId(),
             userDetail = parameters
         )

@@ -1,5 +1,16 @@
 # Changelog
 
+## 2020-12-28
+- Added off-campus section list view.
+- Added cart screen.
+- Added cart bottom bar.
+- Added off-campus section detail screen.
+- Refactored cart business logic using backend api.
+- Refactored tutorial screen using fragment.
+- Prepare for participants screen.
+- Prepare for shipping route map view.
+- Many bug fixes and ui improvements.
+
 ## 2020-11-3
 - Added custom tab for advertisement.
 - Added seller misc screen (for showing contact details and map).
@@ -8,7 +19,7 @@
 - Prepare for seller item detail screen.
 - Prepare for on-campus seller action sheet.
 - Fixed timestamp issue when updating user detail to firestore.
-- Fixed crashes when navigating food catalogs.
+- Fixed crashes when navigating between food catalogs.
 
 ## 2020-10-6
 - Added on-campus seller list view.

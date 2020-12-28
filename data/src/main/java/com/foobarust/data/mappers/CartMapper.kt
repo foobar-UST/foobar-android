@@ -13,7 +13,7 @@ class CartMapper @Inject constructor() {
         return UserCart(
             sellerId = entity.sellerId,
             sellerType = entity.sellerType?.let {SellerType.values()[it] },
-            itemsCount = entity.itemsCount,
+            itemsCount = entity.itemsCount ?: 0,
             subtotalCost = entity.subtotalCost ?: 0.0,
             deliveryCost = entity.deliveryCost ?: 0.0,
             totalCost = entity.totalCost ?: 0.0,

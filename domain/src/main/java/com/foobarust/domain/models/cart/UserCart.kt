@@ -6,7 +6,7 @@ import java.util.*
 data class UserCart(
     val sellerId: String?,
     val sellerType: SellerType?,
-    val itemsCount: Int?,
+    val itemsCount: Int,
     val subtotalCost: Double,
     val deliveryCost: Double,
     val totalCost: Double,

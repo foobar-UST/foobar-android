@@ -128,17 +128,37 @@
     <string name="seller_action_feedback">Send Feedback</string>
 
     <!-- Seller Item -->
-    <string name="seller_item_subtitle_notes">Special Notes</string>
     <string name="seller_item_subtitle_amount">Amount</string>
-    <string name="seller_item_hint_notes">E.g. Add extra sauce</string>
-    <string name="seller_item_button_submit">Add to Cart</string>
     <string name="seller_item_data_format_price">$ %.1f</string>
-    <string name="seller_item_data_format_topping">%s %s (+$ %.1f)</string>
     <string name="seller_item_add_to_cart">Add To Cart ($ %.1f)</string>
+    <string name="seller_item_info"># %s</string>
 
     <!-- Seller Item Detail -->
     <string name="seller_item_detail_increment_content_desc">Add Item</string>
     <string name="seller_item_detail_decrement_content_desc">Remove Item</string>
+
+    <!-- Seller Section -->
+    <string name="seller_section_date">Order opens at %s</string>
+    <string name="seller_section_cutoff_time">Order due at %s</string>
+    <string name="seller_section_available">Available</string>
+    <string name="seller_section_upcoming"># Upcoming</string>
+    <string name="seller_section_user_counts">%d/%d Joined</string>
+    <string name="seller_section_subtitle_recent">Recent Orders</string>
+    <string name="seller_section_subtitle_upcoming">Upcoming</string>
+
+    <!-- Seller Section Detail -->
+    <string name="seller_section_detail_users_subtitle">Participants (%d/%d)</string>
+    <string name="seller_section_detail_counter_on_subtitle">Time Left</string>
+    <string name="seller_section_detail_counter_off_subtitle">Available On</string>
+    <string name="seller_section_detail_section_info_format_cutoff_time">Due at %s</string>
+    <string name="seller_section_detail_section_info_format_delivery_time">Deliver at %s</string>
+    <string name="seller_section_detail_shipping_info_subtitle">Shipped From</string>
+    <string name="seller_section_detail_seller_info_subtitle">Offered By</string>
+    <string name="seller_section_detail_seller_info_format_rating">%.1f</string>
+    <string name="seller_section_detail_button_add_items">Add Item to Cart</string>
+    <string name="more_sections_subtitle">More Orders</string>
+    <string name="more_sections_section_item_format_delivery_time">Deliver %s</string>
+    <string name="more_sections_show_more">More</string>
 
     <!-- Promotion -->
     <string name="promotion_subtitle_advertise">What\'s New</string>
@@ -146,15 +166,17 @@
 
     <!-- Cart -->
     <string name="cart_app_bar_title">%d Items in Cart</string>
-    <string name="cart_bottom_bar_items_count_title">Items in Cart</string>
+    <string name="cart_bottom_bar_title_items_count">Items in Cart</string>
+    <string name="cart_bottom_bar_format_items_count">%d</string>
     <string name="cart_bottom_bar_open_cart_content_desc">Open Cart</string>
-    <string name="cart_seller_info_title">Order From</string>
-    <string name="cart_seller_info_menu_title">Menu</string>
-    <string name="cart_seller_info_detail_title">Detail</string>
-    <string name="cart_total_price_total_title">Total</string>
-    <string name="cart_total_price_subtotal_title">Subtotal</string>
-    <string name="cart_total_price_delivery_fee_title">Delivery</string>
+    <string name="cart_seller_info_subtitle">Order From</string>
+    <string name="cart_seller_info_title_menu">Menu</string>
+    <string name="cart_seller_info_title_detail">Detail</string>
+    <string name="cart_total_price_title_total">Total</string>
+    <string name="cart_total_price_title_subtotal">Subtotal</string>
+    <string name="cart_total_price_title_delivery_fee">Delivery</string>
     <string name="cart_no_item_error">No Item in Cart</string>
+    <string name="cart_item_submitted_message">Added to cart.</string>
     <string name="cart_actions_button_clear_cart">Clear Cart</string>
     <string name="cart_actions_button_purchase">Proceed Payment</string>
     <string name="cart_purchase_item_unavailable_message">Item unavailable. Consider remove it from your cart.</string>

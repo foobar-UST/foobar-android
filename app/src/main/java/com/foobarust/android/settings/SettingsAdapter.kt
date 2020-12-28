@@ -22,7 +22,6 @@ class SettingsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SettingsViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-
         return when (viewType) {
             R.layout.settings_profile_item -> SettingsProfileViewHolder(
                 SettingsProfileItemBinding.inflate(inflater, parent, false)
@@ -40,7 +39,6 @@ class SettingsAdapter(
         when (holder) {
             is SettingsProfileViewHolder -> holder.binding.run {
                 val currentItem = getItem(position) as SettingsProfileModel
-
                 profileModel = currentItem
                 listener = this@SettingsAdapter.listener
 

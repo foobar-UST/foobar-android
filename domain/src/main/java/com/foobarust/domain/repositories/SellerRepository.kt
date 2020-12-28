@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface SellerRepository {
 
-    fun getSellers(sellerType: SellerType): Flow<PagingData<SellerBasic>>
+    fun getSellerBasics(sellerType: SellerType): Flow<PagingData<SellerBasic>>
 
     suspend fun getSellerBasic(sellerId: String): SellerBasic
 
@@ -21,4 +21,10 @@ interface SellerRepository {
     fun getSellerItems(sellerId: String, catalogId: String): Flow<PagingData<SellerItemBasic>>
 
     suspend fun getSellerItemDetail(sellerId: String, itemId: String): SellerItemDetail
+
+    fun getSellerSectionBasics(): Flow<PagingData<SellerSectionBasic>>
+
+    suspend fun getSellerSectionBasics(sellerId: String, numOfSections: Int): List<SellerSectionBasic>
+
+    suspend fun getSellerSectionDetail(sellerId: String, sectionId: String): SellerSectionDetail
 }

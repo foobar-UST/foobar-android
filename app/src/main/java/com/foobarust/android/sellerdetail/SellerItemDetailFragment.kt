@@ -73,7 +73,7 @@ class SellerItemDetailFragment : BottomSheetDialogFragment() {
         }
 
         // Prevent dismissing dialog when submitting to cart
-        viewModel.isSubmitting.observe(viewLifecycleOwner) { submitting ->
+        viewModel.cartItemSubmitting.observe(viewLifecycleOwner) { submitting ->
             requireDialog().setCancelable(!submitting)
         }
 

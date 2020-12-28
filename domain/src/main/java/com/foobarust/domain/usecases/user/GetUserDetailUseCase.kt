@@ -36,6 +36,6 @@ class GetUserDetailUseCase @Inject constructor(
 
         val userId = authRepository.getUserId()
 
-        emitAll(userRepository.getRemoteUserDetailObservable(userId))
+        emitAll(userRepository.getUserDetailObservable(userId))
     }
 }

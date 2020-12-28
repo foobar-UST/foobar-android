@@ -29,8 +29,8 @@
         <item name="cornerSizeBottomRight">0dp</item>
     </style>
 
-    <!-- Corner Radius -->
     <dimen name="small_component_corner_radius">4dp</dimen>
-    <dimen name="medium_component_corner_radius">8dp</dimen>
-    <dimen name="large_component_corner_radius">16dp</dimen>
+    <dimen name="medium_component_corner_radius">2dp</dimen>
+    <dimen name="large_component_corner_radius">8dp</dimen>
+
 </resources>

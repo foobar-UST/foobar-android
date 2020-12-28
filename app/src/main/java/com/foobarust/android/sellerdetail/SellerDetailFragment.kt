@@ -76,11 +76,6 @@ class SellerDetailFragment : FullScreenDialogFragment() {
             showShortToast(it)
         }
 
-        // Retry
-        binding.loadErrorLayout.retryButton.setOnClickListener {
-            viewModel.onFetchSellerDetail(sellerId = args.sellerId)
-        }
-
         // Load at most two consecutive pages for view pager
         binding.itemsViewPager.offscreenPageLimit = 2
 

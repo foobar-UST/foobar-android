@@ -1,5 +1,10 @@
 package com.foobarust.data.mappers
 
+import com.foobarust.data.common.Constants.SELLER_SECTION_STATE_AVAILABLE
+import com.foobarust.data.common.Constants.SELLER_SECTION_STATE_DELIVERED
+import com.foobarust.data.common.Constants.SELLER_SECTION_STATE_PENDING
+import com.foobarust.data.common.Constants.SELLER_SECTION_STATE_PREPARING
+import com.foobarust.data.common.Constants.SELLER_SECTION_STATE_SHIPPED
 import com.foobarust.data.models.seller.*
 import com.foobarust.domain.models.common.Geolocation
 import com.foobarust.domain.models.seller.*
@@ -26,7 +31,6 @@ class SellerMapper @Inject constructor() {
     }
 
     fun toSellerDetail(entity: SellerDetailEntity): SellerDetail {
-        // Map location
         val location = entity.location!!.let {
             SellerLocation(
                 address = it.address!!,
@@ -95,5 +99,56 @@ class SellerMapper @Inject constructor() {
             available = entity.available ?: false,
             updatedAt = entity.updatedAt?.toDate()
         )
+    }
+
+    fun toSellerSectionDetail(entity: SellerSectionDetailEntity): SellerSectionDetail {
+        return SellerSectionDetail(
+            id = entity.id!!,
+            title = entity.title!!,
+            titleZh = entity.titleZh,
+            groupId = entity.groupId!!,
+            sellerId = entity.sellerId!!,
+            sellerName = entity.sellerName!!,
+            sellerNameZh = entity.sellerNameZh,
+            deliveryTime = entity.deliveryTime!!.toDate(),
+            description = entity.description!!,
+            descriptionZh = entity.descriptionZh,
+            cutoffTime = entity.cutoffTime!!.toDate(),
+            maxUsers = entity.maxUsers!!,
+            joinedUsersCount = entity.joinedUsersCount ?: 0,
+            joinedUsersIds = entity.joinedUsersIds ?: emptyList(),
+            imageUrl = entity.imageUrl,
+            state = parseSectionState(entity.state!!),
+            available = entity.available ?: false
+        )
+    }
+
+    fun toSellerSectionBasic(entity: SellerSectionBasicEntity): SellerSectionBasic {
+        return SellerSectionBasic(
+            id = entity.id!!,
+            title = entity.title!!,
+            titleZh = entity.titleZh,
+            sellerId = entity.sellerId!!,
+            sellerName = entity.sellerName!!,
+            sellerNameZh = entity.sellerNameZh,
+            deliveryTime = entity.deliveryTime!!.toDate(),
+            cutoffTime = entity.cutoffTime!!.toDate(),
+            maxUsers = entity.maxUsers!!,
+            joinedUsersCount = entity.joinedUsersCount ?: 0,
+            imageUrl = entity.imageUrl,
+            state = parseSectionState(entity.state!!),
+            available = entity.available ?: false
+        )
+    }
+
+    private fun parseSectionState(sectionState: String): SellerSectionState {
+        return when (sectionState) {
+            SELLER_SECTION_STATE_AVAILABLE -> SellerSectionState.AVAILABLE
+            SELLER_SECTION_STATE_PENDING -> SellerSectionState.PENDING
+            SELLER_SECTION_STATE_PREPARING -> SellerSectionState.PREPARING
+            SELLER_SECTION_STATE_SHIPPED -> SellerSectionState.SHIPPED
+            SELLER_SECTION_STATE_DELIVERED -> SellerSectionState.DELIVERED
+            else -> throw IllegalArgumentException("Invalid SellerSectionState.")
+        }
     }
 }

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="sectionBasic"
+            type="com.foobarust.domain.models.seller.SellerSectionBasic" />
+        <variable
+            name="listener"
+            type="com.foobarust.android.seller.SellerOffCampusAdapter.SellerOffCampusAdapterListener" />
+        <import type="com.foobarust.android.R" />
+        <import type="com.foobarust.domain.models.seller.SellerSectionBasicKt" />
+    </data>
+
+    <!--suppress AndroidUnknownAttribute -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_xmedium"
+        android:layout_marginBottom="@dimen/spacing_xmedium"
+        android:focusable="true"
+        android:clickable="true"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="@dimen/elevation_none"
+        android:onClick="@{() -> listener.onSellerSectionItemClicked(sectionBasic)}"
+        android:onLongClick="@{(view) -> listener.onSellerSectionItemLongClicked(view, sectionBasic)}">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/spacing_large">
+
+            <TextView
+                android:id="@+id/seller_name_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{SellerSectionBasicKt.getSellerNormalizedName(sectionBasic)}"
+                android:textAppearance="?attr/textAppearanceCaption"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Foobarify"/>
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/seller_image_view"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:scaleType="centerCrop"
+                app:glideUrl="@{sectionBasic.imageUrl}"
+                app:glideCenterCrop="@{true}"
+                app:glidePlaceholder="@{R.drawable.placeholder_card}"
+                app:shapeAppearance="@style/ShapeAppearance.Foobar.SmallComponent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/seller_name_text_view"
+                tools:src="@sample/sample_image_5"/>
+
+            <TextView
+                android:id="@+id/title_text_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_large"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:text="@{SellerSectionBasicKt.getNormalizedTitleForUpcoming(sectionBasic)}"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:lineSpacingMultiplier="1.2"
+                app:layout_constraintStart_toEndOf="@id/seller_image_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/seller_name_text_view"
+                tools:text="Lunch Order 午餐訂單 - 12:30 PM"/>
+
+            <TextView
+                android:id="@+id/date_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_large"
+                android:layout_marginTop="@dimen/spacing_medium"
+                android:text="@{@string/seller_section_date(SellerSectionBasicKt.getDeliveryDateString(sectionBasic))}"
+                android:textColor="@color/material_on_surface_emphasis_medium"
+                android:textAppearance="?attr/textAppearanceCaption"
+                app:layout_constraintStart_toEndOf="@id/seller_image_view"
+                app:layout_constraintTop_toBottomOf="@id/title_text_view"
+                tools:text="@string/seller_section_date"/>
+
+            <TextView
+                android:id="@+id/state_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_xmedium"
+                android:layout_marginStart="@dimen/spacing_large"
+                android:text="@string/seller_section_upcoming"
+                android:textColor="@color/material_on_surface_emphasis_medium"
+                android:textAppearance="?attr/textAppearanceOverline"
+                app:layout_constraintStart_toEndOf="@id/seller_image_view"
+                app:layout_constraintTop_toBottomOf="@id/date_text_view"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <!--
+            <TextView
+                android:id="@+id/cut_off_text_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_large"
+                android:layout_marginTop="@dimen/spacing_xmedium"
+                android:text="Order cut off at 12:00 PM"
+                android:textColor="@color/material_on_surface_emphasis_medium"
+                android:textAppearance="?attr/textAppearanceCaption"
+                app:layout_constraintStart_toEndOf="@id/seller_image_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title_text_view"/>
+                -->
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</layout>

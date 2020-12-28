@@ -47,14 +47,14 @@ class InsertSellerFakeData {
 
     @Test
     fun insert_sellers_fake_data() = runBlocking(Dispatchers.IO) {
-        val serializedList: List<SellerSerialized> = Json.decodeFromString(decodeSellersJson())
+        val serializedList: List<SellerSerialized> = Json.decodeFromString(
+            decodeJson(file = "sellers_fake_data.json")
+        )
 
         serializedList.map { it.toSellerDetailEntity() }
             .forEach {
-                firestore.collection(SELLERS_COLLECTION)
-                    .document(it.id!!)
-                    .set(it)
-                    .await()
+                firestore.document("$SELLERS_COLLECTION/${it.id!!}")
+                    .set(it).await()
             }
 
         assertTrue(true)
@@ -63,7 +63,9 @@ class InsertSellerFakeData {
     /*
     @Test
     fun insert_sellers_basic_fake_data() = runBlocking(Dispatchers.IO) {
-        val serializedList: List<SellerSerialized> = Json.decodeFromString(decodeSellersJson())
+        val serializedList: List<SellerSerialized> =Json.decodeFromString(
+            decodeJson(file = "sellers_fake_data.json")
+        )
 
         serializedList.map { it.toSellerBasicEntity() }
             .forEach {
@@ -80,33 +82,24 @@ class InsertSellerFakeData {
 
     @Test
     fun insert_seller_catalogs_fake_data() = runBlocking(Dispatchers.IO) {
-        val serializedList: List<SellerCatalogSerialized> = Json.decodeFromString(decodeCatalogsJson())
+        val serializedList: List<SellerCatalogSerialized> = Json.decodeFromString(
+            decodeJson(file = "seller_catalogs_fake_data.json")
+        )
 
         serializedList.forEach {
             val sellerId = it.seller_id
             val sellerCatalogEntity = it.toSellerCatalogEntity()
 
-            firestore.collection(SELLERS_COLLECTION)
-                .document(sellerId)
-                .collection(SELLERS_CATALOGS_SUB_COLLECTION)
-                .document(it.id)
-                .set(sellerCatalogEntity)
-                .await()
+            firestore.document(
+                "$SELLERS_COLLECTION/$sellerId/$SELLERS_CATALOGS_SUB_COLLECTION/${it.id}"
+            ).set(sellerCatalogEntity).await()
         }
     }
 
-    private fun decodeSellersJson(): String {
+    private fun decodeJson(file: String): String {
         val jsonInputStream = InstrumentationRegistry.getInstrumentation()
             .context.assets
-            .open("sellers_fake_data.json")
-
-        return jsonInputStream.bufferedReader().use { it.readText() }
-    }
-
-    private fun decodeCatalogsJson(): String {
-        val jsonInputStream = InstrumentationRegistry.getInstrumentation()
-            .context.assets
-            .open("seller_catalogs_fake_data.json")
+            .open(file)
 
         return jsonInputStream.bufferedReader().use { it.readText() }
     }

@@ -18,6 +18,7 @@ object Constants {
 
     const val USER_PHOTOS_STORAGE_FOLDER = "user_photos"
 
+    const val USER_ID_FIELD = "id"
     const val USER_USERNAME_FIELD = "username"
     const val USER_EMAIL_FIELD = "email"
     const val USER_NAME_FIELD = "name"
@@ -87,9 +88,33 @@ object Constants {
     const val SELLER_CATALOG_AVAILABLE_FIELD = "available"
     const val SELLER_CATALOG_UPDATED_AT_FIELD = "updated_at"
 
-    // Catalog Schedule
-    const val CATALOG_SCHEDULE_START_TIME_FIELD = "start_time"
-    const val CATALOG_SCHEDULE_END_TIME_FIELD = "end_time"
+    // Seller Section
+    const val SELLER_SECTIONS_SUB_COLLECTION = "sections"
+    const val SELLER_SECTIONS_BASIC_SUB_COLLECTION = "sections_basic"
+
+    const val SELLER_SECTION_ID_FIELD = "id"
+    const val SELLER_SECTION_TITLE_FIELD = "title"
+    const val SELLER_SECTION_TITLE_ZH_FIELD = "title_zh"
+    const val SELLER_SECTION_GROUP_ID_FIELD = "group_id"
+    const val SELLER_SECTION_SELLER_ID_FIELD = "seller_id"
+    const val SELLER_SECTION_SELLER_NAME_FIELD = "seller_name"
+    const val SELLER_SECTION_SELLER_NAME_ZH_FIELD = "seller_name_zh"
+    const val SELLER_SECTION_DELIVERY_TIME_FIELD = "delivery_time"
+    const val SELLER_SECTION_CUTOFF_TIME_FIELD = "cutoff_time"
+    const val SELLER_SECTION_DESCRIPTION_FIELD = "description"
+    const val SELLER_SECTION_DESCRIPTION_ZH_FIELD = "description_zh"
+    const val SELLER_SECTION_MAX_USERS_FIELD = "max_users"
+    const val SELLER_SECTION_JOINED_USERS_COUNT_FIELD = "joined_users_count"
+    const val SELLER_SECTION_JOINED_USERS_IDS_FIELD = "joined_users_ids"
+    const val SELLER_SECTION_IMAGE_URL_FIELD = "image_url"
+    const val SELLER_SECTION_STATE_FIELD = "state"
+    const val SELLER_SECTION_AVAILABLE_FIELD = "available"
+
+    const val SELLER_SECTION_STATE_AVAILABLE = "available"
+    const val SELLER_SECTION_STATE_PENDING = "pending"
+    const val SELLER_SECTION_STATE_PREPARING = "preparing"
+    const val SELLER_SECTION_STATE_SHIPPED = "shipped"
+    const val SELLER_SECTION_STATE_DELIVERED = "delivered"
 
     // Advertise
     const val ADVERTISES_COLLECTION = "advertises"
@@ -123,7 +148,7 @@ object Constants {
     const val SELLER_ITEM_AVAILABLE_FIELD = "available"
     const val SELLER_ITEM_UPDATED_AT_FIELD = "updated_at"
 
-    // Request Parameters
+    // Remote Request Parameters
     const val AUTHORIZATION_HEADER = "Authorization"
 
     const val ADD_USER_CART_ITEM_REQUEST_SELLER_ID = "seller_id"
@@ -132,8 +157,7 @@ object Constants {
 
     const val REMOVE_USER_CART_ITEM_REQUEST_CART_ITEM_ID = "cart_item_id"
 
-    // Responses
-    const val SUCCESS_RESPONSE_DATA_OBJECT = "data"
+    // Remote Responses
     const val ERROR_RESPONSE_ERROR_OBJECT = "error"
     const val ERROR_RESPONSE_CODE_FIELD = "code"
     const val ERROR_RESPONSE_MESSAGE_FIELD = "message"

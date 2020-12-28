@@ -10,6 +10,7 @@ import com.foobarust.android.sellerdetail.SellerItemDetailProperty
 import com.foobarust.android.utils.SingleLiveEvent
 import com.foobarust.domain.models.promotion.SuggestBasic
 import com.foobarust.domain.models.seller.SellerBasic
+import com.foobarust.domain.models.seller.SellerSectionBasic
 import dagger.hilt.android.qualifiers.ApplicationContext
 
 class SellerViewModel @ViewModelInject constructor(
@@ -41,6 +42,10 @@ class SellerViewModel @ViewModelInject constructor(
     val navigateToSuggestItem: LiveData<SellerItemDetailProperty>
         get() = _navigateToSuggestItem
 
+    private val _navigateToSellerSection = SingleLiveEvent<SellerSectionBasic>()
+    val navigateToSellerSection: LiveData<SellerSectionBasic>
+        get() = _navigateToSellerSection
+
     fun onNavigateToSellerDetail(sellerBasic: SellerBasic) {
         _navigateToSellerDetail.value = sellerBasic.id
     }
@@ -51,5 +56,9 @@ class SellerViewModel @ViewModelInject constructor(
 
     fun onNavigateToSuggestItem(suggestBasic: SuggestBasic) {
         // TODO: onNavigateToSuggestItem
+    }
+
+    fun onNavigateToSellerSection(sectionBasic: SellerSectionBasic) {
+        _navigateToSellerSection.value = sectionBasic
     }
 }

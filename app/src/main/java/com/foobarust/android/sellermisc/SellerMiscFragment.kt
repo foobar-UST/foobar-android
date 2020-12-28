@@ -32,7 +32,6 @@ class SellerMiscFragment : FullScreenDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         viewModel.onFetchSellerDetail(sellerId = args.sellerId)
     }
 

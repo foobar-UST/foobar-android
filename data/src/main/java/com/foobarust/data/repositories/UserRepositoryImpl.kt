@@ -4,12 +4,15 @@ import android.content.SharedPreferences
 import android.net.Uri
 import androidx.core.content.edit
 import com.foobarust.data.common.Constants.USERS_COLLECTION
+import com.foobarust.data.common.Constants.USERS_PUBLIC_COLLECTION
 import com.foobarust.data.common.Constants.USER_PHOTOS_STORAGE_FOLDER
 import com.foobarust.data.mappers.UserMapper
 import com.foobarust.data.preferences.PreferencesKeys.ONBOARDING_COMPLETED
+import com.foobarust.data.utils.getAwaitResult
 import com.foobarust.data.utils.putFileFlow
 import com.foobarust.data.utils.snapshotFlow
 import com.foobarust.domain.models.user.UserDetail
+import com.foobarust.domain.models.user.UserPublic
 import com.foobarust.domain.repositories.UserRepository
 import com.foobarust.domain.states.Resource
 import com.google.firebase.firestore.FirebaseFirestore
@@ -38,16 +41,15 @@ class UserRepositoryImpl @Inject constructor(
         preferences.edit { putBoolean(ONBOARDING_COMPLETED, completed) }
     }
 
-    override fun getRemoteUserDetailObservable(userId: String): Flow<Resource<UserDetail>> {
-        return firestore.collection(USERS_COLLECTION)
-            .document(userId)
+    override fun getUserDetailObservable(userId: String): Flow<Resource<UserDetail>> {
+        return firestore.document("$USERS_COLLECTION/$userId")
             .snapshotFlow(userMapper::toUserDetail)
     }
 
-    override suspend fun updateRemoteUserDetail(userId: String, userDetail: UserDetail) {
+    override suspend fun updateUserDetail(userId: String, userDetail: UserDetail) {
         val userDetailEntity = userMapper.toUserDetailEntity(userDetail)
 
-        firestore.collection(USERS_COLLECTION).document(userId)
+        firestore.document("$USERS_COLLECTION/$userId")
             .set(userDetailEntity, SetOptions.merge())
             .await()
     }
@@ -57,5 +59,10 @@ class UserRepositoryImpl @Inject constructor(
         val photoRef = storageReference.child("$USER_PHOTOS_STORAGE_FOLDER/$userId")
 
         return photoRef.putFileFlow(photoFile)
+    }
+
+    override suspend fun getUserPublicInfo(userId: String): UserPublic {
+        return firestore.document("$USERS_PUBLIC_COLLECTION/$userId")
+            .getAwaitResult(userMapper::toUserPublic)
     }
 }

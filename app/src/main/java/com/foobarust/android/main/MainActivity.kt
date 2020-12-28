@@ -11,12 +11,12 @@ import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
-import com.foobarust.android.NavigationSellerDirections
-import com.foobarust.android.R
+import com.foobarust.android.*
 import com.foobarust.android.cart.CartTimeoutDialog
 import com.foobarust.android.cart.CartTimeoutProperty
 import com.foobarust.android.databinding.ActivityMainBinding
 import com.foobarust.android.seller.SellerFragmentDirections
+import com.foobarust.android.tutorial.TutorialFragment
 import com.foobarust.android.utils.*
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -66,6 +66,11 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
         // Navigate to cart timeout dialog
         viewModel.navigateToTimeoutDialog.observe(this) {
             showCartTimeoutDialog(property = it)
+        }
+
+        // Show onboarding tutorial
+        viewModel.showOnboardingTutorial.observe(this) {
+            showOnboardingTutorial()
         }
     }
 
@@ -147,11 +152,7 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
 
     private fun setupViewsForNavGraph(currentGraphId: Int?) {
         // Hide cart bottom bar in settings graph
-        if (currentGraphId == R.id.navigation_seller) {
-            viewModel.showCartBottomBar()
-        } else {
-            viewModel.hideCartBottomBar()
-        }
+        viewModel.onCurrentGraphChanged(currentGraphId)
     }
 
     private fun setupViewsForTopLevelDestinations(currentDestinationId: Int?) {
@@ -182,5 +183,9 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
             supportFragmentManager,
             CartTimeoutDialog.TAG
         )
+    }
+
+    private fun showOnboardingTutorial() {
+        TutorialFragment().show(supportFragmentManager, TutorialFragment.TAG)
     }
 }

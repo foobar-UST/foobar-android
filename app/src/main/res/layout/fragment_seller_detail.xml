@@ -192,6 +192,7 @@
                     app:title="@{viewModel.showToolbarTitle ? viewModel.sellerDetailWithCatalogs.sellerDetail.name : null}"
                     app:layout_collapseMode="pin"
                     app:navigationIcon="@drawable/ic_arrow_back"
+                    app:navigationIconTint="@color/material_on_surface_emphasis_medium"
                     app:paddingTopSystemWindowInsets="@{true}"/>
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>

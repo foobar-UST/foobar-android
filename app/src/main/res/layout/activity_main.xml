@@ -56,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 app:userCart="@{viewModel.userCart}"
-                app:goneIf="@{!(viewModel.showCartBottomBar &amp;&amp; viewModel.userCart != null &amp;&amp; viewModel.userCart.itemsCount > 0)}"/>
+                app:goneIf="@{!viewModel.showCartBottomBar}"/>
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

@@ -6,7 +6,7 @@ import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.foobarust.android.R
 import com.foobarust.android.main.MainActivity
-import com.foobarust.android.onboarding.OnboardingActivity
+import com.foobarust.android.tutorial.TutorialFragment
 import com.foobarust.android.utils.TestCoroutineRule
 import com.foobarust.android.utils.getOrAwaitValue
 import com.foobarust.android.utils.observeForTesting
@@ -43,9 +43,9 @@ class SplashViewModelTest {
 
         delay(SPLASH_DELAY)
 
-        viewModel.startNavigation.observeForTesting {
+        viewModel.navigateToMain.observeForTesting {
             assertEquals(
-                viewModel.startNavigation.getOrAwaitValue(),
+                viewModel.navigateToMain.getOrAwaitValue(),
                 MainActivity::class
             )
         }
@@ -57,10 +57,10 @@ class SplashViewModelTest {
 
         delay(SPLASH_DELAY)
 
-        viewModel.startNavigation.observeForTesting {
+        viewModel.navigateToMain.observeForTesting {
             assertEquals(
-                viewModel.startNavigation.getOrAwaitValue(),
-                OnboardingActivity::class
+                viewModel.navigateToMain.getOrAwaitValue(),
+                TutorialFragment::class
             )
         }
     }

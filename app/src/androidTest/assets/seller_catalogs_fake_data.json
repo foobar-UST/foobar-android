@@ -19,5 +19,35 @@
     "title": "Curry Series",
     "title_zh": "咖喱類",
     "available": true
+  },
+  {
+    "id": "e3e46759-02d9-43b3-a322-298cc33f9ffb",
+    "seller_id": "kZr4pBjju7gQniYGS0kN",
+    "title": "Starters",
+    "available": true
+  },
+  {
+    "id": "f7a74cf7-fa5f-430e-97cd-190c2f5646d7",
+    "seller_id": "kZr4pBjju7gQniYGS0kN",
+    "title": "Entrees",
+    "available": true
+  },
+  {
+    "id": "c276fa63-e29a-436a-95ba-0130248ff819",
+    "seller_id": "kZr4pBjju7gQniYGS0kN",
+    "title": "Pizza",
+    "available": true
+  },
+  {
+    "id": "76559cfe-e445-453e-af0d-bb330c9926f3",
+    "seller_id": "kZr4pBjju7gQniYGS0kN",
+    "title": "Lunch Specials",
+    "available": true
+  },
+  {
+    "id": "66428621-457e-4dc6-8f35-e462f34ea3ce",
+    "seller_id": "kZr4pBjju7gQniYGS0kN",
+    "title": "Specialty Teas",
+    "available": true
   }
 ]

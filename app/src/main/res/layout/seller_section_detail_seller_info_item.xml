@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="sellerInfoItem"
+            type="com.foobarust.android.sellersection.SellerSectionDetailListModel.SellerSectionDetailSellerInfoItemModel" />
+        <variable
+            name="listener"
+            type="com.foobarust.android.sellersection.SellerSectionDetailAdapter.SellerSectionDetailAdapterListener" />
+        <import type="com.foobarust.android.R" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:clickable="true"
+        android:onClick="@{() -> listener.onSellerInfoItemClicked(sellerInfoItem.sellerId)}"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="@dimen/elevation_none">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/spacing_large">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/seller_image_view"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:scaleType="centerCrop"
+                app:glideUrl="@{sellerInfoItem.sellerImageUrl}"
+                app:glideCenterCrop="@{true}"
+                app:glidePlaceholder="@{R.drawable.placeholder_card}"
+                app:shapeAppearance="@style/ShapeAppearance.Foobar.SmallComponent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@sample/sample_image_5"/>
+
+            <TextView
+                android:id="@+id/name_text_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_large"
+                android:text="@{sellerInfoItem.sellerName}"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:lineSpacingMultiplier="1.2"
+                app:layout_constraintStart_toEndOf="@id/seller_image_view"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Foobarify"/>
+
+            <TextView
+                android:id="@+id/rating_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_large"
+                android:layout_marginTop="@dimen/spacing_xmedium"
+                android:gravity="center_vertical"
+                android:text="@{@string/seller_section_detail_seller_info_format_rating(sellerInfoItem.sellerRating)}"
+                android:textColor="@color/material_on_surface_emphasis_medium"
+                android:textAppearance="?attr/textAppearanceCaption"
+                android:drawablePadding="@dimen/spacing_xmedium"
+                app:drawableStartCompat="@drawable/ic_star"
+                app:drawableTint="@color/yellow"
+                app:drawableScale="@{1.0}"
+                app:layout_constraintStart_toEndOf="@id/seller_image_view"
+                app:layout_constraintTop_toBottomOf="@id/name_text_view"
+                tools:text="5.0"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</layout>

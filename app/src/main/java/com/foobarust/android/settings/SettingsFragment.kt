@@ -82,7 +82,7 @@ class SettingsFragment : Fragment(), SettingsAdapter.SettingsAdapterListener {
                 SettingsFragmentDirections.actionSettingsFragmentToLicenseFragment()
             )
             SETTINGS_FEATURES -> findNavController().navigate(
-                SettingsFragmentDirections.actionSettingsFragmentToOnboardingActivity()
+                SettingsFragmentDirections.actionSettingsFragmentToTutorialFragment()
             )
             SETTINGS_SIGN_OUT -> showSignOutConfirmDialog()
             SETTINGS_ORDER_HISTORY -> findNavController().navigate(

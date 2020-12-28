@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.foobarust.android.R
 import com.foobarust.android.databinding.SellerOnCampusItemBinding
-import com.foobarust.android.databinding.SellerSubtitleItemBinding
+import com.foobarust.android.databinding.SubtitleItemBinding
 import com.foobarust.android.seller.SellerOnCampusListModel.SellerOnCampusItemModel
 import com.foobarust.android.seller.SellerOnCampusListModel.SellerOnCampusSubtitleModel
 import com.foobarust.android.seller.SellerOnCampusViewHolder.SellerOnCampusItemViewHolder
@@ -33,8 +33,8 @@ class SellerOnCampusAdapter(
                 SellerOnCampusItemBinding.inflate(inflater, parent, false)
             )
 
-            R.layout.seller_subtitle_item -> SellerOnCampusSubtitleViewHolder(
-                SellerSubtitleItemBinding.inflate(inflater, parent, false)
+            R.layout.subtitle_item -> SellerOnCampusSubtitleViewHolder(
+                SubtitleItemBinding.inflate(inflater, parent, false)
             )
 
             else -> throw IllegalStateException("Unknown view type $viewType")
@@ -63,12 +63,16 @@ class SellerOnCampusAdapter(
                 // Set info
                 sellerBasic?.let {
                     val context = infoTextView.context
+                    /*
                     val infoItemsList = buildList {
                         add(context.getString(R.string.seller_data_format_min_spend_info, it.minSpend))
-                        addAll(it.tags)
+                        addAll()
                     }
-
-                    infoTextView.text = infoItemsList.joinToString(separator = " · ")
+                     */
+                    infoTextView.text = context.getString(
+                        R.string.seller_item_info,
+                        it.tags.joinToString(separator = " · ")
+                    )
                 }
 
                 executePendingBindings()
@@ -84,7 +88,7 @@ class SellerOnCampusAdapter(
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
             is SellerOnCampusItemModel -> R.layout.seller_on_campus_item
-            is SellerOnCampusSubtitleModel -> R.layout.seller_subtitle_item
+            is SellerOnCampusSubtitleModel -> R.layout.subtitle_item
             else -> throw IllegalStateException("Unknown view type at: $position")
         }
     }
@@ -101,7 +105,7 @@ sealed class SellerOnCampusViewHolder(itemView: View) : RecyclerView.ViewHolder(
     ) : SellerOnCampusViewHolder(binding.root)
 
     class SellerOnCampusSubtitleViewHolder(
-        val binding: SellerSubtitleItemBinding
+        val binding: SubtitleItemBinding
     ) : SellerOnCampusViewHolder(binding.root)
 }
 

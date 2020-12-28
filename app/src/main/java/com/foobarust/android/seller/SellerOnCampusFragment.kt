@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -49,18 +50,18 @@ class SellerOnCampusFragment : Fragment(),
             lifecycleOwner = viewLifecycleOwner
         }
 
-        // Setup on campus list
+        // Setup on-campus list
         val concatAdapter = ConcatAdapter()
         val promotionAdapter = PromotionAdapter(
             lifecycle = viewLifecycleOwner.lifecycle,
             advertiseAdapterListener = this,
             suggestAdapterListener = this
         )
-        val sellerAdapter = SellerOnCampusAdapter(this)
+        val sellerOnCampusAdapter = SellerOnCampusAdapter(this)
 
         concatAdapter.addAdapter(promotionAdapter)
-        concatAdapter.addAdapter(sellerAdapter.withLoadStateFooter(
-            footer = PagingLoadStateAdapter { sellerAdapter.retry() }
+        concatAdapter.addAdapter(sellerOnCampusAdapter.withLoadStateFooter(
+            footer = PagingLoadStateAdapter { sellerOnCampusAdapter.retry() }
         ))
 
         binding.recyclerView.run {
@@ -77,10 +78,10 @@ class SellerOnCampusFragment : Fragment(),
             promotionAdapter.submitList(it)
         }
 
-        // Subscribe for seller items
+        // Submit seller items
         viewLifecycleOwner.lifecycleScope.launch {
-            sellerOnCampusViewModel.sellerListModels.collectLatest {
-                sellerAdapter.submitData(it)
+            sellerOnCampusViewModel.onCampusListModels.collectLatest {
+                sellerOnCampusAdapter.submitData(it)
                 //binding.swipeRefreshLayout.isRefreshing = false
             }
         }
@@ -88,13 +89,12 @@ class SellerOnCampusFragment : Fragment(),
         // Retry button
         binding.loadErrorLayout.retryButton.setOnClickListener {
             sellerOnCampusViewModel.onReloadPromotion()
-            sellerAdapter.retry()
+            sellerOnCampusAdapter.retry()
         }
 
         // Control views corresponding to load states
-        sellerAdapter.addLoadStateListener { loadStates ->
+        sellerOnCampusAdapter.addLoadStateListener { loadStates ->
             sellerOnCampusViewModel.onLoadStateChanged(loadStates.source.refresh)
-
             loadStates.anyError()?.let {
                 showShortToast(it.error.message)
             }
@@ -111,7 +111,17 @@ class SellerOnCampusFragment : Fragment(),
 
         // Scroll to top when the tab is reselected
         mainViewModel.scrollToTop.observe(viewLifecycleOwner) {
-            binding.recyclerView.scrollToTop()
+            binding.recyclerView.smoothScrollToTop()
+        }
+
+        // Setup recyclerview bottom padding correspond to cart bottom bar
+        mainViewModel.showCartBottomBar.observe(viewLifecycleOwner) { show ->
+            val bottomPadding = if (show) {
+                requireContext().resources.getDimension(R.dimen.cart_bottom_bar_height)
+            } else {
+                0.0
+            }
+            binding.recyclerView.updatePadding(bottom = bottomPadding.toInt())
         }
 
         return binding.root
@@ -138,7 +148,7 @@ class SellerOnCampusFragment : Fragment(),
 
     private fun scrollToTopWhenNewItemsInserted(promotionAdapter: PromotionAdapter) {
         viewLifecycleOwner.lifecycleScope.launch {
-            promotionAdapter.firstItemInsertedScrollTop(binding.recyclerView)
+            promotionAdapter.scrollToTopWhenFirstItemInserted(binding.recyclerView)
         }
     }
 }

@@ -153,6 +153,7 @@
       }
     },
     "phone_num": "+852 2335-1875",
+    "image_url": "https://cso.ust.hk/sites/cso862-prod.sites2.ust.hk/files/styles/location_tu/public/2019-09/ad_01.png?itok=tRrGMDxE",
     "rating": 5.0,
     "rating_count": 12,
     "min_spend": 0,
@@ -406,7 +407,7 @@
       }
     },
     "phone_num": "+852 2426-1838",
-    "image_url": "https://scontent.fhkg1-1.fna.fbcdn.net/v/t1.0-9/72306941_2548895671822768_1922522443675598848_o.jpg?_nc_cat=104&ccb=2&_nc_sid=a26aad&_nc_ohc=NIWl2Ri8NMQAX9a48N1&_nc_ht=scontent.fhkg1-1.fna&oh=065e44c4c66d2bed4976fe82b188606f&oe=5FC4B45C",
+    "image_url": "https://cso.ust.hk/sites/cso862-prod.sites2.ust.hk/files/images/ann_cat_all_open_lg7_k3.png",
     "rating": 5.0,
     "rating_count": 12,
     "min_spend": 0,
@@ -434,6 +435,28 @@
     "min_spend": 0,
     "opening_hours": "Sunday - Thursday 16:00 - 23:00\nFriday - Saturday 16:00 - 24:00\nPH : 16:00 - 23:00\nPH Eve : 16:00 - 24:00",
     "type": 0,
+    "online": true,
+    "tags": ["Western", "Chinese", "Japanese"]
+  },
+  {
+    "id": "kZr4pBjju7gQniYGS0kN",
+    "name": "Foobarify",
+    "description": "To inspire and nurture the human spirit – one person, one cup and one neighborhood at a time.",
+    "location": {
+      "address": "G/F, Block C, Hong Kong University of Science and Technology, Sai Kung",
+      "address_zh": "西貢清水灣道科技大學C座地下",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
+    },
+    "phone_num": "+852 1234-5678",
+    "image_url": "https://media-cdn.tripadvisor.com/media/photo-s/11/fa/54/9c/cbd.jpg",
+    "rating": 5.0,
+    "rating_count": 12,
+    "min_spend": 0,
+    "opening_hours": "Sunday - Thursday 16:00 - 23:00\nFriday - Saturday 16:00 - 24:00\nPH : 16:00 - 23:00\nPH Eve : 16:00 - 24:00",
+    "type": 1,
     "online": true,
     "tags": ["Western", "Chinese", "Japanese"]
   }

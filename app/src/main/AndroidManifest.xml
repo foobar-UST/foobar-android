@@ -53,7 +53,7 @@
             android:theme="@style/Theme.Foobar.DayNight" />
 
         <activity
-            android:name=".onboarding.OnboardingActivity"
+            android:name=".tutorial.TutorialFragment"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Foobar.Onboarding.DayNight" />
 

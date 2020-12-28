@@ -17,7 +17,7 @@ import com.google.firebase.storage.UploadTask
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 
 const val ERROR_DOCUMENT_NOT_EXIST = "Document does not exist."
@@ -47,111 +47,97 @@ suspend inline fun <reified T, R> Query.getAwaitResult(mapper: (T) -> R): List<R
 }
 
 inline fun <reified T, R> CollectionReference.snapshotFlow(
-    crossinline mapper: (T) -> R,
-    keepAliveUntilCreated: Boolean = false
-): Flow<Resource<List<R>>> {
-    return channelFlow {
-        channel.offer(Resource.Loading())
+    crossinline mapper: (T) -> R
+): Flow<Resource<List<R>>> = callbackFlow {
+    channel.offer(Resource.Loading())
 
-        val subscription = this@snapshotFlow.addSnapshotListener(
-            //MetadataChanges.INCLUDE
-        ) { snapshot, error ->
-            if (error != null) {
-                // Close the channel if there is error
-                channel.offer(Resource.Error(error.message))
-                channel.close(CancellationException(error.message))
-            } else {
-                snapshot?.let {
-                    // doc.metadata.hasPendingWrites ? "Local" : "Server";
-                    if (!it.metadata.hasPendingWrites()) {
-                        val results = it.toObjects(T::class.java)
-                        
-                        if (results.isEmpty()) {
-                            channel.offer(Resource.Error(ERROR_COLLECTION_EMPTY))
-                            if (!keepAliveUntilCreated) {
-                                channel.close(CancellationException(ERROR_COLLECTION_EMPTY))
-                            }
-                        } else {
-                            channel.offer(Resource.Success(results.map { result -> mapper(result) }))
-                        }
-                    }
-                } ?: channel.close(CancellationException(ERROR_DOCUMENT_NOT_EXIST))
-            }
+    val subscription = this@snapshotFlow.addSnapshotListener(
+        //MetadataChanges.INCLUDE
+    ) { snapshot, error ->
+        if (error != null) {
+            // Close the channel if there is error
+            channel.offer(Resource.Error(error.message))
+            channel.close(CancellationException(error.message))
+        } else {
+            snapshot?.let {
+                // doc.metadata.hasPendingWrites ? "Local" : "Server";
+                if (!it.metadata.hasPendingWrites()) {
+                    val results = it.toObjects(T::class.java)
+                    channel.offer(
+                        Resource.Success(results.map { result -> mapper(result) })
+                    )
+                }
+            } ?: channel.close(CancellationException(ERROR_DOCUMENT_NOT_EXIST))
         }
-
-        awaitClose { subscription.remove() }
     }
+
+    awaitClose { subscription.remove() }
 }
 
 inline fun <reified T, R> DocumentReference.snapshotFlow(
     crossinline mapper: (T) -> R,
     keepAliveUntilCreated: Boolean = false
-): Flow<Resource<R>> {
-    return channelFlow {
-        channel.offer(Resource.Loading())
+): Flow<Resource<R>> = callbackFlow {
+    channel.offer(Resource.Loading())
 
-        val subscription = this@snapshotFlow.addSnapshotListener { snapshot, error ->
-            if (error != null) {
-                // Close the channel if there is error
-                channel.offer(Resource.Error(error.message))
-                channel.close(CancellationException(error.message))
-            } else {
-                snapshot?.let {
-                    if (!it.metadata.hasPendingWrites()) {
-                        val result = it.toObject(T::class.java)
-
-                        if (result == null) {
-                            channel.offer(Resource.Error(ERROR_DOCUMENT_NOT_EXIST))
-                            if (!keepAliveUntilCreated) {
-                                channel.close(CancellationException(ERROR_DOCUMENT_NOT_EXIST))
-                            }
-                        } else {
-                            channel.offer(Resource.Success(mapper(result)))
+    val subscription = this@snapshotFlow.addSnapshotListener { snapshot, error ->
+        if (error != null) {
+            // Close the channel if there is error
+            channel.offer(Resource.Error(error.message))
+            channel.close(CancellationException(error.message))
+        } else {
+            snapshot?.let {
+                if (!it.metadata.hasPendingWrites()) {
+                    val result = it.toObject(T::class.java)
+                    if (result == null) {
+                        channel.offer(Resource.Error(ERROR_DOCUMENT_NOT_EXIST))
+                        if (!keepAliveUntilCreated) {
+                            channel.close(CancellationException(ERROR_DOCUMENT_NOT_EXIST))
                         }
+                    } else {
+                        channel.offer(Resource.Success(mapper(result)))
                     }
-                } ?: channel.close(CancellationException(ERROR_DOCUMENT_NOT_EXIST))
-            }
+                }
+            } ?: channel.close(CancellationException(ERROR_DOCUMENT_NOT_EXIST))
         }
-
-        awaitClose { subscription.remove() }
     }
+
+    awaitClose { subscription.remove() }
 }
 
 inline fun <reified T, R> Query.snapshotFlow(
     crossinline mapper: (T) -> R,
     keepAliveUntilCreated: Boolean = false
-): Flow<Resource<List<R>>> {
-    return channelFlow {
-        channel.offer(Resource.Loading())
+): Flow<Resource<List<R>>> = callbackFlow {
+    channel.offer(Resource.Loading())
 
-        val subscription = this@snapshotFlow.addSnapshotListener { snapshot, error ->
-            if (error != null) {
-                // Close the channel if there is error
-                channel.offer(Resource.Error(error.message))
-                channel.close(CancellationException(error.message))
-            } else {
-                snapshot?.let {
-                    if (!it.metadata.hasPendingWrites()) {
-                        val results = it.toObjects(T::class.java)
+    val subscription = this@snapshotFlow.addSnapshotListener { snapshot, error ->
+        if (error != null) {
+            // Close the channel if there is error
+            channel.offer(Resource.Error(error.message))
+            channel.close(CancellationException(error.message))
+        } else {
+            snapshot?.let {
+                if (!it.metadata.hasPendingWrites()) {
+                    val results = it.toObjects(T::class.java)
 
-                        if (results.isEmpty()) {
-                            channel.offer(Resource.Error(ERROR_COLLECTION_EMPTY))
-                            if (!keepAliveUntilCreated) {
-                                channel.close(CancellationException(ERROR_COLLECTION_EMPTY))
-                            }
-                        } else {
-                            channel.offer(Resource.Success(results.map { result -> mapper(result) }))
+                    if (results.isEmpty()) {
+                        channel.offer(Resource.Error(ERROR_COLLECTION_EMPTY))
+                        if (!keepAliveUntilCreated) {
+                            channel.close(CancellationException(ERROR_COLLECTION_EMPTY))
                         }
+                    } else {
+                        channel.offer(Resource.Success(results.map { result -> mapper(result) }))
                     }
-                } ?: channel.close(CancellationException(ERROR_DOCUMENT_NOT_EXIST))
-            }
+                }
+            } ?: channel.close(CancellationException(ERROR_DOCUMENT_NOT_EXIST))
         }
-
-        awaitClose { subscription.remove() }
     }
+
+    awaitClose { subscription.remove() }
 }
 
-fun StorageReference.putFileFlow(uri: Uri): Flow<Resource<Unit>> = channelFlow {
+fun StorageReference.putFileFlow(uri: Uri): Flow<Resource<Unit>> = callbackFlow {
     val progressListener = OnProgressListener<UploadTask.TaskSnapshot> {
         val progress = 100.0 * it.bytesTransferred / it.totalByteCount
         channel.offer(Resource.Loading(progress))

@@ -31,9 +31,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?android:attr/colorBackground"
-                app:title="@{@string/cart_app_bar_title(viewModel.cartItemsLiveData.size)}"
+                app:title="@{@string/cart_app_bar_title(viewModel.cartItemsCount)}"
                 app:layout_scrollFlags="noScroll"
-                app:navigationIcon="@drawable/ic_close"
+                app:navigationIcon="@drawable/ic_arrow_back"
+                app:navigationIconTint="?attr/colorOnSurface"
                 tools:title="4 Items in Cart"/>
 
             <com.google.android.material.progressindicator.LinearProgressIndicator
@@ -66,7 +67,7 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:gravity="center"
-                app:goneIf="@{!((viewModel.uiFetchState instanceof UiFetchState.Success &amp;&amp; viewModel.cartItemsLiveData.empty) || viewModel.uiFetchState instanceof UiFetchState.Error)}"
+                app:goneIf="@{!viewModel.showNoItemLayout}"
                 tools:ignore="UseCompoundDrawables">
 
                 <ImageView

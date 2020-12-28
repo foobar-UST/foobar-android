@@ -40,7 +40,7 @@ class SellerOnCampusViewModel @ViewModelInject constructor(
     val promotionModelItems: LiveData<List<PromotionListModel>>
         get() = _promotionListModels
 
-    val sellerListModels: Flow<PagingData<SellerOnCampusListModel>> = getSellersUseCase(ON_CAMPUS)
+    val onCampusListModels: Flow<PagingData<SellerOnCampusListModel>> = getSellersUseCase(ON_CAMPUS)
         .map { pagingData ->
             pagingData.map { SellerOnCampusListModel.SellerOnCampusItemModel(it) }
         }
@@ -49,7 +49,7 @@ class SellerOnCampusViewModel @ViewModelInject constructor(
                 // Insert subtitle before sellers list
                 return@insertSeparators if (before == null) {
                     SellerOnCampusListModel.SellerOnCampusSubtitleModel(
-                        context.getString(R.string.seller_subtitle)
+                        subtitle = context.getString(R.string.seller_subtitle)
                     )
                 } else {
                     null

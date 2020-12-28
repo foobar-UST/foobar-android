@@ -7,6 +7,7 @@ import java.util.*
  */
 
 data class UserDetail(
+    val id: String,
     val username: String,
     val email: String,
     val name: String? = null,

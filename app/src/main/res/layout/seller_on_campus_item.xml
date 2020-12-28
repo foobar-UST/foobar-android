@@ -69,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_large"
                 android:layout_marginStart="@dimen/spacing_medium"
-                android:layout_marginEnd="@dimen/spacing_xmedium"
+                android:layout_marginEnd="@dimen/spacing_large"
                 android:layout_below="@id/photo_image_view_layout"
                 android:layout_toStartOf="@id/status_text_view"
                 android:text="@{SellerBasicKt.getNormalizedName(sellerBasic)}"
@@ -90,8 +90,8 @@
                 android:gravity="center_vertical"
                 android:text="@{sellerBasic.online ? @string/seller_status_online : @string/seller_status_offline}"
                 android:textColor="?attr/colorSecondary"
-                android:textAppearance="?attr/textAppearanceCaption"
-                tools:text="Opening"/>
+                android:textAppearance="?attr/textAppearanceOverline"
+                tools:text="@string/seller_status_online"/>
 
             <RatingBar
                 style="@style/Widget.Foobar.RatingBar"
@@ -128,7 +128,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_xmedium"
                 android:layout_marginStart="@dimen/spacing_medium"
-                android:layout_marginEnd="@dimen/spacing_xmedium"
+                android:layout_marginEnd="@dimen/spacing_large"
                 android:layout_toStartOf="@id/status_text_view"
                 android:layout_below="@id/rating_bar"
                 android:gravity="center_vertical"
@@ -137,7 +137,7 @@
                 android:maxLines="2"
                 android:ellipsize="end"
                 android:lineSpacingMultiplier="1.2"
-                tools:text="$ 30.0 Min &#183; Western &#183; Chinese"/>
+                tools:text="# Western &#183; Chinese"/>
 
         </RelativeLayout>
 

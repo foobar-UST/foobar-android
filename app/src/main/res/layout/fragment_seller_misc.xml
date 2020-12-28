@@ -31,6 +31,7 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             app:navigationIcon="@drawable/ic_arrow_back"
+            app:navigationIconTint="@color/material_on_surface_emphasis_medium"
             app:paddingTopSystemWindowInsets="@{true}"/>
 
         <LinearLayout

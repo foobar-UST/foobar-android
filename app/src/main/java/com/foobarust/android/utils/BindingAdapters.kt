@@ -16,12 +16,15 @@ import android.view.View
 import android.view.View.*
 import android.view.ViewGroup
 import android.view.WindowInsets
+import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
+import androidx.annotation.AnimRes
 import androidx.annotation.AttrRes
 import androidx.annotation.DrawableRes
 import androidx.core.view.updateLayoutParams
+import androidx.core.view.updatePadding
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
@@ -37,6 +40,13 @@ import kotlin.math.round
 
 interface OnTextViewClickableSpanListener {
     fun onClickableSpanEndClicked(view: View)
+}
+
+@BindingAdapter("attachAnim")
+fun View.bindAttachAnimation(@AnimRes animRes: Int?) {
+    if (animRes == null) return
+    val animation = AnimationUtils.loadAnimation(context, animRes)
+    startAnimation(animation)
 }
 
 @BindingAdapter("progressHideIf")
@@ -87,12 +97,28 @@ fun View.bindMargin(
     setLayoutParams(layoutParams)
 }
 
-@BindingAdapter("iconRes")
-fun MaterialButton.bindIconRes(
-    @DrawableRes drawableRes: Int?
+@BindingAdapter(
+    "paddingTop",
+    "paddingBottom",
+    "paddingStart",
+    "paddingEnd",
+    requireAll = false
+)
+fun View.bindPadding(
+    paddingTop: Float?,
+    paddingBottom: Float?,
+    paddingStart: Float?,
+    paddingEnd: Float?
 ) {
-    if (drawableRes == null) return
+    paddingTop?.let { updatePadding(top = (getPaddingTop() + it).toInt()) }
+    paddingBottom?.let { updatePadding(bottom = (getPaddingBottom() + it).toInt()) }
+    paddingStart?.let { updatePadding(left = (paddingLeft + it).toInt()) }
+    paddingEnd?.let { updatePadding(right = (paddingRight + it).toInt()) }
+}
 
+@BindingAdapter("iconRes")
+fun MaterialButton.bindIconRes(@DrawableRes drawableRes: Int?) {
+    if (drawableRes == null) return
     setIconResource(drawableRes)
 }
 

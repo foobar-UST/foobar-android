@@ -8,9 +8,12 @@ import com.foobarust.data.common.Constants.SELLERS_CATALOGS_SUB_COLLECTION
 import com.foobarust.data.common.Constants.SELLERS_COLLECTION
 import com.foobarust.data.common.Constants.SELLER_CATALOG_AVAILABLE_FIELD
 import com.foobarust.data.common.Constants.SELLER_ITEMS_SUB_COLLECTION
+import com.foobarust.data.common.Constants.SELLER_SECTIONS_BASIC_SUB_COLLECTION
+import com.foobarust.data.common.Constants.SELLER_SECTIONS_SUB_COLLECTION
 import com.foobarust.data.mappers.SellerMapper
 import com.foobarust.data.paging.SellerBasicsPagingSource
 import com.foobarust.data.paging.SellerItemBasicsPagingSource
+import com.foobarust.data.paging.SellerSectionsBasicPagingSource
 import com.foobarust.data.utils.getAwaitResult
 import com.foobarust.domain.models.seller.*
 import com.foobarust.domain.repositories.SellerRepository
@@ -22,19 +25,20 @@ import javax.inject.Inject
  * Created by kevin on 9/27/20
  */
 
-private const val SELLER_BASIC_LIST_PAGE_SIZE = 7
+private const val SELLER_BASICS_LIST_PAGE_SIZE = 7
 private const val SELLER_ITEMS_LIST_PAGE_SIZE = 10
+private const val SELLER_SECTIONS_LIST_PAGE_SIZE = 8
 
 class SellerRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val sellerMapper: SellerMapper
 ) : SellerRepository {
 
-    override fun getSellers(sellerType: SellerType): Flow<PagingData<SellerBasic>> {
+    override fun getSellerBasics(sellerType: SellerType): Flow<PagingData<SellerBasic>> {
         return Pager(
             config = PagingConfig(
-                initialLoadSize = SELLER_BASIC_LIST_PAGE_SIZE * 2,
-                pageSize = SELLER_BASIC_LIST_PAGE_SIZE,
+                initialLoadSize = SELLER_BASICS_LIST_PAGE_SIZE * 2,
+                pageSize = SELLER_BASICS_LIST_PAGE_SIZE,
                 enablePlaceholders = false
             ),
             pagingSourceFactory = {
@@ -44,14 +48,12 @@ class SellerRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getSellerBasic(sellerId: String): SellerBasic {
-        return firestore.collection(SELLERS_BASIC_COLLECTION)
-            .document(sellerId)
+        return firestore.document("$SELLERS_BASIC_COLLECTION/$sellerId")
             .getAwaitResult(sellerMapper::toSellerBasic)
     }
 
     override suspend fun getSellerDetail(sellerId: String): SellerDetail {
-        return firestore.collection(SELLERS_COLLECTION)
-            .document(sellerId)
+        return firestore.document("$SELLERS_COLLECTION/$sellerId")
             .getAwaitResult(sellerMapper::toSellerDetail)
     }
 
@@ -76,10 +78,40 @@ class SellerRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getSellerItemDetail(sellerId: String, itemId: String): SellerItemDetail {
-        return firestore.collection(SELLERS_COLLECTION)
-            .document(sellerId)
-            .collection(SELLER_ITEMS_SUB_COLLECTION)
-            .document(itemId)
+        return firestore.document(
+            "$SELLERS_COLLECTION/$sellerId/$SELLER_ITEMS_SUB_COLLECTION/$itemId"
+        )
             .getAwaitResult(sellerMapper::toSellerItemDetail)
+    }
+
+    override fun getSellerSectionBasics(): Flow<PagingData<SellerSectionBasic>> {
+        return Pager(
+            config = PagingConfig(
+                initialLoadSize = SELLER_SECTIONS_LIST_PAGE_SIZE * 2,
+                pageSize = SELLER_SECTIONS_LIST_PAGE_SIZE,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = {
+                SellerSectionsBasicPagingSource(firestore, sellerMapper)
+            }
+        ).flow
+    }
+
+    override suspend fun getSellerSectionBasics(
+        sellerId: String,
+        numOfSections: Int
+    ): List<SellerSectionBasic> {
+        return firestore.collection(
+            "$SELLERS_COLLECTION/$sellerId/$SELLER_SECTIONS_BASIC_SUB_COLLECTION"
+        )
+            .limit(numOfSections.toLong())
+            .getAwaitResult(sellerMapper::toSellerSectionBasic)
+    }
+
+    override suspend fun getSellerSectionDetail(sellerId: String, sectionId: String): SellerSectionDetail {
+        return firestore.document(
+            "$SELLERS_COLLECTION/$sellerId/$SELLER_SECTIONS_SUB_COLLECTION/$sectionId"
+        )
+            .getAwaitResult(sellerMapper::toSellerSectionDetail)
     }
 }

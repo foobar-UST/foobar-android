@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_seller_section"
+    app:startDestination="@id/sellerSectionDetailFragment">
+
+    <!-- SellerSectionDetailFragment -->
+    <fragment
+        android:id="@+id/sellerSectionDetailFragment"
+        android:name="com.foobarust.android.sellersection.SellerSectionDetailFragment"
+        tools:layout="@layout/fragment_seller_section_detail">
+        <argument
+            android:name="sellerId"
+            app:argType="string" />
+        <argument
+            android:name="sectionId"
+            app:argType="string" />
+    </fragment>
+
+    <!-- SellerSectionUsersFragment -->
+    <fragment
+        android:id="@+id/sellerSectionUsersFragment"
+        android:name="com.foobarust.android.sellersection.SellerSectionUsersFragment"
+        tools:layout="@layout/fragment_seller_section_users"/>
+
+</navigation>

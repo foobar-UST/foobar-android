@@ -1,0 +1,100 @@
+[
+  {
+    "id": "ca5ed386-6c2f-400a-8d05-b76181f6af2c",
+    "username": "cornant",
+    "email": "cornant@test.xyz",
+    "roles": ["user"],
+    "photo_url": "https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png"
+  },
+  {
+    "id": "a9803f26-8dca-43c6-b77a-75216f8c2e32",
+    "username": "deerrush",
+    "email": "deerrush@test.xyz",
+    "roles": ["user"],
+    "photo_url": "https://cdn.iconscout.com/icon/free/png-256/avatar-380-456332.png"
+  },
+  {
+    "id": "8f0aabc5-4632-4c51-ad75-bb404c5a924c",
+    "username": "broccoli",
+    "email": "broccoli@test.xyz",
+    "roles": ["user"],
+    "photo_url": "https://cdn.iconscout.com/icon/free/png-256/avatar-367-456319.png"
+  },
+  {
+    "id": "1a08e0c4-cea0-4cf6-9835-102b208377fd",
+    "username": "rat",
+    "email": "rat@test.xyz",
+    "roles": ["user"],
+    "photo_url": "https://cdn.iconscout.com/icon/free/png-256/avatar-367-456319.png"
+  },
+  {
+    "id": "7ff0a4b5-69c3-4543-ac31-ec9d20cb335f",
+    "username": "enchanting",
+    "email": "enchanting@test.xyz",
+    "roles": ["user"],
+    "photo_url": "https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/7_avatar-512.png"
+  },
+  {
+    "id": "091fe534-619b-44c5-a5a0-1bfd74f14ca4",
+    "username": "clef",
+    "email": "clef@test.xyz",
+    "roles": ["user"],
+    "photo_url": "https://p7.hiclipart.com/preview/129/94/328/computer-icons-avatar-icon-design-male-teacher.jpg"
+  },
+  {
+    "id": "effa8ca2-a199-440c-9a0d-d622e8fe611a",
+    "username": "goldfish",
+    "email": "goldfish@test.xyz",
+    "roles": ["user"],
+    "photo_url": "https://cdn3.iconfinder.com/data/icons/education-248/128/4-512.png"
+  },
+  {
+    "id": "1ccfa715-8afa-4dee-9b15-4efc0567e5e0",
+    "username": "ryebread",
+    "email": "ryebread@test.xyz",
+    "roles": ["user"],
+    "photo_url": "https://cdn1.iconfinder.com/data/icons/avatar-3/512/Teacher-512.png"
+  },
+  {
+    "id": "e267c070-973a-4783-a850-234365950a66",
+    "username": "giraffe",
+    "email": "giraffe@test.xyz",
+    "roles": ["user"],
+    "photo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMLCjCYOtPXxDP2efQ8dCqn8o1ScHf2nULxw&usqp=CAU"
+  },
+  {
+    "id": "be046d98-562d-47eb-a04b-1c5f0b666616",
+    "username": "wolf",
+    "email": "wolf@test.xyz",
+    "roles": ["user"],
+    "photo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLZZuh-coSU6BEcfp5uLlRNL-nJlwK3TtoBQ&usqp=CAU"
+  },
+  {
+    "id": "d7b25cf4-3d28-4681-a907-1c3a26e3f252",
+    "username": "psycho",
+    "email": "psycho@test.xyz",
+    "roles": ["user"],
+    "photo_url": "https://cdn.iconscout.com/icon/free/png-256/avatar-380-456332.png"
+  },
+  {
+    "id": "bfd8b83b-6f2e-4d5b-b3d4-78368342247b",
+    "username": "flower",
+    "email": "flower@test.xyz",
+    "roles": ["user"],
+    "photo_url": "https://cdn.iconscout.com/icon/free/png-512/avatar-373-456325.png"
+  },
+  {
+    "id": "b879c326-006d-40e6-8229-febdb8576247",
+    "username": "bear",
+    "email": "bear@test.xyz",
+    "roles": ["user"],
+    "photo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfzLD7SrZjxvRENOvrdrKg1zktGGMdkN1BTg&usqp=CAU"
+  },
+  {
+    "id": "81e78269-3f97-4ef2-9f22-14c466236f64",
+    "username": "derecho",
+    "email": "derecho@test.xyz",
+    "roles": ["user"],
+    "photo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxLtdifYeywRo54PEZid8SrOliHnblV4GNEQ&usqp=CAU"
+  }
+]

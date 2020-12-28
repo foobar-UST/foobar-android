@@ -4,7 +4,6 @@ import androidx.test.ext.junit.rules.activityScenarioRule
 import androidx.test.platform.app.InstrumentationRegistry
 import com.foobarust.android.InsertFakeDataActivity
 import com.foobarust.data.common.Constants.SELLERS_COLLECTION
-import com.foobarust.data.common.Constants.SELLER_ITEMS_BASIC_SUB_COLLECTION
 import com.foobarust.data.common.Constants.SELLER_ITEMS_SUB_COLLECTION
 import com.foobarust.data.models.seller.SellerItemBasicEntity
 import com.foobarust.data.models.seller.SellerItemDetailEntity
@@ -43,6 +42,7 @@ class InsertSellerItemFakeData {
         hiltRule.inject()
     }
 
+    /*
     @Test
     fun insert_seller_items_basic_fake_data() = runBlocking(Dispatchers.IO) {
         val serializedListSeller: List<SellerItemSerialized> = Json.decodeFromString(decodeJson())
@@ -60,6 +60,8 @@ class InsertSellerItemFakeData {
 
         assertTrue(true)
     }
+
+     */
 
     @Test
     fun insert_seller_items_fake_data() = runBlocking(Dispatchers.IO) {

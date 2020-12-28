@@ -37,13 +37,13 @@ class SellerItemDetailViewModel @ViewModelInject constructor(
     val amountsInput: LiveData<Int>
         get() = _amountsInput.asStateFlow().asLiveData(viewModelScope.coroutineContext)
 
-    private val _isSubmitting = MutableStateFlow(false)
-    val isSubmitting: LiveData<Boolean>
-        get() = _isSubmitting.asStateFlow().asLiveData(viewModelScope.coroutineContext)
+    private val _cartItemSubmitting = MutableStateFlow(false)
+    val cartItemSubmitting: LiveData<Boolean>
+        get() = _cartItemSubmitting.asStateFlow().asLiveData(viewModelScope.coroutineContext)
 
     val finalPrice: LiveData<Double> = _itemDetail.asStateFlow()
         .combine(_amountsInput.asStateFlow()) { itemDetail, amount ->
-            itemDetail?.let { it.price * amount } ?: 0.toDouble()
+            itemDetail?.let { it.price * amount } ?: 0.0
         }
         .asLiveData(viewModelScope.coroutineContext)
 
@@ -85,7 +85,7 @@ class SellerItemDetailViewModel @ViewModelInject constructor(
 
     fun onSubmitItemToCart() = viewModelScope.launch {
         _itemDetail.value?.let { itemDetail ->
-            _isSubmitting.value = true
+            _cartItemSubmitting.value = true
 
             val params = AddUserCartItemParameters(
                 sellerId = property.sellerId,
@@ -96,11 +96,10 @@ class SellerItemDetailViewModel @ViewModelInject constructor(
                 when (it) {
                     is Resource.Success -> {
                         _dismissDialog.value = Unit
-                        _isSubmitting.value = false
-                        showToastMessage("Added to Cart.")
+                        _cartItemSubmitting.value = false
                     }
                     is Resource.Error -> {
-                        _isSubmitting.value = false
+                        _cartItemSubmitting.value = false
                         showToastMessage(it.message)
                     }
                     is Resource.Loading -> Unit

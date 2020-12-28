@@ -3,6 +3,7 @@ package com.foobarust.android.splash
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.foobarust.android.main.MainActivity
 import com.foobarust.android.utils.navigateTo
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -14,9 +15,12 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Observe for navigation
-        viewModel.startNavigation.observe(this) {
-            navigateTo(destination = it, fadeAnim = true, finishSelf = true)
+        viewModel.navigateToMain.observe(this) {
+            navigateTo(
+                destination = MainActivity::class,
+                fadeAnim = true,
+                finishSelf = true
+            )
         }
     }
 }

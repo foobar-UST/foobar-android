@@ -36,7 +36,8 @@ class SellerFragment : Fragment() {
 
             binding.sellerViewPager.run {
                 adapter = sellerPagerAdapter
-                isUserInputEnabled = false
+                // Set page limit to prevent scrolling lag
+                offscreenPageLimit = 2
             }
 
             TabLayoutMediator(binding.sellerTabLayout, binding.sellerViewPager) { tab, position ->
@@ -64,6 +65,16 @@ class SellerFragment : Fragment() {
         viewModel.navigateToSuggestItem.observe(viewLifecycleOwner) {
             findNavController(R.id.sellerFragment)?.navigate(
                 SellerFragmentDirections.actionSellerFragmentToSellerItemDetailFragment(it)
+            )
+        }
+
+        // Navigate to seller section detail
+        viewModel.navigateToSellerSection.observe(viewLifecycleOwner) {
+            findNavController(R.id.sellerFragment)?.navigate(
+                SellerFragmentDirections.actionSellerFragmentToSellerSectionFragment(
+                    sellerId = it.sellerId,
+                    sectionId = it.id
+                )
             )
         }
 
