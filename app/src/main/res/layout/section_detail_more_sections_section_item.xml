@@ -7,20 +7,21 @@
     <data>
         <variable
             name="sectionItem"
-            type="com.foobarust.android.sellersection.MoreSectionsListModel.MoreSectionsSectionItem" />
+            type="com.foobarust.android.sellersection.SectionDetailMoreSectionsListModel.SectionDetailMoreSectionsSectionItem" />
         <variable
             name="listener"
-            type="com.foobarust.android.sellersection.MoreSectionsAdapter.MoreSectionsAdapterListener" />
+            type="com.foobarust.android.sellersection.SectionDetailMoreSectionsAdapter.SectionDetailMoreSectionsAdapterListener" />
         <import type="com.foobarust.android.R" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
-        android:layout_width="260dp"
+        android:layout_width="300dp"
         android:layout_height="match_parent"
         android:layout_margin="@dimen/spacing_xmedium"
         android:focusable="true"
         android:clickable="true"
-        android:onClick="@{() -> listener.onSectionClicked(sectionItem.sectionId)}">
+        android:onClick="@{() -> listener.onSectionClicked(sectionItem.sectionId)}"
+        app:cardElevation="@dimen/elevation_none">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -29,8 +30,8 @@
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/section_image_view"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
                 android:scaleType="centerCrop"
                 app:glideUrl="@{sectionItem.sectionImageUrl}"
                 app:glideCenterCrop="@{true}"

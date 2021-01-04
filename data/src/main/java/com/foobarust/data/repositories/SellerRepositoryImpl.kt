@@ -10,6 +10,9 @@ import com.foobarust.data.common.Constants.SELLER_CATALOG_AVAILABLE_FIELD
 import com.foobarust.data.common.Constants.SELLER_ITEMS_SUB_COLLECTION
 import com.foobarust.data.common.Constants.SELLER_SECTIONS_BASIC_SUB_COLLECTION
 import com.foobarust.data.common.Constants.SELLER_SECTIONS_SUB_COLLECTION
+import com.foobarust.data.common.Constants.SELLER_SECTION_AVAILABLE_FIELD
+import com.foobarust.data.common.Constants.SELLER_SECTION_CUTOFF_TIME_FIELD
+import com.foobarust.data.common.Constants.SELLER_SECTION_SELLER_NAME_FIELD
 import com.foobarust.data.mappers.SellerMapper
 import com.foobarust.data.paging.SellerBasicsPagingSource
 import com.foobarust.data.paging.SellerItemBasicsPagingSource
@@ -18,7 +21,9 @@ import com.foobarust.data.utils.getAwaitResult
 import com.foobarust.domain.models.seller.*
 import com.foobarust.domain.repositories.SellerRepository
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import kotlinx.coroutines.flow.Flow
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -104,8 +109,25 @@ class SellerRepositoryImpl @Inject constructor(
         return firestore.collection(
             "$SELLERS_COLLECTION/$sellerId/$SELLER_SECTIONS_BASIC_SUB_COLLECTION"
         )
+            .whereEqualTo(SELLER_SECTION_AVAILABLE_FIELD, true)
+            .whereGreaterThan(SELLER_SECTION_CUTOFF_TIME_FIELD, Date())
+            .orderBy(SELLER_SECTION_CUTOFF_TIME_FIELD, Query.Direction.ASCENDING)
+            .orderBy(SELLER_SECTION_SELLER_NAME_FIELD, Query.Direction.ASCENDING)
             .limit(numOfSections.toLong())
             .getAwaitResult(sellerMapper::toSellerSectionBasic)
+    }
+
+    override fun getSellerSectionsBasic(sellerId: String): Flow<PagingData<SellerSectionBasic>> {
+        return Pager(
+            config = PagingConfig(
+                initialLoadSize = SELLER_SECTIONS_LIST_PAGE_SIZE * 2,
+                pageSize = SELLER_SECTIONS_LIST_PAGE_SIZE,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = {
+                SellerSectionsBasicPagingSource(firestore, sellerMapper, sellerId)
+            }
+        ).flow
     }
 
     override suspend fun getSellerSectionDetail(sellerId: String, sectionId: String): SellerSectionDetail {

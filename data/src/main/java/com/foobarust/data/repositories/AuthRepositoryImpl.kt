@@ -62,7 +62,6 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun getIdToken(): String {
         val currentUser = firebaseAuth.currentUser ?: throw Exception(ERROR_NOT_SIGNED_IN)
         val tokenResult = currentUser.getIdToken(true).await()
-
         return tokenResult.token ?: throw Exception(ERROR_GET_ID_TOKEN)
     }
 
@@ -70,15 +69,15 @@ class AuthRepositoryImpl @Inject constructor(
         val listener = FirebaseAuth.AuthStateListener {
             val currentUser = it.currentUser
             if (currentUser == null) {
-                channel.offer(Resource.Error(ERROR_NOT_SIGNED_IN))
+                channel.offer(Resource.Success(AuthProfile()))
             } else {
                 channel.offer(
                     Resource.Success(authMapper.toAuthProfile(currentUser))
                 )
             }
-        }.also {
-            firebaseAuth.addAuthStateListener(it)
         }
+
+        firebaseAuth.addAuthStateListener(listener)
 
         awaitClose {
             firebaseAuth.removeAuthStateListener(listener)

@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/navigation_seller"
-    app:startDestination="@id/sellerFragment">
+    app:startDestination="@id/sellerFragment"
+    android:id="@+id/navigation_seller">
 
     <!-- SellerFragment -->
     <fragment
@@ -77,11 +77,14 @@
         <action
             android:id="@+id/action_cartFragment_to_sellerMiscFragment"
             app:destination="@id/sellerMiscFragment" />
+        <action
+            android:id="@+id/action_cartFragment_to_sellerItemDetailFragment"
+            app:destination="@id/sellerItemDetailFragment" />
     </dialog>
 
     <action
         android:id="@+id/action_global_cartFragment"
-        app:destination="@id/cartFragment"/>
+        app:destination="@id/cartFragment" />
 
     <!-- SellerSearchFragment -->
     <dialog
@@ -102,11 +105,14 @@
         android:name="com.foobarust.android.sellersection.SellerSectionFragment"
         tools:layout="@layout/fragment_seller_section">
         <argument
-            android:name="sellerId"
-            app:argType="string" />
-        <argument
-            android:name="sectionId"
-            app:argType="string" />
+            android:name="sellerSectionProperty"
+            app:argType="com.foobarust.android.sellersection.SellerSectionProperty"/>
+        <action
+            android:id="@+id/action_sellerSectionFragment_to_sellerDetailFragment"
+            app:destination="@id/sellerDetailFragment" />
+        <action
+            android:id="@+id/action_sellerSectionFragment_self"
+            app:destination="@id/sellerSectionFragment" />
     </dialog>
 
 </navigation>

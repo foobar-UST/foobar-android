@@ -111,7 +111,6 @@ dependencies {
     kapt(Annotation.HILT_ANDROIDX_COMPILER)
 
     // Debug
-    // Who cares about memory leak
     //debugImplementation(Dependencies.LEAK_CANARY)
 
     // Unit Test

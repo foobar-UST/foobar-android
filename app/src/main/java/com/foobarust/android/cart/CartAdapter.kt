@@ -87,6 +87,7 @@ class CartAdapter(
     interface CartAdapterListener {
         fun onNavigateToSellerDetail(sellerId: String)
         fun onNavigateToSellerMisc(sellerId: String)
+        fun onCartPurchaseItemClicked(userCartItem: UserCartItem)
         fun onRemoveCartItem(userCartItem: UserCartItem)
         fun onClearCart()
         fun onPlaceOrder()

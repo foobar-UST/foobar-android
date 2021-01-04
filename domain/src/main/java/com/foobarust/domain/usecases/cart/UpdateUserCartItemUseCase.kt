@@ -14,13 +14,13 @@ import javax.inject.Inject
 /**
  * Created by kevin on 12/1/20
  */
-class RemoveUserCartItemUseCase @Inject constructor(
+class UpdateUserCartItemUseCase @Inject constructor(
     private val authRepository: AuthRepository,
     private val cartRepository: CartRepository,
     @IoDispatcher coroutineDispatcher: CoroutineDispatcher
-) : FlowUseCase<String, Unit>(coroutineDispatcher) {
+) : FlowUseCase<UpdateUserCartItemParameters, Unit>(coroutineDispatcher) {
 
-    override fun execute(parameters: String): Flow<Resource<Unit>> = flow {
+    override fun execute(parameters: UpdateUserCartItemParameters): Flow<Resource<Unit>> = flow {
         if (!authRepository.isSignedIn()) {
             throw Exception(ERROR_USER_NOT_SIGNED_IN)
         }
@@ -29,7 +29,8 @@ class RemoveUserCartItemUseCase @Inject constructor(
 
         val result = cartRepository.removeUserCartItem(
             idToken = idToken,
-            cartItemId = parameters
+            cartItemId = parameters.cartItemId,
+            amounts = parameters.amounts
         )
 
         when (result) {
@@ -39,3 +40,8 @@ class RemoveUserCartItemUseCase @Inject constructor(
         }
     }
 }
+
+data class UpdateUserCartItemParameters(
+    val cartItemId: String,
+    val amounts: Int
+)

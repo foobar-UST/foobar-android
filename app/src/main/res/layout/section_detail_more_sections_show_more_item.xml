@@ -7,7 +7,7 @@
             type="String" />
         <variable
             name="listener"
-            type="com.foobarust.android.sellersection.MoreSectionsAdapter.MoreSectionsAdapterListener" />
+            type="com.foobarust.android.sellersection.SectionDetailMoreSectionsAdapter.SectionDetailMoreSectionsAdapterListener" />
     </data>
 
     <FrameLayout

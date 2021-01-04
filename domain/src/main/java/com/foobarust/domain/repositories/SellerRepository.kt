@@ -24,6 +24,8 @@ interface SellerRepository {
 
     fun getSellerSectionBasics(): Flow<PagingData<SellerSectionBasic>>
 
+    fun getSellerSectionsBasic(sellerId: String) : Flow<PagingData<SellerSectionBasic>>
+
     suspend fun getSellerSectionBasics(sellerId: String, numOfSections: Int): List<SellerSectionBasic>
 
     suspend fun getSellerSectionDetail(sellerId: String, sectionId: String): SellerSectionDetail

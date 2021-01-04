@@ -1,4 +1,4 @@
-package com.foobarust.data.utils
+package com.foobarust.data.retrofit
 
 import com.foobarust.domain.states.Resource
 import com.google.gson.Gson
@@ -26,7 +26,6 @@ internal class ResourceCall<T>(private val delegate: Call<T>) : Call<Resource<T>
             override fun onResponse(call: Call<T>, response: Response<T>) {
                 val body = response.body()
                 //val code = response.code()
-                val errorBody = response.errorBody()
 
                 if (response.isSuccessful) {
                     if (body != null) {
@@ -39,15 +38,17 @@ internal class ResourceCall<T>(private val delegate: Call<T>) : Call<Resource<T>
                         // Empty response
                         callback.onResponse(
                             this@ResourceCall,
-                            Response.success(Resource.Error("Empty response"))
+                            Response.success(Resource.Error("Empty response."))
                         )
                     }
                 } else {
+                    val errorBody = response.errorBody()
                     val error = when {
                         errorBody == null -> null
                         errorBody.contentLength() == 0L -> null
                         else -> convertErrorBody(errorBody)
                     }
+
                     callback.onResponse(
                         this@ResourceCall,
                         Response.success(Resource.Error(error))
@@ -75,12 +76,6 @@ internal class ResourceCall<T>(private val delegate: Call<T>) : Call<Resource<T>
     override fun timeout(): Timeout = delegate.timeout()
 
     private fun convertErrorBody(errorBody: ResponseBody): String {
-        //        {
-        //            "error": {
-        //                "code": 404,
-        //                "message": "ID not found"
-        //            }
-        //        }
         val errorResponse = Gson().fromJson(errorBody.string(), ErrorResponse::class.java)
         return errorResponse.error.toString()
     }

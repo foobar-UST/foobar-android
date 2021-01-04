@@ -39,7 +39,7 @@
             android:orientation="horizontal"
             android:clipToPadding="false"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/participants_user_item"/>
+            tools:listitem="@layout/section_detail_participants_user_item"/>
 
     </LinearLayout>
 

@@ -15,9 +15,7 @@ import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Singleton
 
-@Module(includes = [
-    DispatcherModule::class
-])
+@Module(includes = [DispatcherModule::class])
 @InstallIn(ApplicationComponent::class)
 object AppModule {
 

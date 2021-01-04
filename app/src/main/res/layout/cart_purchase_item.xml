@@ -15,102 +15,113 @@
         <import type="com.foobarust.domain.models.cart.UserCartItemKt" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="@dimen/spacing_xmedium"
-        android:paddingEnd="@dimen/spacing_large"
-        android:paddingTop="@dimen/spacing_mlarge"
-        android:paddingBottom="@dimen/spacing_mlarge"
-        android:background="?attr/colorSurface">
+        android:focusable="true"
+        android:clickable="true"
+        android:onClick="@{() -> listener.onCartPurchaseItemClicked(purchaseItemModel.userCartItem)}"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="@dimen/elevation_none">
 
-        <ImageButton
-            android:id="@+id/remove_button"
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/min_icon_touch_padding"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_remove_circle_outline"
-            android:onClick="@{() -> listener.onRemoveCartItem(purchaseItemModel.userCartItem)}"
-            android:contentDescription="@string/cart_purchase_item_remove_item_content_desc"
-            app:tint="@color/material_on_surface_emphasis_medium"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:paddingStart="@dimen/spacing_xmedium"
+            android:paddingEnd="@dimen/spacing_large"
+            android:paddingTop="@dimen/spacing_mlarge"
+            android:paddingBottom="@dimen/spacing_mlarge">
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/item_image_view"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="@dimen/spacing_xmedium"
-            android:scaleType="centerCrop"
-            app:glideUrl="@{purchaseItemModel.userCartItem.itemImageUrl}"
-            app:glideCenterCrop="@{true}"
-            app:glidePlaceholder="@{R.drawable.placeholder_card}"
-            app:shapeAppearance="@style/ShapeAppearance.Foobar.SmallComponent"
-            app:goneIf="@{purchaseItemModel.userCartItem.itemImageUrl == null}"
-            app:layout_constraintStart_toEndOf="@id/remove_button"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:src="@sample/sample_image_5"/>
+            <ImageButton
+                android:id="@+id/remove_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/min_icon_touch_padding"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_remove_circle_outline"
+                android:onClick="@{() -> listener.onRemoveCartItem(purchaseItemModel.userCartItem)}"
+                android:contentDescription="@string/cart_purchase_item_remove_item_content_desc"
+                app:tint="@color/material_on_surface_emphasis_medium"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/title_text_view"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/spacing_large"
-            android:layout_marginEnd="@dimen/spacing_xmedium"
-            android:text="@{UserCartItemKt.getNormalizedTitle(purchaseItemModel.userCartItem)}"
-            android:textAppearance="?attr/textAppearanceSubtitle2"
-            android:textColor="@color/material_on_surface_emphasis_high_type"
-            android:lineSpacingMultiplier="1.2"
-            app:layout_constraintStart_toEndOf="@id/item_image_view"
-            app:layout_constraintTop_toTopOf="@+id/item_image_view"
-            app:layout_constraintBottom_toTopOf="@id/quantity_text_view"
-            app:layout_constraintEnd_toStartOf="@id/price_text_view"
-            tools:text="Chicken Tikka Masala" />
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/item_image_view"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="@dimen/spacing_xmedium"
+                android:scaleType="centerCrop"
+                app:glideUrl="@{purchaseItemModel.userCartItem.itemImageUrl}"
+                app:glideCenterCrop="@{true}"
+                app:glidePlaceholder="@{R.drawable.placeholder_card}"
+                app:shapeAppearance="@style/ShapeAppearance.Foobar.SmallComponent"
+                app:goneIf="@{purchaseItemModel.userCartItem.itemImageUrl == null}"
+                app:layout_constraintStart_toEndOf="@id/remove_button"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@sample/sample_image_5"/>
 
-        <TextView
-            android:id="@+id/quantity_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/spacing_large"
-            android:layout_marginTop="@dimen/spacing_xmedium"
-            android:text="@{@string/cart_purchase_item_format_amount(purchaseItemModel.userCartItem.amounts)}"
-            android:textAppearance="?attr/textAppearanceCaption"
-            android:textColor="@color/material_on_surface_emphasis_medium"
-            app:layout_constraintBottom_toBottomOf="@+id/item_image_view"
-            app:layout_constraintStart_toEndOf="@id/item_image_view"
-            app:layout_constraintTop_toBottomOf="@+id/title_text_view"
-            tools:text="Quantity: 1" />
+            <TextView
+                android:id="@+id/title_text_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_large"
+                android:layout_marginEnd="@dimen/spacing_xmedium"
+                android:text="@{UserCartItemKt.getNormalizedTitle(purchaseItemModel.userCartItem)}"
+                android:textAppearance="?attr/textAppearanceSubtitle2"
+                android:textColor="@color/material_on_surface_emphasis_high_type"
+                android:lineSpacingMultiplier="1.2"
+                app:layout_constraintStart_toEndOf="@id/item_image_view"
+                app:layout_constraintTop_toTopOf="@+id/item_image_view"
+                app:layout_constraintBottom_toTopOf="@id/quantity_text_view"
+                app:layout_constraintEnd_toStartOf="@id/price_text_view"
+                tools:text="Chicken Tikka Masala" />
 
-        <TextView
-            android:id="@+id/price_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{@string/cart_purchase_item_format_total_price(purchaseItemModel.userCartItem.totalPrice)}"
-            android:textAppearance="?attr/textAppearanceBody2"
-            android:textColor="?attr/colorPrimary"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/title_text_view"
-            tools:text="x $36.9"/>
+            <TextView
+                android:id="@+id/quantity_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_large"
+                android:layout_marginTop="@dimen/spacing_xmedium"
+                android:text="@{@string/cart_purchase_item_format_amount(purchaseItemModel.userCartItem.amounts)}"
+                android:textAppearance="?attr/textAppearanceCaption"
+                android:textColor="@color/material_on_surface_emphasis_medium"
+                app:layout_constraintBottom_toBottomOf="@+id/item_image_view"
+                app:layout_constraintStart_toEndOf="@id/item_image_view"
+                app:layout_constraintTop_toBottomOf="@+id/title_text_view"
+                tools:text="Quantity: 1" />
 
-        <TextView
-            android:id="@+id/unavailable_text_view"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_large"
-            android:gravity="center_vertical"
-            android:text="@string/cart_purchase_item_unavailable_message"
-            android:textColor="@color/material_on_surface_emphasis_medium"
-            android:textAppearance="?attr/textAppearanceCaption"
-            android:drawablePadding="@dimen/spacing_xmedium"
-            app:drawableStartCompat="@drawable/ic_info"
-            app:drawableTint="@color/material_on_surface_emphasis_medium"
-            app:drawableScale="@{0.98}"
-            app:layout_constraintStart_toStartOf="@id/item_image_view"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/quantity_text_view"
-            app:goneIf="@{purchaseItemModel.userCartItem.available}" />
+            <TextView
+                android:id="@+id/price_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{@string/cart_purchase_item_format_total_price(purchaseItemModel.userCartItem.totalPrice)}"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textColor="?attr/colorPrimary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/title_text_view"
+                tools:text="x $36.9"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/unavailable_text_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:gravity="center_vertical"
+                android:text="@string/cart_purchase_item_unavailable_message"
+                android:textColor="@color/material_on_surface_emphasis_medium"
+                android:textAppearance="?attr/textAppearanceCaption"
+                android:drawablePadding="@dimen/spacing_xmedium"
+                app:drawableStartCompat="@drawable/ic_info"
+                app:drawableTint="@color/material_on_surface_emphasis_medium"
+                app:drawableScale="@{0.98}"
+                app:layout_constraintStart_toStartOf="@id/item_image_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/quantity_text_view"
+                app:goneIf="@{purchaseItemModel.userCartItem.available}" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </com.google.android.material.card.MaterialCardView>
 
 </layout>

@@ -5,6 +5,7 @@ import com.foobarust.data.common.Constants.SELLERS_BASIC_COLLECTION
 import com.foobarust.data.common.Constants.SELLER_TYPE_FIELD
 import com.foobarust.data.mappers.SellerMapper
 import com.foobarust.data.models.seller.SellerBasicEntity
+import com.foobarust.data.utils.isNetworkData
 import com.foobarust.domain.models.seller.SellerBasic
 import com.foobarust.domain.models.seller.SellerType
 import com.google.firebase.firestore.FirebaseFirestore
@@ -29,8 +30,16 @@ class SellerBasicsPagingSource(
 
             val currentPageQuery = params.key ?: requestQuery
             val currentPageData = currentPageQuery.get().await()
-            val lastVisible = currentPageData.documents[currentPageData.size() - 1]
-            val nextPageQuery = requestQuery.startAfter(lastVisible)
+            val nextPageQuery = if (!currentPageData.isEmpty) {
+                val lastVisibleItem = currentPageData.documents[currentPageData.size() - 1]
+                requestQuery.startAfter(lastVisibleItem)
+            } else {
+                null
+            }
+
+            if (!currentPageData.isNetworkData()) {
+                return LoadResult.Error(Throwable("Network error."))
+            }
 
             LoadResult.Page(
                 data = currentPageData.toObjects(SellerBasicEntity::class.java)

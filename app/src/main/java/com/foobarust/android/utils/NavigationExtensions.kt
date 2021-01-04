@@ -3,12 +3,15 @@ package com.foobarust.android.utils
 import android.content.Intent
 import android.util.Log
 import android.util.SparseArray
+import androidx.annotation.IdRes
 import androidx.core.util.forEach
 import androidx.core.util.set
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.foobarust.android.R
@@ -19,6 +22,11 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
  */
 
 private const val TAG = "NavigationExtensions"
+
+inline fun <reified VM: ViewModel> Fragment.getNavGraphViewModel(@IdRes navGraphId: Int, navController: NavController): VM {
+    val backStackEntry = navController.getBackStackEntry(navGraphId)
+    return ViewModelProvider(backStackEntry, defaultViewModelProviderFactory).get(VM::class.java)
+}
 
 fun NavController.registerOnDestinationChangedListener(listener: NavController.OnDestinationChangedListener) {
     removeOnDestinationChangedListener(listener)

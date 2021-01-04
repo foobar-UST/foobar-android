@@ -5,14 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
+import com.foobarust.android.NavigationSellerDirections
 import com.foobarust.android.R
 import com.foobarust.android.common.FullScreenDialogFragment
 import com.foobarust.android.databinding.FragmentSellerDetailBinding
+import com.foobarust.android.main.MainViewModel
 import com.foobarust.android.utils.*
 import com.foobarust.domain.models.seller.getNormalizedTitle
+import com.foobarust.domain.states.getSuccessDataOr
 import com.google.android.material.chip.Chip
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
@@ -29,14 +33,22 @@ import kotlinx.coroutines.launch
 class SellerDetailFragment : FullScreenDialogFragment() {
 
     private var binding: FragmentSellerDetailBinding by AutoClearedValue(this)
-    private val viewModel: SellerDetailViewModel by viewModels()
+    private val mainViewModel: MainViewModel by activityViewModels()
+    private val sellerDetailViewModel: SellerDetailViewModel by viewModels()
     private val args: SellerDetailFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        // Receive user cart
+        lifecycleScope.launchWhenCreated {
+            mainViewModel.userCart.collect {
+                sellerDetailViewModel.onShowUserCartBottomBar(
+                    userCart = it.getSuccessDataOr(null)
+                )
+            }
+        }
         // Receive seller id argument
-        viewModel.onFetchSellerDetail(sellerId = args.sellerId)
+        sellerDetailViewModel.onFetchSellerDetail(sellerId = args.sellerId)
     }
 
     override fun onCreateView(
@@ -45,7 +57,7 @@ class SellerDetailFragment : FullScreenDialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSellerDetailBinding.inflate(inflater, container, false).apply {
-            viewModel = this@SellerDetailFragment.viewModel
+            viewModel = this@SellerDetailFragment.sellerDetailViewModel
             lifecycleOwner = viewLifecycleOwner
         }
 
@@ -54,7 +66,7 @@ class SellerDetailFragment : FullScreenDialogFragment() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.collapsingToolbarLayout, null)
 
         // Set up tab layout and view pager when seller detail is successfully fetched
-        viewModel.sellerDetailWithCatalogs.observe(viewLifecycleOwner) { sellerDetailWithCatalogs ->
+        sellerDetailViewModel.sellerDetailWithCatalogs.observe(viewLifecycleOwner) { sellerDetailWithCatalogs ->
             sellerDetailWithCatalogs?.let {
                 val catalogPagerAdapter = SellerCatalogPagerAdapter(
                     fragmentManager = childFragmentManager,
@@ -72,17 +84,17 @@ class SellerDetailFragment : FullScreenDialogFragment() {
         }
 
         // Show toast message
-        viewModel.toastMessage.observe(viewLifecycleOwner) {
+        sellerDetailViewModel.toastMessage.observe(viewLifecycleOwner) {
             showShortToast(it)
         }
 
-        // Load at most two consecutive pages for view pager
+        // Load at most two consecutive pages for view pager at once
         binding.itemsViewPager.offscreenPageLimit = 2
 
         // Show toolbar title only when collapsed
         viewLifecycleOwner.lifecycleScope.launch {
             binding.appBarLayout.doOnOffsetChanged().collect {
-                viewModel.onShowToolbarTitleChanged(
+                sellerDetailViewModel.onShowToolbarTitleChanged(
                     isShow = it == AppBarStateChangedListener.State.COLLAPSED
                 )
             }
@@ -93,10 +105,10 @@ class SellerDetailFragment : FullScreenDialogFragment() {
 
         // Navigate to SellerMiscFragment
         binding.miscButton.setOnClickListener {
-            viewModel.onShowSellerMisc()
+            sellerDetailViewModel.onShowSellerMisc()
         }
 
-        viewModel.navigateToSellerMisc.observe(viewLifecycleOwner) {
+        sellerDetailViewModel.navigateToSellerMisc.observe(viewLifecycleOwner) {
             findNavController(R.id.sellerDetailFragment)?.navigate(
                 SellerDetailFragmentDirections.actionSellerDetailFragmentToSellerMiscFragment(
                     sellerId = args.sellerId
@@ -105,14 +117,14 @@ class SellerDetailFragment : FullScreenDialogFragment() {
         }
 
         // Navigate to ItemDetailDialog
-        viewModel.navigateToItemDetail.observe(viewLifecycleOwner) {
+        sellerDetailViewModel.navigateToItemDetail.observe(viewLifecycleOwner) {
             findNavController(R.id.sellerDetailFragment)?.navigate(
                 SellerDetailFragmentDirections.actionSellerDetailFragmentToSellerItemDetailFragment(it)
             )
         }
 
         // Setup action chips
-        viewModel.detailActions.observe(viewLifecycleOwner) { detailActions ->
+        sellerDetailViewModel.detailActions.observe(viewLifecycleOwner) { detailActions ->
             val chips = detailActions.map { action ->
                 Chip(requireContext(), null, R.attr.sellerActionChipStyle).apply {
                     hide()
@@ -132,8 +144,14 @@ class SellerDetailFragment : FullScreenDialogFragment() {
         }
 
         // SnackBar
-        viewModel.showSnackBarMessage.observe(viewLifecycleOwner) {
+        sellerDetailViewModel.showSnackBarMessage.observe(viewLifecycleOwner) {
             showMessageSnackBar(message = it)
+        }
+
+        binding.cartBottomBar.cartBottomBarCardView.setOnClickListener {
+            findNavController(R.id.sellerDetailFragment)?.navigate(
+                NavigationSellerDirections.actionGlobalCartFragment()
+            )
         }
 
         return binding.root

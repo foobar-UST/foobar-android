@@ -11,6 +11,7 @@ import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.storage.OnProgressListener
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
@@ -21,7 +22,11 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 
 const val ERROR_DOCUMENT_NOT_EXIST = "Document does not exist."
-const val ERROR_COLLECTION_EMPTY = "Collection is empty."
+
+fun QuerySnapshot.isNetworkData(): Boolean {
+    return !metadata.isFromCache
+
+}
 
 suspend inline fun <reified T, R> CollectionReference.getAwaitResult(mapper: (T) -> R): List<R> {
     return this.get()
@@ -47,25 +52,25 @@ suspend inline fun <reified T, R> Query.getAwaitResult(mapper: (T) -> R): List<R
 }
 
 inline fun <reified T, R> CollectionReference.snapshotFlow(
-    crossinline mapper: (T) -> R
+    crossinline mapper: (T) -> R,
+    keepAlive: Boolean = false
 ): Flow<Resource<List<R>>> = callbackFlow {
     channel.offer(Resource.Loading())
 
-    val subscription = this@snapshotFlow.addSnapshotListener(
-        //MetadataChanges.INCLUDE
-    ) { snapshot, error ->
+    val subscription = this@snapshotFlow.addSnapshotListener { snapshot, error ->
         if (error != null) {
-            // Close the channel if there is error
             channel.offer(Resource.Error(error.message))
             channel.close(CancellationException(error.message))
         } else {
             snapshot?.let {
-                // doc.metadata.hasPendingWrites ? "Local" : "Server";
                 if (!it.metadata.hasPendingWrites()) {
                     val results = it.toObjects(T::class.java)
                     channel.offer(
                         Resource.Success(results.map { result -> mapper(result) })
                     )
+                    if (results.isEmpty() && !keepAlive) {
+                        channel.close()
+                    }
                 }
             } ?: channel.close(CancellationException(ERROR_DOCUMENT_NOT_EXIST))
         }
@@ -76,7 +81,7 @@ inline fun <reified T, R> CollectionReference.snapshotFlow(
 
 inline fun <reified T, R> DocumentReference.snapshotFlow(
     crossinline mapper: (T) -> R,
-    keepAliveUntilCreated: Boolean = false
+    keepAlive: Boolean = false
 ): Flow<Resource<R>> = callbackFlow {
     channel.offer(Resource.Loading())
 
@@ -91,7 +96,7 @@ inline fun <reified T, R> DocumentReference.snapshotFlow(
                     val result = it.toObject(T::class.java)
                     if (result == null) {
                         channel.offer(Resource.Error(ERROR_DOCUMENT_NOT_EXIST))
-                        if (!keepAliveUntilCreated) {
+                        if (!keepAlive) {
                             channel.close(CancellationException(ERROR_DOCUMENT_NOT_EXIST))
                         }
                     } else {
@@ -107,7 +112,7 @@ inline fun <reified T, R> DocumentReference.snapshotFlow(
 
 inline fun <reified T, R> Query.snapshotFlow(
     crossinline mapper: (T) -> R,
-    keepAliveUntilCreated: Boolean = false
+    keepAlive: Boolean = false
 ): Flow<Resource<List<R>>> = callbackFlow {
     channel.offer(Resource.Loading())
 
@@ -120,14 +125,11 @@ inline fun <reified T, R> Query.snapshotFlow(
             snapshot?.let {
                 if (!it.metadata.hasPendingWrites()) {
                     val results = it.toObjects(T::class.java)
-
-                    if (results.isEmpty()) {
-                        channel.offer(Resource.Error(ERROR_COLLECTION_EMPTY))
-                        if (!keepAliveUntilCreated) {
-                            channel.close(CancellationException(ERROR_COLLECTION_EMPTY))
-                        }
-                    } else {
-                        channel.offer(Resource.Success(results.map { result -> mapper(result) }))
+                    channel.offer(
+                        Resource.Success(results.map { result -> mapper(result) })
+                    )
+                    if (results.isEmpty() && !keepAlive) {
+                        channel.close()
                     }
                 }
             } ?: channel.close(CancellationException(ERROR_DOCUMENT_NOT_EXIST))

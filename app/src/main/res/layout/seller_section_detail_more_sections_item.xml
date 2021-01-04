@@ -8,9 +8,11 @@
         android:id="@+id/sections_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="120dp"
+        android:paddingStart="@dimen/spacing_xmedium"
+        android:paddingEnd="@dimen/spacing_xmedium"
         android:clipToPadding="false"
         android:orientation="horizontal"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/more_sections_section_item"/>
+        tools:listitem="@layout/section_detail_more_sections_section_item"/>
 
 </layout>

@@ -8,7 +8,7 @@
         <variable
             name="viewModel"
             type="com.foobarust.android.seller.SellerOffCampusViewModel" />
-        <import type="androidx.paging.LoadState" />
+        <import type="com.foobarust.android.states.UiFetchState" />
     </data>
 
     <FrameLayout
@@ -21,22 +21,22 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:goneIf="@{!(viewModel.loadState instanceof LoadState.NotLoading)}"
-            tools:listitem="@layout/seller_off_campus_item_upcoming" />
+            app:goneIf="@{!(viewModel.uiFetchState instanceof UiFetchState.Success)}"
+            tools:listitem="@layout/seller_sections_item_upcoming" />
 
         <ProgressBar
             android:id="@+id/progress_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            app:goneIf="@{!(viewModel.loadState instanceof LoadState.Loading)}"/>
+            app:goneIf="@{!(viewModel.uiFetchState instanceof UiFetchState.Loading)}"/>
 
         <include
             layout="@layout/load_error_layout"
             android:id="@+id/load_error_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:goneIf="@{!(viewModel.loadState instanceof LoadState.Error)}"/>
+            app:goneIf="@{!(viewModel.uiFetchState instanceof UiFetchState.Error)}"/>
 
     </FrameLayout>
 

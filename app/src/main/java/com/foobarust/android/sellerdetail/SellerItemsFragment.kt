@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.foobarust.android.R
 import com.foobarust.android.common.PagingLoadStateAdapter
 import com.foobarust.android.databinding.FragmentSellerItemsBinding
 import com.foobarust.android.utils.AutoClearedValue
@@ -50,8 +52,7 @@ class SellerItemsFragment : Fragment(), SellerItemsAdapter.SellerItemsAdapterLis
 
         // Setup recycler view
         val sellerItemsAdapter = SellerItemsAdapter(this)
-
-        binding.itemsRecyclerView.run {
+        binding.recyclerView.run {
             adapter = sellerItemsAdapter.withLoadStateFooter(
                 footer = PagingLoadStateAdapter { sellerItemsAdapter.retry() }
             )
@@ -72,12 +73,21 @@ class SellerItemsFragment : Fragment(), SellerItemsAdapter.SellerItemsAdapterLis
             }
         }
 
+        // Setup recyclerview bottom padding correspond to cart bottom bar
+        sellerDetailViewModel.showCartBottomBar.observe(viewLifecycleOwner) { show ->
+            val bottomPadding = if (show) {
+                requireContext().resources.getDimension(R.dimen.cart_bottom_bar_height)
+            } else {
+                0.0
+            }
+            binding.recyclerView.updatePadding(bottom = bottomPadding.toInt())
+        }
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         // Fix crashing when using animateLayoutChanges on parent layout
         // See: https://stackoverflow.com/questions/60004140/pages-contain-a-viewgroup-with-a-layouttransition-or-animatelayoutchanges-tr
         binding.itemsLayout.layoutTransition.setAnimateParentHierarchy(false)

@@ -1,5 +1,6 @@
 package com.foobarust.android.sellersection
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,9 @@ import com.foobarust.android.R
 import com.foobarust.android.common.FullScreenDialogFragment
 import com.foobarust.android.databinding.FragmentSellerSectionBinding
 import com.foobarust.android.utils.AutoClearedValue
+import com.foobarust.android.utils.findNavController
+import com.foobarust.android.utils.getNavGraphViewModel
+import com.foobarust.android.utils.showShortToast
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -20,6 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class SellerSectionFragment : FullScreenDialogFragment() {
 
     private var binding: FragmentSellerSectionBinding by AutoClearedValue(this)
+    private lateinit var viewModel: SellerSectionViewModel
     private val navArgs: SellerSectionFragmentArgs by navArgs()
 
     override fun onCreateView(
@@ -29,29 +34,83 @@ class SellerSectionFragment : FullScreenDialogFragment() {
     ): View {
         binding = FragmentSellerSectionBinding.inflate(inflater, container, false)
 
-        // Navigate to SellerDetailFragment
+        setupNavigation()
+
+        binding.run {
+            viewModel = this@SellerSectionFragment.viewModel
+            lifecycleOwner = viewLifecycleOwner
+        }
+
+        viewModel.onFetchSectionDetail(property = navArgs.sellerSectionProperty)
+
+        // Setup toolbar
+        binding.toolbar.setNavigationOnClickListener {
+            handleBackPressed()
+        }
+
+        // Navigate to seller detail
+        viewModel.navigateToSellerDetail.observe(viewLifecycleOwner) {
+            findNavController(R.id.sellerSectionFragment)?.navigate(
+                SellerSectionFragmentDirections.actionSellerSectionFragmentToSellerDetailFragment(
+                    sellerId = it
+                )
+            )
+        }
+
+        // Navigate to another section
+        viewModel.navigateToSellerSection.observe(viewLifecycleOwner) {
+            findNavController(R.id.sellerSectionFragment)?.navigate(
+                SellerSectionFragmentDirections.actionSellerSectionFragmentSelf(
+                    sellerSectionProperty = it
+                )
+            )
+        }
+
+        // Show toast
+        viewModel.toastMessage.observe(viewLifecycleOwner) {
+            showShortToast(it)
+        }
+
+        // Retry
+        binding.loadErrorLayout.retryButton.setOnClickListener {
+            viewModel.onFetchSectionDetail(property = navArgs.sellerSectionProperty)
+        }
+
+        return binding.root
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return object : Dialog(requireContext(), theme) {
+            override fun onBackPressed() {
+                handleBackPressed()
+            }
+        }
+    }
+
+    private fun setupNavigation() {
         val navHostFragment = childFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
         val navController = navHostFragment.navController
 
-        navController.setGraph(
-            R.navigation.navigation_seller_section,
-            SellerSectionDetailFragmentArgs(
-                sellerId = navArgs.sellerId,
-                sectionId = navArgs.sectionId
-            ).toBundle()
+        navController.setGraph(R.navigation.navigation_seller_section)
+
+        // Cannot initialize ViewModel using navGraphViewModels() as findNavController() is broken at the moment
+        viewModel = getNavGraphViewModel(
+            navGraphId = R.id.navigation_seller_section,
+            navController = navController
         )
 
-        // Setup AppBar configuration
-        /*
-        val appBarConfiguration = AppBarConfiguration(setOf(
-            R.id.sellerSectionDetailFragment,
-            R.id.sellerSectionUsersFragment
-        ))
+        navController.addOnDestinationChangedListener { controller, destination, arguments ->
+            // Keep track of current fragment destination
+            viewModel.currentDestinationId = destination.id
+        }
+    }
 
-        binding.toolbar.setupWithNavController(findNavController(), appBarConfiguration)
-
-         */
-
-        return binding.root
+    private fun handleBackPressed() {
+        // Dismiss the dialog when back pressing in start destination
+        if (viewModel.currentDestinationId == R.id.sellerSectionDetailFragment) {
+            dismiss()
+        } else {
+            viewModel.onBackPressed()
+        }
     }
 }

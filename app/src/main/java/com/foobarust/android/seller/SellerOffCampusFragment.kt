@@ -14,7 +14,13 @@ import com.foobarust.android.R
 import com.foobarust.android.common.PagingLoadStateAdapter
 import com.foobarust.android.databinding.FragmentSellerOffCampusBinding
 import com.foobarust.android.main.MainViewModel
+import com.foobarust.android.promotion.PromotionAdapter
+import com.foobarust.android.promotion.PromotionAdvertiseAdapter
+import com.foobarust.android.promotion.PromotionSuggestAdapter
+import com.foobarust.android.sellersection.SellerSectionsAdapter
 import com.foobarust.android.utils.*
+import com.foobarust.domain.models.promotion.AdvertiseBasic
+import com.foobarust.domain.models.promotion.SuggestBasic
 import com.foobarust.domain.models.seller.SellerSectionBasic
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -25,7 +31,10 @@ import kotlinx.coroutines.launch
  */
 
 @AndroidEntryPoint
-class SellerOffCampusFragment : Fragment(), SellerOffCampusAdapter.SellerOffCampusAdapterListener {
+class SellerOffCampusFragment : Fragment(),
+    PromotionAdvertiseAdapter.PromotionAdvertiseAdapterListener,
+    PromotionSuggestAdapter.PromotionSuggestAdapterListener,
+    SellerSectionsAdapter.SellerOffCampusAdapterListener {
 
     private var binding: FragmentSellerOffCampusBinding by AutoClearedValue(this)
     private val mainViewModel: MainViewModel by activityViewModels()
@@ -44,10 +53,16 @@ class SellerOffCampusFragment : Fragment(), SellerOffCampusAdapter.SellerOffCamp
 
         // Setup off-campus list
         val concatAdapter = ConcatAdapter()
-        val sellerOffCampusAdapter = SellerOffCampusAdapter(this)
+        val promotionAdapter = PromotionAdapter(
+            lifecycle = viewLifecycleOwner.lifecycle,
+            advertiseAdapterListener = this,
+            suggestAdapterListener = this
+        )
+        val sectionsAdapter = SellerSectionsAdapter(this)
 
-        concatAdapter.addAdapter(sellerOffCampusAdapter.withLoadStateFooter(
-            footer = PagingLoadStateAdapter { sellerOffCampusAdapter.retry() }
+        concatAdapter.addAdapter(promotionAdapter)
+        concatAdapter.addAdapter(sectionsAdapter.withLoadStateFooter(
+            footer = PagingLoadStateAdapter { sectionsAdapter.retry() }
         ))
 
         binding.recyclerView.run {
@@ -55,21 +70,34 @@ class SellerOffCampusFragment : Fragment(), SellerOffCampusAdapter.SellerOffCamp
             setHasFixedSize(true)
         }
 
+        // Fixed the issue when the promotion banner is inserted after the suggestion list,
+        // and got hidden at the top of the recycler view
+        viewLifecycleOwner.lifecycleScope.launch {
+            promotionAdapter.scrollToTopWhenFirstItemInserted(binding.recyclerView)
+        }
+
+        // Submit promotion items
+        sellerOffCampusViewModel.promotionListModels.observe(viewLifecycleOwner) {
+            promotionAdapter.submitList(it)
+        }
+
+
         // Submit section items
         viewLifecycleOwner.lifecycleScope.launch {
-            sellerOffCampusViewModel.offCampusListModels.collectLatest {
-                sellerOffCampusAdapter.submitData(it)
+            sellerOffCampusViewModel.sectionsListModels.collectLatest {
+                sectionsAdapter.submitData(it)
             }
         }
 
         // Retry button
         binding.loadErrorLayout.retryButton.setOnClickListener {
-            sellerOffCampusAdapter.retry()
+            sectionsAdapter.refresh()
+            sellerOffCampusViewModel.onReloadPromotion()
         }
 
         // Control views corresponding to load states
-        sellerOffCampusAdapter.addLoadStateListener { loadStates ->
-            sellerOffCampusViewModel.onLoadStateChanged(loadStates.source.refresh)
+        sectionsAdapter.addLoadStateListener { loadStates ->
+            sellerOffCampusViewModel.onPagingLoadStateChanged(loadStates.source.refresh)
             loadStates.anyError()?.let {
                 showShortToast(it.error.message)
             }
@@ -90,6 +118,11 @@ class SellerOffCampusFragment : Fragment(), SellerOffCampusAdapter.SellerOffCamp
             binding.recyclerView.updatePadding(bottom = bottomPadding.toInt())
         }
 
+        // Show toast
+        sellerOffCampusViewModel.toastMessage.observe(viewLifecycleOwner) {
+            showShortToast(it)
+        }
+
         return binding.root
     }
 
@@ -98,7 +131,14 @@ class SellerOffCampusFragment : Fragment(), SellerOffCampusAdapter.SellerOffCamp
     }
 
     override fun onSellerSectionItemLongClicked(view: View, sectionBasic: SellerSectionBasic): Boolean {
-        // TODO: onSellerSectionItemLongClicked
         return true
+    }
+
+    override fun onPromotionAdvertiseItemClicked(advertiseBasic: AdvertiseBasic) {
+        mainViewModel.onLaunchCustomTab(url = advertiseBasic.url)
+    }
+
+    override fun onPromotionSuggestItemClicked(suggestBasic: SuggestBasic) {
+        sellerViewModel.onNavigateToSuggestItem(suggestBasic)
     }
 }

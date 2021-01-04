@@ -1,4 +1,10 @@
 # Changelog
+## 2020-01-04
+- Added section detail screen.
+- Added more sections screen.
+- Improved cart screen.
+- Prepare for participants screen.
+- Prepare for map route.
 
 ## 2020-12-28
 - Added off-campus section list view.

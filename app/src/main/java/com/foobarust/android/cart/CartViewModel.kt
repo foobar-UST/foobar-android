@@ -13,9 +13,9 @@ import com.foobarust.domain.models.cart.UserCartItem
 import com.foobarust.domain.models.seller.SellerBasic
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.cart.GetUserCartItemsUseCase
-import com.foobarust.domain.usecases.cart.GetUserCartUseCase
-import com.foobarust.domain.usecases.cart.RemoveUserCartItemUseCase
 import com.foobarust.domain.usecases.cart.SyncUserCartUseCase
+import com.foobarust.domain.usecases.cart.UpdateUserCartItemParameters
+import com.foobarust.domain.usecases.cart.UpdateUserCartItemUseCase
 import com.foobarust.domain.usecases.seller.GetSellerBasicUseCase
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.*
@@ -27,9 +27,8 @@ import kotlinx.coroutines.launch
 class CartViewModel @ViewModelInject constructor(
     @ApplicationContext private val context: Context,
     private val getSellerBasicUseCase: GetSellerBasicUseCase,
-    private val getUserCartUseCase: GetUserCartUseCase,
     private val getUserCartItemsUseCase: GetUserCartItemsUseCase,
-    private val removeUserCartItemUseCase: RemoveUserCartItemUseCase,
+    private val updateUserCartItemUseCase: UpdateUserCartItemUseCase,
     private val syncUserCartUseCase: SyncUserCartUseCase
 ) : BaseViewModel() {
 
@@ -66,10 +65,8 @@ class CartViewModel @ViewModelInject constructor(
         }
         .asLiveData(viewModelScope.coroutineContext)
 
-    // Block user action when the current transaction is not finished
-    private var blockAction: Boolean = false
-
-    val showSyncRequiredAction: LiveData<Boolean> = _userCart.asStateFlow()
+    val showSyncRequiredAction: LiveData<Boolean> = _userCart
+        .asStateFlow()
         .filterNotNull()
         .map {
             blockAction = it.syncRequired
@@ -78,17 +75,25 @@ class CartViewModel @ViewModelInject constructor(
         .distinctUntilChanged()
         .asLiveData(viewModelScope.coroutineContext)
 
-    fun onFetchCartItems() {
-        fetchUserCart()
-        fetchSellerBasic()
+    // Block user action when the current transaction is not finished
+    private var blockAction: Boolean = false
+
+    fun onFetchCartItems(userCart: UserCart?) {
+        setUiFetchState(UiFetchState.Loading)
+        _userCart.value = userCart
         fetchUserCartItems()
+        fetchSellerBasic()
         buildCartList()
     }
 
     fun onRemoveCartItem(userCartItem: UserCartItem) = viewModelScope.launch {
         if (!blockAction) {
             blockAction = true
-            removeUserCartItemUseCase(userCartItem.id).collect {
+            val params = UpdateUserCartItemParameters(
+                cartItemId = userCartItem.id,
+                amounts = userCartItem.amounts - 1
+            )
+            updateUserCartItemUseCase(params).collect {
                 when (it) {
                     is Resource.Success -> {
                         blockAction = false
@@ -99,7 +104,9 @@ class CartViewModel @ViewModelInject constructor(
                         _isUpdatingProgress.value = false
                         showToastMessage(it.message)
                     }
-                    is Resource.Loading -> _isUpdatingProgress.value = true
+                    is Resource.Loading -> {
+                        _isUpdatingProgress.value = true
+                    }
                 }
             }
         }
@@ -112,40 +119,34 @@ class CartViewModel @ViewModelInject constructor(
                 when (it) {
                     is Resource.Success -> {
                         blockAction = false
+                        _isUpdatingProgress.value = false
                         _showSnackBarMessage.value = context.getString(
                             R.string.cart_sync_required_complete_message
                         )
                     }
                     is Resource.Error -> {
                         blockAction = false
+                        _isUpdatingProgress.value = false
                         showToastMessage(it.message)
                     }
-                    is Resource.Loading -> Unit
-                }
-            }
-        }
-    }
-
-    private fun fetchUserCart() = viewModelScope.launch {
-        getUserCartUseCase(Unit).collect {
-            when (it) {
-                is Resource.Success -> _userCart.value = it.data
-                is Resource.Loading -> setUiFetchState(UiFetchState.Loading)
-                is Resource.Error -> {
-                    _userCart.value = null
-                    setUiFetchState(UiFetchState.Error(it.message))
+                    is Resource.Loading -> {
+                        _isUpdatingProgress.value = true
+                    }
                 }
             }
         }
     }
 
     private fun fetchSellerBasic() = viewModelScope.launch {
-        _userCart.asStateFlow().filterNotNull()
+        _userCart.asStateFlow()
+            .filterNotNull()
             .collect { userCart ->
                 userCart.sellerId?.let {
                     when (val result = getSellerBasicUseCase(it)) {
-                        is Resource.Success -> _sellerBasic.value = result.data
-                        is Resource.Loading -> setUiFetchState(UiFetchState.Loading)
+                        is Resource.Success -> {
+                            _sellerBasic.value = result.data
+                        }
+                        is Resource.Loading -> Unit
                         is Resource.Error -> {
                             _sellerBasic.value = null
                             setUiFetchState(UiFetchState.Error(result.message))
@@ -158,8 +159,10 @@ class CartViewModel @ViewModelInject constructor(
     private fun fetchUserCartItems() = viewModelScope.launch {
         getUserCartItemsUseCase(Unit).collect {
             when (it) {
-                is Resource.Success -> _cartItems.value = it.data
-                is Resource.Loading -> setUiFetchState(UiFetchState.Loading)
+                is Resource.Success -> {
+                    _cartItems.value = it.data
+                }
+                is Resource.Loading -> Unit
                 is Resource.Error -> {
                     _cartItems.value = emptyList()
                     setUiFetchState(UiFetchState.Error(it.message))

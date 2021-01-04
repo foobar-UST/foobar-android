@@ -3,16 +3,22 @@ package com.foobarust.android.seller
 import android.content.Context
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.*
 import com.foobarust.android.R
-import com.foobarust.android.utils.SingleLiveEvent
+import com.foobarust.android.common.BaseViewModel
+import com.foobarust.android.promotion.PromotionListModel
+import com.foobarust.android.sellersection.SellerSectionsListModel
+import com.foobarust.android.utils.asUiFetchState
 import com.foobarust.domain.models.seller.isRecentSection
+import com.foobarust.domain.states.Resource
+import com.foobarust.domain.usecases.promotion.GetAdvertiseBasicsUseCase
+import com.foobarust.domain.usecases.seller.GetSellerSectionsParameters
 import com.foobarust.domain.usecases.seller.GetSellerSectionsUseCase
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.channels.ConflatedBroadcastChannel
+import kotlinx.coroutines.flow.*
 
 /**
  * Created by kevin on 12/21/20
@@ -20,27 +26,44 @@ import kotlinx.coroutines.flow.map
 
 class SellerOffCampusViewModel @ViewModelInject constructor(
     @ApplicationContext private val context: Context,
-    private val getSellerSectionsUseCase: GetSellerSectionsUseCase
-) : ViewModel() {
+    getAdvertiseBasicsUseCase: GetAdvertiseBasicsUseCase,
+    getSellerSectionsUseCase: GetSellerSectionsUseCase
+) : BaseViewModel() {
 
-    private val _loadState = SingleLiveEvent<LoadState>()
-    val loadState: LiveData<LoadState>
-        get() = _loadState
+    private val _startFetching = ConflatedBroadcastChannel(Unit)
+    private val _reloadPromotion = ConflatedBroadcastChannel<Unit>()
 
-    val offCampusListModels: Flow<PagingData<SellerOffCampusListModel>> =
-        getSellerSectionsUseCase(Unit).map { pagingData ->
-            pagingData.map { SellerOffCampusListModel.SellerOffCampusSectionModel(it) }
+    val promotionListModels: LiveData<List<PromotionListModel>> = flowOf(
+        _startFetching.asFlow(),
+        _reloadPromotion.asFlow()
+    )
+        .flattenMerge()
+        .flatMapLatest { getAdvertiseBasicsUseCase(Unit) }
+        .map { result ->
+            if (result is Resource.Success && result.data.isNotEmpty()) {
+                listOf(PromotionListModel.PromotionAdvertiseModel(result.data))
+            } else {
+                emptyList()
+            }
+        }
+        .asLiveData(viewModelScope.coroutineContext)
+
+    val sectionsListModels: Flow<PagingData<SellerSectionsListModel>> =
+        getSellerSectionsUseCase(
+            GetSellerSectionsParameters()
+        ).map { pagingData ->
+            pagingData.map { SellerSectionsListModel.SellerSectionsItemModel(it) }
         }.map { pagingData ->
             pagingData.insertSeparators { before, after ->
                 return@insertSeparators if (before == null) {
-                    SellerOffCampusListModel.SellerOffCampusSubtitleModel(
+                    SellerSectionsListModel.SellerSectionsSubtitleModel(
                         subtitle = context.getString(R.string.seller_section_subtitle_recent)
                     )
                 } else if (after !== null &&
                     before.sellerSectionBasic.isRecentSection() &&
                     !after.sellerSectionBasic.isRecentSection()
                 ) {
-                    SellerOffCampusListModel.SellerOffCampusSubtitleModel(
+                    SellerSectionsListModel.SellerSectionsSubtitleModel(
                         subtitle = context.getString(R.string.seller_section_subtitle_upcoming)
                     )
                 } else {
@@ -49,7 +72,11 @@ class SellerOffCampusViewModel @ViewModelInject constructor(
             }
         }.cachedIn(viewModelScope)
 
-    fun onLoadStateChanged(loadState: LoadState) {
-        _loadState.value = loadState
+    fun onReloadPromotion() {
+        _reloadPromotion.offer(Unit)
+    }
+
+    fun onPagingLoadStateChanged(loadState: LoadState) {
+        setUiFetchState(loadState.asUiFetchState())
     }
 }

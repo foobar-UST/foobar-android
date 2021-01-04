@@ -10,16 +10,10 @@ import com.foobarust.android.common.BaseViewModel
 import com.foobarust.android.settings.SettingsListModel.SettingsProfileModel
 import com.foobarust.android.settings.SettingsListModel.SettingsSectionModel
 import com.foobarust.android.utils.SingleLiveEvent
-import com.foobarust.domain.states.Resource
-import com.foobarust.domain.usecases.auth.GetAuthProfileUseCase
-import com.foobarust.domain.usecases.auth.GetIsUserSignedInUseCase
+import com.foobarust.domain.models.user.UserDetail
+import com.foobarust.domain.models.user.isSignedIn
 import com.foobarust.domain.usecases.auth.SignOutUseCase
-import com.foobarust.domain.usecases.user.GetUserDetailUseCase
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 const val SETTINGS_NOTIFICATIONS = "settings_notifications"
@@ -32,13 +26,8 @@ const val SETTINGS_ORDER_HISTORY = "settings_order_history"
 
 class SettingsViewModel @ViewModelInject constructor(
     @ApplicationContext private val context: Context,
-    private val getIsUserSignedInUseCase: GetIsUserSignedInUseCase,
-    getAuthProfileUseCase: GetAuthProfileUseCase,
-    private val getUserDetailUseCase: GetUserDetailUseCase,
     private val signOutUseCase: SignOutUseCase
 ) : BaseViewModel() {
-
-    private var subscribeUserDetailJob: Job? = null
 
     private val _navigateToSignIn = SingleLiveEvent<Unit>()
     val navigateToSignIn: LiveData<Unit>
@@ -48,79 +37,22 @@ class SettingsViewModel @ViewModelInject constructor(
     val navigateToProfile: LiveData<Unit>
         get() = _navigateToProfile
 
-    private val _settingsItems = MutableLiveData<List<SettingsListModel>>()
-    val settingsItems: LiveData<List<SettingsListModel>>
-        get() = _settingsItems
+    private val _settingsListModels = MutableLiveData<List<SettingsListModel>>()
+    val settingsListModels: LiveData<List<SettingsListModel>>
+        get() = _settingsListModels
 
-    init {
-        // Populate settings list
-        // Use UserDetail to display profile section when online,
-        // use AuthProfile to display profile section when offline
-        getAuthProfileUseCase(Unit).onEach {
-            when (it) {
-                is Resource.Success -> {
-                    subscribeUserDetail()
-                    buildSettingList(
-                        SettingsProfile(username = it.data.username)
-                    )
-                }
-                is Resource.Error -> {
-                    unsubscribeUserDetail()
-                    buildSettingList(SettingsProfile())
-                }
-                is Resource.Loading -> {
-                    _settingsItems.value = emptyList()
-                }
-            }
-        }.launchIn(viewModelScope)
-    }
+    private var userDetail: UserDetail? = null
 
-    private fun subscribeUserDetail() {
-        unsubscribeUserDetail()
+    fun onUserDetailUpdated(userDetail: UserDetail?) {
+        this.userDetail = userDetail
+        _settingsListModels.value = buildList {
+            if (userDetail != null) {
+                // Setup signed in sections
+                add(SettingsProfileModel(
+                    username = userDetail.username,
+                    photoUrl = userDetail.photoUrl
+                ))
 
-        subscribeUserDetailJob = viewModelScope.launch {
-            getUserDetailUseCase(Unit).collect {
-                when (it) {
-                    is Resource.Success -> buildSettingList(
-                        SettingsProfile(
-                            username = it.data.username,
-                            photoUrl = it.data.photoUrl
-                        )
-                    )
-                    is Resource.Error -> showToastMessage(it.message)
-                    is Resource.Loading -> Unit
-                }
-            }
-        }
-    }
-
-    private fun unsubscribeUserDetail() {
-        subscribeUserDetailJob?.cancel()
-        subscribeUserDetailJob = null
-    }
-
-    fun onUserAccountCardClicked() = viewModelScope.launch {
-        when (val result = getIsUserSignedInUseCase(Unit)) {
-            is Resource.Success -> {
-                val isSignedIn = result.data
-                if (isSignedIn) _navigateToProfile.value = Unit else _navigateToSignIn.value = Unit
-            }
-            is Resource.Error -> showToastMessage(result.message)
-            is Resource.Loading -> Unit
-        }
-    }
-
-    fun signOut() = viewModelScope.launch {
-        signOutUseCase(Unit)
-    }
-
-    private fun buildSettingList(settingsProfile: SettingsProfile) {
-        _settingsItems.value = buildList {
-            // Add auth item
-            add(SettingsProfileModel(settingsProfile))
-
-            // Add signed in items
-            if (settingsProfile.isSignedIn()) {
                 addAll(listOf(
                     SettingsSectionModel(
                         id = SETTINGS_FAVORITE,
@@ -133,9 +65,12 @@ class SettingsViewModel @ViewModelInject constructor(
                         title = context.getString(R.string.settings_section_orders_title)
                     )
                 ))
+            } else {
+                // Setup signed out sections
+                add(SettingsProfileModel())
             }
 
-            // Add common items
+            // Setup common sections
             addAll(listOf(
                 SettingsSectionModel(
                     id = SETTINGS_NOTIFICATIONS,
@@ -160,7 +95,7 @@ class SettingsViewModel @ViewModelInject constructor(
             ))
 
             // Add sign out button
-            if (settingsProfile.isSignedIn()) {
+            if (userDetail != null && userDetail.isSignedIn()) {
                 add(SettingsSectionModel(
                     id = SETTINGS_SIGN_OUT,
                     icon = R.drawable.ic_exit_to_app,
@@ -169,13 +104,17 @@ class SettingsViewModel @ViewModelInject constructor(
             }
         }
     }
+
+    fun onUserAccountCardClicked() = viewModelScope.launch {
+        if (userDetail?.isSignedIn() == true) {
+            _navigateToProfile.value = Unit
+        } else {
+            _navigateToSignIn.value = Unit
+        }
+    }
+
+    fun signOut() = viewModelScope.launch {
+        signOutUseCase(Unit)
+    }
 }
 
-data class SettingsProfile(
-    val username: String? = null,
-    val photoUrl: String? = null
-) {
-    fun isSignedIn(): Boolean = username != null
-
-    fun hasPhoto(): Boolean = photoUrl != null
-}

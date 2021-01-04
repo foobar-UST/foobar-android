@@ -11,14 +11,17 @@ import com.foobarust.android.R
 import com.foobarust.android.common.FullScreenDialogFragment
 import com.foobarust.android.databinding.FragmentCartBinding
 import com.foobarust.android.main.MainViewModel
+import com.foobarust.android.sellerdetail.SellerItemDetailProperty
 import com.foobarust.android.utils.AutoClearedValue
 import com.foobarust.android.utils.findNavController
 import com.foobarust.android.utils.scrollToTopWhenFirstItemInserted
 import com.foobarust.android.utils.showShortToast
 import com.foobarust.domain.models.cart.UserCartItem
+import com.foobarust.domain.states.getSuccessDataOr
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 /**
@@ -35,7 +38,12 @@ class CartFragment : FullScreenDialogFragment(), CartAdapter.CartAdapterListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        cartViewModel.onFetchCartItems()
+        // Collect user cart
+        lifecycleScope.launchWhenCreated {
+            mainViewModel.userCart.collect {
+                cartViewModel.onFetchCartItems(userCart = it.getSuccessDataOr(null))
+            }
+        }
     }
 
     override fun onCreateView(
@@ -109,6 +117,19 @@ class CartFragment : FullScreenDialogFragment(), CartAdapter.CartAdapterListener
     override fun onNavigateToSellerMisc(sellerId: String) {
         findNavController(R.id.cartFragment)?.navigate(
             CartFragmentDirections.actionCartFragmentToSellerMiscFragment(sellerId)
+        )
+    }
+
+    override fun onCartPurchaseItemClicked(userCartItem: UserCartItem) {
+        findNavController(R.id.cartFragment)?.navigate(
+            CartFragmentDirections.actionCartFragmentToSellerItemDetailFragment(
+                SellerItemDetailProperty(
+                    sellerId = userCartItem.itemSellerId,
+                    itemId = userCartItem.itemId,
+                    cartItemId = userCartItem.id,
+                    amounts = userCartItem.amounts
+                )
+            )
         )
     }
 

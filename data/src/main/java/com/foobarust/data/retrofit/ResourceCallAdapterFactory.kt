@@ -1,4 +1,4 @@
-package com.foobarust.data.utils
+package com.foobarust.data.retrofit
 
 import com.foobarust.domain.states.Resource
 import retrofit2.Call

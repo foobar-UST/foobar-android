@@ -8,9 +8,6 @@ object Constants {
     // Shared Preferences
     const val PREFS_NAME = "foobarust"
 
-    // Backend
-    const val REMOTE_URL = "https://us-central1-foobar-group-delivery-app.cloudfunctions.net/api/"
-
     // Users
     const val USERS_COLLECTION = "users"
     const val USERS_DELIVERY_COLLECTION = "users_delivery"
@@ -148,17 +145,27 @@ object Constants {
     const val SELLER_ITEM_AVAILABLE_FIELD = "available"
     const val SELLER_ITEM_UPDATED_AT_FIELD = "updated_at"
 
-    // Remote Request Parameters
-    const val AUTHORIZATION_HEADER = "Authorization"
+    // Cloud Functions APIs
+    const val CF_REQUEST_URL = "https://us-central1-foobar-group-delivery-app.cloudfunctions.net/api/"
+    const val CF_AUTH_HEADER = "Authorization"
+
+    // Generic Responses
+    const val CF_SUCCESS_RESPONSE_DATA_OBJECT = "data"
+    const val CF_ERROR_RESPONSE_ERROR_OBJECT = "error"
+    const val CF_ERROR_RESPONSE_CODE_FIELD = "code"
+    const val CF_ERROR_RESPONSE_MESSAGE_FIELD = "message"
+
+    // Google Map Directions APIs
+    const val GM_DIR_URL = "https://maps.googleapis.com/maps/api/directions/"
+    const val GM_DIR_KEY = "key"
+    const val GM_DIR_ORIGIN = "origin"
+    const val GM_DIR_DEST = "destination"
+
 
     const val ADD_USER_CART_ITEM_REQUEST_SELLER_ID = "seller_id"
     const val ADD_USER_CART_ITEM_REQUEST_ITEM_ID = "item_id"
     const val ADD_USER_CART_ITEM_REQUEST_AMOUNTS = "amounts"
 
-    const val REMOVE_USER_CART_ITEM_REQUEST_CART_ITEM_ID = "cart_item_id"
-
-    // Remote Responses
-    const val ERROR_RESPONSE_ERROR_OBJECT = "error"
-    const val ERROR_RESPONSE_CODE_FIELD = "code"
-    const val ERROR_RESPONSE_MESSAGE_FIELD = "message"
+    const val UPDATE_USER_CART_ITEM_REQUEST_CART_ITEM_ID = "cart_item_id"
+    const val UPDATE_USER_CART_ITEM_REQUEST_AMOUNTS = "amounts"
 }

@@ -42,11 +42,9 @@ class SettingsAdapter(
                 profileModel = currentItem
                 listener = this@SettingsAdapter.listener
 
-                // Set user avatar if the user is signed in or he has uploaded his photo,
-                // else set it to placeholder drawable
-                if (currentItem.settingsProfile.hasPhoto()) {
+                if (currentItem.isSignedIn() && currentItem.photoUrl != null) {
                     avatarImageView.bindGlideUrl(
-                        imageUrl = currentItem.settingsProfile.photoUrl,
+                        imageUrl = currentItem.photoUrl,
                         centerCrop = true
                     )
                 } else {
@@ -92,8 +90,11 @@ sealed class SettingsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVi
 
 sealed class SettingsListModel {
     data class SettingsProfileModel(
-        val settingsProfile: SettingsProfile
-    ) : SettingsListModel()
+        val username: String? = null,
+        val photoUrl: String? = null
+    ) : SettingsListModel() {
+        fun isSignedIn(): Boolean = username != null
+    }
 
     data class SettingsSectionModel(
         val id: String,
@@ -113,7 +114,7 @@ object SettingsListModelDiff : DiffUtil.ItemCallback<SettingsListModel>() {
 
     override fun areContentsTheSame(oldItem: SettingsListModel, newItem: SettingsListModel): Boolean {
         return when {
-            oldItem is SettingsProfileModel && newItem is SettingsProfileModel -> oldItem.settingsProfile == newItem.settingsProfile
+            oldItem is SettingsProfileModel && newItem is SettingsProfileModel -> oldItem == newItem
             oldItem is SettingsSectionModel && newItem is SettingsSectionModel -> oldItem.id == newItem.id
             else -> false
         }

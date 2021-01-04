@@ -1,5 +1,6 @@
 package com.foobarust.android
 
+import android.util.Log
 import androidx.test.ext.junit.rules.activityScenarioRule
 import com.foobarust.data.remoteapi.RemoteService
 import com.foobarust.domain.repositories.AuthRepository
@@ -33,7 +34,8 @@ class RemoteTest {
 
     @Test
     fun test() = runBlocking(Dispatchers.IO) {
-
+        val result = remoteService.getHelloWorld(hasError = false)
+        Log.d("RemoteTest", "result: $result")
 
         assert(true)
     }

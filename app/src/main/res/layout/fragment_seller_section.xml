@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.foobarust.android.sellersection.SellerSectionViewModel" />
+        <import type="com.foobarust.android.states.UiFetchState"/>
+        <import type="com.foobarust.domain.models.seller.SellerSectionDetailKt"/>
+    </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinator_layout"
@@ -22,20 +32,41 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:title="Lunch Order 午餐訂單"
+                app:title="@{viewModel.sectionDetailLiveData != null ? SellerSectionDetailKt.getNormalizedTitle(viewModel.sectionDetailLiveData) : ``}"
                 app:layout_scrollFlags="noScroll"
                 app:navigationIcon="@drawable/ic_arrow_back"
-                app:navigationIconTint="?attr/colorOnPrimarySurface"/>
+                app:navigationIconTint="?attr/colorOnPrimarySurface"
+                tools:title="Lunch Order"/>
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/fragment_container"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:name="androidx.navigation.fragment.NavHostFragment"
-            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
-            app:defaultNavHost="true" />
+            android:animateLayoutChanges="true"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/fragment_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:name="androidx.navigation.fragment.NavHostFragment"
+                app:defaultNavHost="true"
+                app:goneIf="@{!(viewModel.uiFetchState instanceof UiFetchState.Success)}" />
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:goneIf="@{!(viewModel.uiFetchState instanceof UiFetchState.Loading)}"/>
+
+            <include
+                layout="@layout/load_error_layout"
+                android:id="@+id/load_error_layout"
+                app:goneIf="@{!(viewModel.uiFetchState instanceof UiFetchState.Error)}"/>
+
+        </FrameLayout>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

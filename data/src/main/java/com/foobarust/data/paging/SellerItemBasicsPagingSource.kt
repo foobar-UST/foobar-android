@@ -28,14 +28,19 @@ class SellerItemBasicsPagingSource(
                 "$SELLERS_COLLECTION/$sellerId/$SELLER_ITEMS_BASIC_SUB_COLLECTION"
             )
                 .whereEqualTo(SELLER_ITEM_CATALOG_ID_FIELD, catalogId)
+                // TODO: For testing items greyed out
                 //.whereGreaterThan(SELLER_ITEM_COUNT_FIELD, 0)           // Having remaining items
                 //.whereEqualTo(SELLER_ITEM_AVAILABLE_FIELD, true)        // Get available items only
                 .limit(params.loadSize.toLong())
 
             val currentPageQuery = params.key ?: requestQuery
             val currentPageData = currentPageQuery.get().await()
-            val lastVisible = currentPageData.documents[currentPageData.size() - 1]
-            val nextPageQuery = requestQuery.startAfter(lastVisible)
+            val nextPageQuery = if (!currentPageData.isEmpty) {
+                val lastVisibleItem = currentPageData.documents[currentPageData.size() - 1]
+                requestQuery.startAfter(lastVisibleItem)
+            } else {
+                null
+            }
 
             LoadResult.Page(
                 data = currentPageData.toObjects(SellerItemBasicEntity::class.java)

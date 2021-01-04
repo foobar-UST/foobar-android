@@ -4,17 +4,19 @@ import android.content.Context
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.R
 import com.foobarust.android.common.BaseViewModel
 import com.foobarust.android.states.UiFetchState
 import com.foobarust.android.utils.SingleLiveEvent
+import com.foobarust.domain.models.cart.UserCart
 import com.foobarust.domain.models.seller.SellerDetail
 import com.foobarust.domain.models.seller.SellerDetailWithCatalogs
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.seller.GetSellerDetailWithCatalogsUseCase
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 /**
@@ -53,6 +55,17 @@ class SellerDetailViewModel @ViewModelInject constructor(
     val showSnackBarMessage: LiveData<String>
         get() = _showSnackBarMessage
 
+    private val _userCart = MutableStateFlow<UserCart?>(null)
+    val userCartLiveData: LiveData<UserCart?> = _userCart
+        .asStateFlow()
+        .asLiveData(viewModelScope.coroutineContext)
+
+    val showCartBottomBar: LiveData<Boolean> = _userCart
+        .asStateFlow()
+        .map { userCart -> userCart != null && userCart.itemsCount > 0 }
+        .distinctUntilChanged()
+        .asLiveData(viewModelScope.coroutineContext)
+
     fun onFetchSellerDetail(sellerId: String) = viewModelScope.launch {
         getSellerDetailWithCatalogsUseCase(sellerId).collect {
             when (it) {
@@ -65,6 +78,10 @@ class SellerDetailViewModel @ViewModelInject constructor(
                 is Resource.Loading -> setUiFetchState(UiFetchState.Loading)
             }
         }
+    }
+
+    fun onShowUserCartBottomBar(userCart: UserCart?) {
+        _userCart.value = userCart
     }
 
     fun onShowToolbarTitleChanged(isShow: Boolean) {

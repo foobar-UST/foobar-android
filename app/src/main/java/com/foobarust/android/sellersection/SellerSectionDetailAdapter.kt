@@ -9,13 +9,15 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.foobarust.android.R
+import com.foobarust.android.common.ScrollStatesManager
 import com.foobarust.android.databinding.*
-import com.foobarust.android.sellersection.MoreSectionsListModel.*
-import com.foobarust.android.sellersection.ParticipantsListModel.*
+import com.foobarust.android.sellersection.SectionDetailMoreSectionsListModel.*
+import com.foobarust.android.sellersection.SectionDetailParticipantsListModel.*
 import com.foobarust.android.sellersection.SellerSectionDetailListModel.*
 import com.foobarust.android.sellersection.SellerSectionDetailViewHolder.*
 import com.foobarust.domain.models.common.Geolocation
 import com.foobarust.domain.models.user.UserPublic
+import com.foobarust.domain.utils.DateUtils
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.ktx.addMarker
 import com.google.maps.android.ktx.awaitMap
@@ -32,6 +34,9 @@ class SellerSectionDetailAdapter(
 ) : ListAdapter<SellerSectionDetailListModel, SellerSectionDetailViewHolder>(
     SellerSectionDetailListModelDiff
 ) {
+
+    private val scrollStatesManager = ScrollStatesManager()
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -70,18 +75,22 @@ class SellerSectionDetailAdapter(
                 usersItem = currentItem
 
                 // Setup users recycler view
-                val participantsAdapter = ParticipantsAdapter(
+                val participantsAdapter = SectionDetailParticipantsAdapter(
                     sectionId = currentItem.sectionId,
                     listener = sellerSectionDetailFragment
                 ).apply {
                     submitList(currentItem.usersPublics.map {
-                        ParticipantsUserItem(userPublic = it)
+                        SectionDetailParticipantsUserItem(userPublic = it)
                     })
                 }
 
                 usersRecyclerView.run {
                     adapter = participantsAdapter
                     setHasFixedSize(true)
+                    scrollStatesManager.restoreScrollState(
+                        layoutPosition = holder.layoutPosition,
+                        recyclerView = this
+                    )
                 }
 
                 executePendingBindings()
@@ -90,23 +99,31 @@ class SellerSectionDetailAdapter(
             is SellerSectionDetailCounterItemViewHolder -> holder.binding.run {
                 val currentItem = getItem(position) as SellerSectionDetailCounterItemModel
 
-                // Setup countdown timer
-                sellerSectionDetailFragment.viewLifecycleOwner.lifecycleScope.launch {
-                    val timeMills = currentItem.cutoffTime.time - Date().time
-                    val timer = object : CountDownTimer(timeMills, 1_000L) {
-                        override fun onTick(millisUntilFinished: Long) {
-                            val remainTime = getCounterRemainTime(millisUntilFinished)
-                            counterValueTextView.text = String.format(
-                                "%02d : %02d : %02d",
-                                remainTime.hours,
-                                remainTime.minutes,
-                                remainTime.seconds
-                            )
+                if (currentItem.isRecentSection) {
+                    // Setup countdown timer for recent section
+                    sellerSectionDetailFragment.viewLifecycleOwner.lifecycleScope.launch {
+                        val timeMills = currentItem.cutoffTime.time - Date().time
+                        val timer = object : CountDownTimer(timeMills, 1_000L) {
+                            override fun onTick(millisUntilFinished: Long) {
+                                val remainTime = getCounterRemainTime(millisUntilFinished)
+                                counterValueTextView.text = String.format(
+                                    "%02d : %02d : %02d",
+                                    remainTime.hours,
+                                    remainTime.minutes,
+                                    remainTime.seconds
+                                )
+                            }
+                            override fun onFinish() { cancel() }
                         }
-                        override fun onFinish() { cancel() }
-                    }
 
-                    timer.start()
+                        timer.start()
+                    }
+                } else {
+                    // Show date for non-recent section
+                    counterValueTextView.text = DateUtils.getDateString(
+                        date = currentItem.cutoffTime,
+                        format = "yyyy-MM-dd"
+                    )
                 }
 
                 executePendingBindings()
@@ -147,7 +164,7 @@ class SellerSectionDetailAdapter(
                 val currentItem = getItem(position) as SellerSectionDetailMoreSectionsItemModel
 
                 // Setup more sections recycler view
-                val moreSectionsAdapter = MoreSectionsAdapter(
+                val moreSectionsAdapter = SectionDetailMoreSectionsAdapter(
                     sellerId = currentItem.sellerId,
                     listener = this@SellerSectionDetailAdapter.sellerSectionDetailFragment
                 ).apply { submitList(currentItem.sectionItems) }
@@ -155,6 +172,10 @@ class SellerSectionDetailAdapter(
                 sectionsRecyclerView.run {
                     adapter = moreSectionsAdapter
                     setHasFixedSize(true)
+                    scrollStatesManager.restoreScrollState(
+                        layoutPosition = holder.layoutPosition,
+                        recyclerView = this
+                    )
                 }
 
                 executePendingBindings()
@@ -194,6 +215,21 @@ class SellerSectionDetailAdapter(
                 TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeMills))
             ).toInt()
         )
+    }
+
+    override fun onViewRecycled(holder: SellerSectionDetailViewHolder) {
+        super.onViewRecycled(holder)
+        if (holder is SellerSectionDetailUsersItemViewHolder) {
+            scrollStatesManager.saveScrollState(
+                layoutPosition = holder.layoutPosition,
+                recyclerView = holder.binding.usersRecyclerView
+            )
+        } else if (holder is SellerSectionDetailMoreSectionsItemViewHolder) {
+            scrollStatesManager.saveScrollState(
+                layoutPosition = holder.layoutPosition,
+                recyclerView = holder.binding.sectionsRecyclerView
+            )
+        }
     }
 
     interface SellerSectionDetailAdapterListener {
@@ -271,7 +307,7 @@ sealed class SellerSectionDetailListModel {
 
     data class SellerSectionDetailMoreSectionsItemModel(
         val sellerId: String,
-        val sectionItems: List<MoreSectionsSectionItem>
+        val sectionItems: List<SectionDetailMoreSectionsSectionItem>
     ) : SellerSectionDetailListModel()
 
     data class SellerSectionDetailSubtitleItemModel(

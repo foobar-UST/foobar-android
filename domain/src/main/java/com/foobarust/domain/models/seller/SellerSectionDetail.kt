@@ -34,6 +34,10 @@ fun SellerSectionDetail.isRecentSection(): Boolean {
         DateUtils.isSameDay(deliveryTime, Date())
 }
 
+fun SellerSectionDetail.getNormalizedTitle(): String {
+    return if (titleZh != null) "$title - $titleZh" else title
+}
+
 fun SellerSectionDetail.getNormalizedDescription(): String {
     return if (descriptionZh != null) "$description\n$descriptionZh" else description
 }

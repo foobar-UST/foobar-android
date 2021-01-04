@@ -71,10 +71,12 @@ class SellerOnCampusFragment : Fragment(),
 
         // Fixed the issue when the promotion banner is inserted after the suggestion list,
         // and got hidden at the top of the recycler view
-        scrollToTopWhenNewItemsInserted(promotionAdapter)
+        viewLifecycleOwner.lifecycleScope.launch {
+            promotionAdapter.scrollToTopWhenFirstItemInserted(binding.recyclerView)
+        }
 
-        // Subscribe for promotion items
-        sellerOnCampusViewModel.promotionModelItems.observe(viewLifecycleOwner) {
+        // Submit promotion items
+        sellerOnCampusViewModel.promotionListModels.observe(viewLifecycleOwner) {
             promotionAdapter.submitList(it)
         }
 
@@ -88,13 +90,13 @@ class SellerOnCampusFragment : Fragment(),
 
         // Retry button
         binding.loadErrorLayout.retryButton.setOnClickListener {
+            sellerOnCampusAdapter.refresh()
             sellerOnCampusViewModel.onReloadPromotion()
-            sellerOnCampusAdapter.retry()
         }
 
         // Control views corresponding to load states
         sellerOnCampusAdapter.addLoadStateListener { loadStates ->
-            sellerOnCampusViewModel.onLoadStateChanged(loadStates.source.refresh)
+            sellerOnCampusViewModel.onPagingLoadStateChanged(loadStates.source.refresh)
             loadStates.anyError()?.let {
                 showShortToast(it.error.message)
             }
@@ -124,13 +126,16 @@ class SellerOnCampusFragment : Fragment(),
             binding.recyclerView.updatePadding(bottom = bottomPadding.toInt())
         }
 
+        // Show toast
+        sellerOnCampusViewModel.toastMessage.observe(viewLifecycleOwner) {
+            showShortToast(it)
+        }
+
         return binding.root
     }
 
     override fun onPromotionAdvertiseItemClicked(advertiseBasic: AdvertiseBasic) {
-        if (!requireActivity().launchCustomTab(advertiseBasic.url)) {
-            showShortToast(getString(R.string.error_resolve_activity_failed))
-        }
+        mainViewModel.onLaunchCustomTab(url = advertiseBasic.url)
     }
 
     override fun onSellerListItemClicked(sellerBasic: SellerBasic) {
@@ -144,11 +149,5 @@ class SellerOnCampusFragment : Fragment(),
 
     override fun onPromotionSuggestItemClicked(suggestBasic: SuggestBasic) {
         sellerViewModel.onNavigateToSuggestItem(suggestBasic)
-    }
-
-    private fun scrollToTopWhenNewItemsInserted(promotionAdapter: PromotionAdapter) {
-        viewLifecycleOwner.lifecycleScope.launch {
-            promotionAdapter.scrollToTopWhenFirstItemInserted(binding.recyclerView)
-        }
     }
 }

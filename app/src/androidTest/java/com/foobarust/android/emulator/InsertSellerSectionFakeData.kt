@@ -3,7 +3,9 @@ package com.foobarust.android.emulator
 import androidx.test.ext.junit.rules.activityScenarioRule
 import androidx.test.platform.app.InstrumentationRegistry
 import com.foobarust.android.InsertFakeDataActivity
-import com.foobarust.data.common.Constants
+import com.foobarust.data.common.Constants.SELLERS_COLLECTION
+import com.foobarust.data.common.Constants.SELLER_SECTIONS_BASIC_SUB_COLLECTION
+import com.foobarust.data.common.Constants.SELLER_SECTIONS_SUB_COLLECTION
 import com.foobarust.data.models.seller.SellerSectionBasicEntity
 import com.foobarust.data.models.seller.SellerSectionDetailEntity
 import com.google.firebase.Timestamp
@@ -49,10 +51,13 @@ class InsertSellerSectionFakeData {
             decodeSectionJson()
         )
 
-        serializedList.map { it.toSellerSectionDetailEntity() }
+        serializedList
+            .mapIndexed { index, sectionSerialized ->
+                sectionSerialized.toSellerSectionDetailEntity(index)
+            }
             .forEach {
                 firestore.document(
-                    "${Constants.SELLERS_COLLECTION}/${it.sellerId}/${Constants.SELLER_SECTIONS_SUB_COLLECTION}/${it.id}"
+                    "${SELLERS_COLLECTION}/${it.sellerId}/${SELLER_SECTIONS_SUB_COLLECTION}/${it.id}"
                 ).set(it).await()
             }
     }
@@ -63,10 +68,13 @@ class InsertSellerSectionFakeData {
             decodeSectionJson()
         )
 
-        serializedList.map { it.toSellerSectionBasicEntity() }
+        serializedList
+            .mapIndexed { index, sectionSerialized ->
+                sectionSerialized.toSellerSectionBasicEntity(index)
+            }
             .forEach {
                 firestore.document(
-                    "${Constants.SELLERS_COLLECTION}/${it.sellerId}/${Constants.SELLER_SECTIONS_BASIC_SUB_COLLECTION}/${it.id}"
+                    "${SELLERS_COLLECTION}/${it.sellerId}/${SELLER_SECTIONS_BASIC_SUB_COLLECTION}/${it.id}"
                 ).set(it).await()
             }
     }
@@ -100,7 +108,7 @@ private data class SellerSectionSerialized(
     val state: String,
     val available: Boolean
 ) {
-    fun toSellerSectionDetailEntity(): SellerSectionDetailEntity {
+    fun toSellerSectionDetailEntity(index: Int): SellerSectionDetailEntity {
         return SellerSectionDetailEntity(
             id = id,
             title = title,
@@ -111,8 +119,8 @@ private data class SellerSectionSerialized(
             sellerNameZh = seller_name_zh,
             description = description,
             descriptionZh = description_zh,
-            deliveryTime = parseTimestamp(delivery_time),
-            cutoffTime = parseTimestamp(cutoff_time),
+            deliveryTime = parseTimestamp(delivery_time, index),
+            cutoffTime = parseTimestamp(cutoff_time, index),
             maxUsers = max_users,
             joinedUsersCount = joined_users_count,
             joinedUsersIds = joined_users_ids,
@@ -122,7 +130,7 @@ private data class SellerSectionSerialized(
         )
     }
 
-    fun toSellerSectionBasicEntity(): SellerSectionBasicEntity {
+    fun toSellerSectionBasicEntity(index: Int): SellerSectionBasicEntity {
         return SellerSectionBasicEntity(
             id = id,
             title = title,
@@ -130,8 +138,8 @@ private data class SellerSectionSerialized(
             sellerId = seller_id,
             sellerName = seller_name,
             sellerNameZh = seller_name_zh,
-            deliveryTime = parseTimestamp(delivery_time),
-            cutoffTime = parseTimestamp(cutoff_time),
+            deliveryTime = parseTimestamp(delivery_time, index),
+            cutoffTime = parseTimestamp(cutoff_time, index),
             maxUsers = max_users,
             joinedUsersCount = joined_users_count,
             imageUrl = image_url,
@@ -140,9 +148,16 @@ private data class SellerSectionSerialized(
         )
     }
 
-    private fun parseTimestamp(time: String): Timestamp {
+    private fun parseTimestamp(time: String, index: Int): Timestamp {
         val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US)
         formatter.timeZone = TimeZone.getTimeZone("Asia/Hong_Kong")
-        return Timestamp(formatter.parse(time)!!)
+
+        val calendar = Calendar.getInstance().apply {
+            timeZone = TimeZone.getTimeZone("Asia/Hong_Kong")
+            setTime(Date())
+            add(Calendar.DATE, index)
+        }
+
+        return Timestamp(calendar.time)
     }
 }

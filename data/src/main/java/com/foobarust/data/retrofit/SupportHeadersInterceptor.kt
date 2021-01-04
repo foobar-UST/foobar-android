@@ -1,4 +1,4 @@
-package com.foobarust.data.utils
+package com.foobarust.data.retrofit
 
 import okhttp3.Interceptor
 import okhttp3.Response

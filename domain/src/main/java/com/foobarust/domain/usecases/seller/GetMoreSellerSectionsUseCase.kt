@@ -20,11 +20,12 @@ class GetMoreSellerSectionsUseCase @Inject constructor(
         return sellerRepository.getSellerSectionBasics(
             sellerId = parameters.sellerId,
             numOfSections = parameters.numOfSections
-        )
+        ).filter { it.id != parameters.currentSectionId  }
     }
 }
 
 data class GetMoreSellerSectionsParameters(
     val sellerId: String,
-    val numOfSections: Int
+    val numOfSections: Int,
+    val currentSectionId: String
 )

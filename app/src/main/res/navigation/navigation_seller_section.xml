@@ -11,18 +11,32 @@
         android:id="@+id/sellerSectionDetailFragment"
         android:name="com.foobarust.android.sellersection.SellerSectionDetailFragment"
         tools:layout="@layout/fragment_seller_section_detail">
-        <argument
-            android:name="sellerId"
-            app:argType="string" />
-        <argument
-            android:name="sectionId"
-            app:argType="string" />
+        <action
+            android:id="@+id/action_sellerSectionDetailFragment_to_sellerSectionMoreSectionsFragment"
+            app:destination="@id/sellerSectionMoreSectionsFragment"
+            app:enterAnim="@animator/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+        <action
+            android:id="@+id/action_sellerSectionDetailFragment_to_sellerSectionParticipantsFragment"
+            app:destination="@id/sellerSectionParticipantsFragment"
+            app:enterAnim="@animator/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
     </fragment>
 
-    <!-- SellerSectionUsersFragment -->
+    <!-- ParticipantsFragment -->
     <fragment
-        android:id="@+id/sellerSectionUsersFragment"
-        android:name="com.foobarust.android.sellersection.SellerSectionUsersFragment"
-        tools:layout="@layout/fragment_seller_section_users"/>
+        android:id="@+id/sellerSectionParticipantsFragment"
+        android:name="com.foobarust.android.sellersection.SellerSectionParticipantsFragment"
+        tools:layout="@layout/fragment_seller_section_participants"/>
+
+    <!-- MoreSectionsFragment -->
+    <fragment
+        android:id="@+id/sellerSectionMoreSectionsFragment"
+        android:name="com.foobarust.android.sellersection.SellerSectionMoreSectionsFragment"
+        tools:layout="@layout/fragment_seller_section_more_sections"/>
 
 </navigation>

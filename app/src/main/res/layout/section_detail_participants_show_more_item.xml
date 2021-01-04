@@ -9,7 +9,7 @@
             type="String" />
         <variable
             name="listener"
-            type="com.foobarust.android.sellersection.ParticipantsAdapter.ParticipantsAdapterListener" />
+            type="com.foobarust.android.sellersection.SectionDetailParticipantsAdapter.SectionDetailParticipantsAdapterListener" />
     </data>
 
     <FrameLayout
@@ -19,14 +19,13 @@
         tools:background="?attr/colorPrimarySurface">
 
         <com.google.android.material.button.MaterialButton
-            style="@style/Widget.MaterialComponents.Button.TextButton"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
             android:id="@+id/show_more_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text="@string/more_sections_show_more"
-            android:textColor="?attr/colorOnPrimarySurface"
-            android:onClick="@{() -> listener.onParticipantsShowMoreClicked(sectionId)}"/>
+            android:onClick="@{() -> listener.onParticipantsShowMoreClicked(sectionId)}" />
 
     </FrameLayout>
 

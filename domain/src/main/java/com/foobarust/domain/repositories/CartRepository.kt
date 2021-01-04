@@ -18,7 +18,7 @@ interface CartRepository {
         amounts: Int
     ): Resource<Unit>
 
-    suspend fun removeUserCartItem(idToken: String, cartItemId: String): Resource<Unit>
+    suspend fun removeUserCartItem(idToken: String, cartItemId: String, amounts: Int): Resource<Unit>
 
     suspend fun clearUserCart(idToken: String): Resource<Unit>
 

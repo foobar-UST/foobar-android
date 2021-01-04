@@ -42,6 +42,24 @@ class InsertSellerItemFakeData {
         hiltRule.inject()
     }
 
+    @Test
+    fun insert_seller_items_fake_data() = runBlocking(Dispatchers.IO) {
+        val serializedListSeller: List<SellerItemSerialized> = Json.decodeFromString(decodeJson())
+
+        serializedListSeller.forEach {
+            val sellerId = it.seller_id
+            val sellerItemDetailEntity = it.toSellerItemDetailEntity()
+
+            firestore.document(
+                "$SELLERS_COLLECTION/$sellerId/$SELLER_ITEMS_SUB_COLLECTION/${it.id}"
+            )
+                .set(sellerItemDetailEntity)
+                .await()
+        }
+
+        assertTrue(true)
+    }
+
     /*
     @Test
     fun insert_seller_items_basic_fake_data() = runBlocking(Dispatchers.IO) {
@@ -62,25 +80,6 @@ class InsertSellerItemFakeData {
     }
 
      */
-
-    @Test
-    fun insert_seller_items_fake_data() = runBlocking(Dispatchers.IO) {
-        val serializedListSeller: List<SellerItemSerialized> = Json.decodeFromString(decodeJson())
-
-        serializedListSeller.forEach {
-            val sellerId = it.seller_id
-            val sellerItemDetailEntity = it.toSellerItemDetailEntity()
-
-            firestore.document(
-                "$SELLERS_COLLECTION/$sellerId/$SELLER_ITEMS_SUB_COLLECTION/${it.id}"
-            )
-                .set(sellerItemDetailEntity)
-                .await()
-
-        }
-
-        assertTrue(true)
-    }
 
     private fun decodeJson(): String {
         val jsonInputStream = InstrumentationRegistry.getInstrumentation()

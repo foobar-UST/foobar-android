@@ -8,10 +8,10 @@ import androidx.lifecycle.viewModelScope
 import com.foobarust.android.common.BaseViewModel
 import com.foobarust.android.states.UiFetchState
 import com.foobarust.android.utils.SingleLiveEvent
+import com.foobarust.domain.models.cart.UserCart
 import com.foobarust.domain.models.seller.SellerItemDetail
 import com.foobarust.domain.states.Resource
-import com.foobarust.domain.usecases.cart.AddUserCartItemParameters
-import com.foobarust.domain.usecases.cart.AddUserCartItemUseCase
+import com.foobarust.domain.usecases.cart.*
 import com.foobarust.domain.usecases.seller.GetSellerItemDetailParameters
 import com.foobarust.domain.usecases.seller.GetSellerItemDetailUseCase
 import kotlinx.coroutines.flow.*
@@ -24,7 +24,8 @@ import kotlinx.parcelize.Parcelize
 
 class SellerItemDetailViewModel @ViewModelInject constructor(
     private val getSellerItemDetailUseCase: GetSellerItemDetailUseCase,
-    private val addUserCartItemUseCase: AddUserCartItemUseCase
+    private val addUserCartItemUseCase: AddUserCartItemUseCase,
+    private val updateUserCartItemUseCase: UpdateUserCartItemUseCase
 ) : BaseViewModel() {
 
     lateinit var property: SellerItemDetailProperty
@@ -51,30 +52,41 @@ class SellerItemDetailViewModel @ViewModelInject constructor(
     val dismissDialog: LiveData<Unit>
         get() = _dismissDialog
 
+    private val _showDiffSellerDialog = SingleLiveEvent<Unit>()
+    val showDiffSellerDialog: LiveData<Unit>
+        get() = _showDiffSellerDialog
+
     fun onFetchItemDetail(property: SellerItemDetailProperty) = viewModelScope.launch {
         this@SellerItemDetailViewModel.property = property
+        // Setup initial amount for update action
+        property.amounts?.let {
+            _amountsInput.value = it
+        }
 
         val parameters = GetSellerItemDetailParameters(
             sellerId = property.sellerId,
             itemId = property.itemId
         )
 
-        when (val resource = getSellerItemDetailUseCase(parameters)) {
+        when (val result = getSellerItemDetailUseCase(parameters)) {
             is Resource.Success -> {
-                _itemDetail.value = resource.data
+                _itemDetail.value = result.data
                 setUiFetchState(UiFetchState.Success)
             }
             is Resource.Error -> {
                 _dismissDialog.value = Unit
-                setUiFetchState(UiFetchState.Error(resource.message))
+                setUiFetchState(UiFetchState.Error(result.message))
             }
             is Resource.Loading -> setUiFetchState(UiFetchState.Loading)
         }
     }
 
     fun onAmountIncremented() {
-        // TODO: set maximum amount
-        _amountsInput.value++
+        _itemDetail.value?.let { itemDetail ->
+            if (_amountsInput.value + 1 <= itemDetail.count) {
+                _amountsInput.value++
+            }
+        }
     }
 
     fun onAmountDecremented() {
@@ -83,36 +95,72 @@ class SellerItemDetailViewModel @ViewModelInject constructor(
         }
     }
 
-    fun onSubmitItemToCart() = viewModelScope.launch {
-        _itemDetail.value?.let { itemDetail ->
-            _cartItemSubmitting.value = true
+    fun onSubmitItemToCart(userCart: UserCart) = viewModelScope.launch {
+        _cartItemSubmitting.value = true
+        if (property.isUpdateAction()) {
+            updateUserCartItem()
+        } else {
+            addUserCartItem(userCart)
+        }
+    }
 
-            val params = AddUserCartItemParameters(
-                sellerId = property.sellerId,
-                itemId = itemDetail.id,
-                amounts = _amountsInput.value
-            )
-            addUserCartItemUseCase(params).collect {
-                when (it) {
-                    is Resource.Success -> {
-                        _dismissDialog.value = Unit
-                        _cartItemSubmitting.value = false
-                    }
-                    is Resource.Error -> {
-                        _cartItemSubmitting.value = false
-                        showToastMessage(it.message)
-                    }
-                    is Resource.Loading -> Unit
+    private fun updateUserCartItem() = viewModelScope.launch {
+        val params = UpdateUserCartItemParameters(
+            cartItemId = property.cartItemId!!,
+            amounts = _amountsInput.value
+        )
+
+        updateUserCartItemUseCase(params).collect {
+            when (it) {
+                is Resource.Success -> {
+                    _dismissDialog.value = Unit
+                    _cartItemSubmitting.value = false
                 }
+                is Resource.Error -> {
+                    _cartItemSubmitting.value = false
+                    showToastMessage(it.message)
+                }
+                is Resource.Loading -> Unit
             }
         }
     }
 
-    //fun isSubmittingToCart(): Boolean = _isSubmitting.value
+    private fun addUserCartItem(userCart: UserCart) = viewModelScope.launch {
+        val itemId = _itemDetail.value?.id ?: return@launch
+        val params = AddUserCartItemParameters(
+            sellerId = property.sellerId,
+            itemId = itemId,
+            amounts = _amountsInput.value,
+            userCart = userCart
+        )
+
+        addUserCartItemUseCase(params).collect {
+            when (it) {
+                is Resource.Success -> {
+                    _dismissDialog.value = Unit
+                    _cartItemSubmitting.value = false
+                }
+                is Resource.Error -> {
+                    _cartItemSubmitting.value = false
+                    if (it.message == ERROR_DIFFERENT_SELLER) {
+                        _showDiffSellerDialog.value = Unit
+                    } else {
+                        showToastMessage(it.message)
+                    }
+                }
+                is Resource.Loading -> Unit
+            }
+        }
+    }
 }
 
 @Parcelize
 data class SellerItemDetailProperty(
     val sellerId: String,
-    val itemId: String
-) : Parcelable
+    val itemId: String,
+    // These fields will be used for updating cart item.
+    val cartItemId: String? = null,
+    val amounts: Int? = null
+) : Parcelable {
+    fun isUpdateAction(): Boolean = cartItemId != null
+}

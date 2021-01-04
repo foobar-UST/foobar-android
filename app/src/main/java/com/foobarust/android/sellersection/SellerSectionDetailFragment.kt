@@ -7,12 +7,15 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.navArgs
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
+import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentSellerSectionDetailBinding
 import com.foobarust.android.utils.AutoClearedValue
 import com.foobarust.android.utils.scrollToTopWhenFirstItemInserted
 import com.foobarust.android.utils.showShortToast
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 /**
@@ -22,19 +25,22 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class SellerSectionDetailFragment : Fragment(),
     SellerSectionDetailAdapter.SellerSectionDetailAdapterListener,
-    ParticipantsAdapter.ParticipantsAdapterListener,
-    MoreSectionsAdapter.MoreSectionsAdapterListener {
+    SectionDetailParticipantsAdapter.SectionDetailParticipantsAdapterListener,
+    SectionDetailMoreSectionsAdapter.SectionDetailMoreSectionsAdapterListener {
 
     private var binding: FragmentSellerSectionDetailBinding by AutoClearedValue(this)
-    private val navArgs: SellerSectionDetailFragmentArgs by navArgs()
-    private val viewModel: SellerSectionDetailViewModel by viewModels()
+    private val sectionViewModel: SellerSectionViewModel by navGraphViewModels(R.id.navigation_seller_section)
+    private val sectionDetailViewModel: SellerSectionDetailViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.onFetchSectionDetail(
-            sellerId = navArgs.sellerId,
-            sectionId = navArgs.sectionId
-        )
+        lifecycleScope.launchWhenCreated {
+            sectionViewModel.sectionDetail.collect { sectionDetail ->
+                sectionDetail?.let {
+                    sectionDetailViewModel.onReceiveSellerDetail(sectionDetail = it)
+                }
+            }
+        }
     }
 
     override fun onCreateView(
@@ -43,7 +49,7 @@ class SellerSectionDetailFragment : Fragment(),
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSellerSectionDetailBinding.inflate(inflater, container, false).apply {
-            viewModel = this@SellerSectionDetailFragment.viewModel
+            viewModel = this@SellerSectionDetailFragment.sectionDetailViewModel
             lifecycleOwner = viewLifecycleOwner
         }
 
@@ -55,7 +61,7 @@ class SellerSectionDetailFragment : Fragment(),
             setHasFixedSize(true)
         }
 
-        viewModel.sectionDetailListModels.observe(viewLifecycleOwner) {
+        sectionDetailViewModel.sectionDetailListModels.observe(viewLifecycleOwner) {
             sectionDetailAdapter.submitList(it)
         }
 
@@ -65,23 +71,20 @@ class SellerSectionDetailFragment : Fragment(),
         }
 
         // Show toast message
-        viewModel.toastMessage.observe(viewLifecycleOwner) {
+        sectionDetailViewModel.toastMessage.observe(viewLifecycleOwner) {
             showShortToast(it)
         }
 
-        // Retry
-        binding.loadErrorLayout.retryButton.setOnClickListener {
-            viewModel.onFetchSectionDetail(
-                sellerId = navArgs.sellerId,
-                sectionId = navArgs.sectionId
-            )
+        // Add to cart button
+        binding.addItemsButton.setOnClickListener {
+            sectionViewModel.onNavigateToSellerDetail()
         }
 
         return binding.root
     }
 
     override fun onSellerInfoItemClicked(sellerId: String) {
-
+        sectionViewModel.onNavigateToSellerDetail()
     }
 
     override fun onParticipantItemClicked(userId: String) {
@@ -89,14 +92,20 @@ class SellerSectionDetailFragment : Fragment(),
     }
 
     override fun onParticipantsShowMoreClicked(sectionId: String) {
-
+        findNavController().navigate(
+            SellerSectionDetailFragmentDirections
+                .actionSellerSectionDetailFragmentToSellerSectionParticipantsFragment()
+        )
     }
 
     override fun onSectionClicked(sectionId: String) {
-
+        sectionViewModel.onNavigateToSellerSection(sectionId)
     }
 
     override fun onSectionsShowMoreClicked(sellerId: String) {
-
+        findNavController().navigate(
+            SellerSectionDetailFragmentDirections
+                .actionSellerSectionDetailFragmentToSellerSectionMoreSectionsFragment()
+        )
     }
 }

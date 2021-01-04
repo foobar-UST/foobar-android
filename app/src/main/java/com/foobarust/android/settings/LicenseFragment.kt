@@ -4,11 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import com.foobarust.android.common.FullScreenDialogFragment
 import com.foobarust.android.databinding.FragmentLicenseBinding
 import com.foobarust.android.utils.AutoClearedValue
 
-class LicenseFragment : Fragment() {
+class LicenseFragment : FullScreenDialogFragment() {
 
     private var binding: FragmentLicenseBinding by AutoClearedValue(this)
 
@@ -18,7 +18,6 @@ class LicenseFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentLicenseBinding.inflate(inflater, container, false)
-
         return binding.root
     }
 
@@ -49,6 +48,6 @@ class LicenseFragment : Fragment() {
             SOFTWARE.
         """.trimIndent()
 
-        binding.contentTextView.text  = licenseContent
+        binding.licenseTextView.text  = licenseContent
     }
 }

@@ -7,10 +7,10 @@
     <data>
         <variable
             name="userItem"
-            type="com.foobarust.android.sellersection.ParticipantsListModel.ParticipantsUserItem" />
+            type="com.foobarust.android.sellersection.SectionDetailParticipantsListModel.SectionDetailParticipantsUserItem" />
         <variable
             name="listener"
-            type="com.foobarust.android.sellersection.ParticipantsAdapter.ParticipantsAdapterListener" />
+            type="com.foobarust.android.sellersection.SectionDetailParticipantsAdapter.SectionDetailParticipantsAdapterListener" />
         <import type="com.foobarust.android.R" />
     </data>
 

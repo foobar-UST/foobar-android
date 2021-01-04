@@ -244,6 +244,15 @@
 
         </FrameLayout>
 
+        <include
+            layout="@layout/cart_bottom_bar_layout"
+            android:id="@+id/cart_bottom_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            app:userCart="@{viewModel.userCartLiveData}"
+            app:goneIf="@{!viewModel.showCartBottomBar}"/>
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </layout>

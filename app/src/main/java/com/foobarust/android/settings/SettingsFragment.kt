@@ -7,27 +7,42 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentSettingsBinding
+import com.foobarust.android.main.MainViewModel
 import com.foobarust.android.utils.AutoClearedValue
 import com.foobarust.android.utils.findNavController
 import com.foobarust.android.utils.showShortToast
+import com.foobarust.domain.states.getSuccessDataOr
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class SettingsFragment : Fragment(), SettingsAdapter.SettingsAdapterListener {
 
     private var binding: FragmentSettingsBinding by AutoClearedValue(this)
-    private val viewModel: SettingsViewModel by viewModels()
+    private val mainViewModel: MainViewModel by activityViewModels()
+    private val settingsViewModel: SettingsViewModel by viewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        lifecycleScope.launchWhenCreated {
+            mainViewModel.userDetail.collect {
+                settingsViewModel.onUserDetailUpdated(userDetail = it.getSuccessDataOr(null))
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentSettingsBinding.inflate(inflater, container, false)
 
         // Setup recyclerView
@@ -39,26 +54,26 @@ class SettingsFragment : Fragment(), SettingsAdapter.SettingsAdapterListener {
             setHasFixedSize(true)
         }
 
-        viewModel.settingsItems.observe(viewLifecycleOwner) { models ->
+        settingsViewModel.settingsListModels.observe(viewLifecycleOwner) { models ->
             settingsAdapter.submitList(models)
         }
 
         // Navigate to SignInActivity
-        viewModel.navigateToSignIn.observe(viewLifecycleOwner) {
+        settingsViewModel.navigateToSignIn.observe(viewLifecycleOwner) {
             findNavController().navigate(
                 SettingsFragmentDirections.actionSettingsFragmentToSignInActivity()
             )
         }
 
         // Navigate to ProfileFragment
-        viewModel.navigateToProfile.observe(viewLifecycleOwner) {
+        settingsViewModel.navigateToProfile.observe(viewLifecycleOwner) {
             findNavController().navigate(
                 SettingsFragmentDirections.actionSettingsFragmentToProfileFragment()
             )
         }
 
         // Show toast message
-        viewModel.toastMessage.observe(viewLifecycleOwner) {
+        settingsViewModel.toastMessage.observe(viewLifecycleOwner) {
             showShortToast(it)
         }
 
@@ -66,7 +81,7 @@ class SettingsFragment : Fragment(), SettingsAdapter.SettingsAdapterListener {
     }
 
     override fun onSettingsUserProfileClicked() {
-        viewModel.onUserAccountCardClicked()
+        settingsViewModel.onUserAccountCardClicked()
     }
 
     override fun onSettingsSectionClicked(sectionId: String) {
@@ -111,7 +126,7 @@ class SettingsFragment : Fragment(), SettingsAdapter.SettingsAdapterListener {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(getString(R.string.sign_out_dialog_title))
             .setMessage(getString(R.string.sign_out_dialog_message))
-            .setPositiveButton(android.R.string.ok) { _, _ -> viewModel.signOut() }
+            .setPositiveButton(android.R.string.ok) { _, _ -> settingsViewModel.signOut() }
             .setNegativeButton(android.R.string.cancel) { dialog, _ -> dialog.dismiss() }
             .show()
     }

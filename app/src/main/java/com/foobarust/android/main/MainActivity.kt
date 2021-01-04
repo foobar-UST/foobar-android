@@ -30,7 +30,6 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = DataBindingUtil.setContentView<ActivityMainBinding>(
             this,
             R.layout.activity_main
@@ -40,7 +39,7 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
         }
 
         if (savedInstanceState == null) {
-            setupBottomNavigation()
+            setupNavigation()
         }
 
         // Setup toolbar item
@@ -52,8 +51,8 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
         }
 
         // Show snack bar
-        viewModel.showSnackBarMessage.observe(this) {
-            showMessageSnackBar(message = it)
+        viewModel.showSnackBarMessage.observe(this) { message ->
+            Snackbar.make(binding.coordinatorLayout, message, Snackbar.LENGTH_SHORT).show()
         }
 
         // Navigate to cart
@@ -72,6 +71,13 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
         viewModel.showOnboardingTutorial.observe(this) {
             showOnboardingTutorial()
         }
+
+        // Launch chrome tab
+        viewModel.launchCustomTab.observe(this) {
+            if (!launchCustomTab(url = it)) {
+                showShortToast(getString(R.string.error_resolve_activity_failed))
+            }
+        }
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
@@ -79,7 +85,7 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
         // BottomNavigationBar has restored its instance state
         // and its selectedItemId, we can proceed with setting up the
         // BottomNavigationBar with Navigation
-        setupBottomNavigation()
+        setupNavigation()
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -91,44 +97,35 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
 
     override fun onMenuItemClick(menuItem: MenuItem?): Boolean {
         when (menuItem?.itemId) {
-            R.id.action_seller_search -> showSellerSearch()
+            R.id.action_seller_search -> navigateToSellerSearch()
         }
 
         return true
     }
 
-    private fun setupBottomNavigation() {
+    private fun setupNavigation() {
         val navGraphIds = listOf(
             R.navigation.navigation_seller,
             R.navigation.navigation_order,
             R.navigation.navigation_explore,
             R.navigation.navigation_settings
         )
-
         val navController = binding.bottomNavigationView.setupWithNavController(
             navGraphIds = navGraphIds,
             fragmentManager = supportFragmentManager,
-            containerId = R.id.fragment_container,
+            containerId = R.id.nav_host_container,
             intent = intent,
             itemReselected = { viewModel.onTabScrollToTop() }
         )
-
-        val topLevelDestinations = listOf(
-            R.id.sellerFragment,
-            R.id.orderFragment,
-            R.id.exploreFragment,
-            R.id.settingsFragment
-        )
-
-        val listener =
-            NavController.OnDestinationChangedListener { controller, destination, arguments ->
-                setupViewsForNavGraph(controller.graph.id)
-                if (controller.currentDestination?.id in topLevelDestinations) {
-                    setupViewsForTopLevelDestinations(controller.currentDestination?.id)
-                } else {
-                    setupViewsForInnerDestinations()
-                }
+        val listener = NavController.OnDestinationChangedListener { controller, destination, arguments ->
+            viewModel.onCurrentNavGraphChanged(controller.graph.id)
+            // Setup views for top level destinations
+            if (destination.id in viewModel.topLevelDestinations) {
+                setupTopLevelDestinationsViews(destination.id)
+            } else {
+                setupInnerDestinationsViews()
             }
+        }
 
         navController.observe(this) {
             // Setup toolbar
@@ -144,38 +141,27 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
 
         currentNavController = navController
 
-        // TODO: show badge
+        // TODO: Setup badge
         binding.bottomNavigationView.getOrCreateBadge(R.id.navigation_explore).run {
             isVisible = true
         }
     }
 
-    private fun setupViewsForNavGraph(currentGraphId: Int?) {
-        // Hide cart bottom bar in settings graph
-        viewModel.onCurrentGraphChanged(currentGraphId)
-    }
-
-    private fun setupViewsForTopLevelDestinations(currentDestinationId: Int?) {
-        // Show toolbar menu only in SellerFragment
-        if (currentDestinationId == R.id.sellerFragment) {
-            binding.toolbar.inflateMenu(R.menu.menu_toolbar_main)
-        } else {
-            binding.toolbar.menu.clear()
+    private fun setupTopLevelDestinationsViews(destinationId: Int) {
+        when (destinationId) {
+            R.id.sellerFragment -> binding.toolbar.inflateMenu(R.menu.menu_toolbar_main)
+            else -> binding.toolbar.menu.clear()
         }
     }
 
-    private fun setupViewsForInnerDestinations() {
+    private fun setupInnerDestinationsViews() {
         binding.toolbar.menu.clear()
     }
 
-    private fun showSellerSearch() {
+    private fun navigateToSellerSearch() {
         currentNavController?.value?.navigate(
             SellerFragmentDirections.actionSellerFragmentToSellerSearchFragment()
         )
-    }
-
-    private fun showMessageSnackBar(message: String) {
-        Snackbar.make(binding.coordinatorLayout, message, Snackbar.LENGTH_SHORT).show()
     }
 
     private fun showCartTimeoutDialog(property: CartTimeoutProperty) {

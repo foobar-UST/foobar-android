@@ -6,6 +6,12 @@
     android:id="@+id/navigation_settings"
     app:startDestination="@id/settingsFragment">
 
+    <!-- SignInActivity -->
+    <activity
+        android:id="@+id/signInActivity"
+        android:name="com.foobarust.android.auth.AuthActivity"
+        tools:layout="@layout/activity_auth"/>
+
     <!-- SettingsFragment -->
     <fragment
         android:id="@+id/settingsFragment"
@@ -55,51 +61,45 @@
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
 
-    <fragment
+    <!-- NotificationFragment -->
+    <dialog
         android:id="@+id/notificationFragment"
         android:name="com.foobarust.android.settings.NotificationFragment"
-        android:label="@string/fragment_label_notification"
         tools:layout="@layout/fragment_notification"/>
 
-    <fragment
+    <!-- LicenseFragment -->
+    <dialog
         android:id="@+id/licenseFragment"
         android:name="com.foobarust.android.settings.LicenseFragment"
-        android:label="@string/fragment_label_license"
         tools:layout="@layout/fragment_license"/>
 
-    <fragment
+    <!-- FavoriteFragment -->
+    <dialog
         android:id="@+id/favoriteFragment"
         android:name="com.foobarust.android.settings.FavoriteFragment"
-        android:label="@string/fragment_label_favorite"
         tools:layout="@layout/fragment_favorite"/>
 
-    <fragment
+    <!-- OrderHistoryFragment -->
+    <dialog
         android:id="@+id/orderHistoryFragment"
         android:name="com.foobarust.android.order.OrderHistoryFragment"
-        android:label="@string/fragment_label_order_history"
         tools:layout="@layout/fragment_order_history"/>
 
     <!-- ProfileFragment -->
-    <fragment
+    <dialog
         android:id="@+id/profileFragment"
         android:name="com.foobarust.android.profile.ProfileFragment"
-        android:label="@string/fragment_label_profile"
         tools:layout="@layout/fragment_profile">
         <action
             android:id="@+id/action_profileFragment_to_textInputDialog"
             app:destination="@id/textInputDialog" />
-    </fragment>
+    </dialog>
 
     <!-- TutorialFragment -->
     <dialog
         android:id="@+id/tutorialFragment"
         android:name="com.foobarust.android.tutorial.TutorialFragment"
         tools:layout="@layout/fragment_tutorial"/>
-
-    <activity
-        android:id="@+id/signInActivity"
-        android:name="com.foobarust.android.auth.AuthActivity"
-        tools:layout="@layout/activity_auth"/>
 
     <!-- TextInputDialog -->
     <dialog

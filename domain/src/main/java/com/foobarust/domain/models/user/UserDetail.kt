@@ -7,15 +7,19 @@ import java.util.*
  */
 
 data class UserDetail(
-    val id: String,
-    val username: String,
-    val email: String,
+    val id: String? = null,
+    val username: String? = null,
+    val email: String? = null,
     val name: String? = null,
     val phoneNum: String? = null,
     val photoUrl: String? = null,
     val updatedAt: Date? = null
 )
 
-fun UserDetail.isOrderingAllowed(): Boolean {
+fun UserDetail.isSignedIn(): Boolean {
+    return id != null
+}
+
+fun UserDetail.isDataCompleted(): Boolean {
     return !name.isNullOrEmpty() && !phoneNum.isNullOrEmpty()
 }

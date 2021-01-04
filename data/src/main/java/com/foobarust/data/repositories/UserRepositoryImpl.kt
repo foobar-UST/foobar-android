@@ -43,7 +43,7 @@ class UserRepositoryImpl @Inject constructor(
 
     override fun getUserDetailObservable(userId: String): Flow<Resource<UserDetail>> {
         return firestore.document("$USERS_COLLECTION/$userId")
-            .snapshotFlow(userMapper::toUserDetail)
+            .snapshotFlow(userMapper::toUserDetail, true)
     }
 
     override suspend fun updateUserDetail(userId: String, userDetail: UserDetail) {

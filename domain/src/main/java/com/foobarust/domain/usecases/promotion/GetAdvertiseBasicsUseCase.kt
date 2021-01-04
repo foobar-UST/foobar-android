@@ -7,6 +7,7 @@ import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.FlowUseCase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 /**
@@ -18,7 +19,7 @@ class GetAdvertiseBasicsUseCase @Inject constructor(
     @IoDispatcher coroutineDispatcher: CoroutineDispatcher
 ) : FlowUseCase<Unit, List<AdvertiseBasic>>(coroutineDispatcher) {
 
-    override fun execute(parameters: Unit): Flow<Resource<List<AdvertiseBasic>>> {
-        return promotionRepository.getAdvertisesObservable()
+    override fun execute(parameters: Unit): Flow<Resource<List<AdvertiseBasic>>> = flow {
+        emit(Resource.Success(promotionRepository.getAdvertiseBasics()))
     }
 }

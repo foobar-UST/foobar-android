@@ -5,7 +5,7 @@ import com.foobarust.data.common.Constants.USER_CARTS_COLLECTION
 import com.foobarust.data.common.Constants.USER_CART_ITEMS_SUB_COLLECTION
 import com.foobarust.data.mappers.CartMapper
 import com.foobarust.data.models.cart.AddUserCartItemRequest
-import com.foobarust.data.models.cart.RemoveUserCartItemRequest
+import com.foobarust.data.models.cart.UpdateUserCartItemRequest
 import com.foobarust.data.remoteapi.RemoteService
 import com.foobarust.data.utils.snapshotFlow
 import com.foobarust.domain.models.cart.UserCart
@@ -24,7 +24,7 @@ class CartRepositoryImpl @Inject constructor(
 
     override fun getUserCartObservable(userId: String): Flow<Resource<UserCart>> {
         return firestore.document("$USER_CARTS_COLLECTION/$userId")
-            .snapshotFlow(cartMapper::toUserCart, keepAliveUntilCreated = true)
+            .snapshotFlow(cartMapper::toUserCart, keepAlive = true)
     }
 
     override fun getUserCartItemsObservable(userId: String): Flow<Resource<List<UserCartItem>>> {
@@ -52,10 +52,14 @@ class CartRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun removeUserCartItem(idToken: String, cartItemId: String): Resource<Unit> {
+    override suspend fun removeUserCartItem(
+        idToken: String,
+        cartItemId: String,
+        amounts: Int
+    ): Resource<Unit> {
        val result = remoteService.removeUserCartItem(
             idToken = idToken,
-            removeUserCartItemRequest = RemoveUserCartItemRequest(cartItemId)
+            updateUserCartItemRequest = UpdateUserCartItemRequest(cartItemId, amounts)
         )
 
         return when (result) {

@@ -1,20 +1,20 @@
 package com.foobarust.android.sellersection
 
 import android.content.Context
-import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.R
 import com.foobarust.android.common.BaseViewModel
-import com.foobarust.android.sellersection.MoreSectionsListModel.MoreSectionsSectionItem
+import com.foobarust.android.sellersection.SectionDetailMoreSectionsListModel.SectionDetailMoreSectionsSectionItem
 import com.foobarust.android.sellersection.SellerSectionDetailListModel.*
 import com.foobarust.android.states.UiFetchState
 import com.foobarust.domain.models.seller.*
 import com.foobarust.domain.models.user.UserPublic
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.seller.*
+import com.foobarust.domain.utils.cancelIfActive
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
@@ -32,7 +32,6 @@ class SellerSectionDetailViewModel @ViewModelInject constructor(
     private val getSectionParticipantsUseCase: GetSectionParticipantsUseCase
 ) : BaseViewModel() {
 
-    private val _sectionDetail = MutableStateFlow<SellerSectionDetail?>(null)
     private val _participantsInfo = MutableStateFlow<List<UserPublic>>(emptyList())
     private val _sellerDetail = MutableStateFlow<SellerDetail?>(null)
     private val _moreSections = MutableStateFlow<List<SellerSectionBasic>>(emptyList())
@@ -41,98 +40,74 @@ class SellerSectionDetailViewModel @ViewModelInject constructor(
     val sectionDetailListModels: LiveData<List<SellerSectionDetailListModel>>
         get() = _sectionDetailListModels
 
-    private var fetchSectionDetailJob: Job? = null
+    private val _showAddItemsButton = MutableLiveData(false)
+    val showAddItemsButton: LiveData<Boolean>
+        get() = _showAddItemsButton
 
-    fun onFetchSectionDetail(sellerId: String, sectionId: String) {
-        setUiFetchState(UiFetchState.Loading)
+    private var fetchSectionDataJob: Job? = null
 
-        fetchSectionDetailJob?.cancel()
-        fetchSectionDetailJob = viewModelScope.launch {
-            fetchSectionDetail(sellerId, sectionId)
-            fetchSellerDetail()
-            //fetchMoreSections()
-            fetchParticipantsInfo()
-            buildSectionDetailList()
+    fun onReceiveSellerDetail(sectionDetail: SellerSectionDetail) {
+        _showAddItemsButton.value = true
+        fetchSectionDataJob?.cancelIfActive()
+        fetchSectionDataJob = viewModelScope.launch {
+            fetchSellerDetail(sectionDetail)
+            fetchMoreSections(sectionDetail)
+            fetchParticipantsInfo(sectionDetail)
+            buildSectionDetailList(sectionDetail)
         }
     }
 
-    private fun fetchSectionDetail(sellerId: String, sectionId: String) = viewModelScope.launch {
-        when (val result = getSellerSectionDetailUseCase(
-            GetSellerSectionDetailParameters(sellerId, sectionId)
-        )) {
-            is Resource.Success -> {
-                _sectionDetail.value = result.data
-                setUiFetchState(UiFetchState.Success)
-            }
+    private fun fetchSellerDetail(sectionDetail: SellerSectionDetail) = viewModelScope.launch {
+        when (val result = getSellerDetailUseCase(sectionDetail.sellerId)) {
+            is Resource.Success -> _sellerDetail.value = result.data
             is Resource.Loading -> setUiFetchState(UiFetchState.Loading)
             is Resource.Error -> {
-                _sectionDetail.value = null
-                setUiFetchState(UiFetchState.Error(result.message))
+                _sellerDetail.value = null
+                showToastMessage(result.message)
             }
         }
     }
 
-    private fun fetchSellerDetail() = viewModelScope.launch {
-        _sectionDetail.asStateFlow()
-            .filterNotNull()
-            .collect { sectionDetail ->
-                when (val result = getSellerDetailUseCase(sectionDetail.sellerId)) {
-                    is Resource.Success -> _sellerDetail.value = result.data
-                    is Resource.Loading -> setUiFetchState(UiFetchState.Loading)
-                    is Resource.Error -> {
-                        _sellerDetail.value = null
-                        setUiFetchState(UiFetchState.Error(result.message))
-                    }
-                }
+    private fun fetchMoreSections(sectionDetail: SellerSectionDetail) = viewModelScope.launch {
+        when (val result = getMoreSellerSectionsUseCase(
+            GetMoreSellerSectionsParameters(
+                sellerId = sectionDetail.sellerId,
+                numOfSections = 5,
+                currentSectionId = sectionDetail.id
+            )
+        )) {
+            is Resource.Success -> _moreSections.value = result.data
+            is Resource.Loading -> Unit
+            is Resource.Error -> {
+                _moreSections.value = emptyList()
+                showToastMessage(result.message)
             }
+        }
     }
 
-    private fun fetchMoreSections() = viewModelScope.launch {
-        _sectionDetail.asStateFlow()
-            .filterNotNull()
-            .collect { sectionDetail ->
-                when (val result = getMoreSellerSectionsUseCase(
-                    GetMoreSellerSectionsParameters(
-                        sellerId = sectionDetail.sellerId,
-                        numOfSections = 5
-                    )
-                )) {
-                    is Resource.Success -> _moreSections.value = result.data
-                    is Resource.Loading -> Unit
-                    is Resource.Error -> {
-                        _moreSections.value = emptyList()
-                        setUiFetchState(UiFetchState.Error(result.message))
-                    }
-                }
+    private fun fetchParticipantsInfo(sectionDetail: SellerSectionDetail) = viewModelScope.launch {
+        when (val result = getSectionParticipantsUseCase(
+            GetSectionParticipantsParameters(
+                userIds = sectionDetail.joinedUsersIds,
+                numOfUsers = 10
+            )
+        )) {
+            is Resource.Success -> _participantsInfo.value = result.data
+            is Resource.Loading -> Unit
+            is Resource.Error -> {
+                _participantsInfo.value = emptyList()
+                showToastMessage(result.message)
             }
-
+        }
     }
 
-    private fun fetchParticipantsInfo() = viewModelScope.launch {
-        _sectionDetail.asStateFlow()
-            .filterNotNull()
-            .flatMapLatest { getSectionParticipantsUseCase(it.joinedUsersIds) }
-            .collect {
-                when (it) {
-                    is Resource.Success -> _participantsInfo.value = it.data
-                    is Resource.Loading -> Unit
-                    is Resource.Error -> {
-                        _participantsInfo.value = emptyList()
-                        setUiFetchState(UiFetchState.Error(it.message))
-                    }
-                }
-            }
-    }
-
-    private fun buildSectionDetailList() = viewModelScope.launch {
+    private fun buildSectionDetailList(sectionDetail: SellerSectionDetail) = viewModelScope.launch {
         combine(
-            _sectionDetail.asStateFlow().filterNotNull(),
+            flowOf(sectionDetail),
             _participantsInfo.asStateFlow(),
             _sellerDetail.asStateFlow(),
             _moreSections.asStateFlow()
         ) { sectionDetail, participantsInfo, sellerDetail, moreSections ->
-            Log.d("DetailViewModel", "participantsInfo: $participantsInfo\nsectionDetail: $sectionDetail\nsellerDetail: $sellerDetail\nmoreSections: $moreSections")
-
             buildList {
                 // Add participants row
                 if (participantsInfo.isNotEmpty()) {
@@ -159,15 +134,6 @@ class SellerSectionDetailViewModel @ViewModelInject constructor(
                 ))
 
                 if (sellerDetail != null) {
-                    // Add shipping info
-                    add(SellerSectionDetailSubtitleItemModel(
-                        subtitle = context.getString(R.string.seller_section_detail_shipping_info_subtitle)
-                    ))
-                    add(SellerSectionDetailShippingInfoItemModel(
-                        address = sellerDetail.getNormalizedAddress(),
-                        geolocation = sellerDetail.location.geolocation
-                    ))
-
                     // Add seller info
                     add(SellerSectionDetailSubtitleItemModel(
                         subtitle = context.getString(R.string.seller_section_detail_seller_info_subtitle)
@@ -179,10 +145,19 @@ class SellerSectionDetailViewModel @ViewModelInject constructor(
                         sellerImageUrl = sellerDetail.imageUrl
                     ))
 
+                    // Add shipping info
+                    add(SellerSectionDetailSubtitleItemModel(
+                        subtitle = context.getString(R.string.seller_section_detail_shipping_info_subtitle)
+                    ))
+                    add(SellerSectionDetailShippingInfoItemModel(
+                        address = sellerDetail.getNormalizedAddress(),
+                        geolocation = sellerDetail.location.geolocation
+                    ))
+
                     // Add more sections
                     if (moreSections.isNotEmpty()) {
                         val sectionItems = moreSections.map {
-                            MoreSectionsSectionItem(
+                            SectionDetailMoreSectionsSectionItem(
                                 sectionId = it.id,
                                 sectionTitle = it.getNormalizedTitleForMoreSections(),
                                 sectionDeliveryTime = it.getDeliveryTimeString(),

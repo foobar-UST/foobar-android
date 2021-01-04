@@ -30,7 +30,7 @@ object Versions {
     const val JUNIT = "4.13.1"
     const val KOTLIN = "1.4.20"
     const val KOTLIN_SERIALIZATION = "1.0.1"
-    const val LEAK_CANARY = "2.4"
+    const val LEAK_CANARY = "2.6"
     const val LIFECYCLE = "2.2.0"
     const val MAP = "2.2.0"
     const val MATERIAL = "1.3.0-beta01"

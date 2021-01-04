@@ -19,11 +19,15 @@
     <!-- Actions -->
     <string name="action_cancel">Cancel</string>
     <string name="action_save">Save</string>
-    <string name="action_retry">Retry</string>
-    <string name="action_load_more">Load More</string>
     <string name="action_clear_text">Clear Text</string>
     <string name="action_search">Search</string>
     <string name="action_detail">Detail</string>
+
+    <!-- Error layout -->
+    <string name="load_error_retry">Retry</string>
+
+    <!-- Paging -->
+    <string name="load_state_retry">Retry</string>
 
     <!-- Error -->
     <string name="error_resolve_activity_failed">No application to handle this action.</string>
@@ -134,10 +138,14 @@
     <string name="seller_item_info"># %s</string>
 
     <!-- Seller Item Detail -->
+    <string name="seller_item_detail_format_item_count">(%d Left)</string>
     <string name="seller_item_detail_increment_content_desc">Add Item</string>
     <string name="seller_item_detail_decrement_content_desc">Remove Item</string>
+    <string name="seller_item_detail_diff_seller_title">Add Item</string>
+    <string name="seller_item_detail_diff_seller_message">You can only add items from one seller for each order.</string>
 
     <!-- Seller Section -->
+    <string name="seller_section_format_app_bar_title">%s %s</string>
     <string name="seller_section_date">Order opens at %s</string>
     <string name="seller_section_cutoff_time">Order due at %s</string>
     <string name="seller_section_available">Available</string>
