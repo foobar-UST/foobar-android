@@ -9,6 +9,8 @@
             name="viewModel"
             type="com.foobarust.android.sellermisc.SellerMiscViewModel" />
         <import type="com.foobarust.android.states.UiFetchState" />
+        <import type="com.foobarust.domain.models.seller.SellerDetailKt" />
+        <import type="com.foobarust.android.utils.BindingConverters" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -20,9 +22,8 @@
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/map_view"
             android:layout_width="match_parent"
-            android:layout_height="270dp"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
-            tools:background="@sample/sample_image_1"/>
+            android:layout_height="match_parent"
+            android:name="com.google.android.gms.maps.SupportMapFragment" />
 
         <com.google.android.material.appbar.MaterialToolbar
             style="@style/Widget.MaterialComponents.Toolbar.Surface"
@@ -34,17 +35,221 @@
             app:navigationIconTint="@color/material_on_surface_emphasis_medium"
             app:paddingTopSystemWindowInsets="@{true}"/>
 
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/bottom_sheet"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+            app:marginTopSystemWindowInsets="@{true}"
+            app:bottomSheetBackground="@{true}">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:background="?attr/colorSurface">
+
+                <androidx.constraintlayout.widget.Group
+                    android:id="@+id/header_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:background="?attr/colorPrimarySurface"
+                    app:constraint_referenced_ids="title_text_view,rating_bar,rating_text_view,phone_num_text_view,website_text_view"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@id/website_text_view"/>
+
+                <TextView
+                    android:id="@+id/title_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_large"
+                    android:layout_marginEnd="@dimen/spacing_large"
+                    android:layout_marginTop="@dimen/spacing_large"
+                    android:text="@{viewModel.sellerDetail != null ? SellerDetailKt.getNormalizedName(viewModel.sellerDetail) : ``}"
+                    android:textColor="?attr/colorOnPrimarySurface"
+                    android:textAppearance="?attr/textAppearanceHeadline6"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Starbucks Coffee 星巴克咖啡"/>
+
+                <RatingBar
+                    style="@style/Widget.Foobar.RatingBar"
+                    android:id="@+id/rating_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_large"
+                    android:layout_marginTop="@dimen/spacing_xmedium"
+                    android:progressTint="@color/yellow"
+                    android:secondaryProgressTint="@color/yellow"
+                    android:isIndicator="true"
+                    android:numStars="5"
+                    android:stepSize="0.01"
+                    android:rating="@{BindingConverters.doubleToFloat(viewModel.sellerDetail.rating)}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/title_text_view"
+                    tools:rating="3.5"/>
+
+                <TextView
+                    android:id="@+id/rating_text_view"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_xmedium"
+                    android:text="@{@string/seller_data_format_rating(viewModel.sellerDetail.rating)}"
+                    android:textColor="?attr/colorOnPrimarySurface"
+                    android:textAppearance="?attr/textAppearanceCaption"
+                    app:layout_constraintTop_toTopOf="@id/rating_bar"
+                    app:layout_constraintBottom_toBottomOf="@id/rating_bar"
+                    app:layout_constraintStart_toEndOf="@id/rating_bar"
+                    tools:text="4.9 (10)"/>
+
+                <TextView
+                    android:id="@+id/phone_num_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_large"
+                    android:layout_marginTop="@dimen/spacing_large"
+                    android:paddingBottom="@dimen/spacing_large"
+                    android:text="@{viewModel.sellerDetail.phoneNum}"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    android:textColor="?attr/colorOnPrimarySurface"
+                    android:gravity="center_vertical"
+                    android:drawablePadding="@dimen/spacing_mxlarge"
+                    app:drawableStartCompat="@drawable/ic_local_phone"
+                    app:drawableTint="@color/material_on_primary_emphasis_medium"
+                    app:drawableScale="@{1.0}"
+                    app:layout_constraintTop_toBottomOf="@id/rating_text_view"
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:text="+852 1234-5678"/>
+
+                <TextView
+                    android:id="@+id/website_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_large"
+                    android:paddingBottom="@dimen/spacing_large"
+                    android:text="@{viewModel.sellerDetail.website}"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    android:textColor="?attr/colorOnPrimarySurface"
+                    android:gravity="center_vertical"
+                    android:drawablePadding="@dimen/spacing_mxlarge"
+                    android:visibility="gone"
+                    app:drawableStartCompat="@drawable/ic_public"
+                    app:drawableTint="@color/material_on_primary_emphasis_medium"
+                    app:drawableScale="@{1.0}"
+                    app:layout_constraintTop_toBottomOf="@id/phone_num_text_view"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:goneIf="@{viewModel.sellerDetail.website == null}"
+                    tools:visibility="visible"
+                    tools:text="starbucks.com"/>
+
+                <TextView
+                    android:id="@+id/address_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_large"
+                    android:layout_marginStart="@dimen/spacing_large"
+                    android:layout_marginEnd="@dimen/spacing_large"
+                    android:text="@{viewModel.sellerDetail != null ? SellerDetailKt.getNormalizedAddress(viewModel.sellerDetail) : ``}"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    android:textColor="@color/material_on_surface_emphasis_medium"
+                    android:lineSpacingMultiplier="1.2"
+                    android:ellipsize="end"
+                    android:drawablePadding="@dimen/spacing_large"
+                    app:drawableStartCompat="@drawable/ic_location_on"
+                    app:drawableTint="@color/material_on_surface_emphasis_medium"
+                    app:layout_constraintTop_toBottomOf="@id/website_text_view"
+                    tools:text="LG5, Hong Kong University of Science and Technology, Sai Kung\n香港科技大學LG5，西貢"/>
+
+                <TextView
+                    android:id="@+id/opening_hours_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_mxlarge"
+                    android:layout_marginStart="@dimen/spacing_large"
+                    android:layout_marginEnd="@dimen/spacing_large"
+                    android:text="@{viewModel.sellerDetail.openingHours}"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    android:textColor="@color/material_on_surface_emphasis_medium"
+                    android:lineSpacingMultiplier="1.2"
+                    android:ellipsize="end"
+                    android:drawablePadding="@dimen/spacing_large"
+                    app:drawableStartCompat="@drawable/ic_access_time"
+                    app:drawableTint="@color/material_on_surface_emphasis_medium"
+                    app:layout_constraintTop_toBottomOf="@id/address_text_view"
+                    tools:text="Mon - Fri: 08:00 - 20:00\nSat, Sun &amp; PH: 08:30 - 20:00"/>
+
+                <com.google.android.material.button.MaterialButton
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:id="@+id/favorite_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="44dp"
+                    android:layout_marginTop="@dimen/spacing_xmedium"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:text="Add to Favorite"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    app:icon="@drawable/ic_add"
+                    app:iconSize="16dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/opening_hours_text_view"/>
+
+                <TextView
+                    android:id="@+id/description_subtitle_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_large"
+                    android:text="@string/seller_misc_title_description"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/favorite_button"/>
+
+                <TextView
+                    android:id="@+id/description_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_large"
+                    android:layout_marginStart="@dimen/spacing_large"
+                    android:layout_marginEnd="@dimen/spacing_large"
+                    android:text="@{viewModel.sellerDetail != null ? SellerDetailKt.getNormalizedDescription(viewModel.sellerDetail) : ``}"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    android:textColor="@color/material_on_surface_emphasis_medium"
+                    android:lineSpacingMultiplier="1.2"
+                    app:layout_constraintTop_toBottomOf="@id/description_subtitle_text_view"
+                    tools:text="Starbucks offers a range of exceptional products that customers enjoy in our stores, at home, and on the go. Coffee: More than 30 blends and single-origin premium coffees. Handcrafted Beverages: Fresh-brewed coffee, hot and iced espresso beverages, Frappuccino® coffee and non-coffee blended beverages, Starbucks Refreshers® beverages, smoothies and teas. Merchandise: Coffee- and tea-brewing equipment, Verismo® System by Starbucks, mugs and accessories, packaged goods, books and gifts. Fresh Food: Baked pastries, sandwiches, salads, salad and grain bowls, oatmeal, yogurt parfaits and fruit cups.\n\n星巴克提供了一系列出色的產品，客戶可以在我們的商店，家中和旅途中享用。咖啡：30多種混合咖啡和單源優質咖啡。手工飲料：現煮咖啡，冷熱特濃咖啡，星冰樂®咖啡和非咖啡混合飲料，星巴克Refreshers®飲料，冰沙和茶。商品：咖啡和茶釀造設備，星巴克的Verismo®System，杯子和配件，包裝的商品，書籍和禮品。新鮮食品：烘焙糕點，三明治，色拉，色拉和穀物碗，燕麥片，酸奶凍糕和水果杯。"/>
+
+                <!--
+                <ProgressBar
+                    android:id="@+id/progress_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xlarge"
+                    android:layout_gravity="center_horizontal"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:goneIf="@{!(viewModel.uiFetchState instanceof UiFetchState.Loading)}" />
+
+
+                <include
+                    layout="@layout/load_error_layout"
+                    android:id="@+id/load_error_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xlarge"/>
+                -->
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+
+        <!--
         <LinearLayout
             android:id="@+id/bottom_sheet_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-            app:marginTopSystemWindowInsets="@{true}"
-            app:bottomSheetBackground="@{true}"
-            tools:background="?attr/colorSurface">
-
-            <include layout="@layout/bottom_sheet_pill"/>
+            android:orientation="vertical">
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -59,25 +264,10 @@
                     tools:listitem="@layout/seller_misc_address_item"
                     tools:itemCount="1"/>
 
-                <ProgressBar
-                    android:id="@+id/progress_bar"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_marginTop="@dimen/spacing_xlarge"
-                    android:layout_gravity="center_horizontal"
-                    app:goneIf="@{!(viewModel.uiFetchState instanceof UiFetchState.Loading)}" />
-
-                <include
-                    layout="@layout/load_error_layout"
-                    android:id="@+id/load_error_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_xlarge"
-                    app:goneIf="@{!(viewModel.uiFetchState instanceof UiFetchState.Error)}" />
-
             </FrameLayout>
 
         </LinearLayout>
+        -->
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

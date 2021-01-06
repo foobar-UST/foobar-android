@@ -28,10 +28,8 @@ class SyncUserCartUseCase @Inject constructor(
 
         val idToken = authRepository.getIdToken()
 
-        when (val result = cartRepository.syncUserCart(idToken)) {
-            is Resource.Success -> emit(Resource.Success(result.data))
-            is Resource.Error -> emit(Resource.Error(result.message))
-            is Resource.Loading -> emit(Resource.Loading())
-        }
+        cartRepository.syncUserCart(idToken)
+
+        emit(Resource.Success(Unit))
     }
 }

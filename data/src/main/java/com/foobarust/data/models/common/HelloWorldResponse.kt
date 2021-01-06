@@ -1,4 +1,4 @@
-package com.foobarust.data.models
+package com.foobarust.data.models.common
 
 import com.google.gson.annotations.SerializedName
 

@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
         <variable
@@ -15,26 +13,9 @@
         android:padding="@dimen/spacing_large"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/title_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{addressModel.name}"
-            android:textColor="@color/material_on_surface_emphasis_high_type"
-            android:textAppearance="?attr/textAppearanceHeadline6"
-            tools:text="Happy Restaurant"/>
 
-        <TextView
-            android:id="@+id/address_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_xmedium"
-            android:text="@{addressModel.address}"
-            android:textColor="@color/material_on_surface_emphasis_medium"
-            android:textAppearance="?attr/textAppearanceBody2"
-            android:lineSpacingMultiplier="1.2"
-            android:ellipsize="end"
-            tools:text="LG5, Hong Kong University of Science and Technology, Sai Kung"/>
+
+
 
     </LinearLayout>
 

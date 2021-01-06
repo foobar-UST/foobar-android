@@ -3,20 +3,22 @@ package com.foobarust.data.di
 import android.content.Context
 import android.content.SharedPreferences
 import com.foobarust.data.BuildConfig.*
+import com.foobarust.data.api.MapService
+import com.foobarust.data.api.RemoteService
 import com.foobarust.data.common.Constants.CF_REQUEST_URL
 import com.foobarust.data.common.Constants.GM_DIR_URL
 import com.foobarust.data.common.Constants.PREFS_NAME
-import com.foobarust.data.remoteapi.MapService
-import com.foobarust.data.remoteapi.RemoteService
-import com.foobarust.data.retrofit.ResourceCallAdapterFactory
-import com.foobarust.data.retrofit.ResourceConverterFactory
-import com.foobarust.data.retrofit.SupportHeadersInterceptor
+import com.foobarust.data.json.DirectionsDeserializer
+import com.foobarust.data.models.maps.DirectionsResponse
+import com.foobarust.data.retrofit.RemoteResponseInterceptor
+import com.foobarust.data.retrofit.RequestHeadersInterceptor
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
+import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -73,7 +75,8 @@ object PersistentModule {
             level = HttpLoggingInterceptor.Level.BODY
         }
         val builder = OkHttpClient.Builder().apply {
-            addInterceptor(SupportHeadersInterceptor())
+            addInterceptor(RequestHeadersInterceptor())
+            addInterceptor(RemoteResponseInterceptor())
             addInterceptor(loggingInterceptor)
         }
 
@@ -92,9 +95,9 @@ object PersistentModule {
         return Retrofit.Builder()
             .client(okHttpClient)
             .baseUrl(url)
-            .addConverterFactory(ResourceConverterFactory())
+            //.addConverterFactory(ResourceConverterFactory())
             .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(ResourceCallAdapterFactory())
+            //.addCallAdapterFactory(ResourceCallAdapterFactory())
             .build()
             .create(RemoteService::class.java)
     }
@@ -102,10 +105,15 @@ object PersistentModule {
     @Singleton
     @Provides
     fun provideMapService(okHttpClient: OkHttpClient): MapService {
+        val customGson = GsonBuilder().registerTypeAdapter(
+            DirectionsResponse::class.java,
+            DirectionsDeserializer()
+        ).create()
+
         return Retrofit.Builder()
             .client(okHttpClient)
             .baseUrl(GM_DIR_URL)
-            // add converter
+            .addConverterFactory(GsonConverterFactory.create(customGson))
             .build()
             .create(MapService::class.java)
     }

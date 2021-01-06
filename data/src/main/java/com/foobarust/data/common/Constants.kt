@@ -156,7 +156,7 @@ object Constants {
     const val CF_ERROR_RESPONSE_MESSAGE_FIELD = "message"
 
     // Google Map Directions APIs
-    const val GM_DIR_URL = "https://maps.googleapis.com/maps/api/directions/"
+    const val GM_DIR_URL = "https://maps.googleapis.com/maps/api/"
     const val GM_DIR_KEY = "key"
     const val GM_DIR_ORIGIN = "origin"
     const val GM_DIR_DEST = "destination"

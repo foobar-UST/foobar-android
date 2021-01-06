@@ -11,10 +11,13 @@ import com.foobarust.android.R
 import com.foobarust.android.common.FullScreenDialogFragment
 import com.foobarust.android.databinding.FragmentSellerMiscBinding
 import com.foobarust.android.utils.AutoClearedValue
-import com.foobarust.android.utils.drawDivider
+import com.foobarust.android.utils.showShortToast
+import com.foobarust.android.utils.themeColor
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.maps.android.ktx.addMarker
+import com.google.maps.android.ktx.addPolyline
 import com.google.maps.android.ktx.awaitMap
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -48,23 +51,26 @@ class SellerMiscFragment : FullScreenDialogFragment() {
         // Setup toolbar
         binding.toolbar.setNavigationOnClickListener { dismiss() }
 
-        // Setup property list
-        val sellerMiscAdapter = SellerMiscAdapter()
-
-        binding.recyclerView.run {
-            adapter = sellerMiscAdapter
-            drawDivider(forViewType = R.layout.seller_misc_address_item)
-            setHasFixedSize(true)
+        // Setup bottom sheet
+        viewLifecycleOwner.lifecycleScope.launch {
+            binding.bottomSheet.setBottomSheetPeekTo(
+                behavior = BottomSheetBehavior.from(binding.bottomSheet),
+                anchorView = binding.headerGroup
+            )
         }
 
-        viewModel.sellerMiscListModels.observe(viewLifecycleOwner) {
-            sellerMiscAdapter.submitList(it)
+        // Show toast
+        viewModel.toastMessage.observe(viewLifecycleOwner) {
+            showShortToast(it)
         }
 
+        /*
         // Retry
         binding.loadErrorLayout.retryButton.setOnClickListener {
             viewModel.onFetchSellerDetail(sellerId = args.sellerId)
         }
+
+         */
 
         return binding.root
     }
@@ -75,11 +81,27 @@ class SellerMiscFragment : FullScreenDialogFragment() {
         // Setup map view
         val mapFragment = childFragmentManager.findFragmentById(R.id.map_view) as SupportMapFragment
 
+        // Add seller coordinate
         viewModel.latLng.observe(viewLifecycleOwner) { latLng ->
             viewLifecycleOwner.lifecycleScope.launch {
                 mapFragment.awaitMap().run {
                     addMarker { position(latLng) }
                     moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
+                }
+            }
+        }
+
+        // Add route
+        viewModel.polyline.observe(viewLifecycleOwner) { polyline ->
+            polyline?.let {
+                viewLifecycleOwner.lifecycleScope.launch {
+                    mapFragment.awaitMap().run {
+                        addPolyline {
+                            color(requireContext().themeColor(R.attr.colorSecondary))
+                            width(10f)
+                            addAll(it)
+                        }
+                    }
                 }
             }
         }

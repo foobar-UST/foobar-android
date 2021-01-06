@@ -134,11 +134,9 @@ class MainViewModel @ViewModelInject constructor(
     fun onUpdateUserPhoto(uriString: String) = viewModelScope.launch {
         updateUserPhotoUseCase(uriString).collect {
             when (it) {
-                is Resource.Success -> {
-                    _showSnackBarMessage.value = context.getString(
+                is Resource.Success -> _showSnackBarMessage.value = context.getString(
                         R.string.profile_user_photo_uploaded_message
                     )
-                }
                 is Resource.Error -> showToastMessage(it.message)
                 is Resource.Loading -> Unit
             }
@@ -148,11 +146,9 @@ class MainViewModel @ViewModelInject constructor(
     fun onClearUsersCart() = viewModelScope.launch {
         clearUserCartUseCase(Unit).collect {
             when (it) {
-                is Resource.Success -> {
-                    _showSnackBarMessage.value = context.getString(
+                is Resource.Success -> _showSnackBarMessage.value = context.getString(
                         R.string.cart_cleared_message
                     )
-                }
                 is Resource.Error -> showToastMessage(it.message)
                 is Resource.Loading -> Unit
             }

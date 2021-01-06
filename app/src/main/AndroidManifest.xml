@@ -27,7 +27,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="false"
         android:theme="@style/Theme.Foobar.DayNight"
-        android:usesCleartextTraffic="true" tools:targetApi="23">
+        android:usesCleartextTraffic="true"
+        tools:targetApi="23">
 
         <activity
             android:name=".splash.SplashActivity"
@@ -51,11 +52,6 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Foobar.DayNight" />
-
-        <activity
-            android:name=".tutorial.TutorialFragment"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.Foobar.Onboarding.DayNight" />
 
         <activity
             android:name=".auth.AuthActivity"
@@ -122,7 +118,7 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
+            android:value="${mapsApiKey}" />
 
     </application>
 

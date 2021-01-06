@@ -27,17 +27,13 @@ class UpdateUserCartItemUseCase @Inject constructor(
 
         val idToken = authRepository.getIdToken()
 
-        val result = cartRepository.removeUserCartItem(
+        cartRepository.removeUserCartItem(
             idToken = idToken,
             cartItemId = parameters.cartItemId,
             amounts = parameters.amounts
         )
 
-        when (result) {
-            is Resource.Success -> emit(Resource.Success(Unit))
-            is Resource.Error -> emit(Resource.Error(result.message))
-            is Resource.Loading -> emit(Resource.Loading())
-        }
+        emit(Resource.Success(Unit))
     }
 }
 

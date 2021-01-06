@@ -96,7 +96,6 @@ class SellerItemDetailViewModel @ViewModelInject constructor(
     }
 
     fun onSubmitItemToCart(userCart: UserCart) = viewModelScope.launch {
-        _cartItemSubmitting.value = true
         if (property.isUpdateAction()) {
             updateUserCartItem()
         } else {
@@ -120,7 +119,9 @@ class SellerItemDetailViewModel @ViewModelInject constructor(
                     _cartItemSubmitting.value = false
                     showToastMessage(it.message)
                 }
-                is Resource.Loading -> Unit
+                is Resource.Loading -> {
+                    _cartItemSubmitting.value = true
+                }
             }
         }
     }
@@ -148,7 +149,9 @@ class SellerItemDetailViewModel @ViewModelInject constructor(
                         showToastMessage(it.message)
                     }
                 }
-                is Resource.Loading -> Unit
+                is Resource.Loading -> {
+                    _cartItemSubmitting.value = true
+                }
             }
         }
     }

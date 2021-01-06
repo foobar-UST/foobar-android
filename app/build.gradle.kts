@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.util.*
 
 plugins {
     id(Plugins.ANDROID_APPLICATION)
@@ -22,19 +23,30 @@ android {
         versionCode = Application.VERSION_CODE
         versionName = Application.VERSION_NAME
         testInstrumentationRunner = Dependencies.HILT_TEST_RUNNER
+
+        // Get Maps API
+        val properties = Properties()
+        val localProperties = rootProject.file("local.properties")
+        properties.load(localProperties.inputStream())
+
+        // Expose API to manifest
+        setManifestPlaceholders(
+            mapOf(
+                "mapsApiKey" to properties.getProperty("MAPS_API_KEY", "")
+                //"crashlyticsCollectionEnabled" to true
+            )
+        )
     }
 
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            //manifestPlaceholders = mapOf("crashlyticsCollectionEnabled" to true)
         }
-        /*
+
         getByName("debug") {
-            manifestPlaceholders = mapOf("crashlyticsCollectionEnabled" to false)
+
         }
-         */
     }
 
     compileOptions {
@@ -105,6 +117,7 @@ dependencies {
     implementation(Dependencies.GLIDE)
     implementation(Dependencies.SPINKIT)
     implementation(Dependencies.MAP)
+
 
     // Annotation Processors
     kapt(Annotation.HILT_ANDROID_COMPILER)

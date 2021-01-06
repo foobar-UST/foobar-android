@@ -122,7 +122,7 @@
     <!-- Seller Misc -->
     <string name="seller_misc_title_opening_hours">Opening Hours</string>
     <string name="seller_misc_title_contact_details">Contact Details</string>
-    <string name="seller_misc_title_description">Info</string>
+    <string name="seller_misc_title_description">Seller Info</string>
     <string name="seller_misc_data_format_phone">Tel: %s</string>
     <string name="seller_misc_data_format_website">Website: %s</string>
 

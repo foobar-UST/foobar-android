@@ -65,6 +65,7 @@ object Dependencies {
     const val GSON = "com.google.code.gson:gson:${Versions.GSON}"
     const val SHIMMER = "com.facebook.shimmer:shimmer:${Versions.SHIMMER}"
     const val MAP = "com.google.maps.android:maps-ktx:${Versions.MAP}"
+    const val MAP_UTILS = "com.google.maps.android:android-maps-utils:${Versions.MAP}"
     const val RETROFIT = "com.squareup.retrofit2:retrofit:${Versions.RETROFIT}"
     const val RETROFIT_CONVERTER_GSON = "com.squareup.retrofit2:converter-gson:${Versions.RETROFIT}"
     const val OKHTTP_LOGGING_INTERCEPTOR = "com.squareup.okhttp3:logging-interceptor:${Versions.OKHTTP_LOGGING_INTERCEPTOR}"

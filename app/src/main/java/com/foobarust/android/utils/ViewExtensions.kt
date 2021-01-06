@@ -9,6 +9,8 @@ import android.graphics.drawable.Drawable
 import android.text.InputFilter
 import android.util.TypedValue
 import android.view.View
+import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.ColorInt
@@ -20,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.foobarust.android.R
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
@@ -29,6 +32,31 @@ import kotlin.coroutines.resume
 /**
  * Created by kevin on 8/14/20
  */
+
+suspend fun ViewGroup.setBottomSheetPeekTo(
+    behavior: BottomSheetBehavior<*>,
+    anchorView: View
+) {
+    // Hide bottom sheet at the beginning
+    behavior.peekHeight = 0
+
+    return suspendCancellableCoroutine { continuation ->
+        val listener = object : ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                viewTreeObserver.removeOnGlobalLayoutListener(this)
+                // Set peek height
+                behavior.setPeekHeight(anchorView.bottom, true)
+            }
+        }
+
+        viewTreeObserver.addOnGlobalLayoutListener(listener)
+
+        continuation.invokeOnCancellation {
+           viewTreeObserver.removeOnGlobalLayoutListener(listener)
+        }
+    }
+}
+
 
 fun View.show() {
     visibility = View.VISIBLE
@@ -102,19 +130,27 @@ fun BottomNavigationView.hideIf(isHide: Boolean) {
 }
 
 fun Activity.showShortToast(message: String?) {
-    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    message?.let {
+        Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+    }
 }
 
 fun Activity.showLongToast(message: String?) {
-    Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+    message?.let {
+        Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+    }
 }
 
 fun Fragment.showShortToast(message: String?) {
-    Toast.makeText(this.context, message, Toast.LENGTH_SHORT).show()
+    message?.let {
+        Toast.makeText(this.context, it, Toast.LENGTH_SHORT).show()
+    }
 }
 
 fun Fragment.showLongToast(message: String?) {
-    Toast.makeText(this.context, message, Toast.LENGTH_LONG).show()
+    message?.let {
+        Toast.makeText(this.context, it, Toast.LENGTH_LONG).show()
+    }
 }
 
 fun RecyclerView.drawDivider(@LayoutRes forViewType: Int) {

@@ -2,17 +2,19 @@ package com.foobarust.android.sellermisc
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.common.BaseViewModel
-import com.foobarust.android.sellermisc.SellerMiscListModel.*
 import com.foobarust.android.states.UiFetchState
 import com.foobarust.domain.models.seller.SellerDetail
-import com.foobarust.domain.models.seller.getNormalizedAddress
-import com.foobarust.domain.models.seller.getNormalizedName
+import com.foobarust.domain.models.seller.SellerType
 import com.foobarust.domain.states.Resource
+import com.foobarust.domain.states.getSuccessDataOr
+import com.foobarust.domain.usecases.maps.GetDirectionsParameters
+import com.foobarust.domain.usecases.maps.GetDirectionsUseCase
 import com.foobarust.domain.usecases.seller.GetSellerDetailUseCase
 import com.google.android.gms.maps.model.LatLng
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 /**
@@ -20,55 +22,50 @@ import kotlinx.coroutines.launch
  */
 
 class SellerMiscViewModel @ViewModelInject constructor(
-    private val getSellerDetailUseCase: GetSellerDetailUseCase
+    private val getSellerDetailUseCase: GetSellerDetailUseCase,
+    private val getDirectionsUseCase: GetDirectionsUseCase
 ) : BaseViewModel() {
 
-    private val _latLng = MutableLiveData<LatLng>()
-    val latLng: LiveData<LatLng>
-        get() = _latLng
+    private val _sellerDetail = MutableStateFlow<SellerDetail?>(null)
+    val sellerDetail: LiveData<SellerDetail> = _sellerDetail.asStateFlow()
+        .filterNotNull()
+        .asLiveData(viewModelScope.coroutineContext)
 
-    private val _sellerMiscListModels = MutableLiveData<List<SellerMiscListModel>>()
-    val sellerMiscListModels: LiveData<List<SellerMiscListModel>>
-        get() = _sellerMiscListModels
+    val latLng: LiveData<LatLng> = _sellerDetail.asStateFlow()
+        .filterNotNull()
+        .map {
+            LatLng(
+                it.location.geolocation.latitude,
+                it.location.geolocation.longitude
+            )
+        }
+        .asLiveData(viewModelScope.coroutineContext)
+
+    val polyline: LiveData<List<LatLng>?> = _sellerDetail.asStateFlow()
+        .filterNotNull()
+        .filter { it.type == SellerType.OFF_CAMPUS }
+        .map {
+            getDirectionsUseCase(
+                GetDirectionsParameters(
+                    sellerLatitude = it.location.geolocation.latitude,
+                    sellerLongitude = it.location.geolocation.longitude
+                )
+            ).getSuccessDataOr(null)
+        }
+        .map { geolocation ->
+            geolocation?.map { LatLng(it.latitude, it.longitude) }
+        }
+        .asLiveData(viewModelScope.coroutineContext)
+
 
     fun onFetchSellerDetail(sellerId: String) = viewModelScope.launch {
         setUiFetchState(UiFetchState.Loading)
-
         when (val result = getSellerDetailUseCase(sellerId)) {
             is Resource.Success -> {
-                val sellerDetail = result.data
-
-                _latLng.value = LatLng(
-                    sellerDetail.location.geolocation.latitude,
-                    sellerDetail.location.geolocation.longitude
-                )
-
+                _sellerDetail.value = result.data
                 setUiFetchState(UiFetchState.Success)
-                buildSellerMiscList(sellerDetail)
             }
             is Resource.Error -> setUiFetchState(UiFetchState.Error(result.message))
-        }
-    }
-
-    private fun buildSellerMiscList(sellerDetail: SellerDetail) {
-        _sellerMiscListModels.value = buildList {
-            addAll(listOf(
-                SellerMiscAddressModel(
-                    name = sellerDetail.getNormalizedName(),
-                    address = sellerDetail.location.getNormalizedAddress(),
-                ),
-                SellerMiscOpeningHoursModel(
-                    openingHours = sellerDetail.openingHours
-                ),
-                SellerMiscContactModel(
-                    phoneNum = sellerDetail.phoneNum,
-                    website = sellerDetail.website
-                )
-            ))
-
-            sellerDetail.description?.let {
-                add(SellerMiscDescriptionModel(description = it))
-            }
         }
     }
 }

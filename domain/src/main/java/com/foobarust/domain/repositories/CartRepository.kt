@@ -11,16 +11,11 @@ interface CartRepository {
 
     fun getUserCartItemsObservable(userId: String): Flow<Resource<List<UserCartItem>>>
 
-    suspend fun addUserCartItem(
-        idToken: String,
-        sellerId: String,
-        itemId: String,
-        amounts: Int
-    ): Resource<Unit>
+    suspend fun addUserCartItem(idToken: String, sellerId: String, itemId: String, amounts: Int)
 
-    suspend fun removeUserCartItem(idToken: String, cartItemId: String, amounts: Int): Resource<Unit>
+    suspend fun removeUserCartItem(idToken: String, cartItemId: String, amounts: Int)
 
-    suspend fun clearUserCart(idToken: String): Resource<Unit>
+    suspend fun clearUserCart(idToken: String)
 
-    suspend fun syncUserCart(idToken: String): Resource<Unit>
+    suspend fun syncUserCart(idToken: String)
 }

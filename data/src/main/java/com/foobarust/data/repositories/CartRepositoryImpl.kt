@@ -1,12 +1,12 @@
 package com.foobarust.data.repositories
 
+import com.foobarust.data.api.RemoteService
 import com.foobarust.data.common.Constants.USERS_COLLECTION
 import com.foobarust.data.common.Constants.USER_CARTS_COLLECTION
 import com.foobarust.data.common.Constants.USER_CART_ITEMS_SUB_COLLECTION
 import com.foobarust.data.mappers.CartMapper
 import com.foobarust.data.models.cart.AddUserCartItemRequest
 import com.foobarust.data.models.cart.UpdateUserCartItemRequest
-import com.foobarust.data.remoteapi.RemoteService
 import com.foobarust.data.utils.snapshotFlow
 import com.foobarust.domain.models.cart.UserCart
 import com.foobarust.domain.models.cart.UserCartItem
@@ -39,49 +39,29 @@ class CartRepositoryImpl @Inject constructor(
         sellerId: String,
         itemId: String,
         amounts: Int
-    ): Resource<Unit> {
-        val result = remoteService.addUserCartItem(
+    ) {
+        remoteService.addUserCartItem(
             idToken = idToken,
             addUserCartItemRequest = AddUserCartItemRequest(sellerId, itemId, amounts)
         )
-
-        return when (result) {
-            is Resource.Success -> Resource.Success(Unit)
-            is Resource.Error -> Resource.Error(result.message)
-            is Resource.Loading -> Resource.Loading()
-        }
     }
 
     override suspend fun removeUserCartItem(
         idToken: String,
         cartItemId: String,
         amounts: Int
-    ): Resource<Unit> {
-       val result = remoteService.removeUserCartItem(
+    ) {
+       remoteService.removeUserCartItem(
             idToken = idToken,
             updateUserCartItemRequest = UpdateUserCartItemRequest(cartItemId, amounts)
         )
-
-        return when (result) {
-            is Resource.Success -> Resource.Success(Unit)
-            is Resource.Error -> Resource.Error(result.message)
-            is Resource.Loading -> Resource.Loading()
-        }
     }
 
-    override suspend fun clearUserCart(idToken: String): Resource<Unit> {
-        return when (val result = remoteService.clearUserCart(idToken)) {
-            is Resource.Success -> Resource.Success(Unit)
-            is Resource.Error -> Resource.Error(result.message)
-            is Resource.Loading -> Resource.Loading()
-        }
+    override suspend fun clearUserCart(idToken: String) {
+        remoteService.clearUserCart(idToken)
     }
 
-    override suspend fun syncUserCart(idToken: String): Resource<Unit> {
-        return when (val result = remoteService.syncUserCart(idToken)) {
-            is Resource.Success -> Resource.Success(Unit)
-            is Resource.Error -> Resource.Error(result.message)
-            is Resource.Loading -> Resource.Loading()
-        }
+    override suspend fun syncUserCart(idToken: String) {
+        remoteService.syncUserCart(idToken)
     }
 }

@@ -1,3 +1,5 @@
+import java.util.*
+
 plugins {
     id(Plugins.ANDROID_LIBRARY)
     id(Plugins.KOTLIN_ANDROID)
@@ -21,6 +23,12 @@ android {
     }
 
     buildTypes {
+        // Get Maps API
+        val properties = Properties()
+        val localProperties = rootProject.file("local.properties")
+        properties.load(localProperties.inputStream())
+        val mapsApiKey = properties.getProperty("MAPS_API_KEY", "")
+
         getByName("release") {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
@@ -31,6 +39,7 @@ android {
             buildConfigField("String", "FIREBASE_EMULATOR_FIRESTORE_PORT", "\"8080\"")
             buildConfigField("String", "FIREBASE_EMULATOR_FUNCTIONS_PORT", "\"5001\"")
             buildConfigField("int", "FIREBASE_EMULATOR_AUTH_PORT", "9099")
+            buildConfigField("String", "GOOGLE_MAPS_API_KEY", "\"$mapsApiKey\"")
         }
     }
 
@@ -73,6 +82,8 @@ dependencies {
     implementation(Dependencies.RETROFIT)
     implementation(Dependencies.RETROFIT_CONVERTER_GSON)
     implementation(Dependencies.OKHTTP_LOGGING_INTERCEPTOR)
+    implementation(Dependencies.PLAY_SERVICES_MAP)
+    implementation(Dependencies.MAP_UTILS)
 
     // Annotation Processors
     kapt(Annotation.ROOM_COMPILER)

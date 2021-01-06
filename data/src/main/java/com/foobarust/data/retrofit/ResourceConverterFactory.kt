@@ -16,12 +16,12 @@ class ResourceConverterFactory : Converter.Factory() {
         type: Type,
         annotations: Array<Annotation>,
         retrofit: Retrofit
-    ): Converter<ResponseBody, *>? {
+    ): Converter<ResponseBody, *> {
         // Data<HelloWorld>
         val dataType = TypeToken.getParameterized(ResourceData::class.java, type).type
 
         // From ResponseBody to Data<T>
-        val converter: Converter<ResponseBody, ResourceData<Any>>? = retrofit.nextResponseBodyConverter(
+        val converter: Converter<ResponseBody, ResourceData<Any>> = retrofit.nextResponseBodyConverter(
             this,
             dataType,
             annotations

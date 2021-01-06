@@ -1,6 +1,5 @@
 package com.foobarust.data.retrofit
 
-import android.util.Log
 import okhttp3.ResponseBody
 import retrofit2.Converter
 
@@ -11,13 +10,10 @@ import retrofit2.Converter
 data class ResourceData<T>(val data: T)
 
 class ResourceConverter(
-    private val delegate: Converter<ResponseBody, ResourceData<Any>>?
+    private val delegate: Converter<ResponseBody, ResourceData<Any>>
 ) : Converter<ResponseBody, Any> {
 
     override fun convert(value: ResponseBody): Any? {
-        //Log.d("RemoteTest", "responsebody: ${value.string()}")
-        val data = delegate?.convert(value)?.data
-        Log.d("RemoteTest", "data: ${data}")
-        return data
+        return delegate.convert(value)?.data
     }
 }
