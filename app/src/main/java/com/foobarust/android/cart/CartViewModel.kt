@@ -1,6 +1,7 @@
 package com.foobarust.android.cart
 
 import android.content.Context
+import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.foobarust.android.R
@@ -68,10 +69,7 @@ class CartViewModel @ViewModelInject constructor(
     val showSyncRequiredAction: LiveData<Boolean> = _userCart
         .asStateFlow()
         .filterNotNull()
-        .map {
-            blockAction = it.syncRequired
-            it.syncRequired
-        }
+        .map { it.syncRequired }
         .distinctUntilChanged()
         .asLiveData(viewModelScope.coroutineContext)
 
@@ -113,6 +111,8 @@ class CartViewModel @ViewModelInject constructor(
     }
 
     fun onSyncUserCart() = viewModelScope.launch {
+        Log.d("CartViewModel", "blockAction: $blockAction")
+
         if (!blockAction) {
             blockAction = true
             syncUserCartUseCase(Unit).collect {
