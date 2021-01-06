@@ -95,7 +95,7 @@ class SellerItemDetailViewModel @ViewModelInject constructor(
         }
     }
 
-    fun onSubmitItemToCart(userCart: UserCart) = viewModelScope.launch {
+    fun onSubmitItemToCart(userCart: UserCart?) = viewModelScope.launch {
         if (property.isUpdateAction()) {
             updateUserCartItem()
         } else {
@@ -126,13 +126,13 @@ class SellerItemDetailViewModel @ViewModelInject constructor(
         }
     }
 
-    private fun addUserCartItem(userCart: UserCart) = viewModelScope.launch {
+    private fun addUserCartItem(userCart: UserCart?) = viewModelScope.launch {
         val itemId = _itemDetail.value?.id ?: return@launch
         val params = AddUserCartItemParameters(
             sellerId = property.sellerId,
             itemId = itemId,
             amounts = _amountsInput.value,
-            userCart = userCart
+            currentSellerId = userCart?.sellerId
         )
 
         addUserCartItemUseCase(params).collect {

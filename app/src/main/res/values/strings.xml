@@ -46,7 +46,7 @@
     <string name="signin_input_username_empty">Please enter your username to login.</string>
     <string name="signin_verify_title">We have sent you a sign-in link</string>
     <string name="signin_verify_description">Please check your ITSC mailbox.</string>
-    <string name="signin_verify_no_email">Did\'t receive the email?&#160;</string>
+    <string name="signin_verify_no_email">Didn\'t receive the email?&#160;</string>
     <string name="signin_verify_resend_email">Resend Email</string>
     <string name="signin_error">Sign-in error. Please try again.</string>
     <string name="signin_cancel">Sign-in canceled.</string>

@@ -11,6 +11,7 @@ import com.foobarust.android.R
 import com.foobarust.android.common.FullScreenDialogFragment
 import com.foobarust.android.databinding.FragmentSellerMiscBinding
 import com.foobarust.android.utils.AutoClearedValue
+import com.foobarust.android.utils.setBottomSheetPeekTo
 import com.foobarust.android.utils.showShortToast
 import com.foobarust.android.utils.themeColor
 import com.google.android.gms.maps.CameraUpdateFactory

@@ -102,9 +102,7 @@ class SellerItemDetailFragment : BottomSheetDialogFragment() {
     private fun submitItemToCart() {
         viewLifecycleOwner.lifecycleScope.launch {
             val userCart = mainViewModel.userCart.first().getSuccessDataOr(null)
-            userCart?.let {
-                itemDetailViewModel.onSubmitItemToCart(userCart = it)
-            }
+            itemDetailViewModel.onSubmitItemToCart(userCart = userCart)
         }
     }
 

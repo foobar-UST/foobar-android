@@ -11,7 +11,3 @@ data class SellerLocation(
     val addressZh: String,
     val geolocation: Geolocation
 )
-
-fun SellerLocation.getNormalizedAddress(): String {
-    return "$address\n$addressZh"
-}

@@ -2,7 +2,6 @@ package com.foobarust.domain.usecases.cart
 
 import com.foobarust.domain.common.UseCaseExceptions.ERROR_USER_NOT_SIGNED_IN
 import com.foobarust.domain.di.IoDispatcher
-import com.foobarust.domain.models.cart.UserCart
 import com.foobarust.domain.repositories.AuthRepository
 import com.foobarust.domain.repositories.CartRepository
 import com.foobarust.domain.states.Resource
@@ -30,8 +29,9 @@ class AddUserCartItemUseCase @Inject constructor(
         }
 
         // Check the user add item from one seller only
-        val cartSellerId = parameters.userCart.sellerId
-        if (cartSellerId != null && cartSellerId != parameters.sellerId) {
+        val currentSellerId = parameters.currentSellerId
+        val itemSellerId = parameters.sellerId
+        if (currentSellerId != null && currentSellerId != itemSellerId) {
             throw Exception(ERROR_DIFFERENT_SELLER)
         }
 
@@ -52,5 +52,5 @@ data class AddUserCartItemParameters(
     val sellerId: String,
     val itemId: String,
     val amounts: Int,
-    val userCart: UserCart
+    val currentSellerId: String?
 )
