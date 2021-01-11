@@ -34,7 +34,7 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
         getByName("debug") {
-            buildConfigField("Boolean", "USE_FIREBASE_EMULATOR", "true")
+            buildConfigField("Boolean", "USE_FIREBASE_EMULATOR", "false")
             buildConfigField("String", "FIREBASE_EMULATOR_HOST", "\"192.168.128.66\"")
             buildConfigField("String", "FIREBASE_EMULATOR_FIRESTORE_PORT", "\"8080\"")
             buildConfigField("String", "FIREBASE_EMULATOR_FUNCTIONS_PORT", "\"5001\"")
