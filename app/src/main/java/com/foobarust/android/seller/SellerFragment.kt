@@ -5,19 +5,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.viewpager2.widget.ViewPager2
 import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentSellerBinding
+import com.foobarust.android.main.MainViewModel
 import com.foobarust.android.utils.AutoClearedValue
 import com.foobarust.android.utils.findNavController
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SellerFragment : Fragment() {
 
     private var binding: FragmentSellerBinding by AutoClearedValue(this)
-    private val viewModel: SellerViewModel by viewModels()
+    private val mainViewModel: MainViewModel by activityViewModels()
+    private val sellerViewModel: SellerViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,7 +34,7 @@ class SellerFragment : Fragment() {
         binding = FragmentSellerBinding.inflate(inflater, container, false)
 
         // Setup on-campus and off-campus tabs
-        viewModel.sellerPages.observe(viewLifecycleOwner) {
+        sellerViewModel.sellerPages.observe(viewLifecycleOwner) {
             val sellerPagerAdapter = SellerPagerAdapter(
                 fragmentManager = childFragmentManager,
                 lifecycle = lifecycle,
@@ -38,15 +45,23 @@ class SellerFragment : Fragment() {
                 adapter = sellerPagerAdapter
                 // Set page limit to prevent scrolling lag
                 offscreenPageLimit = 2
+
+                registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                    override fun onPageSelected(position: Int) {
+                        super.onPageSelected(position)
+                        sellerViewModel.currentTabPage = position
+                    }
+                })
             }
 
             TabLayoutMediator(binding.sellerTabLayout, binding.sellerViewPager) { tab, position ->
+                // Set tab title
                 tab.text = it[position].title
             }.attach()
         }
 
         // Navigate to seller detail
-        viewModel.navigateToSellerDetail.observe(viewLifecycleOwner) {
+        sellerViewModel.navigateToSellerDetail.observe(viewLifecycleOwner) {
             findNavController(R.id.sellerFragment)?.navigate(
                 SellerFragmentDirections.actionSellerFragmentToSellerDetailFragment(
                     sellerId = it
@@ -55,26 +70,35 @@ class SellerFragment : Fragment() {
         }
 
         // Navigate to seller action
-        viewModel.navigateToSellerAction.observe(viewLifecycleOwner) {
+        sellerViewModel.navigateToSellerAction.observe(viewLifecycleOwner) {
             findNavController(R.id.sellerFragment)?.navigate(
                 SellerFragmentDirections.actionSellerFragmentToSellerActionDialog()
             )
         }
 
         // Navigate to suggest item
-        viewModel.navigateToSuggestItem.observe(viewLifecycleOwner) {
+        sellerViewModel.navigateToSuggestItem.observe(viewLifecycleOwner) {
             findNavController(R.id.sellerFragment)?.navigate(
                 SellerFragmentDirections.actionSellerFragmentToSellerItemDetailFragment(it)
             )
         }
 
         // Navigate to seller section detail
-        viewModel.navigateToSellerSection.observe(viewLifecycleOwner) {
+        sellerViewModel.navigateToSellerSection.observe(viewLifecycleOwner) {
             findNavController(R.id.sellerFragment)?.navigate(
                 SellerFragmentDirections.actionSellerFragmentToSellerSectionFragment(
                     sellerSectionProperty = it
                 )
             )
+        }
+
+        // Observe bottom navigation scroll to top, and propagate to view pager
+        viewLifecycleOwner.lifecycleScope.launch {
+            mainViewModel.scrollToTop.collect { currentGraph ->
+                if (currentGraph == R.id.sellerFragment) {
+                    sellerViewModel.onScrollToTop()
+                }
+            }
         }
 
         return binding.root

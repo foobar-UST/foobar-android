@@ -20,6 +20,10 @@ class NotificationFragment : FullScreenDialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentNotificationBinding.inflate(inflater, container, false)
+
+        // Dismiss dialog
+        binding.toolbar.setNavigationOnClickListener { dismiss() }
+
         return binding.root
     }
 }

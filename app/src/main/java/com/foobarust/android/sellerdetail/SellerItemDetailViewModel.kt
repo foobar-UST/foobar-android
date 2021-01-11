@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.common.BaseViewModel
-import com.foobarust.android.states.UiFetchState
+import com.foobarust.android.states.UiState
 import com.foobarust.android.utils.SingleLiveEvent
 import com.foobarust.domain.models.cart.UserCart
 import com.foobarust.domain.models.seller.SellerItemDetail
@@ -71,13 +71,13 @@ class SellerItemDetailViewModel @ViewModelInject constructor(
         when (val result = getSellerItemDetailUseCase(parameters)) {
             is Resource.Success -> {
                 _itemDetail.value = result.data
-                setUiFetchState(UiFetchState.Success)
+                setUiState(UiState.Success)
             }
             is Resource.Error -> {
                 _dismissDialog.value = Unit
-                setUiFetchState(UiFetchState.Error(result.message))
+                setUiState(UiState.Error(result.message))
             }
-            is Resource.Loading -> setUiFetchState(UiFetchState.Loading)
+            is Resource.Loading -> setUiState(UiState.Loading)
         }
     }
 

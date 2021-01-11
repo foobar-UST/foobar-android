@@ -22,6 +22,7 @@ import com.foobarust.domain.models.promotion.AdvertiseBasic
 import com.foobarust.domain.models.promotion.SuggestBasic
 import com.foobarust.domain.models.seller.SellerBasic
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -69,16 +70,12 @@ class SellerOnCampusFragment : Fragment(),
             setHasFixedSize(true)
         }
 
-        // Fixed the issue when the promotion banner is inserted after the suggestion list,
-        // and got hidden at the top of the recycler view
-        viewLifecycleOwner.lifecycleScope.launch {
-            promotionAdapter.scrollToTopWhenFirstItemInserted(binding.recyclerView)
-        }
-
         // Submit promotion items
         sellerOnCampusViewModel.promotionListModels.observe(viewLifecycleOwner) {
             promotionAdapter.submitList(it)
         }
+
+        normalizeListPosition(promotionAdapter)
 
         // Submit seller items
         viewLifecycleOwner.lifecycleScope.launch {
@@ -102,18 +99,21 @@ class SellerOnCampusFragment : Fragment(),
             }
         }
 
-        /*
         // Swipe to refresh
         binding.swipeRefreshLayout.setOnRefreshListener {
-            sellerOnCampusViewModel.reloadPromotionItems()
-            sellerAdapter.refresh()
-            scrollToTopWhenNewItemsInserted(promotionAdapter)
+            sellerOnCampusViewModel.onSwipeRefresh()
+            sellerOnCampusViewModel.onReloadPromotion()
+            sellerOnCampusAdapter.refresh()
+            normalizeListPosition(promotionAdapter)
         }
-         */
 
         // Scroll to top when the tab is reselected
-        mainViewModel.scrollToTop.observe(viewLifecycleOwner) {
-            binding.recyclerView.smoothScrollToTop()
+        viewLifecycleOwner.lifecycleScope.launch {
+            sellerViewModel.scrollToTop.collect { pagePosition ->
+                if (pagePosition == 0) {
+                    binding.recyclerView.smoothScrollToTop()
+                }
+            }
         }
 
         // Setup recyclerview bottom padding correspond to cart bottom bar
@@ -129,6 +129,12 @@ class SellerOnCampusFragment : Fragment(),
         // Show toast
         sellerOnCampusViewModel.toastMessage.observe(viewLifecycleOwner) {
             showShortToast(it)
+        }
+
+        // Swipe refresh layout
+        sellerOnCampusViewModel.isSwipeRefreshing.observe(viewLifecycleOwner) { isRefreshing ->
+            binding.swipeRefreshLayout.isRefreshing = isRefreshing
+            //binding.swipeRefreshLayout.isEnabled = !isRefreshing
         }
 
         return binding.root
@@ -149,5 +155,13 @@ class SellerOnCampusFragment : Fragment(),
 
     override fun onPromotionSuggestItemClicked(suggestBasic: SuggestBasic) {
         sellerViewModel.onNavigateToSuggestItem(suggestBasic)
+    }
+
+    private fun normalizeListPosition(promotionAdapter: PromotionAdapter) {
+        // Fixed the issue when the promotion banner is inserted after the suggestion list,
+        // and got hidden at the top of the recycler view
+        viewLifecycleOwner.lifecycleScope.launch {
+            promotionAdapter.scrollToTopWhenFirstItemInserted(binding.recyclerView)
+        }
     }
 }

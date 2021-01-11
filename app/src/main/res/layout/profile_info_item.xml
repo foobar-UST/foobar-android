@@ -7,10 +7,10 @@
     <data>
         <variable
             name="infoModel"
-            type="com.foobarust.android.profile.ProfileListModel.ProfileInfoModel" />
+            type="com.foobarust.android.settings.ProfileListModel.ProfileInfoModel" />
         <variable
             name="listener"
-            type="com.foobarust.android.profile.ProfileAdapter.ProfileAdapterListener" />
+            type="com.foobarust.android.settings.ProfileAdapter.ProfileAdapterListener" />
         <import type="com.foobarust.android.R"/>
     </data>
 
@@ -18,26 +18,37 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/spacing_large"
+        android:gravity="center_horizontal"
         android:orientation="vertical">
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/avatar_image_view"
-            android:layout_width="104dp"
-            android:layout_height="104dp"
-            android:layout_gravity="center_horizontal"
-            android:onClick="@{() -> listener.onProfileAvatarClicked()}"
-            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Foobar.Circle"
-            app:glideUrl="@{infoModel.userDetail.photoUrl}"
-            app:glideCenterCrop="@{true}"
-            app:glidePlaceholder="@{R.drawable.ic_user}"
-            tools:src="@sample/sample_image_5"/>
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/avatar_image_view"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:onClick="@{() -> listener.onProfileAvatarClicked()}"
+                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Foobar.Circle"
+                app:glideUrl="@{infoModel.userDetail.photoUrl}"
+                app:glideCenterCrop="@{true}"
+                app:glidePlaceholder="@{R.drawable.ic_user}" />
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="end|bottom"
+                android:src="@drawable/ic_add_circle"
+                app:tint="?attr/colorSecondary"/>
+
+        </FrameLayout>
 
         <TextView
             android:id="@+id/username_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_large"
-            android:layout_gravity="center_horizontal"
             android:text="@{infoModel.userDetail.username}"
             android:textAppearance="?attr/textAppearanceHeadline5"
             android:textStyle="bold"
@@ -48,7 +59,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_xmedium"
-            android:layout_gravity="center_horizontal"
             android:text="@{infoModel.userDetail.email}"
             android:textAppearance="?attr/textAppearanceSubtitle2"
             android:textColor="@color/material_on_background_emphasis_medium"

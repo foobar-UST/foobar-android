@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.common.BaseViewModel
-import com.foobarust.android.states.UiFetchState
+import com.foobarust.android.states.UiState
 import com.foobarust.android.utils.SingleLiveEvent
 import com.foobarust.domain.models.seller.SellerSectionDetail
 import com.foobarust.domain.states.Resource
@@ -49,12 +49,16 @@ class SellerSectionViewModel @ViewModelInject constructor(
     val navigateToSellerSection: LiveData<SellerSectionProperty>
         get() = _navigateToSellerSection
 
-    var currentDestinationId: Int? = null
+    private val _navigateToSellerMisc = SingleLiveEvent<String>()
+    val navigateToSellerMisc: LiveData<String>
+        get() = _navigateToSellerMisc
+
+    private val _currentDestination = MutableStateFlow(-1)
 
     private var fetchSectionDetailJob: Job? = null
 
     fun onFetchSectionDetail(property: SellerSectionProperty) {
-        setUiFetchState(UiFetchState.Loading)
+        setUiState(UiState.Loading)
         fetchSectionDetailJob?.cancelIfActive()
         fetchSectionDetailJob = viewModelScope.launch {
             when (val result = getSellerSectionDetailUseCase(
@@ -65,12 +69,12 @@ class SellerSectionViewModel @ViewModelInject constructor(
             )) {
                 is Resource.Success -> {
                     _sectionDetail.emit(result.data)
-                    setUiFetchState(UiFetchState.Success)
+                    setUiState(UiState.Success)
                 }
                 is Resource.Loading -> Unit
                 is Resource.Error -> {
                     _sectionDetail.emit(null)
-                    setUiFetchState(UiFetchState.Error(result.message))
+                    setUiState(UiState.Error(result.message))
                 }
             }
         }
@@ -85,6 +89,11 @@ class SellerSectionViewModel @ViewModelInject constructor(
         sellerId?.let { _navigateToSellerDetail.value = it }
     }
 
+    fun onNavigateToSellerMisc() = viewModelScope.launch {
+        val sellerId = sectionDetail.first()?.sellerId
+        sellerId?.let { _navigateToSellerMisc.value = it }
+    }
+
     fun onNavigateToSellerSection(sectionId: String) = viewModelScope.launch {
         val sellerId = sectionDetail.first()?.sellerId
         sellerId?.let {
@@ -93,6 +102,10 @@ class SellerSectionViewModel @ViewModelInject constructor(
                 sellerId = it
             )
         }
+    }
+
+    fun onUpdateCurrentDestination(destinationId: Int) {
+        _currentDestination.value = destinationId
     }
 }
 

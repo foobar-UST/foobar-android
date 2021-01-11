@@ -8,36 +8,43 @@
         <variable
             name="viewModel"
             type="com.foobarust.android.seller.SellerOffCampusViewModel" />
-        <import type="com.foobarust.android.states.UiFetchState" />
+        <import type="com.foobarust.android.states.UiState" />
     </data>
 
-    <FrameLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:animateLayoutChanges="true">
+        android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:goneIf="@{!(viewModel.uiFetchState instanceof UiFetchState.Success)}"
-            tools:listitem="@layout/seller_sections_item_upcoming" />
+            android:animateLayoutChanges="true">
 
-        <ProgressBar
-            android:id="@+id/progress_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            app:goneIf="@{!(viewModel.uiFetchState instanceof UiFetchState.Loading)}"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:goneIf="@{!(viewModel.uiState instanceof UiState.Success)}"
+                tools:listitem="@layout/seller_sections_item_upcoming" />
 
-        <include
-            layout="@layout/load_error_layout"
-            android:id="@+id/load_error_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:goneIf="@{!(viewModel.uiFetchState instanceof UiFetchState.Error)}"/>
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:goneIf="@{!(viewModel.uiState instanceof UiState.Loading)}"/>
 
-    </FrameLayout>
+            <include
+                layout="@layout/load_error_layout"
+                android:id="@+id/load_error_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:goneIf="@{!(viewModel.uiState instanceof UiState.Error)}"/>
+
+        </FrameLayout>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </layout>

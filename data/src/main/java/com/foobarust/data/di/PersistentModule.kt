@@ -12,6 +12,7 @@ import com.foobarust.data.json.DirectionsDeserializer
 import com.foobarust.data.models.maps.DirectionsResponse
 import com.foobarust.data.retrofit.RemoteResponseInterceptor
 import com.foobarust.data.retrofit.RequestHeadersInterceptor
+import com.foobarust.data.retrofit.SuccessResponseConverterFactory
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.firestoreSettings
@@ -24,6 +25,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -70,48 +72,53 @@ object PersistentModule {
 
     @Singleton
     @Provides
-    fun provideOkHttpClient(): OkHttpClient {
-        val loggingInterceptor = HttpLoggingInterceptor().apply {
+    fun provideLoggingInterceptor(): Interceptor {
+        return HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
-        val builder = OkHttpClient.Builder().apply {
-            addInterceptor(RequestHeadersInterceptor())
-            addInterceptor(RemoteResponseInterceptor())
-            addInterceptor(loggingInterceptor)
-        }
-
-        return builder.build()
     }
 
     @Singleton
     @Provides
-    fun provideRemoteService(okHttpClient: OkHttpClient): RemoteService {
+    fun provideDefaultHttpClientBuilder(loggingInterceptor: Interceptor): OkHttpClient.Builder {
+        return OkHttpClient.Builder().apply {
+            addInterceptor(loggingInterceptor)
+        }
+    }
+
+    @Singleton
+    @Provides
+    fun provideRemoteService(defaultHttpClientBuilder: OkHttpClient.Builder): RemoteService {
         val url = if (USE_FIREBASE_EMULATOR) {
             "http://$FIREBASE_EMULATOR_HOST:$FIREBASE_EMULATOR_FUNCTIONS_PORT/foobar-group-delivery-app/us-central1/api/"
         } else {
             CF_REQUEST_URL
         }
 
+        val clientBuilder = defaultHttpClientBuilder.apply {
+            addInterceptor(RequestHeadersInterceptor())
+            addInterceptor(RemoteResponseInterceptor())
+        }
+
         return Retrofit.Builder()
-            .client(okHttpClient)
+            .client(clientBuilder.build())
             .baseUrl(url)
-            //.addConverterFactory(ResourceConverterFactory())
+            .addConverterFactory(SuccessResponseConverterFactory())
             .addConverterFactory(GsonConverterFactory.create())
-            //.addCallAdapterFactory(ResourceCallAdapterFactory())
             .build()
             .create(RemoteService::class.java)
     }
 
     @Singleton
     @Provides
-    fun provideMapService(okHttpClient: OkHttpClient): MapService {
+    fun provideMapService(defaultHttpClientBuilder: OkHttpClient.Builder): MapService {
         val customGson = GsonBuilder().registerTypeAdapter(
             DirectionsResponse::class.java,
             DirectionsDeserializer()
         ).create()
 
         return Retrofit.Builder()
-            .client(okHttpClient)
+            .client(defaultHttpClientBuilder.build())
             .baseUrl(GM_DIR_URL)
             .addConverterFactory(GsonConverterFactory.create(customGson))
             .build()

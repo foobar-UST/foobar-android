@@ -8,7 +8,7 @@
         <variable
             name="viewModel"
             type="com.foobarust.android.sellersection.SellerSectionViewModel" />
-        <import type="com.foobarust.android.states.UiFetchState"/>
+        <import type="com.foobarust.android.states.UiState"/>
         <import type="com.foobarust.domain.models.seller.SellerSectionDetailKt"/>
     </data>
 
@@ -52,19 +52,19 @@
                 android:layout_height="match_parent"
                 android:name="androidx.navigation.fragment.NavHostFragment"
                 app:defaultNavHost="true"
-                app:goneIf="@{!(viewModel.uiFetchState instanceof UiFetchState.Success)}" />
+                app:goneIf="@{!(viewModel.uiState instanceof UiState.Success)}" />
 
             <ProgressBar
                 android:id="@+id/progress_bar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                app:goneIf="@{!(viewModel.uiFetchState instanceof UiFetchState.Loading)}"/>
+                app:goneIf="@{!(viewModel.uiState instanceof UiState.Loading)}"/>
 
             <include
                 layout="@layout/load_error_layout"
                 android:id="@+id/load_error_layout"
-                app:goneIf="@{!(viewModel.uiFetchState instanceof UiFetchState.Error)}"/>
+                app:goneIf="@{!(viewModel.uiState instanceof UiState.Error)}"/>
 
         </FrameLayout>
 

@@ -19,7 +19,7 @@ interface UserRepository {
 
     suspend fun updateUserDetail(userId: String, userDetail: UserDetail)
 
-    fun updateUserPhoto(userId: String, uriString: String): Flow<Resource<Unit>>
+    fun uploadUserPhoto(userId: String, uri: String, extension: String): Flow<Resource<Unit>>
 
     suspend fun getUserPublicInfo(userId: String): UserPublic
 }

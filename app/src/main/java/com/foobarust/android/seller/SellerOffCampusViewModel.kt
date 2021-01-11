@@ -3,11 +3,13 @@ package com.foobarust.android.seller
 import android.content.Context
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.*
 import com.foobarust.android.R
 import com.foobarust.android.common.BaseViewModel
+import com.foobarust.android.common.OnSwipeRefreshListener
 import com.foobarust.android.promotion.PromotionListModel
 import com.foobarust.android.sellersection.SellerSectionsListModel
 import com.foobarust.android.utils.asUiFetchState
@@ -28,16 +30,12 @@ class SellerOffCampusViewModel @ViewModelInject constructor(
     @ApplicationContext private val context: Context,
     getAdvertiseBasicsUseCase: GetAdvertiseBasicsUseCase,
     getSellerSectionsUseCase: GetSellerSectionsUseCase
-) : BaseViewModel() {
+) : BaseViewModel(), OnSwipeRefreshListener {
 
-    private val _startFetching = ConflatedBroadcastChannel(Unit)
-    private val _reloadPromotion = ConflatedBroadcastChannel<Unit>()
+    private val _fetchPromotion = ConflatedBroadcastChannel(Unit)
 
-    val promotionListModels: LiveData<List<PromotionListModel>> = flowOf(
-        _startFetching.asFlow(),
-        _reloadPromotion.asFlow()
-    )
-        .flattenMerge()
+    val promotionListModels: LiveData<List<PromotionListModel>> = _fetchPromotion
+        .asFlow()
         .flatMapLatest { getAdvertiseBasicsUseCase(Unit) }
         .map { result ->
             if (result is Resource.Success && result.data.isNotEmpty()) {
@@ -46,6 +44,7 @@ class SellerOffCampusViewModel @ViewModelInject constructor(
                 emptyList()
             }
         }
+        .filter { it.isNotEmpty() }
         .asLiveData(viewModelScope.coroutineContext)
 
     val sectionsListModels: Flow<PagingData<SellerSectionsListModel>> =
@@ -72,11 +71,26 @@ class SellerOffCampusViewModel @ViewModelInject constructor(
             }
         }.cachedIn(viewModelScope)
 
+    private val _isSwipeRefreshing = MutableLiveData(false)
+    val isSwipeRefreshing: LiveData<Boolean>
+        get() = _isSwipeRefreshing
+
+    override fun onSwipeRefresh() {
+        _isSwipeRefreshing.value = true
+    }
+
     fun onReloadPromotion() {
-        _reloadPromotion.offer(Unit)
+        _fetchPromotion.offer(Unit)
     }
 
     fun onPagingLoadStateChanged(loadState: LoadState) {
-        setUiFetchState(loadState.asUiFetchState())
+        if (_isSwipeRefreshing.value == true && loadState is LoadState.Loading) {
+            return
+        }
+        if (loadState is LoadState.NotLoading || loadState is LoadState.Error) {
+            _isSwipeRefreshing.value = false
+        }
+
+        setUiState(loadState.asUiFetchState())
     }
 }

@@ -15,12 +15,8 @@ import com.foobarust.android.sellersection.SectionDetailMoreSectionsListModel.*
 import com.foobarust.android.sellersection.SectionDetailParticipantsListModel.*
 import com.foobarust.android.sellersection.SellerSectionDetailListModel.*
 import com.foobarust.android.sellersection.SellerSectionDetailViewHolder.*
-import com.foobarust.domain.models.common.Geolocation
 import com.foobarust.domain.models.user.UserPublic
 import com.foobarust.domain.utils.DateUtils
-import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.ktx.addMarker
-import com.google.maps.android.ktx.awaitMap
 import kotlinx.coroutines.launch
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -51,9 +47,6 @@ class SellerSectionDetailAdapter(
             )
             R.layout.seller_section_detail_section_info_item -> SellerSectionDetailSectionInfoItemViewHolder(
                 SellerSectionDetailSectionInfoItemBinding.inflate(inflater, parent, false)
-            )
-            R.layout.seller_section_detail_shipping_info_item -> SellerSectionDetailShippingInfoItemViewHolder(
-                SellerSectionDetailShippingInfoItemBinding.inflate(inflater, parent, false)
             )
             R.layout.seller_section_detail_seller_info_item -> SellerSectionDetailSellerInfoItemViewHolder(
                 SellerSectionDetailSellerInfoItemBinding.inflate(inflater, parent, false)
@@ -98,6 +91,7 @@ class SellerSectionDetailAdapter(
 
             is SellerSectionDetailCounterItemViewHolder -> holder.binding.run {
                 val currentItem = getItem(position) as SellerSectionDetailCounterItemModel
+                counterItem = currentItem
 
                 if (currentItem.isRecentSection) {
                     // Setup countdown timer for recent section
@@ -130,27 +124,7 @@ class SellerSectionDetailAdapter(
             }
 
             is SellerSectionDetailSectionInfoItemViewHolder -> holder.binding.run {
-                orderInfoItem = getItem(position) as SellerSectionDetailSectionInfoItemModel
-                executePendingBindings()
-            }
-
-            is SellerSectionDetailShippingInfoItemViewHolder -> holder.binding.run {
-                val currentItem = getItem(position) as SellerSectionDetailShippingInfoItemModel
-                shippingInfoItem = currentItem
-
-                // Setup map view
-                sellerSectionDetailFragment.viewLifecycleOwner.lifecycleScope.launch {
-                    addressMapView.onCreate(null)
-                    addressMapView.awaitMap().run {
-                        val latLng = LatLng(
-                            currentItem.geolocation.latitude,
-                            currentItem.geolocation.longitude
-                        )
-                        addMarker { position(latLng) }
-                        //moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
-                    }
-                }
-
+                sectionInfoItem = getItem(position) as SellerSectionDetailSectionInfoItemModel
                 executePendingBindings()
             }
 
@@ -193,7 +167,6 @@ class SellerSectionDetailAdapter(
             is SellerSectionDetailUsersItemModel -> R.layout.seller_section_detail_users_item
             is SellerSectionDetailCounterItemModel -> R.layout.seller_section_detail_counter_item
             is SellerSectionDetailSectionInfoItemModel -> R.layout.seller_section_detail_section_info_item
-            is SellerSectionDetailShippingInfoItemModel -> R.layout.seller_section_detail_shipping_info_item
             is SellerSectionDetailSellerInfoItemModel -> R.layout.seller_section_detail_seller_info_item
             is SellerSectionDetailMoreSectionsItemModel -> R.layout.seller_section_detail_more_sections_item
             is SellerSectionDetailSubtitleItemModel -> R.layout.subtitle_item
@@ -256,10 +229,6 @@ sealed class SellerSectionDetailViewHolder(itemView: View) : RecyclerView.ViewHo
         val binding: SellerSectionDetailSectionInfoItemBinding
     ) : SellerSectionDetailViewHolder(binding.root)
 
-    data class SellerSectionDetailShippingInfoItemViewHolder(
-        val binding: SellerSectionDetailShippingInfoItemBinding
-    ) : SellerSectionDetailViewHolder(binding.root)
-
     data class SellerSectionDetailSellerInfoItemViewHolder(
         val binding: SellerSectionDetailSellerInfoItemBinding
     ) : SellerSectionDetailViewHolder(binding.root)
@@ -290,19 +259,17 @@ sealed class SellerSectionDetailListModel {
         val description: String,
         val cutoffTime: String,
         val deliveryDate: String,
-        val deliveryTime: String
-    ) : SellerSectionDetailListModel()
-
-    data class SellerSectionDetailShippingInfoItemModel(
-        val address: String,
-        val geolocation: Geolocation
+        val deliveryTime: String,
+        val deliveryLocation: String
     ) : SellerSectionDetailListModel()
 
     data class SellerSectionDetailSellerInfoItemModel(
         val sellerId: String,
         val sellerName: String,
-        val sellerRating: Double,
-        val sellerImageUrl: String?
+        val sellerRating: String,
+        val sellerAddress: String,
+        val sellerImageUrl: String?,
+        val sellerOnline: Boolean
     ) : SellerSectionDetailListModel()
 
     data class SellerSectionDetailMoreSectionsItemModel(
@@ -327,8 +294,6 @@ object SellerSectionDetailListModelDiff : DiffUtil.ItemCallback<SellerSectionDet
                 newItem is SellerSectionDetailCounterItemModel ||
             oldItem is SellerSectionDetailSectionInfoItemModel &&
                 newItem is SellerSectionDetailSectionInfoItemModel ||
-            oldItem is SellerSectionDetailShippingInfoItemModel &&
-                newItem is SellerSectionDetailShippingInfoItemModel ||
             oldItem is SellerSectionDetailSellerInfoItemModel &&
                 newItem is SellerSectionDetailSellerInfoItemModel ||
             oldItem is SellerSectionDetailMoreSectionsItemModel &&
@@ -350,8 +315,6 @@ object SellerSectionDetailListModelDiff : DiffUtil.ItemCallback<SellerSectionDet
                 newItem is SellerSectionDetailCounterItemModel ||
             oldItem is SellerSectionDetailSectionInfoItemModel &&
                 newItem is SellerSectionDetailSectionInfoItemModel ||
-            oldItem is SellerSectionDetailShippingInfoItemModel &&
-                newItem is SellerSectionDetailShippingInfoItemModel ||
             oldItem is SellerSectionDetailSellerInfoItemModel &&
                 newItem is SellerSectionDetailSellerInfoItemModel ||
             oldItem is SellerSectionDetailMoreSectionsItemModel &&

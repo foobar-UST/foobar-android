@@ -6,6 +6,7 @@ import com.foobarust.data.common.Constants.SELLER_ITEMS_BASIC_SUB_COLLECTION
 import com.foobarust.data.common.Constants.SELLER_ITEM_CATALOG_ID_FIELD
 import com.foobarust.data.mappers.SellerMapper
 import com.foobarust.data.models.seller.SellerItemBasicEntity
+import com.foobarust.data.utils.isNetworkData
 import com.foobarust.domain.models.seller.SellerItemBasic
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -40,6 +41,10 @@ class SellerItemBasicsPagingSource(
                 requestQuery.startAfter(lastVisibleItem)
             } else {
                 null
+            }
+
+            if (!currentPageData.isNetworkData()) {
+                throw Exception("Network error.")
             }
 
             LoadResult.Page(

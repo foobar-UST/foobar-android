@@ -2,6 +2,8 @@ package com.foobarust.data.models.seller
 
 import com.foobarust.data.common.Constants.SELLER_SECTION_AVAILABLE_FIELD
 import com.foobarust.data.common.Constants.SELLER_SECTION_CUTOFF_TIME_FIELD
+import com.foobarust.data.common.Constants.SELLER_SECTION_DELIVERY_LOCATION_FIELD
+import com.foobarust.data.common.Constants.SELLER_SECTION_DELIVERY_LOCATION__ZH_FIELD
 import com.foobarust.data.common.Constants.SELLER_SECTION_DELIVERY_TIME_FIELD
 import com.foobarust.data.common.Constants.SELLER_SECTION_DESCRIPTION_FIELD
 import com.foobarust.data.common.Constants.SELLER_SECTION_DESCRIPTION_ZH_FIELD
@@ -17,8 +19,10 @@ import com.foobarust.data.common.Constants.SELLER_SECTION_SELLER_NAME_ZH_FIELD
 import com.foobarust.data.common.Constants.SELLER_SECTION_STATE_FIELD
 import com.foobarust.data.common.Constants.SELLER_SECTION_TITLE_FIELD
 import com.foobarust.data.common.Constants.SELLER_SECTION_TITLE_ZH_FIELD
+import com.foobarust.data.common.Constants.SELLER_SECTION_UPDATED_AT_FIELD
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.PropertyName
+import com.google.firebase.firestore.ServerTimestamp
 
 /**
  * Created by kevin on 12/20/20
@@ -58,6 +62,14 @@ data class SellerSectionDetailEntity(
     val deliveryTime: Timestamp? = null,
 
     @JvmField
+    @PropertyName(SELLER_SECTION_DELIVERY_LOCATION_FIELD)
+    val deliveryLocation: String? = null,
+
+    @JvmField
+    @PropertyName(SELLER_SECTION_DELIVERY_LOCATION__ZH_FIELD)
+    val deliveryLocationZh: String? = null,
+
+    @JvmField
     @PropertyName(SELLER_SECTION_CUTOFF_TIME_FIELD)
     val cutoffTime: Timestamp? = null,
 
@@ -91,5 +103,10 @@ data class SellerSectionDetailEntity(
 
     @JvmField
     @PropertyName(SELLER_SECTION_AVAILABLE_FIELD)
-    val available: Boolean? = null
+    val available: Boolean? = null,
+
+    @JvmField
+    @PropertyName(SELLER_SECTION_UPDATED_AT_FIELD)
+    @ServerTimestamp
+    val updatedAt: Timestamp? = null
 )

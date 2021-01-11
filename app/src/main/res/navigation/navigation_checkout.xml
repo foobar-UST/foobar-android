@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_checkout"
+    app:startDestination="@id/cartFragment">
+
+    <!-- CartFragment -->
+    <fragment
+        android:id="@+id/cartFragment"
+        android:name="com.foobarust.android.checkout.CartFragment"
+        tools:layout="@layout/fragment_cart">
+        <action
+            android:id="@+id/action_cartFragment_to_paymentFragment"
+            app:destination="@id/paymentFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_cartFragment_to_deliveryOptionsBottomSheet"
+            app:destination="@id/deliveryOptionsBottomSheet" />
+    </fragment>
+
+    <!-- DeliveryOptionsBottomSheet -->
+    <dialog
+        android:id="@+id/deliveryOptionsBottomSheet"
+        android:name="com.foobarust.android.checkout.DeliveryOptionsBottomSheet"
+        tools:layout="@layout/bottom_sheet_delivery_options">
+        <argument
+            android:name="deliveryOptionProperties"
+            app:argType="com.foobarust.android.checkout.DeliveryOptionProperty[]"/>
+    </dialog>
+
+    <!-- PaymentFragment -->
+    <fragment
+        android:id="@+id/paymentFragment"
+        android:name="com.foobarust.android.checkout.PaymentFragment"
+        tools:layout="@layout/fragment_payment">
+        <action
+            android:id="@+id/action_paymentFragment_to_orderSuccessFragment"
+            app:destination="@id/orderSuccessFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+
+    <!-- OrderSuccessFragment -->
+    <fragment
+        android:id="@+id/orderSuccessFragment"
+        android:name="com.foobarust.android.checkout.OrderSuccessFragment"
+        tools:layout="@layout/fragment_order_success"/>
+
+</navigation>

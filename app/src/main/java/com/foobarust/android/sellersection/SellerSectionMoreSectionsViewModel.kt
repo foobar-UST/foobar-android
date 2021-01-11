@@ -49,7 +49,7 @@ class SellerSectionMoreSectionsViewModel @ViewModelInject constructor(
     }
 
     fun onPagingLoadStateChanged(loadState: LoadState) {
-        setUiFetchState(loadState.asUiFetchState())
+        setUiState(loadState.asUiFetchState())
     }
 }
 

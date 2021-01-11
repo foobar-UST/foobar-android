@@ -1,4 +1,15 @@
 # Changelog
+## 2020-01-11
+- Refactored photo upload job using WorkManager.
+- Refactored GetUserCartUseCase using SharedFlow.
+- Refactored GetUserDetailUseCase using SharedFlow.
+- Added progress bar in ProfileFragment.
+- Added delivery location for section.
+- Added CheckoutFragment.
+- Added file extension for uploading user photo.
+- Fixed fragment slide animation flickering.
+- Prepared for delivery options.
+
 ## 2020-01-04
 - Added section detail screen.
 - Added more sections screen.

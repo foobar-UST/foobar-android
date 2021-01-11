@@ -10,6 +10,7 @@
             type="com.foobarust.android.sellerdetail.SellerItemDetailViewModel" />
         <import type="com.foobarust.domain.models.seller.SellerItemDetailKt" />
         <import type="com.foobarust.android.utils.BindingConverters" />
+        <import type="com.foobarust.android.R"/>
     </data>
 
     <RelativeLayout
@@ -65,6 +66,20 @@
                 android:lineSpacingMultiplier="1.2"
                 app:goneIf="@{viewModel.itemDetail.description == null}"
                 tools:text="Item description will be shown here" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/photo_image_view"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:layout_below="@id/description_text_view"
+                android:scaleType="centerCrop"
+                app:glideUrl="@{viewModel.itemDetail.imageUrl}"
+                app:glideCenterCrop="@{true}"
+                app:glidePlaceholder="@{R.drawable.placeholder_card}"
+                app:shapeAppearance="@style/ShapeAppearance.Foobar.SmallComponent"
+                app:goneIf="@{viewModel.itemDetail.imageUrl == null}"
+                tools:src="@sample/sample_image_1"/>
 
         </RelativeLayout>
 

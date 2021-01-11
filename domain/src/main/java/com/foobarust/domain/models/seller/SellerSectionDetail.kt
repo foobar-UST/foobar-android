@@ -17,6 +17,8 @@ data class SellerSectionDetail(
     val sellerName: String,
     val sellerNameZh: String?,
     val deliveryTime: Date,
+    val deliveryLocation: String,
+    val deliveryLocationZh: String?,
     val description: String,
     val descriptionZh: String?,
     val cutoffTime: Date,
@@ -40,6 +42,10 @@ fun SellerSectionDetail.getNormalizedTitle(): String {
 
 fun SellerSectionDetail.getNormalizedDescription(): String {
     return if (descriptionZh != null) "$description\n$descriptionZh" else description
+}
+
+fun SellerSectionDetail.getNormalizedDeliveryLocation(): String {
+    return if (deliveryLocationZh != null) "$deliveryLocation\n$deliveryLocationZh" else deliveryLocation
 }
 
 fun SellerSectionDetail.getCutoffTimeString(): String {

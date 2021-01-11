@@ -7,95 +7,49 @@
     <data>
         <variable
             name="viewModel"
-            type="com.foobarust.android.cart.CartViewModel" />
-        <import type="com.foobarust.android.states.UiFetchState" />
+            type="com.foobarust.android.checkout.CartViewModel" />
+        <import type="com.foobarust.android.states.UiState" />
     </data>
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <FrameLayout
         android:id="@+id/coordinator_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layoutFullscreen="@{true}">
+        android:layout_height="match_parent">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/app_bar_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?android:attr/colorBackground"
-            app:elevation="@dimen/elevation_none"
-            app:paddingTopSystemWindowInsets="@{true}">
-
-            <com.google.android.material.appbar.MaterialToolbar
-                style="@style/Widget.MaterialComponents.Toolbar.Surface"
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?android:attr/colorBackground"
-                app:title="@{@string/cart_app_bar_title(viewModel.cartItemsCount)}"
-                app:layout_scrollFlags="noScroll"
-                app:navigationIcon="@drawable/ic_arrow_back"
-                app:navigationIconTint="?attr/colorOnSurface"
-                tools:title="4 Items in Cart"/>
-
-            <com.google.android.material.progressindicator.LinearProgressIndicator
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:indeterminate="true"
-                app:showAnimationBehavior="outward"
-                app:hideAnimationBehavior="outward"
-                app:progressHideIf="@{!viewModel.isUpdatingProgress}"/>
-
-        </com.google.android.material.appbar.AppBarLayout>
-
-        <FrameLayout
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:animateLayoutChanges="true"
-            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:goneIf="@{viewModel.showNoItemLayout}"
+            tools:listitem="@layout/cart_purchase_item"/>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:goneIf="@{!(viewModel.uiFetchState instanceof UiFetchState.Success)}"
-                tools:listitem="@layout/cart_purchase_item"/>
+        <LinearLayout
+            android:id="@+id/no_item_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            app:goneIf="@{!viewModel.showNoItemLayout}"
+            tools:ignore="UseCompoundDrawables">
 
-            <LinearLayout
-                android:id="@+id/no_item_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:gravity="center"
-                app:goneIf="@{!viewModel.showNoItemLayout}"
-                tools:ignore="UseCompoundDrawables">
+            <ImageView
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:src="@drawable/ic_shopping_bag"
+                android:contentDescription="@string/cart_no_item_error"
+                app:tint="@color/material_on_surface_emphasis_medium" />
 
-                <ImageView
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:src="@drawable/ic_shopping_bag"
-                    android:contentDescription="@string/cart_no_item_error"
-                    app:tint="@color/material_on_surface_emphasis_medium" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_large"
-                    android:text="@string/cart_no_item_error"
-                    android:textAppearance="?attr/textAppearanceSubtitle1"
-                    android:textColor="@color/material_on_surface_emphasis_medium"/>
-
-            </LinearLayout>
-
-            <ProgressBar
-                android:id="@+id/progress_bar"
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                app:goneIf="@{!(viewModel.uiFetchState instanceof UiFetchState.Loading)}" />
+                android:layout_marginTop="@dimen/spacing_large"
+                android:text="@string/cart_no_item_error"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:textColor="@color/material_on_surface_emphasis_medium"/>
 
-        </FrameLayout>
+        </LinearLayout>
 
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </FrameLayout>
 
 </layout>

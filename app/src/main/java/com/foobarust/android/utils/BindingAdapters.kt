@@ -17,9 +17,8 @@ import android.view.View.*
 import android.view.ViewGroup
 import android.view.WindowInsets
 import android.view.animation.AnimationUtils
-import android.widget.ImageView
-import android.widget.Spinner
-import android.widget.TextView
+import android.view.inputmethod.EditorInfo
+import android.widget.*
 import androidx.annotation.AnimRes
 import androidx.annotation.AttrRes
 import androidx.annotation.DrawableRes
@@ -33,13 +32,23 @@ import com.foobarust.android.R
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.shape.MaterialShapeDrawable
 import kotlin.math.round
 
 interface OnTextViewClickableSpanListener {
     fun onClickableSpanEndClicked(view: View)
+}
+
+@BindingAdapter("clearFocusWhenDone")
+fun EditText.bindClearFocusWhenDone(clear: Boolean) {
+    if (!clear) return
+    setOnEditorActionListener { view, actionId, event ->
+        if (actionId == EditorInfo.IME_ACTION_DONE) {
+            clearFocus()
+        }
+        return@setOnEditorActionListener false
+    }
 }
 
 @BindingAdapter("attachAnim")
@@ -372,12 +381,64 @@ fun Chip.bindGlideChipSrc(
 }
 */
 
-@BindingAdapter("srcCompat")
-fun ShapeableImageView.bindSrcCompat(@DrawableRes drawableRes: Int?) {
+@BindingAdapter(
+    "glideUrl",
+    "glideCenterCrop",
+    "glideCircularCrop",
+    "glidePlaceholder",
+    requireAll = false
+)
+fun ImageButton.bindGlideUrl(
+    imageUrl: String?,
+    centerCrop: Boolean = false,
+    circularCrop: Boolean = false,
+    @DrawableRes placeholder: Int? = null
+) {
+    if (imageUrl == null) {
+        bindGlideSrc(placeholder, centerCrop, circularCrop)
+        return
+    }
+
+    createGlideRequest(
+        context,
+        imageUrl,
+        centerCrop,
+        circularCrop,
+        placeholder
+    ).into(this)
+}
+
+@BindingAdapter(
+    "glideSrc",
+    "glideCenterCrop",
+    "glideCircularCrop",
+    requireAll = false
+)
+fun ImageButton.bindGlideSrc(
+    @DrawableRes drawableRes: Int?,
+    centerCrop: Boolean = false,
+    circularCrop: Boolean = false
+) {
+    if (drawableRes == null) return
+
+    createGlideRequest(
+        context,
+        drawableRes,
+        centerCrop,
+        circularCrop
+    ).into(this)
+}
+
+@BindingAdapter(
+    "src"
+)
+fun ImageView.bindSrc(
+    @DrawableRes drawableRes: Int?
+) {
     if (drawableRes == null) return
 
     val drawable = context.getDrawableOrNull(drawableRes)
-    setImageDrawable(drawable)
+    drawable?.let { setImageDrawable(it) }
 }
 
 @BindingAdapter(

@@ -1,0 +1,14 @@
+[
+  {
+    "id": "5c8c9a47-d139-474a-8a9a-87bbd12c16c0",
+    "identifier": "pickup",
+    "for_seller_type": 0,
+    "enabled": true
+  },
+  {
+    "id": "887e230b-b13d-4df4-864a-d560eab0ef0b",
+    "identifier": "delivery",
+    "for_seller_type": 1,
+    "enabled": true
+  }
+]

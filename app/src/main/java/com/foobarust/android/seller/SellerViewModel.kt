@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
 import com.foobarust.android.R
 import com.foobarust.android.common.BaseViewModel
 import com.foobarust.android.sellerdetail.SellerItemDetailProperty
@@ -13,6 +14,10 @@ import com.foobarust.domain.models.promotion.SuggestBasic
 import com.foobarust.domain.models.seller.SellerBasic
 import com.foobarust.domain.models.seller.SellerSectionBasic
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 
 class SellerViewModel @ViewModelInject constructor(
     @ApplicationContext private val context: Context,
@@ -47,6 +52,13 @@ class SellerViewModel @ViewModelInject constructor(
     val navigateToSellerSection: LiveData<SellerSectionProperty>
         get() = _navigateToSellerSection
 
+    // Scroll-to-top trigger to be consumed
+    // by SellerOnCampusFragment and SellerOffCampusFragment
+    private val _scrollToTop = MutableSharedFlow<Int>()
+    val scrollToTop: SharedFlow<Int> = _scrollToTop.asSharedFlow()
+
+    var currentTabPage: Int = 0
+
     fun onNavigateToSellerDetail(sellerBasic: SellerBasic) {
         _navigateToSellerDetail.value = sellerBasic.id
     }
@@ -64,5 +76,9 @@ class SellerViewModel @ViewModelInject constructor(
             sectionId = sectionBasic.id,
             sellerId = sectionBasic.sellerId
         )
+    }
+
+    fun onScrollToTop() = viewModelScope.launch {
+        _scrollToTop.emit(currentTabPage)
     }
 }

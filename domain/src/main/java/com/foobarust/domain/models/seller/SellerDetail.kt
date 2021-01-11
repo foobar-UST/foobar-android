@@ -21,7 +21,8 @@ data class SellerDetail(
     val online: Boolean,
     val notice: String?,
     val openingHours: String,
-    val tags: List<String>
+    val tags: List<String>,
+    val deliveryCost: Double?
 )
 
 fun SellerDetail.getNormalizedName(): String {
@@ -39,4 +40,8 @@ fun SellerDetail.getNormalizedDescription(): String? {
 
 fun SellerDetail.getNormalizedAddress(): String {
     return "${location.address}\n${location.addressZh}"
+}
+
+fun SellerDetail.getNormalizedRatingString(): String {
+    return if (rating == 0.0) "n.a." else String.format("%.1f", rating)
 }

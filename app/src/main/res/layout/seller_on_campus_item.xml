@@ -89,9 +89,9 @@
                 android:layout_marginEnd="@dimen/spacing_medium"
                 android:gravity="center_vertical"
                 android:text="@{sellerBasic.online ? @string/seller_status_online : @string/seller_status_offline}"
-                android:textColor="?attr/colorSecondary"
                 android:textAppearance="?attr/textAppearanceOverline"
-                tools:text="@string/seller_status_online"/>
+                tools:text="@string/seller_status_online"
+                tools:textColor="?attr/colorSecondary"/>
 
             <RatingBar
                 style="@style/Widget.Foobar.RatingBar"
@@ -117,7 +117,7 @@
                 android:layout_alignBottom="@id/rating_bar"
                 android:layout_marginStart="@dimen/spacing_xmedium"
                 android:gravity="center_vertical"
-                android:text="@{@string/seller_data_format_rating(sellerBasic.rating)}"
+                android:text="@{SellerBasicKt.getNormalizedRatingString(sellerBasic)}"
                 android:textColor="@color/material_on_surface_emphasis_medium"
                 android:textAppearance="?attr/textAppearanceCaption"
                 tools:text="4.9"/>

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.navArgs
 import com.foobarust.android.R
@@ -25,6 +26,7 @@ class SellerSectionFragment : FullScreenDialogFragment() {
 
     private var binding: FragmentSellerSectionBinding by AutoClearedValue(this)
     private lateinit var viewModel: SellerSectionViewModel
+    private lateinit var navController: NavController
     private val navArgs: SellerSectionFragmentArgs by navArgs()
 
     override fun onCreateView(
@@ -52,6 +54,15 @@ class SellerSectionFragment : FullScreenDialogFragment() {
         viewModel.navigateToSellerDetail.observe(viewLifecycleOwner) {
             findNavController(R.id.sellerSectionFragment)?.navigate(
                 SellerSectionFragmentDirections.actionSellerSectionFragmentToSellerDetailFragment(
+                    sellerId = it
+                )
+            )
+        }
+
+        // Navigate to seller misc
+        viewModel.navigateToSellerMisc.observe(viewLifecycleOwner) {
+            findNavController(R.id.sellerSectionFragment)?.navigate(
+                SellerSectionFragmentDirections.actionSellerSectionFragmentToSellerMiscFragment(
                     sellerId = it
                 )
             )
@@ -89,8 +100,7 @@ class SellerSectionFragment : FullScreenDialogFragment() {
 
     private fun setupNavigation() {
         val navHostFragment = childFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
-        val navController = navHostFragment.navController
-
+        navController = navHostFragment.navController
         navController.setGraph(R.navigation.navigation_seller_section)
 
         // Cannot initialize ViewModel using navGraphViewModels() as findNavController() is broken at the moment
@@ -99,15 +109,16 @@ class SellerSectionFragment : FullScreenDialogFragment() {
             navController = navController
         )
 
+        // Record current destination
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
-            // Keep track of current fragment destination
-            viewModel.currentDestinationId = destination.id
+            viewModel.onUpdateCurrentDestination(destination.id)
         }
     }
 
     private fun handleBackPressed() {
         // Dismiss the dialog when back pressing in start destination
-        if (viewModel.currentDestinationId == R.id.sellerSectionDetailFragment) {
+        val currentDestination = navController.currentDestination?.id
+        if (currentDestination == R.id.sellerSectionDetailFragment) {
             dismiss()
         } else {
             viewModel.onBackPressed()

@@ -5,12 +5,15 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.workDataOf
 import com.foobarust.android.R
-import com.foobarust.android.cart.CartTimeoutProperty
 import com.foobarust.android.common.BaseViewModel
 import com.foobarust.android.utils.SingleLiveEvent
+import com.foobarust.android.works.UploadUserPhotoWorker
 import com.foobarust.domain.models.cart.UserCart
-import com.foobarust.domain.models.user.UserDetail
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.states.getSuccessDataOr
 import com.foobarust.domain.usecases.cart.CheckCartTimeOutUseCase
@@ -18,8 +21,6 @@ import com.foobarust.domain.usecases.cart.ClearUserCartUseCase
 import com.foobarust.domain.usecases.cart.GetUserCartUseCase
 import com.foobarust.domain.usecases.onboarding.GetOnboardingCompletedUseCase
 import com.foobarust.domain.usecases.onboarding.UpdateOnboardingCompletedUseCase
-import com.foobarust.domain.usecases.user.GetUserDetailUseCase
-import com.foobarust.domain.usecases.user.UpdateUserPhotoUseCase
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -30,28 +31,15 @@ import kotlinx.coroutines.launch
 
 class MainViewModel @ViewModelInject constructor(
     @ApplicationContext private val context: Context,
-    getUserDetailUseCase: GetUserDetailUseCase,
+    private val workManager: WorkManager,
     getUserCartUseCase: GetUserCartUseCase,
-    private val updateUserPhotoUseCase: UpdateUserPhotoUseCase,
     private val checkCartTimeOutUseCase: CheckCartTimeOutUseCase,
     private val clearUserCartUseCase: ClearUserCartUseCase,
     private val getOnboardingCompletedUseCase: GetOnboardingCompletedUseCase,
-    private val updateOnboardingCompletedUseCase: UpdateOnboardingCompletedUseCase
+    private val updateOnboardingCompletedUseCase: UpdateOnboardingCompletedUseCase,
 ) : BaseViewModel() {
 
-    val userDetail: SharedFlow<Resource<UserDetail>> = getUserDetailUseCase(Unit)
-        .shareIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
-            replay = 1
-        )
-
-    val userCart: SharedFlow<Resource<UserCart?>> = getUserCartUseCase(Unit)
-        .shareIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
-            replay = 1
-        )
+    private val userCart: Flow<Resource<UserCart?>> = getUserCartUseCase(Unit)
 
     val userCartLiveData: LiveData<UserCart?> = userCart
         .map { it.getSuccessDataOr(null) }
@@ -79,10 +67,9 @@ class MainViewModel @ViewModelInject constructor(
         .distinctUntilChanged()
         .asLiveData(viewModelScope.coroutineContext)
 
-
-    private val _scrollToTop = SingleLiveEvent<Unit>()
-    val scrollToTop: LiveData<Unit>
-        get() = _scrollToTop
+    // Scroll-to-top trigger to be consumed by top-level destinations
+    private val _scrollToTop = MutableSharedFlow<Int>()
+    val scrollToTop: SharedFlow<Int> = _scrollToTop.asSharedFlow()
 
     private val _showSnackBarMessage = SingleLiveEvent<String>()
     val showSnackBarMessage: LiveData<String>
@@ -102,6 +89,8 @@ class MainViewModel @ViewModelInject constructor(
 
     private var hasCheckedCartTimeout: Boolean = false
 
+    private var currentDestinationId: Int = 0
+
     init {
         showOnboardingTutorial()
         fetchUserCart()
@@ -112,7 +101,6 @@ class MainViewModel @ViewModelInject constructor(
             when (result) {
                 is Resource.Success -> {
                     val userCart = result.data
-                    //_userCart.value = userCart
                     if (!hasCheckedCartTimeout && userCart != null) {
                         checkUserCartTimeout(userCart = userCart)
                     }
@@ -123,24 +111,33 @@ class MainViewModel @ViewModelInject constructor(
         }
     }
 
-    fun onCurrentNavGraphChanged(destinationId: Int) {
-        _currentNavGraphId.value = destinationId
+    fun onCurrentNavGraphChanged(graphId: Int) {
+        _currentNavGraphId.value = graphId
     }
 
-    fun onTabScrollToTop() {
-        _scrollToTop.value = Unit
+    fun onCurrentDestinationChanged(destinationId: Int) {
+        currentDestinationId = destinationId
     }
 
-    fun onUpdateUserPhoto(uriString: String) = viewModelScope.launch {
-        updateUserPhotoUseCase(uriString).collect {
-            when (it) {
-                is Resource.Success -> _showSnackBarMessage.value = context.getString(
-                        R.string.profile_user_photo_uploaded_message
-                    )
-                is Resource.Error -> showToastMessage(it.message)
-                is Resource.Loading -> Unit
-            }
-        }
+    fun onScrollToTop() = viewModelScope.launch {
+        _scrollToTop.emit(currentDestinationId)
+    }
+
+    fun onUploadUserPhoto(uri: String, extension: String) {
+        val inputData = workDataOf(
+            UploadUserPhotoWorker.USER_PHOTO_URL to uri,
+            UploadUserPhotoWorker.USER_PHOTO_EXTENSION to extension
+        )
+
+        val uploadRequest = OneTimeWorkRequestBuilder<UploadUserPhotoWorker>()
+            .setInputData(inputData)
+            .build()
+
+        workManager.beginUniqueWork(
+            UploadUserPhotoWorker.WORK_NAME,
+            ExistingWorkPolicy.REPLACE,
+            uploadRequest
+        ).enqueue()
     }
 
     fun onClearUsersCart() = viewModelScope.launch {
@@ -164,6 +161,10 @@ class MainViewModel @ViewModelInject constructor(
 
     fun onLaunchCustomTab(url: String) {
         _launchCustomTab.value = url
+    }
+
+    suspend fun getCurrentUserCart(): UserCart? {
+        return (userCart.first { it is Resource.Success } as Resource.Success).data
     }
 
     private fun showOnboardingTutorial() = viewModelScope.launch {

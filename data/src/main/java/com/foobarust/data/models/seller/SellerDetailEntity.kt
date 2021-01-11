@@ -1,6 +1,7 @@
 package com.foobarust.data.models.seller
 
 import com.foobarust.data.common.Constants.SELLER_BY_USER_ID
+import com.foobarust.data.common.Constants.SELLER_DELIVERY_COST
 import com.foobarust.data.common.Constants.SELLER_DESCRIPTION_FIELD
 import com.foobarust.data.common.Constants.SELLER_DESCRIPTION_ZH_FIELD
 import com.foobarust.data.common.Constants.SELLER_ID_FIELD
@@ -97,5 +98,9 @@ data class SellerDetailEntity(
 
     @JvmField
     @PropertyName(SELLER_BY_USER_ID)
-    val byUserId: String? = null
+    val byUserId: String? = null,
+
+    @JvmField
+    @PropertyName(SELLER_DELIVERY_COST)
+    val deliveryCost: Double? = null
 )

@@ -52,7 +52,7 @@ class SellerSectionsBasicPagingSource(
             }
 
             if (!currentPageData.isNetworkData()) {
-                return LoadResult.Error(Throwable())
+                throw Exception("Network error.")
             }
 
             LoadResult.Page(

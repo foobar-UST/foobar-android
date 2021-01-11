@@ -84,7 +84,8 @@ class SellerSectionDetailFragment : Fragment(),
     }
 
     override fun onSellerInfoItemClicked(sellerId: String) {
-        sectionViewModel.onNavigateToSellerDetail()
+        // Show ship from location map route
+        sectionViewModel.onNavigateToSellerMisc()
     }
 
     override fun onParticipantItemClicked(userId: String) {

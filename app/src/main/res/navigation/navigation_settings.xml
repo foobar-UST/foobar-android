@@ -20,25 +20,13 @@
         tools:layout="@layout/fragment_settings">
         <action
             android:id="@+id/action_settingsFragment_to_licenseFragment"
-            app:destination="@id/licenseFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+            app:destination="@id/licenseFragment" />
         <action
             android:id="@+id/action_settingsFragment_to_notificationFragment"
-            app:destination="@id/notificationFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+            app:destination="@id/notificationFragment" />
         <action
             android:id="@+id/action_settingsFragment_to_favoriteFragment"
-            app:destination="@id/favoriteFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+            app:destination="@id/favoriteFragment" />
         <action
             android:id="@+id/action_settingsFragment_to_tutorialFragment"
             app:destination="@id/tutorialFragment" />
@@ -47,18 +35,7 @@
             app:destination="@id/signInActivity" />
         <action
             android:id="@+id/action_settingsFragment_to_profileFragment"
-            app:destination="@id/profileFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
-        <action
-            android:id="@+id/action_settingsFragment_to_orderHistoryFragment"
-            app:destination="@id/orderHistoryFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            app:destination="@id/profileFragment" />
     </fragment>
 
     <!-- NotificationFragment -->
@@ -79,16 +56,10 @@
         android:name="com.foobarust.android.settings.FavoriteFragment"
         tools:layout="@layout/fragment_favorite"/>
 
-    <!-- OrderHistoryFragment -->
-    <dialog
-        android:id="@+id/orderHistoryFragment"
-        android:name="com.foobarust.android.order.OrderHistoryFragment"
-        tools:layout="@layout/fragment_order_history"/>
-
     <!-- ProfileFragment -->
     <dialog
         android:id="@+id/profileFragment"
-        android:name="com.foobarust.android.profile.ProfileFragment"
+        android:name="com.foobarust.android.settings.ProfileFragment"
         tools:layout="@layout/fragment_profile">
         <action
             android:id="@+id/action_profileFragment_to_textInputDialog"

@@ -8,7 +8,7 @@
         <variable
             name="viewModel"
             type="com.foobarust.android.sellermisc.SellerMiscViewModel" />
-        <import type="com.foobarust.android.states.UiFetchState" />
+        <import type="com.foobarust.android.states.UiState" />
         <import type="com.foobarust.domain.models.seller.SellerDetailKt" />
         <import type="com.foobarust.android.utils.BindingConverters" />
     </data>
@@ -92,13 +92,13 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/spacing_xmedium"
-                    android:text="@{@string/seller_data_format_rating(viewModel.sellerDetail.rating)}"
+                    android:text="@{viewModel.sellerDetail != null ? SellerDetailKt.getNormalizedRatingString(viewModel.sellerDetail) : ``}"
                     android:textColor="?attr/colorOnPrimarySurface"
                     android:textAppearance="?attr/textAppearanceCaption"
                     app:layout_constraintTop_toTopOf="@id/rating_bar"
                     app:layout_constraintBottom_toBottomOf="@id/rating_bar"
                     app:layout_constraintStart_toEndOf="@id/rating_bar"
-                    tools:text="4.9 (10)"/>
+                    tools:text="4.9"/>
 
                 <TextView
                     android:id="@+id/phone_num_text_view"
@@ -185,7 +185,7 @@
                     android:layout_marginTop="@dimen/spacing_xmedium"
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
-                    android:text="Add to Favorite"
+                    android:text="@string/seller_misc_button_add_to_favorite"
                     android:textAppearance="?attr/textAppearanceBody2"
                     app:icon="@drawable/ic_add"
                     app:iconSize="16dp"
@@ -199,6 +199,7 @@
                     android:layout_marginTop="@dimen/spacing_large"
                     android:text="@string/seller_misc_title_description"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
+                    app:goneIf="@{viewModel.sellerDetail.description == null || viewModel.sellerDetail.description.empty}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/favorite_button"/>
@@ -215,6 +216,7 @@
                     android:textColor="@color/material_on_surface_emphasis_medium"
                     android:lineSpacingMultiplier="1.2"
                     app:layout_constraintTop_toBottomOf="@id/description_subtitle_text_view"
+                    app:goneIf="@{viewModel.sellerDetail.description == null || viewModel.sellerDetail.description.empty}"
                     tools:text="Starbucks offers a range of exceptional products that customers enjoy in our stores, at home, and on the go. Coffee: More than 30 blends and single-origin premium coffees. Handcrafted Beverages: Fresh-brewed coffee, hot and iced espresso beverages, Frappuccino® coffee and non-coffee blended beverages, Starbucks Refreshers® beverages, smoothies and teas. Merchandise: Coffee- and tea-brewing equipment, Verismo® System by Starbucks, mugs and accessories, packaged goods, books and gifts. Fresh Food: Baked pastries, sandwiches, salads, salad and grain bowls, oatmeal, yogurt parfaits and fruit cups.\n\n星巴克提供了一系列出色的產品，客戶可以在我們的商店，家中和旅途中享用。咖啡：30多種混合咖啡和單源優質咖啡。手工飲料：現煮咖啡，冷熱特濃咖啡，星冰樂®咖啡和非咖啡混合飲料，星巴克Refreshers®飲料，冰沙和茶。商品：咖啡和茶釀造設備，星巴克的Verismo®System，杯子和配件，包裝的商品，書籍和禮品。新鮮食品：烘焙糕點，三明治，色拉，色拉和穀物碗，燕麥片，酸奶凍糕和水果杯。"/>
 
                 <!--

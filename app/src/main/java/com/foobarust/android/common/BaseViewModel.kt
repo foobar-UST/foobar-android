@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
-import com.foobarust.android.states.UiFetchState
+import com.foobarust.android.states.UiState
 import com.foobarust.android.utils.SingleLiveEvent
 
 abstract class BaseViewModel : ViewModel() {
@@ -15,10 +15,10 @@ abstract class BaseViewModel : ViewModel() {
         get() = _toastMessage
 
     // Observable for controlling layouts including progress bar and network error layout
-    private val _uiFetchState = MutableLiveData<UiFetchState>()
-    val uiFetchState: LiveData<UiFetchState>
-        get() = _uiFetchState.map {
-            if (it is UiFetchState.Error) showToastMessage(it.message)
+    private val _uiState = MutableLiveData<UiState>()
+    val uiState: LiveData<UiState>
+        get() = _uiState.map {
+            if (it is UiState.Error) showToastMessage(it.message)
             it
         }
 
@@ -26,7 +26,7 @@ abstract class BaseViewModel : ViewModel() {
         _toastMessage.value = message
     }
 
-    fun setUiFetchState(uiFetchState: UiFetchState) {
-        _uiFetchState.value = uiFetchState
+    fun setUiState(uiState: UiState) {
+        _uiState.value = uiState
     }
 }

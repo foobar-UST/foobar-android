@@ -8,7 +8,7 @@
     <data>
         <variable
             name="warningModel"
-            type="com.foobarust.android.profile.ProfileListModel.ProfileWarningModel" />
+            type="com.foobarust.android.settings.ProfileListModel.ProfileWarningModel" />
     </data>
 
     <TextView

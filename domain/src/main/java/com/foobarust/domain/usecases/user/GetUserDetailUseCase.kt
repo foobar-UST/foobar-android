@@ -15,16 +15,16 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.ProducerScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Created by kevin on 9/17/20
  */
 
+@Singleton
 class GetUserDetailUseCase @Inject constructor(
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository,
@@ -34,41 +34,47 @@ class GetUserDetailUseCase @Inject constructor(
 
     private var observeUserDetailJob: Job? = null
 
-    override fun execute(parameters: Unit): Flow<Resource<UserDetail>> = channelFlow {
+    // Share result to multiple consumers
+    private val sharedResult: SharedFlow<Resource<UserDetail>> = channelFlow<Resource<UserDetail>> {
         authRepository.getAuthProfileObservable().collect { result ->
+            println("[GetUserDetailUseCase]: AuthProfile collected.")
             stopObserveUserDetail()
-
             if (result is Resource.Success) {
                 val authProfile = result.data
                 if (authProfile.isSignedIn()) {
-                    println("[GetUserDetailUseCase]: observing auth: signed in")
+                    println("[GetUserDetailUseCase]: User is signed in. Offer UserDetail.")
                     startObserveUserDetail(userId = authProfile.id!!, authProfile = authProfile)
                 } else {
-                    println("[GetUserDetailUseCase]: observing auth: signed out")
+                    println("[GetUserDetailUseCase]: User is signed out. Offer AuthProfile.")
                     channel.offer(Resource.Success(authProfile.asUserDetail()))
                 }
             }
         }
-    }
+    }.shareIn(
+        scope = externalScope,
+        started = SharingStarted.Eagerly,       // Produce immediately
+        replay = 1
+    )
+
+    override fun execute(parameters: Unit): Flow<Resource<UserDetail>> = sharedResult
 
     private fun ProducerScope<Resource<UserDetail>>.startObserveUserDetail(
         userId: String,
         authProfile: AuthProfile
     ) {
-        println("[GetUserDetailUseCase]: startObserveUserDetail")
         observeUserDetailJob = externalScope.launch(coroutineDispatcher) {
             userRepository.getUserDetailObservable(userId).collect {
                 when (it) {
                     is Resource.Success -> {
-                        // Offer user detail data from firestore
-                        println("[GetUserDetailUseCase]: using UserDetail")
+                        // Offer user detail data from Firestore
+                        println("[GetUserDetailUseCase]: Offered UserDetail.")
                         channel.offer(Resource.Success(it.data))
                     }
                     is Resource.Error -> {
                         // Offer auth profile data if there is network error or the user detail
                         // document is not created yet. The snapshot observable will still keep alive
                         // when there is no network, it will only be detached once the user is signed out.
-                        println("[GetUserDetailUseCase]: using AuthProfile")
+                        println("[GetUserDetailUseCase]: Offered AuthProfile.")
                         channel.offer(Resource.Success(authProfile.asUserDetail()))
                     }
                     is Resource.Loading -> Unit
@@ -78,7 +84,7 @@ class GetUserDetailUseCase @Inject constructor(
     }
 
     private fun stopObserveUserDetail() {
-        println("[GetUserDetailUseCase]: stopObserveUserDetail")
+        println("[GetUserDetailUseCase]: Stop observing UserDetail form db.")
         observeUserDetailJob.cancelIfActive()
     }
 }

@@ -10,7 +10,7 @@
         <item name="chipIconTint">@color/material_on_surface_emphasis_medium</item>
     </style>
 
-    <style name="Widget.Foobar.RadioButton" parent="Widget.MaterialComponents.CompoundButton.CheckBox">
+    <style name="Widget.Foobar.RadioButton" parent="Widget.AppCompat.CompoundButton.RadioButton">
         <item name="android:paddingStart">@dimen/spacing_large</item>
         <item name="android:paddingEnd">@dimen/spacing_large</item>
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>

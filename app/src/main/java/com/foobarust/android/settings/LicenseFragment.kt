@@ -18,6 +18,10 @@ class LicenseFragment : FullScreenDialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentLicenseBinding.inflate(inflater, container, false)
+
+        // Dismiss dialog
+        binding.toolbar.setNavigationOnClickListener { dismiss() }
+
         return binding.root
     }
 

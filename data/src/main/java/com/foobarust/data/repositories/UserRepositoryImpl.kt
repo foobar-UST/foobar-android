@@ -2,6 +2,7 @@ package com.foobarust.data.repositories
 
 import android.content.SharedPreferences
 import android.net.Uri
+import android.util.Log
 import androidx.core.content.edit
 import com.foobarust.data.common.Constants.USERS_COLLECTION
 import com.foobarust.data.common.Constants.USERS_PUBLIC_COLLECTION
@@ -54,9 +55,11 @@ class UserRepositoryImpl @Inject constructor(
             .await()
     }
 
-    override fun updateUserPhoto(userId: String, uriString: String): Flow<Resource<Unit>> {
-        val photoFile = Uri.parse(uriString)
-        val photoRef = storageReference.child("$USER_PHOTOS_STORAGE_FOLDER/$userId")
+    override fun uploadUserPhoto(userId: String, uri: String, extension: String): Flow<Resource<Unit>> {
+        val photoFile = Uri.parse(uri)
+        val photoFileName = userId + extension
+        Log.d("UserRepositoryImpl", "photo: $photoFileName")
+        val photoRef = storageReference.child("$USER_PHOTOS_STORAGE_FOLDER/$photoFileName")
 
         return photoRef.putFileFlow(photoFile)
     }

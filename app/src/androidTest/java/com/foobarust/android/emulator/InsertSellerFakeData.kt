@@ -123,7 +123,8 @@ private data class SellerSerialized(
     val online: Boolean,
     val notice: String? = null,
     val opening_hours: String,
-    val tags: List<String>
+    val tags: List<String>,
+    val deliveryCost: Double? = null
 ) {
     fun toSellerDetailEntity(): SellerDetailEntity {
         val location = SellerLocationEntity(

@@ -38,7 +38,7 @@ class SellerBasicsPagingSource(
             }
 
             if (!currentPageData.isNetworkData()) {
-                return LoadResult.Error(Throwable("Network error."))
+                throw Exception("Network error.")
             }
 
             LoadResult.Page(

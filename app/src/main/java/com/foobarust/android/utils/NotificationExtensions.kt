@@ -8,6 +8,7 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Build
 import androidx.annotation.DrawableRes
+import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.*
 import com.foobarust.android.R
 import kotlin.reflect.KClass
@@ -45,15 +46,15 @@ fun NotificationManager.generateNotificationId(): Int {
 }
 
 fun NotificationManager.sendNotification(
+    context: Context,
+    intentActivity: KClass<*>,
     channelId: String,
     title: String,
     messageBody: String,
     priority: Int = PRIORITY_DEFAULT,
     autoCancel: Boolean = true,
     @DrawableRes largeIconRes: Int? = null,
-    bigPictureStyle: Boolean = false,
-    context: Context,
-    intentActivity: KClass<*>
+    bigPictureStyle: Boolean = false
 ) {
     val notificationId = generateNotificationId()
     val contentIntent = Intent(context, intentActivity.java)
@@ -96,14 +97,17 @@ fun NotificationManager.sendNotification(
     notify(notificationId, builder.build())
 }
 
+/**
+ * Return the Notification builder of a progress notification
+ */
 fun NotificationManager.buildProgressNotification(
+    context: Context,
+    intentActivity: KClass<*>,
     channelId: String,
     title: String,
     messageBody: String,
     priority: Int = PRIORITY_DEFAULT,
-    autoCancel: Boolean = true,
-    context: Context,
-    intentActivity: KClass<*>
+    autoCancel: Boolean = true
 ): ProgressNotification {
     val notificationId = generateNotificationId()
     val contentIntent = Intent(context, intentActivity.java)
@@ -119,21 +123,30 @@ fun NotificationManager.buildProgressNotification(
         context,
         channelId
     )
-        .setSmallIcon(R.drawable.ic_restaurant)         // TODO: Change small icon
+        .setSmallIcon(R.drawable.ic_restaurant)                     // TODO: Change small icon
         .setContentTitle(title)
         .setContentText(messageBody)
         .setContentIntent(contentPendingIntent)
         .setPriority(priority)
         .setAutoCancel(autoCancel)
-        .setProgress(MAX_PROGRESS, MIN_PROGRESS, false)
+        .setProgress(MAX_PROGRESS, MIN_PROGRESS, false) // Initialize progress
 
     return ProgressNotification(
-        id = notificationId,
+        notificationId = notificationId,
         builder = builder
     )
 }
 
+fun NotificationCompat.Builder.setCurrentProgress(progress: Double) {
+    setProgress(MAX_PROGRESS, progress.toInt(), false)
+}
+
+fun NotificationCompat.Builder.clearProgress(resultMessage: String) {
+    setContentText(resultMessage)
+    setProgress(MIN_PROGRESS, MIN_PROGRESS, false)
+}
+
 data class ProgressNotification(
-    val id: Int,
+    val notificationId: Int,
     val builder: Builder
 )

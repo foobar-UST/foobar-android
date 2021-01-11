@@ -8,9 +8,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import javax.inject.Singleton
 
-@Module(includes = [
-    PersistentModule::class
-])
+@Module(includes = [PersistentModule::class])
 @InstallIn(ApplicationComponent::class)
 abstract class CartModule {
 

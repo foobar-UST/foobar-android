@@ -38,6 +38,7 @@ class InsertPromotionFakeData {
 
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
+
     @Inject
     lateinit var firestore: FirebaseFirestore
 
@@ -55,7 +56,7 @@ class InsertPromotionFakeData {
 
         val advertiseBasicSerializedList: List<AdvertiseBasicSerialized> = Json.decodeFromString(jsonString)
 
-        advertiseBasicSerializedList.map { it.toAdvertiseBasic() }
+        advertiseBasicSerializedList.map { it.toAdvertiseBasicEntity() }
             .forEach {
                 firestore.collection(ADVERTISES_BASIC_COLLECTION).document(it.id!!)
                     .set(it)
@@ -74,7 +75,7 @@ class InsertPromotionFakeData {
 
         val suggestBasicSerializedList: List<SuggestBasicSerialized> = Json.decodeFromString(jsonString)
 
-        suggestBasicSerializedList.map { it.toSuggestBasic() }
+        suggestBasicSerializedList.map { it.toSuggestBasicEntity() }
             .forEach {
                 firestore.collection(USERS_COLLECTION).document(firebaseAuth.currentUser!!.uid)
                     .collection(SUGGESTS_BASIC_COLLECTION).document(it.id!!)
@@ -93,7 +94,7 @@ private data class AdvertiseBasicSerialized(
     val url: String,
     val image_url: String
 ) {
-    fun toAdvertiseBasic(): AdvertiseBasicEntity {
+    fun toAdvertiseBasicEntity(): AdvertiseBasicEntity {
         return AdvertiseBasicEntity(
             id = id,
             url = url,
@@ -110,7 +111,7 @@ private data class SuggestBasicSerialized(
     val seller_name: String,
     val image_url: String
 ) {
-    fun toSuggestBasic(): SuggestBasicEntity {
+    fun toSuggestBasicEntity(): SuggestBasicEntity {
         return SuggestBasicEntity(
             id = id,
             itemId = item_id,

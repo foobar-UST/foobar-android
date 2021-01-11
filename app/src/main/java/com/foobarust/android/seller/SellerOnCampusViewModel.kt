@@ -6,6 +6,7 @@ import androidx.lifecycle.*
 import androidx.paging.*
 import com.foobarust.android.R
 import com.foobarust.android.common.BaseViewModel
+import com.foobarust.android.common.OnSwipeRefreshListener
 import com.foobarust.android.promotion.PromotionListModel
 import com.foobarust.android.utils.asUiFetchState
 import com.foobarust.domain.models.seller.SellerType.*
@@ -20,16 +21,13 @@ class SellerOnCampusViewModel @ViewModelInject constructor(
     @ApplicationContext private val context: Context,
     getAdvertiseBasicsUseCase: GetAdvertiseBasicsUseCase,
     getSellersUseCase: GetSellersUseCase,
-) : BaseViewModel() {
+) : BaseViewModel(), OnSwipeRefreshListener {
 
-    private val _startFetching = ConflatedBroadcastChannel(Unit)
-    private val _reloadPromotion = ConflatedBroadcastChannel<Unit>()
+    private val _fetchOnCampus = ConflatedBroadcastChannel(Unit)
+    private val _fetchPromotion = ConflatedBroadcastChannel(Unit)
 
-    val promotionListModels: LiveData<List<PromotionListModel>> = flowOf(
-        _startFetching.asFlow(),
-        _reloadPromotion.asFlow()
-    )
-        .flattenMerge()
+    val promotionListModels: LiveData<List<PromotionListModel>> = _fetchPromotion
+        .asFlow()
         .flatMapLatest { getAdvertiseBasicsUseCase(Unit) }
         .map { result ->
             if (result is Resource.Success && result.data.isNotEmpty()) {
@@ -38,9 +36,12 @@ class SellerOnCampusViewModel @ViewModelInject constructor(
                 emptyList()
             }
         }
+        .filter { it.isNotEmpty() }
         .asLiveData(viewModelScope.coroutineContext)
 
-    val onCampusListModels: Flow<PagingData<SellerOnCampusListModel>> = _startFetching.asFlow()
+
+    val onCampusListModels: Flow<PagingData<SellerOnCampusListModel>> = _fetchOnCampus
+        .asFlow()
         .flatMapLatest { getSellersUseCase(ON_CAMPUS) }
         .map { pagingData ->
             pagingData.map { SellerOnCampusListModel.SellerOnCampusItemModel(it) }
@@ -59,11 +60,26 @@ class SellerOnCampusViewModel @ViewModelInject constructor(
         }
         .cachedIn(viewModelScope)
 
+    private val _isSwipeRefreshing = MutableLiveData(false)
+    val isSwipeRefreshing: LiveData<Boolean>
+        get() = _isSwipeRefreshing
+
+    override fun onSwipeRefresh() {
+        _isSwipeRefreshing.value = true
+    }
+
     fun onReloadPromotion() {
-        _reloadPromotion.offer(Unit)
+        _fetchPromotion.offer(Unit)
     }
 
     fun onPagingLoadStateChanged(loadState: LoadState) {
-        setUiFetchState(loadState.asUiFetchState())
+        if (_isSwipeRefreshing.value == true && loadState is LoadState.Loading) {
+            return
+        }
+        if (loadState is LoadState.NotLoading || loadState is LoadState.Error) {
+            _isSwipeRefreshing.value = false
+        }
+
+        setUiState(loadState.asUiFetchState())
     }
 }

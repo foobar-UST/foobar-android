@@ -15,6 +15,8 @@ import com.foobarust.android.seller.SellerOnCampusListModel.SellerOnCampusItemMo
 import com.foobarust.android.seller.SellerOnCampusListModel.SellerOnCampusSubtitleModel
 import com.foobarust.android.seller.SellerOnCampusViewHolder.SellerOnCampusItemViewHolder
 import com.foobarust.android.seller.SellerOnCampusViewHolder.SellerOnCampusSubtitleViewHolder
+import com.foobarust.android.utils.getColorCompat
+import com.foobarust.android.utils.themeColor
 import com.foobarust.domain.models.seller.SellerBasic
 
 /**
@@ -44,8 +46,9 @@ class SellerOnCampusAdapter(
     override fun onBindViewHolder(holder: SellerOnCampusViewHolder, position: Int) {
         when (holder) {
             is SellerOnCampusItemViewHolder -> holder.binding.run {
+                val currentItem = (getItem(position) as? SellerOnCampusItemModel)?.sellerBasic
                 // Setup binding
-                sellerBasic = (getItem(position) as? SellerOnCampusItemModel)?.sellerBasic
+                sellerBasic = currentItem
                 listener = this@SellerOnCampusAdapter.listener
 
                 // Setup photo layout round corner
@@ -61,19 +64,23 @@ class SellerOnCampusAdapter(
                 }
 
                 // Set info
-                sellerBasic?.let {
+                currentItem?.let {
                     val context = infoTextView.context
-                    /*
-                    val infoItemsList = buildList {
-                        add(context.getString(R.string.seller_data_format_min_spend_info, it.minSpend))
-                        addAll()
-                    }
-                     */
                     infoTextView.text = context.getString(
                         R.string.seller_item_info,
                         it.tags.joinToString(separator = " · ")
                     )
                 }
+
+                // Set status text color
+                val context = statusTextView.context
+                val statusColor = if (currentItem?.online == true) {
+                    context.themeColor(R.attr.colorSecondary)
+                } else {
+                    context.getColorCompat(R.color.material_on_surface_disabled)
+                }
+
+                statusTextView.setTextColor(statusColor)
 
                 executePendingBindings()
             }

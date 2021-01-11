@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.common.BaseViewModel
-import com.foobarust.android.states.UiFetchState
+import com.foobarust.android.states.UiState
 import com.foobarust.domain.models.seller.SellerDetail
 import com.foobarust.domain.models.seller.SellerType
 import com.foobarust.domain.states.Resource
@@ -59,13 +59,13 @@ class SellerMiscViewModel @ViewModelInject constructor(
 
 
     fun onFetchSellerDetail(sellerId: String) = viewModelScope.launch {
-        setUiFetchState(UiFetchState.Loading)
+        setUiState(UiState.Loading)
         when (val result = getSellerDetailUseCase(sellerId)) {
             is Resource.Success -> {
                 _sellerDetail.value = result.data
-                setUiFetchState(UiFetchState.Success)
+                setUiState(UiState.Success)
             }
-            is Resource.Error -> setUiFetchState(UiFetchState.Error(result.message))
+            is Resource.Error -> setUiState(UiState.Error(result.message))
         }
     }
 }

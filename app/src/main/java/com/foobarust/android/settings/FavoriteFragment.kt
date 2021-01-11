@@ -18,6 +18,10 @@ class FavoriteFragment : FullScreenDialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentFavoriteBinding.inflate(inflater, container, false)
+
+        // Dismiss dialog
+        binding.toolbar.setNavigationOnClickListener { dismiss() }
+
         return binding.root
     }
 }

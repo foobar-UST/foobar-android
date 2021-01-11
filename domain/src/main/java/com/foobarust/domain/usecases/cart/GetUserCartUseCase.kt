@@ -13,12 +13,12 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.ProducerScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class GetUserCartUseCase @Inject constructor(
     private val authRepository: AuthRepository,
     private val cartRepository: CartRepository,
@@ -28,29 +28,42 @@ class GetUserCartUseCase @Inject constructor(
 
     private var observeUserCartJob: Job? = null
 
-    override fun execute(parameters: Unit): Flow<Resource<UserCart?>> = channelFlow {
+    // Share result to multiple consumers
+    private val sharedResult: SharedFlow<Resource<UserCart?>> = channelFlow<Resource<UserCart?>> {
         authRepository.getAuthProfileObservable().collect { result ->
+            println("[GetUserCartUseCase]: AuthProfile collected.")
             stopObserveUserCart()
             if (result is Resource.Success) {
                 if (result.data.isSignedIn()) {
-                    println("[GetUserDetailUseCase]: observing auth: signed in")
+                    println("[GetUserCartUseCase]: User is signed in. Offer UserCart.")
                     startObserveUserCart(userId = result.data.id!!)
                 } else {
                     // Return null when the user is not signed in
-                    println("[GetUserDetailUseCase]: observing auth: signed out, user cart is null")
+                    println("[GetUserCartUseCase]: User is signed out. Offer null.")
                     channel.offer(Resource.Success(null))
                 }
             }
         }
-    }
+    }.shareIn(
+        scope = externalScope,
+        started = SharingStarted.WhileSubscribed(),
+        replay = 1
+    )
+
+    override fun execute(parameters: Unit): Flow<Resource<UserCart?>> = sharedResult
 
     private fun ProducerScope<Resource<UserCart>>.startObserveUserCart(userId: String) {
-        println("[GetUserCartUseCase]: startObserveUserCart")
         observeUserCartJob = externalScope.launch(coroutineDispatcher) {
             cartRepository.getUserCartObservable(userId).collect {
                 when (it) {
-                    is Resource.Success -> channel.offer(Resource.Success(it.data))
-                    is Resource.Error -> channel.offer(Resource.Error(it.message))
+                    is Resource.Success -> {
+                        println("[GetUserCartUseCase]: Offered UserCart.")
+                        channel.offer(Resource.Success(it.data))
+                    }
+                    is Resource.Error -> {
+                        println("[GetUserCartUseCase]: Error getting UserCart: ${it.message}.")
+                        channel.offer(Resource.Error(it.message))
+                    }
                     is Resource.Loading -> Unit
                 }
             }
@@ -58,7 +71,7 @@ class GetUserCartUseCase @Inject constructor(
     }
 
     private fun stopObserveUserCart() {
-        println("[GetUserCartUseCase]: stopObserveUserCart")
+        println("[GetUserCartUseCase]: Stop observing UserCart from db.")
         observeUserCartJob.cancelIfActive()
     }
 }

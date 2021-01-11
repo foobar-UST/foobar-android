@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
@@ -13,10 +12,8 @@ import com.foobarust.android.NavigationSellerDirections
 import com.foobarust.android.R
 import com.foobarust.android.common.FullScreenDialogFragment
 import com.foobarust.android.databinding.FragmentSellerDetailBinding
-import com.foobarust.android.main.MainViewModel
 import com.foobarust.android.utils.*
 import com.foobarust.domain.models.seller.getNormalizedTitle
-import com.foobarust.domain.states.getSuccessDataOr
 import com.google.android.material.chip.Chip
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
@@ -33,22 +30,13 @@ import kotlinx.coroutines.launch
 class SellerDetailFragment : FullScreenDialogFragment() {
 
     private var binding: FragmentSellerDetailBinding by AutoClearedValue(this)
-    private val mainViewModel: MainViewModel by activityViewModels()
     private val sellerDetailViewModel: SellerDetailViewModel by viewModels()
     private val args: SellerDetailFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Receive user cart
-        lifecycleScope.launchWhenCreated {
-            mainViewModel.userCart.collect {
-                sellerDetailViewModel.onShowUserCartBottomBar(
-                    userCart = it.getSuccessDataOr(null)
-                )
-            }
-        }
         // Receive seller id argument
-        sellerDetailViewModel.onFetchSellerDetail(sellerId = args.sellerId)
+        sellerDetailViewModel.onFetchSellerDetailWithCatalogs(sellerId = args.sellerId)
     }
 
     override fun onCreateView(
@@ -150,7 +138,7 @@ class SellerDetailFragment : FullScreenDialogFragment() {
 
         binding.cartBottomBar.cartBottomBarCardView.setOnClickListener {
             findNavController(R.id.sellerDetailFragment)?.navigate(
-                NavigationSellerDirections.actionGlobalCartFragment()
+                NavigationSellerDirections.actionGlobalCheckoutFragment()
             )
         }
 

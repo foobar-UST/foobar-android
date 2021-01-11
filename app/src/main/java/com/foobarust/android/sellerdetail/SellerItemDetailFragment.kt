@@ -13,11 +13,9 @@ import com.foobarust.android.databinding.FragmentSellerItemDetailBinding
 import com.foobarust.android.main.MainViewModel
 import com.foobarust.android.utils.AutoClearedValue
 import com.foobarust.android.utils.showShortToast
-import com.foobarust.domain.states.getSuccessDataOr
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 /**
@@ -101,7 +99,7 @@ class SellerItemDetailFragment : BottomSheetDialogFragment() {
 
     private fun submitItemToCart() {
         viewLifecycleOwner.lifecycleScope.launch {
-            val userCart = mainViewModel.userCart.first().getSuccessDataOr(null)
+            val userCart = mainViewModel.getCurrentUserCart()
             itemDetailViewModel.onSubmitItemToCart(userCart = userCart)
         }
     }

@@ -7,10 +7,10 @@
     <data>
         <variable
             name="editModel"
-            type="com.foobarust.android.profile.ProfileListModel.ProfileEditModel" />
+            type="com.foobarust.android.settings.ProfileListModel.ProfileEditModel" />
         <variable
             name="listener"
-            type="com.foobarust.android.profile.ProfileAdapter.ProfileAdapterListener" />
+            type="com.foobarust.android.settings.ProfileAdapter.ProfileAdapterListener" />
     </data>
 
     <com.google.android.material.card.MaterialCardView

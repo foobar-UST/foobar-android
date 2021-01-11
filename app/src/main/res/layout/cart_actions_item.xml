@@ -6,10 +6,10 @@
     <data>
         <variable
             name="actionsModel"
-            type="com.foobarust.android.cart.CartListModel.CartActionsModel" />
+            type="com.foobarust.android.checkout.CartListModel.CartActionsItemModel" />
         <variable
             name="listener"
-            type="com.foobarust.android.cart.CartAdapter.CartAdapterListener" />
+            type="com.foobarust.android.checkout.CartAdapter.CartAdapterListener" />
     </data>
 
     <LinearLayout

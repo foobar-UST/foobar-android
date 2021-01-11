@@ -4,6 +4,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
+import androidx.work.WorkManager
 import com.foobarust.domain.di.DispatcherModule
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.crashlytics.ktx.crashlytics
@@ -21,9 +22,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideNotificationManager(
-        @ApplicationContext context: Context
-    ): NotificationManager {
+    fun provideNotificationManager(@ApplicationContext context: Context): NotificationManager {
         return ContextCompat.getSystemService(
             context,
             NotificationManager::class.java
@@ -32,9 +31,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providePackageManager(
-        @ApplicationContext context: Context
-    ): PackageManager {
+    fun providePackageManager(@ApplicationContext context: Context): PackageManager {
         return context.packageManager
     }
 
@@ -42,5 +39,11 @@ object AppModule {
     @Singleton
     fun provideCrashlytics(): FirebaseCrashlytics {
         return Firebase.crashlytics
+    }
+
+    @Provides
+    @Singleton
+    fun provideWorkManager(@ApplicationContext context: Context): WorkManager {
+        return WorkManager.getInstance(context)
     }
 }

@@ -21,5 +21,5 @@ data class ErrorResponseContent(
     @SerializedName(CF_ERROR_RESPONSE_MESSAGE_FIELD)
     val message: String?
 ) {
-    override fun toString(): String = "[HTTP $code]: $message"
+    override fun toString(): String = "Http $code: $message"
 }

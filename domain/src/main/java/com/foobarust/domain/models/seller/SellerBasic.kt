@@ -19,3 +19,8 @@ data class SellerBasic(
 fun SellerBasic.getNormalizedName(): String {
     return if (nameZh != null) "$name $nameZh" else name
 }
+
+
+fun SellerBasic.getNormalizedRatingString(): String {
+    return if (rating == 0.0) "n.a." else String.format("%.1f", rating)
+}

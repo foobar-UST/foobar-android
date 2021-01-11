@@ -23,9 +23,11 @@ import kotlinx.coroutines.tasks.await
 
 const val ERROR_DOCUMENT_NOT_EXIST = "Document does not exist."
 
+/**
+ * Check if the query snapshot is came from network data instead of local caches.
+ */
 fun QuerySnapshot.isNetworkData(): Boolean {
     return !metadata.isFromCache
-
 }
 
 suspend inline fun <reified T, R> CollectionReference.getAwaitResult(mapper: (T) -> R): List<R> {

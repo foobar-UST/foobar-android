@@ -6,7 +6,7 @@
     <data>
         <variable
             name="totalPriceModel"
-            type="com.foobarust.android.cart.CartListModel.CartTotalPriceModel" />
+            type="com.foobarust.android.checkout.CartListModel.CartTotalPriceItemModel" />
     </data>
 
     <RelativeLayout

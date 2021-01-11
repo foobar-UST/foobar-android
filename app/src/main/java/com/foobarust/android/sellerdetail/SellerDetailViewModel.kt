@@ -8,15 +8,21 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.R
 import com.foobarust.android.common.BaseViewModel
-import com.foobarust.android.states.UiFetchState
+import com.foobarust.android.states.UiState
 import com.foobarust.android.utils.SingleLiveEvent
 import com.foobarust.domain.models.cart.UserCart
 import com.foobarust.domain.models.seller.SellerDetail
 import com.foobarust.domain.models.seller.SellerDetailWithCatalogs
+import com.foobarust.domain.models.seller.getNormalizedRatingString
 import com.foobarust.domain.states.Resource
+import com.foobarust.domain.states.getSuccessDataOr
+import com.foobarust.domain.usecases.cart.GetUserCartUseCase
 import com.foobarust.domain.usecases.seller.GetSellerDetailWithCatalogsUseCase
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 /**
@@ -28,8 +34,11 @@ const val SELLER_DETAIL_ACTION_TAG = "action_tag"
 
 class SellerDetailViewModel @ViewModelInject constructor(
     @ApplicationContext private val context: Context,
-    private val getSellerDetailWithCatalogsUseCase: GetSellerDetailWithCatalogsUseCase
+    private val getSellerDetailWithCatalogsUseCase: GetSellerDetailWithCatalogsUseCase,
+    getUserCartUseCase: GetUserCartUseCase,
 ) : BaseViewModel() {
+
+    private val userCart: Flow<Resource<UserCart?>> = getUserCartUseCase(Unit)
 
     private val _sellerDetailWithCatalogs = MutableLiveData<SellerDetailWithCatalogs?>()
     val sellerDetailWithCatalogs: LiveData<SellerDetailWithCatalogs?>
@@ -55,33 +64,28 @@ class SellerDetailViewModel @ViewModelInject constructor(
     val showSnackBarMessage: LiveData<String>
         get() = _showSnackBarMessage
 
-    private val _userCart = MutableStateFlow<UserCart?>(null)
-    val userCartLiveData: LiveData<UserCart?> = _userCart
-        .asStateFlow()
+    val userCartLiveData: LiveData<UserCart?> = userCart
+        .map { it.getSuccessDataOr(null) }
         .asLiveData(viewModelScope.coroutineContext)
 
-    val showCartBottomBar: LiveData<Boolean> = _userCart
-        .asStateFlow()
+    val showCartBottomBar: LiveData<Boolean> = userCart
+        .map { it.getSuccessDataOr(null) }
         .map { userCart -> userCart != null && userCart.itemsCount > 0 }
         .distinctUntilChanged()
         .asLiveData(viewModelScope.coroutineContext)
 
-    fun onFetchSellerDetail(sellerId: String) = viewModelScope.launch {
+    fun onFetchSellerDetailWithCatalogs(sellerId: String) = viewModelScope.launch {
         getSellerDetailWithCatalogsUseCase(sellerId).collect {
             when (it) {
                 is Resource.Success -> {
                     _sellerDetailWithCatalogs.value = it.data
                     buildActionList(sellerDetail = it.data.sellerDetail)
-                    setUiFetchState(UiFetchState.Success)
+                    setUiState(UiState.Success)
                 }
-                is Resource.Error -> setUiFetchState(UiFetchState.Error(it.message))
-                is Resource.Loading -> setUiFetchState(UiFetchState.Loading)
+                is Resource.Error -> setUiState(UiState.Error(it.message))
+                is Resource.Loading -> setUiState(UiState.Loading)
             }
         }
-    }
-
-    fun onShowUserCartBottomBar(userCart: UserCart?) {
-        _userCart.value = userCart
     }
 
     fun onShowToolbarTitleChanged(isShow: Boolean) {
@@ -113,7 +117,7 @@ class SellerDetailViewModel @ViewModelInject constructor(
             // Rating
             add(SellerDetailAction(
                 id = SELLER_DETAIL_ACTION_RATING,
-                title = context.getString(R.string.seller_data_format_rating, sellerDetail.rating),
+                title = sellerDetail.getNormalizedRatingString(),
                 drawableRes = R.drawable.ic_star,
                 colorRes = R.color.yellow
             ))

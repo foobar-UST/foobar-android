@@ -6,7 +6,7 @@
 
     <data>
         <variable
-            name="orderInfoItem"
+            name="sectionInfoItem"
             type="com.foobarust.android.sellersection.SellerSectionDetailListModel.SellerSectionDetailSectionInfoItemModel" />
     </data>
 
@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_xmedium"
             android:lineSpacingMultiplier="1.2"
-            android:text="@{orderInfoItem.description}"
+            android:text="@{sectionInfoItem.description}"
             android:textColor="@color/material_on_surface_emphasis_medium"
             android:textAppearance="?attr/textAppearanceBody2"
             tools:text="Ordering food delivery for a group - whether for an office lunch or dinner at home—just got easier.\n為團體訂購食物（無論是在家中辦公室午餐還是晚餐），都變得更加容易。" />
@@ -33,9 +33,9 @@
             android:id="@+id/delivery_date_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_large"
+            android:layout_marginTop="@dimen/spacing_mlarge"
             android:gravity="center_vertical"
-            android:text="@{orderInfoItem.deliveryDate}"
+            android:text="@{sectionInfoItem.deliveryDate}"
             android:textColor="@color/material_on_surface_emphasis_medium"
             android:textAppearance="?attr/textAppearanceBody2"
             android:drawablePadding="@dimen/spacing_large"
@@ -48,9 +48,9 @@
             android:id="@+id/cutoff_time_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_xmedium"
+            android:layout_marginTop="@dimen/spacing_large"
             android:gravity="center_vertical"
-            android:text="@{@string/seller_section_detail_section_info_format_cutoff_time(orderInfoItem.cutoffTime)}"
+            android:text="@{@string/seller_section_detail_section_info_format_cutoff_time(sectionInfoItem.cutoffTime)}"
             android:textColor="@color/material_on_surface_emphasis_medium"
             android:textAppearance="?attr/textAppearanceBody2"
             android:drawablePadding="@dimen/spacing_large"
@@ -63,9 +63,9 @@
             android:id="@+id/delivery_time_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_xmedium"
+            android:layout_marginTop="@dimen/spacing_large"
             android:gravity="center_vertical"
-            android:text="@{@string/seller_section_detail_section_info_format_delivery_time(orderInfoItem.deliveryTime)}"
+            android:text="@{@string/seller_section_detail_section_info_format_delivery_time(sectionInfoItem.deliveryTime)}"
             android:textColor="@color/material_on_surface_emphasis_medium"
             android:textAppearance="?attr/textAppearanceBody2"
             android:drawablePadding="@dimen/spacing_large"
@@ -73,6 +73,20 @@
             app:drawableTint="@color/material_on_surface_emphasis_medium"
             app:drawableStartCompat="@drawable/ic_local_shipping"
             tools:text="Deliver at 12:30 PM" />
+
+        <TextView
+            android:id="@+id/pick_up_location_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:gravity="center_vertical"
+            android:text="@{@string/seller_section_detail_section_info_format_delivery_location(sectionInfoItem.deliveryLocation)}"
+            android:textColor="@color/material_on_surface_emphasis_medium"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:drawablePadding="@dimen/spacing_large"
+            app:drawableScale="@{1.0}"
+            app:drawableTint="@color/material_on_surface_emphasis_medium"
+            app:drawableStartCompat="@drawable/ic_shopping_bag" />
 
     </LinearLayout>
 

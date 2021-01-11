@@ -7,36 +7,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentSettingsBinding
-import com.foobarust.android.main.MainViewModel
 import com.foobarust.android.utils.AutoClearedValue
 import com.foobarust.android.utils.findNavController
 import com.foobarust.android.utils.showShortToast
-import com.foobarust.domain.states.getSuccessDataOr
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class SettingsFragment : Fragment(), SettingsAdapter.SettingsAdapterListener {
 
     private var binding: FragmentSettingsBinding by AutoClearedValue(this)
-    private val mainViewModel: MainViewModel by activityViewModels()
     private val settingsViewModel: SettingsViewModel by viewModels()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        lifecycleScope.launchWhenCreated {
-            mainViewModel.userDetail.collect {
-                settingsViewModel.onUserDetailUpdated(userDetail = it.getSuccessDataOr(null))
-            }
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -81,7 +66,7 @@ class SettingsFragment : Fragment(), SettingsAdapter.SettingsAdapterListener {
     }
 
     override fun onSettingsUserProfileClicked() {
-        settingsViewModel.onUserAccountCardClicked()
+        settingsViewModel.onUserAccountClicked()
     }
 
     override fun onSettingsSectionClicked(sectionId: String) {
@@ -100,9 +85,6 @@ class SettingsFragment : Fragment(), SettingsAdapter.SettingsAdapterListener {
                 SettingsFragmentDirections.actionSettingsFragmentToTutorialFragment()
             )
             SETTINGS_SIGN_OUT -> showSignOutConfirmDialog()
-            SETTINGS_ORDER_HISTORY -> findNavController().navigate(
-                SettingsFragmentDirections.actionSettingsFragmentToOrderHistoryFragment()
-            )
         }
     }
 

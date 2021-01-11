@@ -12,8 +12,6 @@ import androidx.navigation.NavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.foobarust.android.*
-import com.foobarust.android.cart.CartTimeoutDialog
-import com.foobarust.android.cart.CartTimeoutProperty
 import com.foobarust.android.databinding.ActivityMainBinding
 import com.foobarust.android.seller.SellerFragmentDirections
 import com.foobarust.android.tutorial.TutorialFragment
@@ -58,7 +56,7 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
         // Navigate to cart
         binding.cartBottomBar.cartBottomBarCardView.setOnClickListener {
             currentNavController?.value?.navigate(
-                NavigationSellerDirections.actionGlobalCartFragment()
+                NavigationSellerDirections.actionGlobalCheckoutFragment()
             )
         }
 
@@ -115,10 +113,13 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
             fragmentManager = supportFragmentManager,
             containerId = R.id.nav_host_container,
             intent = intent,
-            itemReselected = { viewModel.onTabScrollToTop() }
+            itemReselected = { viewModel.onScrollToTop() }
         )
         val listener = NavController.OnDestinationChangedListener { controller, destination, arguments ->
+            // Keep track of the current graph and destination
             viewModel.onCurrentNavGraphChanged(controller.graph.id)
+            viewModel.onCurrentDestinationChanged(destination.id)
+
             // Setup views for top level destinations
             if (destination.id in viewModel.topLevelDestinations) {
                 setupTopLevelDestinationsViews(destination.id)

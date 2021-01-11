@@ -1,6 +1,7 @@
 package com.foobarust.android.sellersection
 
 import android.content.Context
+import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,7 +10,7 @@ import com.foobarust.android.R
 import com.foobarust.android.common.BaseViewModel
 import com.foobarust.android.sellersection.SectionDetailMoreSectionsListModel.SectionDetailMoreSectionsSectionItem
 import com.foobarust.android.sellersection.SellerSectionDetailListModel.*
-import com.foobarust.android.states.UiFetchState
+import com.foobarust.android.states.UiState
 import com.foobarust.domain.models.seller.*
 import com.foobarust.domain.models.user.UserPublic
 import com.foobarust.domain.states.Resource
@@ -26,7 +27,6 @@ import kotlinx.coroutines.launch
 
 class SellerSectionDetailViewModel @ViewModelInject constructor(
     @ApplicationContext private val context: Context,
-    private val getSellerSectionDetailUseCase: GetSellerSectionDetailUseCase,
     private val getSellerDetailUseCase: GetSellerDetailUseCase,
     private val getMoreSellerSectionsUseCase: GetMoreSellerSectionsUseCase,
     private val getSectionParticipantsUseCase: GetSectionParticipantsUseCase
@@ -60,7 +60,7 @@ class SellerSectionDetailViewModel @ViewModelInject constructor(
     private fun fetchSellerDetail(sectionDetail: SellerSectionDetail) = viewModelScope.launch {
         when (val result = getSellerDetailUseCase(sectionDetail.sellerId)) {
             is Resource.Success -> _sellerDetail.value = result.data
-            is Resource.Loading -> setUiFetchState(UiFetchState.Loading)
+            is Resource.Loading -> setUiState(UiState.Loading)
             is Resource.Error -> {
                 _sellerDetail.value = null
                 showToastMessage(result.message)
@@ -120,6 +120,7 @@ class SellerSectionDetailViewModel @ViewModelInject constructor(
                 }
 
                 // Add counter
+                Log.d("SellerSectionDetail", "${sectionDetail.isRecentSection()}")
                 add(SellerSectionDetailCounterItemModel(
                     cutoffTime = sectionDetail.cutoffTime,
                     isRecentSection = sectionDetail.isRecentSection()
@@ -130,28 +131,20 @@ class SellerSectionDetailViewModel @ViewModelInject constructor(
                     description = sectionDetail.getNormalizedDescription(),
                     cutoffTime = sectionDetail.getCutoffTimeString(),
                     deliveryDate = sectionDetail.getDeliveryDateString(),
-                    deliveryTime = sectionDetail.getDeliveryTimeString()
+                    deliveryTime = sectionDetail.getDeliveryTimeString(),
+                    deliveryLocation = sectionDetail.getNormalizedDeliveryLocation()
                 ))
 
                 if (sellerDetail != null) {
                     // Add seller info
-                    add(SellerSectionDetailSubtitleItemModel(
-                        subtitle = context.getString(R.string.seller_section_detail_seller_info_subtitle)
-                    ))
+                    add(SellerSectionDetailSubtitleItemModel(subtitle = context.getString(R.string.seller_section_detail_seller_info_subtitle)))
                     add(SellerSectionDetailSellerInfoItemModel(
                         sellerId = sellerDetail.id,
                         sellerName = sellerDetail.getNormalizedName(),
-                        sellerRating = sellerDetail.rating,
-                        sellerImageUrl = sellerDetail.imageUrl
-                    ))
-
-                    // Add shipping info
-                    add(SellerSectionDetailSubtitleItemModel(
-                        subtitle = context.getString(R.string.seller_section_detail_shipping_info_subtitle)
-                    ))
-                    add(SellerSectionDetailShippingInfoItemModel(
-                        address = sellerDetail.getNormalizedAddress(),
-                        geolocation = sellerDetail.location.geolocation
+                        sellerRating = sellerDetail.getNormalizedRatingString(),
+                        sellerAddress = sellerDetail.getNormalizedAddress(),
+                        sellerImageUrl = sellerDetail.imageUrl,
+                        sellerOnline = sellerDetail.online
                     ))
 
                     // Add more sections
@@ -160,7 +153,7 @@ class SellerSectionDetailViewModel @ViewModelInject constructor(
                             SectionDetailMoreSectionsSectionItem(
                                 sectionId = it.id,
                                 sectionTitle = it.getNormalizedTitleForMoreSections(),
-                                sectionDeliveryTime = it.getDeliveryTimeString(),
+                                sectionDeliveryTime = context.getString(R.string.more_sections_section_item_format_delivery_time, it.getDeliveryTimeString()),
                                 sectionImageUrl = it.imageUrl
                             )
                         }

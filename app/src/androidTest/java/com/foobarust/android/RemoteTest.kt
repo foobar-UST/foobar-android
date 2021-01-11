@@ -37,7 +37,7 @@ class RemoteTest {
     @Test
     fun hello_world_test() = runBlocking(Dispatchers.IO) {
         try {
-            val result = remoteService.getHelloWorld(hasError = true)
+            val result = remoteService.getHelloWorld(hasError = false)
             Log.d("RemoteTest", "result: $result")
         } catch (e: Exception) {
             Log.d("RemoteTest", "message: ${e.message}")

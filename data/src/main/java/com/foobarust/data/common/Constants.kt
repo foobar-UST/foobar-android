@@ -23,6 +23,7 @@ object Constants {
     const val USER_PHONE_NUM_FIELD = "phone_num"
     const val USER_ROLES_FIELD = "roles"
     const val USER_UPDATED_AT_FIELD = "updated_at"
+    const val USER_CREATED_REST_FIELD = "createdRest"
 
     // Cart
     const val USER_CARTS_COLLECTION = "user_carts"
@@ -72,6 +73,7 @@ object Constants {
     const val SELLER_NOTICE_FIELD = "notice"
     const val SELLER_TAGS_FIELD = "tags"
     const val SELLER_BY_USER_ID = "by_user_id"
+    const val SELLER_DELIVERY_COST = "delivery_cost"
 
     // Seller Location
     const val SELLER_LOCATION_ADDRESS_FIELD = "address"
@@ -97,6 +99,8 @@ object Constants {
     const val SELLER_SECTION_SELLER_NAME_FIELD = "seller_name"
     const val SELLER_SECTION_SELLER_NAME_ZH_FIELD = "seller_name_zh"
     const val SELLER_SECTION_DELIVERY_TIME_FIELD = "delivery_time"
+    const val SELLER_SECTION_DELIVERY_LOCATION_FIELD = "delivery_location"
+    const val SELLER_SECTION_DELIVERY_LOCATION__ZH_FIELD = "delivery_location_zh"
     const val SELLER_SECTION_CUTOFF_TIME_FIELD = "cutoff_time"
     const val SELLER_SECTION_DESCRIPTION_FIELD = "description"
     const val SELLER_SECTION_DESCRIPTION_ZH_FIELD = "description_zh"
@@ -106,6 +110,7 @@ object Constants {
     const val SELLER_SECTION_IMAGE_URL_FIELD = "image_url"
     const val SELLER_SECTION_STATE_FIELD = "state"
     const val SELLER_SECTION_AVAILABLE_FIELD = "available"
+    const val SELLER_SECTION_UPDATED_AT_FIELD = "updated_at"
 
     const val SELLER_SECTION_STATE_AVAILABLE = "available"
     const val SELLER_SECTION_STATE_PENDING = "pending"
@@ -144,6 +149,24 @@ object Constants {
     const val SELLER_ITEM_COUNT_FIELD = "count"
     const val SELLER_ITEM_AVAILABLE_FIELD = "available"
     const val SELLER_ITEM_UPDATED_AT_FIELD = "updated_at"
+
+    // Payment Methods
+    const val PAYMENT_METHODS_COLLECTION = "payment_methods"
+
+    const val PAYMENT_METHOD_ID_FIELD = "id"
+    const val PAYMENT_METHOD_IDENTIFIER_FIELD = "identifier"
+    const val PAYMENT_METHOD_ENABLED_FIELD = "enabled"
+
+    // Delivery Option
+    const val DELIVERY_OPTIONS_COLLECTION = "delivery_options"
+
+    const val DELIVERY_OPTION_ID_FIELD = "id"
+    const val DELIVERY_OPTION_IDENTIFIER_FIELD = "identifier"
+    const val DELIVERY_OPTION_FOR_SELLER_TYPE_FIELD = "for_seller_type"
+    const val DELIVERY_OPTION_ENABLED_FIELD = "enabled"
+
+    const val DELIVERY_OPTION_IDENTIFIER_PICKUP = "pickup"
+    const val DELIVERY_OPTION_IDENTIFIER_DELIVERY = "delivery"
 
     // Cloud Functions APIs
     const val CF_REQUEST_URL = "https://us-central1-foobar-group-delivery-app.cloudfunctions.net/api/"

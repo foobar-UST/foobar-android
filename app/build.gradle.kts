@@ -117,6 +117,8 @@ dependencies {
     implementation(Dependencies.GLIDE)
     implementation(Dependencies.SPINKIT)
     implementation(Dependencies.MAP)
+    implementation(Dependencies.WORK)
+    implementation(Dependencies.HILT_WORK)
 
 
     // Annotation Processors

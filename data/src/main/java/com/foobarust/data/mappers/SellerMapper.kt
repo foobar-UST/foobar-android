@@ -59,7 +59,8 @@ class SellerMapper @Inject constructor() {
             online = entity.online ?: false,
             openingHours = entity.openingHours!!,
             notice = entity.notice,
-            tags = entity.tags ?: emptyList()
+            tags = entity.tags ?: emptyList(),
+            deliveryCost = entity.deliveryCost
         )
     }
 
@@ -111,6 +112,8 @@ class SellerMapper @Inject constructor() {
             sellerName = entity.sellerName!!,
             sellerNameZh = entity.sellerNameZh,
             deliveryTime = entity.deliveryTime!!.toDate(),
+            deliveryLocation = entity.deliveryLocation!!,
+            deliveryLocationZh = entity.deliveryLocationZh,
             description = entity.description!!,
             descriptionZh = entity.descriptionZh,
             cutoffTime = entity.cutoffTime!!.toDate(),

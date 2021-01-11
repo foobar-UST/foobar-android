@@ -15,7 +15,7 @@ interface RemoteService {
     @GET("test/hello-world")
     suspend fun getHelloWorld(
         @Query("has_error") hasError: Boolean
-    ) : HelloWorldResponse
+    ): HelloWorldResponse
 
     @PUT("cart/")
     suspend fun addUserCartItem(

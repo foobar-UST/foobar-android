@@ -13,8 +13,9 @@
     <string name="notification_channel_default_name">Default</string>
     <string name="notification_channel_upload_id" translatable="false">upload_notification_channel</string>
     <string name="notification_channel_upload_name">Upload</string>
-    <string name="notification_item_upload_user_photo_title">User Photo</string>
-    <string name="notification_item_upload_user_photo_body">Uploading in progress</string>
+    <string name="notification_item_upload_user_photo_title">Upload User Photo</string>
+    <string name="notification_item_upload_user_photo_body">Uploading</string>
+    <string name="notification_item_upload_user_photo_complete">Completed</string>
 
     <!-- Actions -->
     <string name="action_cancel">Cancel</string>
@@ -109,10 +110,9 @@
     <string name="seller_deliver_type_delivery">Delivery</string>
     <string name="seller_status_online">Opening</string>
     <string name="seller_status_offline">Closed</string>
-    <string name="seller_status_offline_message">Seller is currently closed.</string>
+    <string name="seller_status_offline_message">Restaurant is closed.</string>
     <string name="seller_data_format_min_spend_info">$ %.1f Min</string>
     <string name="seller_data_format_min_spend">%.1f Minimum</string>
-    <string name="seller_data_format_rating">%.1f</string>
     <string name="seller_type_on_campus">On-Campus</string>
     <string name="seller_type_off_campus">Off-Campus</string>
 
@@ -125,6 +125,7 @@
     <string name="seller_misc_title_description">Seller Info</string>
     <string name="seller_misc_data_format_phone">Tel: %s</string>
     <string name="seller_misc_data_format_website">Website: %s</string>
+    <string name="seller_misc_button_add_to_favorite">Add to Favorite</string>
 
     <!-- Seller Actions -->
     <string name="seller_action_add_favorite">Add to Favorite</string>
@@ -160,9 +161,9 @@
     <string name="seller_section_detail_counter_off_subtitle">Available On</string>
     <string name="seller_section_detail_section_info_format_cutoff_time">Due at %s</string>
     <string name="seller_section_detail_section_info_format_delivery_time">Deliver at %s</string>
-    <string name="seller_section_detail_shipping_info_subtitle">Shipped From</string>
+    <string name="seller_section_detail_section_info_format_delivery_location">Pick up at %s</string>
     <string name="seller_section_detail_seller_info_subtitle">Offered By</string>
-    <string name="seller_section_detail_seller_info_format_rating">%.1f</string>
+    <string name="seller_section_detail_seller_info_ship_from">Detail</string>
     <string name="seller_section_detail_button_add_items">Add Item to Cart</string>
     <string name="more_sections_subtitle">More Orders</string>
     <string name="more_sections_section_item_format_delivery_time">Deliver %s</string>
@@ -172,8 +173,12 @@
     <string name="promotion_subtitle_advertise">What\'s New</string>
     <string name="promotion_subtitle_suggest">Suggest For You</string>
 
+    <!-- Checkout -->
+    <string name="checkout_app_bar_title_cart">%d Items in Cart</string>
+    <string name="checkout_app_bar_title_payment">Payment</string>
+    <string name="checkout_app_bar_title_order_success">Order Success</string>
+
     <!-- Cart -->
-    <string name="cart_app_bar_title">%d Items in Cart</string>
     <string name="cart_bottom_bar_title_items_count">Items in Cart</string>
     <string name="cart_bottom_bar_format_items_count">%d</string>
     <string name="cart_bottom_bar_open_cart_content_desc">Open Cart</string>
@@ -183,6 +188,7 @@
     <string name="cart_total_price_title_total">Total</string>
     <string name="cart_total_price_title_subtotal">Subtotal</string>
     <string name="cart_total_price_title_delivery_fee">Delivery</string>
+    <string name="cart_notes_hint">Leave a message</string>
     <string name="cart_no_item_error">No Item in Cart</string>
     <string name="cart_item_submitted_message">Added to cart.</string>
     <string name="cart_actions_button_clear_cart">Clear Cart</string>
@@ -205,5 +211,9 @@
     <string name="cart_timeout_dialog_message">You still have %d items left in your cart.</string>
     <string name="cart_timeout_dialog_button_continue">Continue</string>
     <string name="cart_timeout_dialog_button_clear_cart">Clear Cart</string>
+
+    <!-- Delivery Options -->
+    <string name="delivery_options_title_pickup">Pickup</string>
+    <string name="delivery_options_title_delivery">Delivery</string>
 
 </resources>

@@ -2,7 +2,7 @@ package com.foobarust.android.utils
 
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
-import com.foobarust.android.states.UiFetchState
+import com.foobarust.android.states.UiState
 
 /**
  * Created by kevin on 9/29/20
@@ -15,10 +15,10 @@ fun CombinedLoadStates.anyError(): LoadState.Error? {
         ?: prepend as? LoadState.Error
 }
 
-fun LoadState.asUiFetchState(): UiFetchState {
+fun LoadState.asUiFetchState(): UiState {
     return when (this) {
-        is LoadState.NotLoading -> UiFetchState.Success
-        LoadState.Loading -> UiFetchState.Loading
-        is LoadState.Error -> UiFetchState.Error(this.error.message)
+        is LoadState.NotLoading -> UiState.Success
+        LoadState.Loading -> UiState.Loading
+        is LoadState.Error -> UiState.Error(this.error.message)
     }
 }

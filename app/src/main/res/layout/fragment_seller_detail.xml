@@ -9,7 +9,7 @@
             name="viewModel"
             type="com.foobarust.android.sellerdetail.SellerDetailViewModel" />
         <import type="com.foobarust.android.R" />
-        <import type="com.foobarust.android.states.UiFetchState" />
+        <import type="com.foobarust.android.states.UiState" />
         <import type="com.foobarust.domain.models.seller.SellerDetailKt" />
     </data>
 
@@ -40,7 +40,7 @@
                     android:layout_height="wrap_content"
                     android:background="?android:attr/colorBackground"
                     app:layout_collapseMode="parallax"
-                    app:goneIf="@{!(viewModel.uiFetchState instanceof UiFetchState.Success)}">
+                    app:goneIf="@{!(viewModel.uiState instanceof UiState.Success)}">
 
                     <!-- Top scrim to emphasis status bar icon -->
                     <FrameLayout
@@ -204,7 +204,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
-            app:goneIf="@{!(viewModel.uiFetchState instanceof UiFetchState.Success)}">
+            app:goneIf="@{!(viewModel.uiState instanceof UiState.Success)}">
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/category_tab_layout"
@@ -232,7 +232,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                app:goneIf="@{!(viewModel.uiFetchState instanceof UiFetchState.Loading)}" />
+                app:goneIf="@{!(viewModel.uiState instanceof UiState.Loading)}" />
 
             <include
                 layout="@layout/load_error_layout"
@@ -240,7 +240,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                app:goneIf="@{!(viewModel.uiFetchState instanceof UiFetchState.Error)}" />
+                app:goneIf="@{!(viewModel.uiState instanceof UiState.Error)}" />
 
         </FrameLayout>
 

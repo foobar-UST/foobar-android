@@ -8,7 +8,7 @@
         <variable
             name="viewModel"
             type="com.foobarust.android.sellersection.SellerSectionDetailViewModel" />
-        <import type="com.foobarust.android.states.UiFetchState"/>
+        <import type="com.foobarust.android.states.UiState"/>
     </data>
 
     <FrameLayout

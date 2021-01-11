@@ -7,10 +7,10 @@
     <data>
         <variable
             name="sellerInfoModel"
-            type="com.foobarust.android.cart.CartListModel.CartSellerInfoModel" />
+            type="com.foobarust.android.checkout.CartListModel.CartSellerInfoItemModel" />
         <variable
             name="listener"
-            type="com.foobarust.android.cart.CartAdapter.CartAdapterListener" />
+            type="com.foobarust.android.checkout.CartAdapter.CartAdapterListener" />
         <import type="com.foobarust.domain.models.seller.SellerBasicKt" />
         <import type="com.foobarust.domain.models.seller.SellerType" />
         <import type="com.foobarust.android.R" />
