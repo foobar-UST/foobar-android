@@ -6,6 +6,7 @@ import java.util.*
 data class UserCart(
     val sellerId: String?,
     val sellerType: SellerType?,
+    val sectionId: String?,
     val itemsCount: Int,
     val subtotalCost: Double,
     val deliveryCost: Double,
@@ -13,3 +14,7 @@ data class UserCart(
     val syncRequired: Boolean,
     val updatedAt: Date?
 )
+
+fun UserCart.isSectionOrder(): Boolean {
+    return sectionId != null
+}

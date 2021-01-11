@@ -5,10 +5,7 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import androidx.work.ExistingWorkPolicy
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
-import androidx.work.workDataOf
+import androidx.work.*
 import com.foobarust.android.R
 import com.foobarust.android.common.BaseViewModel
 import com.foobarust.android.utils.SingleLiveEvent
@@ -128,9 +125,13 @@ class MainViewModel @ViewModelInject constructor(
             UploadUserPhotoWorker.USER_PHOTO_URL to uri,
             UploadUserPhotoWorker.USER_PHOTO_EXTENSION to extension
         )
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
 
         val uploadRequest = OneTimeWorkRequestBuilder<UploadUserPhotoWorker>()
             .setInputData(inputData)
+            .setConstraints(constraints)
             .build()
 
         workManager.beginUniqueWork(

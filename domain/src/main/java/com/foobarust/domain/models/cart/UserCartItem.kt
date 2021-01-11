@@ -9,6 +9,7 @@ data class UserCartItem(
     val id: String,
     val itemId: String,
     val itemSellerId: String,
+    val itemSectionId: String?,
     val itemTitle: String,
     val itemTitleZh: String?,
     val itemPrice: Double,
@@ -21,4 +22,8 @@ data class UserCartItem(
 
 fun UserCartItem.getNormalizedTitle(): String {
     return if (itemTitleZh != null) "$itemTitle\n$itemTitleZh" else itemTitle
+}
+
+fun UserCartItem.isSectionItem(): Boolean {
+    return itemSectionId != null
 }

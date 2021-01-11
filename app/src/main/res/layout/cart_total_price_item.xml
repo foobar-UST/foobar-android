@@ -5,7 +5,7 @@
 
     <data>
         <variable
-            name="totalPriceModel"
+            name="totalPriceItemModel"
             type="com.foobarust.android.checkout.CartListModel.CartTotalPriceItemModel" />
     </data>
 
@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:text="@{@string/cart_total_price_format_cost(totalPriceModel.total)}"
+            android:text="@{@string/cart_total_price_format_cost(totalPriceItemModel.total)}"
             android:textColor="?attr/colorPrimary"
             android:textAppearance="?attr/textAppearanceHeadline4"
             tools:text="$1,052.84"/>
@@ -50,7 +50,7 @@
             android:layout_marginTop="@dimen/spacing_xmedium"
             android:layout_alignParentEnd="true"
             android:layout_below="@id/total_value_text_view"
-            android:text="@{@string/cart_total_price_format_cost(totalPriceModel.subtotal)}"
+            android:text="@{@string/cart_total_price_format_cost(totalPriceItemModel.subtotal)}"
             android:textColor="?attr/colorPrimary"
             android:textAppearance="?attr/textAppearanceSubtitle2"
             tools:text="$914.00"/>
@@ -71,7 +71,7 @@
             android:layout_marginTop="@dimen/spacing_xmedium"
             android:layout_alignParentEnd="true"
             android:layout_below="@id/subtotal_value_text_view"
-            android:text="@{@string/cart_total_price_format_cost(totalPriceModel.deliveryFee)}"
+            android:text="@{@string/cart_total_price_format_cost(totalPriceItemModel.deliveryFee)}"
             android:textColor="?attr/colorPrimary"
             android:textAppearance="?attr/textAppearanceSubtitle2"
             tools:text="$84.00"/>

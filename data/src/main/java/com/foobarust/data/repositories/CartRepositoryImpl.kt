@@ -37,12 +37,13 @@ class CartRepositoryImpl @Inject constructor(
     override suspend fun addUserCartItem(
         idToken: String,
         sellerId: String,
+        sectionId: String?,
         itemId: String,
         amounts: Int
     ) {
         remoteService.addUserCartItem(
             idToken = idToken,
-            addUserCartItemRequest = AddUserCartItemRequest(sellerId, itemId, amounts)
+            addUserCartItemRequest = AddUserCartItemRequest(sellerId, sectionId, itemId, amounts)
         )
     }
 

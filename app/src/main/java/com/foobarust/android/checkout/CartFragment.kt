@@ -144,16 +144,6 @@ class CartFragment : Fragment(), CartAdapter.CartAdapterListener {
 
     }
 
-    override fun onChooseDeliveryOption() {
-        findNavController().navigate(
-            CartFragmentDirections.actionCartFragmentToDeliveryOptionsBottomSheet(
-                deliveryOptionProperties = cartViewModel.getDeliveryOptions()
-                    .map { it.toDeliveryOptionProperty() }
-                    .toTypedArray()
-            )
-        )
-    }
-
     private fun showSyncRequiredSnackBar() {
         syncActionSnackBar = Snackbar.make(
             binding.coordinatorLayout,

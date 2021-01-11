@@ -94,15 +94,18 @@ class SellerItemsFragment : Fragment(), SellerItemsAdapter.SellerItemsAdapterLis
     }
 
     override fun onSellerItemClicked(sellerItemBasic: SellerItemBasic) {
+        val sellerId = requireArguments().getString(ARG_SELLER_ID)
+            ?: throw IllegalArgumentException("Seller id not found.")
+
         sellerDetailViewModel.onShowItemDetailDialog(
-            sellerId = requireArguments().getString(ARG_SELLER_ID)
-                ?: throw IllegalArgumentException("Seller id not found."),
+            sellerId = sellerId,
             itemId = sellerItemBasic.id
         )
     }
 
     companion object {
         const val ARG_SELLER_ID = "arg_seller_id"
+        const val ARG_SECTION_ID = "arg_section_id"
         const val ARG_CATEGORY_ID = "arg_category_id"
 
         @JvmStatic

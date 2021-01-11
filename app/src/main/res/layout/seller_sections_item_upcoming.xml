@@ -20,7 +20,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_xmedium"
-        android:layout_marginBottom="@dimen/spacing_xmedium"
         android:focusable="true"
         android:clickable="true"
         app:cardCornerRadius="0dp"

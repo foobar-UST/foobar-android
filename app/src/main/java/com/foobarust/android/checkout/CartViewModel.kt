@@ -10,11 +10,11 @@ import com.foobarust.android.states.UiState
 import com.foobarust.android.utils.SingleLiveEvent
 import com.foobarust.domain.models.cart.UserCart
 import com.foobarust.domain.models.cart.UserCartItem
-import com.foobarust.domain.models.checkout.DeliveryOption
 import com.foobarust.domain.models.seller.SellerBasic
+import com.foobarust.domain.models.seller.SellerType
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.cart.*
-import com.foobarust.domain.usecases.checkout.GetDeliveryOptionsUseCase
+import com.foobarust.domain.usecases.checkout.GetDeliveryAddressUseCase
 import com.foobarust.domain.usecases.seller.GetSellerBasicUseCase
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.*
@@ -28,7 +28,7 @@ class CartViewModel @ViewModelInject constructor(
     private val getUserCartUseCase: GetUserCartUseCase,
     private val getUserCartItemsUseCase: GetUserCartItemsUseCase,
     private val getSellerBasicUseCase: GetSellerBasicUseCase,
-    private val getDeliveryOptionsUseCase: GetDeliveryOptionsUseCase,
+    private val getDeliveryAddressUseCase: GetDeliveryAddressUseCase,
     private val updateUserCartItemUseCase: UpdateUserCartItemUseCase,
     private val syncUserCartUseCase: SyncUserCartUseCase,
     private val clearUserCartUseCase: ClearUserCartUseCase
@@ -37,11 +37,7 @@ class CartViewModel @ViewModelInject constructor(
     private val _cartItems = MutableStateFlow<List<UserCartItem>>(emptyList())
     private val _userCart = MutableStateFlow<UserCart?>(null)
     private val _sellerBasic = MutableStateFlow<SellerBasic?>(null)
-
-    private val _deliveryOptions = MutableStateFlow<List<DeliveryOption>>(emptyList())
-
-    private val _currentDeliveryOption = MutableStateFlow<DeliveryOption?>(null)
-
+    private val _deliveryAddress = MutableStateFlow<String?>(null)
 
     private val _cartListModels = MutableLiveData<List<CartListModel>>()
     val cartListModels: LiveData<List<CartListModel>>
@@ -89,16 +85,16 @@ class CartViewModel @ViewModelInject constructor(
         fetchCartItems()
         fetchUserCartDetails()
         fetchSellerDetails()
-        fetchDeliveryOptions()
+        fetchDeliveryAddress()
 
         // Build list from multiple data sources
         viewModelScope.launch {
             combine(_cartItems.asStateFlow(),
                 _sellerBasic.asStateFlow().filterNotNull(),
                 _userCart.asStateFlow().filterNotNull(),
-                _currentDeliveryOption.asStateFlow().filterNotNull()
-            ) { cartItems, sellerBasic, userCart, deliveryOption ->
-                buildCartListModels(cartItems, sellerBasic, userCart, deliveryOption)
+                _deliveryAddress.asStateFlow().filterNotNull()
+            ) { cartItems, sellerBasic, userCart, deliveryAddress ->
+                buildCartListModels(cartItems, sellerBasic, userCart, deliveryAddress)
             }.collect {
                 _cartListModels.value = it
             }
@@ -145,14 +141,15 @@ class CartViewModel @ViewModelInject constructor(
         _userCart.asStateFlow()
             .filterNotNull()
             .mapNotNull { it.sellerId }
-            .collect { sellerId ->
-                when (val result = getSellerBasicUseCase(sellerId)) {
+            .flatMapLatest { getSellerBasicUseCase(it) }
+            .collect {
+                when (it) {
                     is Resource.Success -> {
-                        _sellerBasic.value = result.data
+                        _sellerBasic.value = it.data
                     }
                     is Resource.Error -> {
                         _sellerBasic.value = null
-                        showToastMessage(result.message)
+                        showToastMessage(it.message)
                     }
                     is Resource.Loading -> {
                         _sellerBasic.value = null
@@ -161,23 +158,22 @@ class CartViewModel @ViewModelInject constructor(
             }
     }
 
-    private fun fetchDeliveryOptions() = viewModelScope.launch {
-        _sellerBasic.asStateFlow()
+    private fun fetchDeliveryAddress() = viewModelScope.launch {
+        _userCart.asStateFlow()
             .filterNotNull()
-            .flatMapLatest { getDeliveryOptionsUseCase(it.type) }
+            .filter { it.sellerType != null }
+            .flatMapLatest { getDeliveryAddressUseCase(it) }
             .collect {
                 when (it) {
                     is Resource.Success -> {
-                        val deliveryOptions = it.data
-                        _deliveryOptions.value = deliveryOptions
-                        _currentDeliveryOption.value = deliveryOptions.firstOrNull()
+                        _deliveryAddress.value = it.data
                     }
                     is Resource.Error -> {
-                        _deliveryOptions.value = emptyList()
+                        _deliveryAddress.value = null
                         showToastMessage(it.message)
                     }
                     is Resource.Loading -> {
-                        _deliveryOptions.value = emptyList()
+                        _deliveryAddress.value = null
                     }
                 }
             }
@@ -234,15 +230,11 @@ class CartViewModel @ViewModelInject constructor(
         }
     }
 
-    fun getDeliveryOptions(): List<DeliveryOption> {
-        return _deliveryOptions.value
-    }
-
     private fun buildCartListModels(
         cartItems: List<UserCartItem>,
         sellerBasic: SellerBasic,
         userCart: UserCart,
-        deliveryOption: DeliveryOption
+        deliveryAddress: String
     ): List<CartListModel> {
         if (cartItems.isEmpty()) return emptyList()
 
@@ -256,8 +248,19 @@ class CartViewModel @ViewModelInject constructor(
             })
 
             // Add delivery option section
-            val deliveryOptionItemModel = deliveryOption.toCartDeliveryOptionItemModel(context = context)
-            add(deliveryOptionItemModel)
+            add(CartDeliveryInfoItemModel(
+                title = if (userCart.sellerType == SellerType.ON_CAMPUS) {
+                    context.getString(R.string.cart_delivery_info_title_pickup)
+                } else {
+                    context.getString(R.string.cart_delivery_info_title_delivery)
+                },
+                address = deliveryAddress,
+                drawable = if (userCart.sellerType == SellerType.ON_CAMPUS) {
+                    R.drawable.ic_directions_run
+                } else {
+                    R.drawable.ic_local_shipping
+                }
+            ))
 
             // Add notes section
             add(CartNotesItemModel)

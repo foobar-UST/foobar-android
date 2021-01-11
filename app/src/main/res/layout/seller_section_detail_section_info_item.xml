@@ -86,7 +86,8 @@
             android:drawablePadding="@dimen/spacing_large"
             app:drawableScale="@{1.0}"
             app:drawableTint="@color/material_on_surface_emphasis_medium"
-            app:drawableStartCompat="@drawable/ic_shopping_bag" />
+            app:drawableStartCompat="@drawable/ic_shopping_bag"
+            tools:text="Pick Up at HKUST"/>
 
     </LinearLayout>
 

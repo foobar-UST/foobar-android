@@ -18,20 +18,7 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
-        <action
-            android:id="@+id/action_cartFragment_to_deliveryOptionsBottomSheet"
-            app:destination="@id/deliveryOptionsBottomSheet" />
     </fragment>
-
-    <!-- DeliveryOptionsBottomSheet -->
-    <dialog
-        android:id="@+id/deliveryOptionsBottomSheet"
-        android:name="com.foobarust.android.checkout.DeliveryOptionsBottomSheet"
-        tools:layout="@layout/bottom_sheet_delivery_options">
-        <argument
-            android:name="deliveryOptionProperties"
-            app:argType="com.foobarust.android.checkout.DeliveryOptionProperty[]"/>
-    </dialog>
 
     <!-- PaymentFragment -->
     <fragment

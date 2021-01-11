@@ -29,18 +29,20 @@ object Constants {
     const val USER_CARTS_COLLECTION = "user_carts"
     const val USER_CART_ITEMS_SUB_COLLECTION = "cart_items"
 
-    const val USER_CARTS_SELLER_ID_FIELD = "seller_id"
-    const val USER_CARTS_SELLER_TYPE_FIELD = "seller_type"
-    const val USER_CARTS_ITEMS_COUNT_FIELD = "items_count"
-    const val USER_CARTS_SUBTOTAL_COST_FIELD = "subtotal_cost"
-    const val USER_CARTS_DELIVERY_COST_FIELD = "delivery_cost"
-    const val USER_CARTS_TOTAL_COST_FIELD = "total_cost"
-    const val USER_CARTS_SYNC_REQUIRED_FIELD = "sync_required"
-    const val USER_CARTS_UPDATED_AT_FIELD = "updated_at"
+    const val USER_CART_SELLER_ID_FIELD = "seller_id"
+    const val USER_CART_SELLER_TYPE_FIELD = "seller_type"
+    const val USER_CART_SELLER_SECTION_ID_FIELD = "section_id"
+    const val USER_CART_ITEMS_COUNT_FIELD = "items_count"
+    const val USER_CART_SUBTOTAL_COST_FIELD = "subtotal_cost"
+    const val USER_CART_DELIVERY_COST_FIELD = "delivery_cost"
+    const val USER_CART_TOTAL_COST_FIELD = "total_cost"
+    const val USER_CART_SYNC_REQUIRED_FIELD = "sync_required"
+    const val USER_CART_UPDATED_AT_FIELD = "updated_at"
 
     const val USER_CART_ITEMS_ID_FIELD = "id"
     const val USER_CART_ITEMS_ITEM_ID_FIELD = "item_id"
     const val USER_CART_ITEMS_ITEM_SELLER_ID_FIELD = "item_seller_id"
+    const val USER_CART_ITEMS_ITEM_SECTION_ID_FIELD = "item_section_id"
     const val USER_CART_ITEMS_ITEM_TITLE_FIELD = "item_title"
     const val USER_CART_ITEMS_ITEM_TITLE_ZH_FIELD = "item_title_zh"
     const val USER_CART_ITEMS_ITEM_PRICE_FIELD = "item_price"
@@ -157,16 +159,6 @@ object Constants {
     const val PAYMENT_METHOD_IDENTIFIER_FIELD = "identifier"
     const val PAYMENT_METHOD_ENABLED_FIELD = "enabled"
 
-    // Delivery Option
-    const val DELIVERY_OPTIONS_COLLECTION = "delivery_options"
-
-    const val DELIVERY_OPTION_ID_FIELD = "id"
-    const val DELIVERY_OPTION_IDENTIFIER_FIELD = "identifier"
-    const val DELIVERY_OPTION_FOR_SELLER_TYPE_FIELD = "for_seller_type"
-    const val DELIVERY_OPTION_ENABLED_FIELD = "enabled"
-
-    const val DELIVERY_OPTION_IDENTIFIER_PICKUP = "pickup"
-    const val DELIVERY_OPTION_IDENTIFIER_DELIVERY = "delivery"
 
     // Cloud Functions APIs
     const val CF_REQUEST_URL = "https://us-central1-foobar-group-delivery-app.cloudfunctions.net/api/"
@@ -184,8 +176,8 @@ object Constants {
     const val GM_DIR_ORIGIN = "origin"
     const val GM_DIR_DEST = "destination"
 
-
     const val ADD_USER_CART_ITEM_REQUEST_SELLER_ID = "seller_id"
+    const val ADD_USER_CART_ITEM_REQUEST_SECTION_ID = "section_id"
     const val ADD_USER_CART_ITEM_REQUEST_ITEM_ID = "item_id"
     const val ADD_USER_CART_ITEM_REQUEST_AMOUNTS = "amounts"
 

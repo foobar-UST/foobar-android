@@ -6,6 +6,7 @@ import com.foobarust.data.common.Constants.USER_CART_ITEMS_ID_FIELD
 import com.foobarust.data.common.Constants.USER_CART_ITEMS_ITEM_ID_FIELD
 import com.foobarust.data.common.Constants.USER_CART_ITEMS_ITEM_IMAGE_URL_FIELD
 import com.foobarust.data.common.Constants.USER_CART_ITEMS_ITEM_PRICE_FIELD
+import com.foobarust.data.common.Constants.USER_CART_ITEMS_ITEM_SECTION_ID_FIELD
 import com.foobarust.data.common.Constants.USER_CART_ITEMS_ITEM_SELLER_ID_FIELD
 import com.foobarust.data.common.Constants.USER_CART_ITEMS_ITEM_TITLE_FIELD
 import com.foobarust.data.common.Constants.USER_CART_ITEMS_ITEM_TITLE_ZH_FIELD
@@ -30,6 +31,10 @@ data class UserCartItemEntity(
     @JvmField
     @PropertyName(USER_CART_ITEMS_ITEM_SELLER_ID_FIELD)
     val itemSellerId: String? = null,
+
+    @JvmField
+    @PropertyName(USER_CART_ITEMS_ITEM_SECTION_ID_FIELD)
+    val itemSectionId: String? = null,
 
     @JvmField
     @PropertyName(USER_CART_ITEMS_ITEM_TITLE_FIELD)

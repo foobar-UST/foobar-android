@@ -130,6 +130,7 @@ class SellerItemDetailViewModel @ViewModelInject constructor(
         val itemId = _itemDetail.value?.id ?: return@launch
         val params = AddUserCartItemParameters(
             sellerId = property.sellerId,
+            sectionId = property.sectionId,
             itemId = itemId,
             amounts = _amountsInput.value,
             currentSellerId = userCart?.sellerId
@@ -161,6 +162,7 @@ class SellerItemDetailViewModel @ViewModelInject constructor(
 data class SellerItemDetailProperty(
     val sellerId: String,
     val itemId: String,
+    val sectionId: String? = null,
     // These fields will be used for updating cart item.
     val cartItemId: String? = null,
     val amounts: Int? = null

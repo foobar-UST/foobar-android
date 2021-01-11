@@ -58,23 +58,26 @@ class SellerSectionViewModel @ViewModelInject constructor(
     private var fetchSectionDetailJob: Job? = null
 
     fun onFetchSectionDetail(property: SellerSectionProperty) {
-        setUiState(UiState.Loading)
         fetchSectionDetailJob?.cancelIfActive()
         fetchSectionDetailJob = viewModelScope.launch {
-            when (val result = getSellerSectionDetailUseCase(
-                GetSellerSectionDetailParameters(
-                    sellerId = property.sellerId,
-                    sectionId = property.sectionId
-                )
-            )) {
-                is Resource.Success -> {
-                    _sectionDetail.emit(result.data)
-                    setUiState(UiState.Success)
-                }
-                is Resource.Loading -> Unit
-                is Resource.Error -> {
-                    _sectionDetail.emit(null)
-                    setUiState(UiState.Error(result.message))
+            val params = GetSellerSectionDetailParameters(
+                sellerId = property.sellerId,
+                sectionId = property.sectionId
+            )
+
+            getSellerSectionDetailUseCase(params).collect {
+                when (it) {
+                    is Resource.Success -> {
+                        _sectionDetail.emit(it.data)
+                        setUiState(UiState.Success)
+                    }
+                    is Resource.Error -> {
+                        _sectionDetail.emit(null)
+                        setUiState(UiState.Error(it.message))
+                    }
+                    is Resource.Loading -> {
+                        setUiState(UiState.Loading)
+                    }
                 }
             }
         }

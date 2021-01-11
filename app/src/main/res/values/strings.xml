@@ -160,8 +160,8 @@
     <string name="seller_section_detail_counter_on_subtitle">Time Left</string>
     <string name="seller_section_detail_counter_off_subtitle">Available On</string>
     <string name="seller_section_detail_section_info_format_cutoff_time">Due at %s</string>
-    <string name="seller_section_detail_section_info_format_delivery_time">Deliver at %s</string>
-    <string name="seller_section_detail_section_info_format_delivery_location">Pick up at %s</string>
+    <string name="seller_section_detail_section_info_format_delivery_time">Deliver To %s</string>
+    <string name="seller_section_detail_section_info_format_delivery_location">Pick Up At %s</string>
     <string name="seller_section_detail_seller_info_subtitle">Offered By</string>
     <string name="seller_section_detail_seller_info_ship_from">Detail</string>
     <string name="seller_section_detail_button_add_items">Add Item to Cart</string>
@@ -198,6 +198,8 @@
     <string name="cart_purchase_item_format_amount">Quantity: %d</string>
     <string name="cart_purchase_item_format_notes">Notes: %s</string>
     <string name="cart_purchase_item_format_total_price">x $%.1f</string>
+    <string name="cart_delivery_info_title_pickup">Pick Up At</string>
+    <string name="cart_delivery_info_title_delivery">Deliver to</string>
     <string name="cart_bottom_bar_format_total_price">$ %.1f</string>
     <string name="cart_total_price_format_cost">$%.1f</string>
     <string name="cart_clear_cart_dialog_title">Clear Cart</string>
@@ -211,9 +213,5 @@
     <string name="cart_timeout_dialog_message">You still have %d items left in your cart.</string>
     <string name="cart_timeout_dialog_button_continue">Continue</string>
     <string name="cart_timeout_dialog_button_clear_cart">Clear Cart</string>
-
-    <!-- Delivery Options -->
-    <string name="delivery_options_title_pickup">Pickup</string>
-    <string name="delivery_options_title_delivery">Delivery</string>
 
 </resources>

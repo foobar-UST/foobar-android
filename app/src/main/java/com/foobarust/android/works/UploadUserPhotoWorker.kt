@@ -75,7 +75,7 @@ class UploadUserPhotoWorker @WorkerInject constructor(
                         }
                     }
                 }
-            }.join()
+            }
         }
 
         Log.d("UploadUserPhotoWorker", "Upload job finished.")

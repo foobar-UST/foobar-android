@@ -43,8 +43,8 @@ class CartAdapter(
                 CartActionsItemBinding.inflate(inflater, parent, false)
             )
 
-            R.layout.cart_delivery_option_item -> CartDeliveryOptionItemViewHolder(
-                CartDeliveryOptionItemBinding.inflate(inflater, parent, false)
+            R.layout.cart_delivery_info_item -> CartDeliveryInfoItemViewHolder(
+                CartDeliveryInfoItemBinding.inflate(inflater, parent, false)
             )
 
             R.layout.cart_notes_item -> CartNotesItemViewHolder(
@@ -58,7 +58,7 @@ class CartAdapter(
     override fun onBindViewHolder(holder: CartViewHolder, position: Int) {
         when (holder) {
             is CartSellerInfoItemViewHolder -> holder.binding.run {
-                sellerInfoModel = getItem(position) as CartSellerInfoItemModel
+                sellerInfoItemModel = getItem(position) as CartSellerInfoItemModel
                 listener = this@CartAdapter.listener
                 executePendingBindings()
             }
@@ -70,7 +70,7 @@ class CartAdapter(
             }
 
             is CartTotalPriceItemViewHolder -> holder.binding.run {
-                totalPriceModel = getItem(position) as CartTotalPriceItemModel
+                totalPriceItemModel = getItem(position) as CartTotalPriceItemModel
                 executePendingBindings()
             }
 
@@ -80,8 +80,8 @@ class CartAdapter(
                 executePendingBindings()
             }
 
-            is CartDeliveryOptionItemViewHolder -> holder.binding.run {
-                deliveryOptionItemModel = getItem(position) as CartDeliveryOptionItemModel
+            is CartDeliveryInfoItemViewHolder -> holder.binding.run {
+                deliveryInfoItemModel = getItem(position) as CartDeliveryInfoItemModel
                 listener = this@CartAdapter.listener
                 executePendingBindings()
             }
@@ -101,7 +101,7 @@ class CartAdapter(
             is CartPurchaseItemModel -> R.layout.cart_purchase_item
             is CartTotalPriceItemModel -> R.layout.cart_total_price_item
             is CartActionsItemModel -> R.layout.cart_actions_item
-            is CartDeliveryOptionItemModel -> R.layout.cart_delivery_option_item
+            is CartDeliveryInfoItemModel -> R.layout.cart_delivery_info_item
             is CartNotesItemModel -> R.layout.cart_notes_item
         }
     }
@@ -114,7 +114,6 @@ class CartAdapter(
         fun onClearCart()
         fun onPlaceOrder()
         fun onUpdateNotes(notes: String)
-        fun onChooseDeliveryOption()
     }
 }
 
@@ -135,8 +134,8 @@ sealed class CartViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
         val binding: CartActionsItemBinding
     ) : CartViewHolder(binding.root)
 
-    class CartDeliveryOptionItemViewHolder(
-        val binding: CartDeliveryOptionItemBinding
+    class CartDeliveryInfoItemViewHolder(
+        val binding: CartDeliveryInfoItemBinding
     ) : CartViewHolder(binding.root)
 
     class CartNotesItemViewHolder(
@@ -163,9 +162,9 @@ sealed class CartListModel {
         val allowOrder: Boolean
     ) : CartListModel()
 
-    data class CartDeliveryOptionItemModel(
-        val optionId: String,
+    data class CartDeliveryInfoItemModel(
         val title: String,
+        val address: String,
         @DrawableRes val drawable: Int
     ) : CartListModel()
 
@@ -180,7 +179,7 @@ object CartListModelDiff : DiffUtil.ItemCallback<CartListModel>() {
                 oldItem.userCartItem.id == newItem.userCartItem.id
             oldItem is CartTotalPriceItemModel && newItem is CartTotalPriceItemModel -> true
             oldItem is CartActionsItemModel && newItem is CartActionsItemModel -> true
-            oldItem is CartDeliveryOptionItemModel && newItem is CartDeliveryOptionItemModel -> true
+            oldItem is CartDeliveryInfoItemModel && newItem is CartDeliveryInfoItemModel -> true
             oldItem is CartNotesItemModel && newItem is CartNotesItemModel -> true
             else -> false
         }
@@ -194,7 +193,7 @@ object CartListModelDiff : DiffUtil.ItemCallback<CartListModel>() {
                 oldItem.userCartItem == newItem.userCartItem
             oldItem is CartTotalPriceItemModel && newItem is CartTotalPriceItemModel -> oldItem == newItem
             oldItem is CartActionsItemModel && newItem is CartActionsItemModel -> oldItem == newItem
-            oldItem is CartDeliveryOptionItemModel && newItem is CartDeliveryOptionItemModel -> oldItem == newItem
+            oldItem is CartDeliveryInfoItemModel && newItem is CartDeliveryInfoItemModel -> oldItem == newItem
             oldItem is CartNotesItemModel && newItem is CartNotesItemModel -> oldItem == newItem
             else -> false
         }

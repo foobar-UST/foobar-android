@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="deliveryInfoItemModel"
+            type="com.foobarust.android.checkout.CartListModel.CartDeliveryInfoItemModel" />
+        <variable
+            name="listener"
+            type="com.foobarust.android.checkout.CartAdapter.CartAdapterListener" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_xmedium"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="@dimen/elevation_none">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/spacing_large">
+
+            <ImageView
+                android:id="@+id/icon_image_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_large"
+                app:src="@{deliveryInfoItemModel.drawable}"
+                app:tint="@color/material_on_surface_emphasis_medium"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/title_text_view"
+                app:layout_constraintBottom_toBottomOf="@id/title_text_view"
+                tools:src="@drawable/ic_shopping_bag"/>
+
+            <TextView
+                android:id="@+id/title_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_mxlarge"
+                android:text="@{deliveryInfoItemModel.title}"
+                android:textAppearance="?attr/textAppearanceSubtitle2"
+                app:layout_constraintStart_toEndOf="@id/icon_image_view"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Pick up at" />
+
+            <TextView
+                android:id="@+id/address_text_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_mxlarge"
+                android:layout_marginTop="@dimen/spacing_xmedium"
+                android:text="@{deliveryInfoItemModel.address}"
+                android:textAppearance="?attr/textAppearanceCaption"
+                android:textColor="@color/material_on_surface_emphasis_medium"
+                android:lineSpacingMultiplier="1.2"
+                app:layout_constraintTop_toBottomOf="@id/title_text_view"
+                app:layout_constraintStart_toEndOf="@id/icon_image_view"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="Atrium, HKUST"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+    </com.google.android.material.card.MaterialCardView>
+
+</layout>

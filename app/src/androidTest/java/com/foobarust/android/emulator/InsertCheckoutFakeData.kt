@@ -3,9 +3,7 @@ package com.foobarust.android.emulator
 import androidx.test.ext.junit.rules.activityScenarioRule
 import androidx.test.platform.app.InstrumentationRegistry
 import com.foobarust.android.InsertFakeDataActivity
-import com.foobarust.data.common.Constants.DELIVERY_OPTIONS_COLLECTION
 import com.foobarust.data.common.Constants.PAYMENT_METHODS_COLLECTION
-import com.foobarust.data.models.checkout.DeliveryOptionEntity
 import com.foobarust.data.models.checkout.PaymentMethodEntity
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -58,22 +56,6 @@ class InsertCheckoutFakeData {
         }
     }
 
-    @Test
-    fun insert_delivery_options_fake_data() = runBlocking(Dispatchers.IO) {
-        val serializedList: List<DeliveryOptionSerialized> = Json.decodeFromString(
-            decodeJson(file = "delivery_options_fake_data.json")
-        )
-
-        serializedList.forEach {
-            val optionId = it.id
-            val entity = it.toDeliveryOptionEntity()
-
-            firestore.document("$DELIVERY_OPTIONS_COLLECTION/$optionId")
-                .set(entity)
-                .await()
-        }
-    }
-
     private fun decodeJson(file: String): String {
         val jsonInputStream = InstrumentationRegistry.getInstrumentation()
             .context.assets
@@ -93,23 +75,6 @@ private data class PaymentMethodSerialized(
         return PaymentMethodEntity(
             id = id,
             identifier = identifier,
-            enabled = enabled
-        )
-    }
-}
-
-@Serializable
-private data class DeliveryOptionSerialized(
-    val id: String,
-    val identifier: String,
-    val for_seller_type: Int,
-    val enabled: Boolean
-) {
-    fun toDeliveryOptionEntity(): DeliveryOptionEntity {
-        return DeliveryOptionEntity(
-            id = id,
-            identifier = identifier,
-            forSellerType = for_seller_type,
             enabled = enabled
         )
     }

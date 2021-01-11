@@ -3,8 +3,11 @@ package com.foobarust.domain.usecases.seller
 import com.foobarust.domain.di.IoDispatcher
 import com.foobarust.domain.models.seller.SellerSectionDetail
 import com.foobarust.domain.repositories.SellerRepository
-import com.foobarust.domain.usecases.CoroutineUseCase
+import com.foobarust.domain.states.Resource
+import com.foobarust.domain.usecases.FlowUseCase
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 /**
@@ -14,13 +17,17 @@ import javax.inject.Inject
 class GetSellerSectionDetailUseCase @Inject constructor(
     private val sellerRepository: SellerRepository,
     @IoDispatcher coroutineDispatcher: CoroutineDispatcher
-) : CoroutineUseCase<GetSellerSectionDetailParameters, SellerSectionDetail>(coroutineDispatcher) {
+) : FlowUseCase<GetSellerSectionDetailParameters, SellerSectionDetail>(coroutineDispatcher) {
 
-    override suspend fun execute(parameters: GetSellerSectionDetailParameters): SellerSectionDetail {
-        return sellerRepository.getSellerSectionDetail(
+    override fun execute(
+        parameters: GetSellerSectionDetailParameters
+    ): Flow<Resource<SellerSectionDetail>> = flow {
+        val sectionDetail = sellerRepository.getSellerSectionDetail(
             sellerId = parameters.sellerId,
             sectionId = parameters.sectionId
         )
+
+        emit(Resource.Success(sectionDetail))
     }
 }
 

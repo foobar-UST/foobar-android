@@ -40,6 +40,7 @@ class AddUserCartItemUseCase @Inject constructor(
         cartRepository.addUserCartItem(
             idToken = idToken,
             sellerId = parameters.sellerId,
+            sectionId = parameters.sectionId,
             itemId = parameters.itemId,
             amounts = parameters.amounts
         )
@@ -50,6 +51,7 @@ class AddUserCartItemUseCase @Inject constructor(
 
 data class AddUserCartItemParameters(
     val sellerId: String,
+    val sectionId: String? = null,
     val itemId: String,
     val amounts: Int,
     val currentSellerId: String?

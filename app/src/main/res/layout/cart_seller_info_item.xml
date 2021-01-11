@@ -6,7 +6,7 @@
 
     <data>
         <variable
-            name="sellerInfoModel"
+            name="sellerInfoItemModel"
             type="com.foobarust.android.checkout.CartListModel.CartSellerInfoItemModel" />
         <variable
             name="listener"
@@ -40,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_xmedium"
-            android:text="@{SellerBasicKt.getNormalizedName(sellerInfoModel.sellerBasic)}"
+            android:text="@{SellerBasicKt.getNormalizedName(sellerInfoItemModel.sellerBasic)}"
             android:textAppearance="?attr/textAppearanceBody2"
             android:textColor="@color/material_on_surface_emphasis_medium"
             app:layout_constraintStart_toStartOf="parent"
@@ -57,11 +57,11 @@
             android:paddingBottom="@dimen/spacing_medium"
             android:paddingStart="@dimen/spacing_xmedium"
             android:paddingEnd="@dimen/spacing_xmedium"
-            android:text="@{sellerInfoModel.sellerBasic.type == SellerType.ON_CAMPUS ? @string/seller_type_on_campus : @string/seller_type_off_campus }"
+            android:text="@{sellerInfoItemModel.sellerBasic.type == SellerType.ON_CAMPUS ? @string/seller_type_on_campus : @string/seller_type_off_campus }"
             android:textColor="?attr/colorOnSecondary"
             android:textAppearance="?attr/textAppearanceOverline"
             android:background="@drawable/shape_seller_type"
-            android:backgroundTint="@{sellerInfoModel.sellerBasic.type == SellerType.ON_CAMPUS ? @color/mint_100 : @color/maroon_100}"
+            android:backgroundTint="@{sellerInfoItemModel.sellerBasic.type == SellerType.ON_CAMPUS ? @color/mint_100 : @color/maroon_100}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/seller_name_text_view"
@@ -72,11 +72,11 @@
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:layout_marginTop="@dimen/spacing_large"
-            android:contentDescription="@{sellerInfoModel.sellerBasic.name}"
+            android:contentDescription="@{sellerInfoItemModel.sellerBasic.name}"
             android:scaleType="centerCrop"
             app:glideCenterCrop="@{true}"
             app:glidePlaceholder="@{R.drawable.placeholder_card}"
-            app:glideUrl="@{sellerInfoModel.sellerBasic.imageUrl}"
+            app:glideUrl="@{sellerInfoItemModel.sellerBasic.imageUrl}"
             app:layout_constraintTop_toBottomOf="@id/seller_type_text_view"
             tools:src="@sample/sample_image_5" />
 
@@ -86,7 +86,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_xmedium"
-            android:onClick="@{() -> listener.onNavigateToSellerDetail(sellerInfoModel.sellerBasic.id)}"
+            android:onClick="@{() -> listener.onNavigateToSellerDetail(sellerInfoItemModel.sellerBasic.id)}"
             android:text="@string/cart_seller_info_title_menu"
             android:textAppearance="?attr/textAppearanceBody2"
             app:icon="@drawable/ic_fastfood"
@@ -103,7 +103,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_xmedium"
-            android:onClick="@{() -> listener.onNavigateToSellerMisc(sellerInfoModel.sellerBasic.id)}"
+            android:onClick="@{() -> listener.onNavigateToSellerMisc(sellerInfoItemModel.sellerBasic.id)}"
             android:text="@string/cart_seller_info_title_detail"
             android:textAppearance="?attr/textAppearanceBody2"
             app:icon="@drawable/ic_live_help"

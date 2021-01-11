@@ -6,7 +6,6 @@ import androidx.lifecycle.*
 import com.foobarust.android.R
 import com.foobarust.android.sellerdetail.SellerItemDetailProperty
 import com.foobarust.android.utils.SingleLiveEvent
-import com.foobarust.domain.usecases.cart.GetUserCartUseCase
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,8 +16,7 @@ import kotlinx.coroutines.flow.combine
  */
 
 class CheckoutViewModel @ViewModelInject constructor(
-    @ApplicationContext context: Context,
-    getUserCartUseCase: GetUserCartUseCase
+    @ApplicationContext context: Context
 ) : ViewModel() {
 
     private val _showUpdatingProgress = MutableLiveData(false)
@@ -42,7 +40,6 @@ class CheckoutViewModel @ViewModelInject constructor(
         get() = _backPressed
 
     private val _currentDestination = MutableStateFlow(-1)
-
     private val _cartItemsCount = MutableStateFlow(0)
 
     val appBarTitle: LiveData<String> = _currentDestination

@@ -14,6 +14,7 @@
         <item name="android:paddingStart">@dimen/spacing_large</item>
         <item name="android:paddingEnd">@dimen/spacing_large</item>
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:lineSpacingMultiplier">1.2</item>
         <item name="android:textColor">@color/material_on_surface_emphasis_medium</item>
     </style>
 
