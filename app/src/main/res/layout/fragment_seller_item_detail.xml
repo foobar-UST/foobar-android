@@ -9,175 +9,181 @@
             name="viewModel"
             type="com.foobarust.android.sellerdetail.SellerItemDetailViewModel" />
         <import type="com.foobarust.domain.models.seller.SellerItemDetailKt" />
+        <import type="com.foobarust.android.R" />
+        <import type="com.foobarust.android.common.UiState" />
         <import type="com.foobarust.android.utils.BindingConverters" />
-        <import type="com.foobarust.android.R"/>
     </data>
 
-    <RelativeLayout
-        android:id="@+id/bottom_sheet_layout"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinator_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:background="?android:attr/colorBackground"
+        app:layoutFullscreen="@{true}">
 
-        <RelativeLayout
-            android:id="@+id/header_layout"
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/app_bar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/spacing_large"
-            android:background="?attr/colorPrimarySurface">
+            android:background="?android:attr/colorBackground"
+            app:collapseIf="@{viewModel.itemDetail.imageUrl == null}"
+            app:elevation="@dimen/elevation_none">
 
-            <TextView
-                android:id="@+id/title_text_view"
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:id="@+id/collapsing_toolbar_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/spacing_large"
-                android:layout_toStartOf="@id/price_text_view"
-                android:text="@{viewModel.itemDetail != null ? SellerItemDetailKt.getNormalizedTitle(viewModel.itemDetail) : ``}"
-                android:textAppearance="?attr/textAppearanceSubtitle1"
-                android:textColor="?attr/colorOnPrimary"
-                android:ellipsize="end"
-                android:lineSpacingMultiplier="1.2"
-                tools:text="Item Title" />
+                app:contentScrim="?android:attr/colorBackground"
+                app:titleEnabled="false"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
-            <TextView
-                android:id="@+id/price_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:text="@{@string/seller_item_data_format_price(viewModel.itemDetail.price)}"
-                android:textStyle="bold"
-                android:textAppearance="?attr/textAppearanceSubtitle1"
-                android:textColor="?attr/colorSecondary"
-                android:lineSpacingMultiplier="1.2"
-                tools:text="$ 57.4"/>
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="210dp"
+                    app:layout_collapseMode="parallax"
+                    app:goneIf="@{!(viewModel.uiState instanceof UiState.Success) || viewModel.itemDetail.imageUrl == null}"
+                    tools:visibility="visible">
 
-            <TextView
-                android:id="@+id/description_text_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_xmedium"
-                android:layout_marginEnd="@dimen/spacing_large"
-                android:layout_below="@id/title_text_view"
-                android:layout_toStartOf="@id/price_text_view"
-                android:text="@{viewModel.itemDetail != null ? SellerItemDetailKt.getNormalizedDescription(viewModel.itemDetail) : ``}"
-                android:textAppearance="?attr/textAppearanceBody2"
-                android:textColor="@color/material_on_primary_emphasis_medium"
-                android:ellipsize="end"
-                android:lineSpacingMultiplier="1.2"
-                app:goneIf="@{viewModel.itemDetail.description == null}"
-                tools:text="Item description will be shown here" />
+                    <View
+                        android:id="@+id/scrim_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/scrim_fade_top"
+                        android:elevation="@dimen/elevation_small" />
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/photo_image_view"
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:layout_marginTop="@dimen/spacing_large"
-                android:layout_below="@id/description_text_view"
-                android:scaleType="centerCrop"
-                app:glideUrl="@{viewModel.itemDetail.imageUrl}"
-                app:glideCenterCrop="@{true}"
-                app:glidePlaceholder="@{R.drawable.placeholder_card}"
-                app:shapeAppearance="@style/ShapeAppearance.Foobar.SmallComponent"
-                app:goneIf="@{viewModel.itemDetail.imageUrl == null}"
-                tools:src="@sample/sample_image_1"/>
+                    <ImageView
+                        android:id="@+id/item_image_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:contentDescription="@{viewModel.itemDetail.title}"
+                        app:glideUrl="@{viewModel.itemDetail.imageUrl}"
+                        app:glideCenterCrop="@{true}"
+                        app:glidePlaceholder="@{R.drawable.placeholder_card}"
+                        tools:src="@sample/sample_image_2"/>
 
-        </RelativeLayout>
+                </FrameLayout>
 
-        <TextView
-            android:id="@+id/amount_title_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_large"
-            android:layout_marginBottom="@dimen/spacing_xmedium"
-            android:layout_marginStart="@dimen/spacing_large"
-            android:layout_below="@id/header_layout"
-            android:text="@string/seller_item_subtitle_amount"
-            android:textAppearance="?attr/textAppearanceSubtitle1" />
+                <com.google.android.material.appbar.MaterialToolbar
+                    style="@style/Widget.MaterialComponents.Toolbar.Surface"
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    app:title="@{viewModel.toolbarTitle}"
+                    app:layout_collapseMode="pin"
+                    app:navigationIcon="@drawable/ic_arrow_back"
+                    app:navigationIconTint="@color/material_on_surface_emphasis_medium"
+                    app:paddingTopSystemWindowInsets="@{true}"/>
 
-        <TextView
-            android:id="@+id/item_count_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/spacing_large"
-            android:layout_alignTop="@id/amount_title_text_view"
-            android:layout_alignBottom="@id/amount_title_text_view"
-            android:layout_alignParentEnd="true"
-            android:gravity="center_vertical"
-            android:text="@{@string/seller_item_detail_format_item_count(viewModel.itemDetail.count)}"
-            android:textAppearance="?attr/textAppearanceBody2"
-            android:textColor="@color/material_on_surface_emphasis_medium"/>
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
 
-        <LinearLayout
-            android:id="@+id/amount_layout"
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="140dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+            tools:listitem="@layout/seller_item_detail_info_item"
+            tools:itemCount="1"
+            app:goneIf="@{!(viewModel.uiState instanceof UiState.Success)}"/>
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/spacing_large"
-            android:layout_marginEnd="@dimen/spacing_large"
-            android:layout_below="@id/amount_title_text_view"
-            android:padding="@dimen/spacing_medium"
-            android:orientation="horizontal"
-            android:gravity="center">
+            android:layout_gravity="center"
+            app:goneIf="@{!(viewModel.uiState instanceof UiState.Loading)}" />
+
+        <include
+            layout="@layout/load_error_layout"
+            android:id="@+id/load_error_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            app:goneIf="@{!(viewModel.uiState instanceof UiState.Error)}"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:layout_gravity="bottom"
+            android:background="?android:attr/colorBackground"
+            app:goneIf="@{!(viewModel.uiState instanceof UiState.Success)}">
 
             <ImageButton
                 android:id="@+id/amount_increment_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/min_icon_touch_padding"
-                android:src="@drawable/ic_add"
+                android:layout_marginEnd="@dimen/spacing_large"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/seller_item_detail_increment_content_desc"
-                app:tint="@color/material_on_surface_emphasis_medium"/>
+                android:padding="@dimen/min_icon_touch_padding"
+                android:src="@drawable/ic_add"
+                app:layout_constraintBottom_toBottomOf="@+id/amount_text_view"
+                app:layout_constraintEnd_toStartOf="@+id/amount_text_view"
+                app:layout_constraintTop_toTopOf="@+id/amount_text_view"
+                app:tint="@color/material_on_surface_emphasis_medium" />
 
             <TextView
+                android:id="@+id/amount_text_view"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:paddingStart="@dimen/spacing_mxlarge"
                 android:paddingEnd="@dimen/spacing_mxlarge"
-                android:gravity="center"
                 android:text="@{BindingConverters.intToString(viewModel.amountsInput)}"
-                android:textColor="?attr/colorPrimary"
                 android:textAppearance="?attr/textAppearanceHeadline6"
-                tools:text="1"/>
+                android:textColor="?attr/colorPrimary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/submit_button"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="1" />
 
             <ImageButton
                 android:id="@+id/amount_decrement_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/min_icon_touch_padding"
-                android:src="@drawable/ic_remove"
+                android:layout_marginStart="@dimen/spacing_large"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/seller_item_detail_decrement_content_desc"
-                app:tint="@color/material_on_surface_emphasis_medium"/>
-
-        </LinearLayout>
-
-        <FrameLayout
-            android:id="@+id/submit_to_cart_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/amount_layout">
+                android:padding="@dimen/min_icon_touch_padding"
+                android:src="@drawable/ic_remove"
+                app:layout_constraintBottom_toBottomOf="@+id/amount_text_view"
+                app:layout_constraintStart_toEndOf="@+id/amount_text_view"
+                app:layout_constraintTop_toTopOf="@+id/amount_text_view"
+                app:tint="@color/material_on_surface_emphasis_medium" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/submit_to_cart_button"
+                style="@style/Widget.MaterialComponents.Button"
+                android:id="@+id/submit_button"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:layout_margin="@dimen/spacing_large"
-                android:text="@{viewModel.cartItemSubmitting == false ? @string/seller_item_add_to_cart(viewModel.finalPrice) : ``}"
+                android:text="@{viewModel.submitButtonTitle}"
+                android:clickable="@{!viewModel.isSubmitting}"
                 app:iconGravity="textStart"
                 app:iconPadding="@dimen/spacing_large"
-                tools:text="Add to Cart"/>
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:text="Add to Cart ($ 56.0)"/>
 
             <ProgressBar
-                android:id="@+id/submit_to_cart_progress_bar"
+                android:id="@+id/submit_progress_bar"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
-                android:layout_gravity="center"
                 android:indeterminateTint="?attr/colorOnPrimary"
                 android:elevation="3dp"
-                app:goneIf="@{viewModel.cartItemSubmitting == false}" />
+                app:layout_constraintTop_toTopOf="@id/submit_button"
+                app:layout_constraintBottom_toBottomOf="@id/submit_button"
+                app:layout_constraintStart_toStartOf="@id/submit_button"
+                app:layout_constraintEnd_toEndOf="@id/submit_button"
+                app:goneIf="@{!viewModel.isSubmitting}" />
 
-        </FrameLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </RelativeLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </layout>

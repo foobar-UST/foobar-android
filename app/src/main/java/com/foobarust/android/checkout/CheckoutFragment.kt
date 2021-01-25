@@ -7,13 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import com.foobarust.android.R
 import com.foobarust.android.common.FullScreenDialogFragment
 import com.foobarust.android.databinding.FragmentCheckoutBinding
 import com.foobarust.android.utils.AutoClearedValue
 import com.foobarust.android.utils.findNavController
 import com.foobarust.android.utils.getNavGraphViewModel
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -35,30 +35,35 @@ class CheckoutFragment : FullScreenDialogFragment() {
 
         setupNavigation()
 
+        // Setup binding
         binding.run {
             viewModel = this@CheckoutFragment.viewModel
             lifecycleOwner = viewLifecycleOwner
         }
 
-        // Setup toolbar
+        // Setup toolbar navigation button
         binding.toolbar.setNavigationOnClickListener {
             handleBackPressed()
         }
 
-        // Dismiss dialog
-        binding.toolbar.setNavigationOnClickListener { handleBackPressed() }
+        // Expose submit button click event to child fragments
+        binding.submitButton.setOnClickListener {
+            viewModel.onSubmitButtonClicked()
+        }
 
         // Navigate to SellerDetail
         viewModel.navigateToSellerDetail.observe(viewLifecycleOwner) {
             findNavController(R.id.checkoutFragment)?.navigate(
-                CheckoutFragmentDirections.actionCheckoutFragmentToSellerDetailFragment(sellerId = it)
+                CheckoutFragmentDirections.actionCheckoutFragmentToSellerDetailFragment(property = it)
             )
         }
 
         // Navigate to SellerMisc
         viewModel.navigateToSellerMisc.observe(viewLifecycleOwner) {
             findNavController(R.id.checkoutFragment)?.navigate(
-                CheckoutFragmentDirections.actionCheckoutFragmentToSellerMiscFragment(sellerId = it)
+                CheckoutFragmentDirections.actionCheckoutFragmentToSellerMiscFragment(
+                    sellerId = it
+                )
             )
         }
 
@@ -66,9 +71,23 @@ class CheckoutFragment : FullScreenDialogFragment() {
         viewModel.navigateToSellerItemDetail.observe(viewLifecycleOwner) {
             findNavController(R.id.checkoutFragment)?.navigate(
                 CheckoutFragmentDirections.actionCheckoutFragmentToSellerItemDetailFragment(
-                    sellerItemDetailProperty = it
+                    property = it
                 )
             )
+        }
+
+        // Navigate to SellerSection
+        viewModel.navigateToSellerSection.observe(viewLifecycleOwner) {
+            findNavController(R.id.checkoutFragment)?.navigate(
+                CheckoutFragmentDirections.actionCheckoutFragmentToSellerSectionFragment(
+                    property = it
+                )
+            )
+        }
+
+        // Expand collapsing toolbar
+        viewModel.expandCollapsingToolbar.observe(viewLifecycleOwner) {
+            binding.appBarLayout.setExpanded(true, true)
         }
 
         return binding.root
@@ -104,14 +123,9 @@ class CheckoutFragment : FullScreenDialogFragment() {
         // Dismiss the dialog when back pressing in start destination
         val currentDestination = navController.currentDestination?.id
         if (currentDestination == R.id.cartFragment) {
-            dismiss()
+            findNavController().navigateUp()
         } else {
             viewModel.onBackPressed()
         }
-    }
-
-
-    private fun showSnackBar(message: String) {
-        Snackbar.make(binding.coordinatorLayout, message, Snackbar.LENGTH_SHORT).show()
     }
 }

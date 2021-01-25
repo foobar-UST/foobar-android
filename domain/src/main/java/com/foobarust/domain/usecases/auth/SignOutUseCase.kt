@@ -18,9 +18,7 @@ class SignOutUseCase @Inject constructor(
 ) : CoroutineUseCase<Unit, Unit>(coroutineDispatcher) {
 
     override suspend fun execute(parameters: Unit) {
-        //val userId = authRepository.getAuthUserId()
-        // Remove local user detail
-        //userRepository.removeLocalUserDetail(userId)
         authRepository.signOut()
+        userRepository.clearUserDetailCache()
     }
 }

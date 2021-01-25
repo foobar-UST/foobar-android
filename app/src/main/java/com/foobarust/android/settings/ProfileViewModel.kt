@@ -3,7 +3,6 @@ package com.foobarust.android.settings
 import android.content.Context
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.R
@@ -11,6 +10,7 @@ import com.foobarust.android.common.BaseViewModel
 import com.foobarust.android.common.TextInputProperty
 import com.foobarust.android.common.TextInputType.NAME
 import com.foobarust.android.common.TextInputType.PHONE_NUM
+import com.foobarust.android.common.UiState
 import com.foobarust.android.settings.ProfileListModel.*
 import com.foobarust.android.utils.SingleLiveEvent
 import com.foobarust.domain.models.user.UserDetail
@@ -19,10 +19,10 @@ import com.foobarust.domain.states.Resource
 import com.foobarust.domain.states.getSuccessDataOr
 import com.foobarust.domain.usecases.common.GetFormattedPhoneNumUseCase
 import com.foobarust.domain.usecases.user.GetUserDetailUseCase
+import com.foobarust.domain.usecases.user.UpdateUserDetailParameters
 import com.foobarust.domain.usecases.user.UpdateUserDetailUseCase
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
@@ -36,9 +36,7 @@ class ProfileViewModel @ViewModelInject constructor(
     private val getFormattedPhoneNumUseCase: GetFormattedPhoneNumUseCase
 ) : BaseViewModel() {
 
-    private val userDetail: Flow<Resource<UserDetail>> = getUserDetailUseCase(Unit)
-
-    val profileListModels: LiveData<List<ProfileListModel>> = userDetail
+    val profileListModels: LiveData<List<ProfileListModel>> = getUserDetailUseCase(Unit)
         .map { it.getSuccessDataOr(null) }
         .map { buildProfileListModels(userDetail = it) }
         .asLiveData(viewModelScope.coroutineContext)
@@ -47,42 +45,44 @@ class ProfileViewModel @ViewModelInject constructor(
     val navigateToTextInput: LiveData<TextInputProperty>
         get() = _navigateToTextInput
 
-    private val _isUpdatingProgress = MutableLiveData(false)
-    val isUpdatingProgress: LiveData<Boolean>
-        get() = _isUpdatingProgress
+    private val _snackBarMessage = SingleLiveEvent<String>()
+    val snackBarMessage: LiveData<String>
+        get() = _snackBarMessage
 
     fun updateUserName(name: String) = viewModelScope.launch {
-        val currentUserDetail = (userDetail
-            .first { it is Resource.Success } as Resource.Success)
-            .data
-
-        _isUpdatingProgress.value = true
-
-        val updatedUserDetail = currentUserDetail.copy(name = name, updatedAt = null)
-        val resource = updateUserDetailUseCase(updatedUserDetail)
-
-        if (resource is Resource.Error) {
-            showToastMessage(resource.message)
+        val params = UpdateUserDetailParameters(name = name)
+        updateUserDetailUseCase(params).collect {
+            when (it) {
+                is Resource.Success -> {
+                    setUiState(UiState.Success)
+                    _snackBarMessage.value = context.getString(R.string.profile_user_detail_updated)
+                }
+                is Resource.Error -> {
+                    setUiState(UiState.Error(it.message))
+                }
+                is Resource.Loading -> {
+                    setUiState(UiState.Loading)
+                }
+            }
         }
-
-        _isUpdatingProgress.value = false
     }
 
     fun updateUserPhoneNum(phoneNum: String) = viewModelScope.launch {
-        val currentUserDetail = (userDetail
-            .first { it is Resource.Success } as Resource.Success)
-            .data
-
-        _isUpdatingProgress.value = true
-
-        val updatedUserDetail = currentUserDetail.copy(phoneNum = phoneNum, updatedAt = null)
-        val resource = updateUserDetailUseCase(updatedUserDetail)
-
-        if (resource is Resource.Error) {
-            showToastMessage(resource.message)
+        val params = UpdateUserDetailParameters(phoneNum = phoneNum)
+        updateUserDetailUseCase(params).collect {
+            when (it) {
+                is Resource.Success -> {
+                    setUiState(UiState.Success)
+                    _snackBarMessage.value = context.getString(R.string.profile_user_detail_updated)
+                }
+                is Resource.Error -> {
+                    setUiState(UiState.Error(it.message))
+                }
+                is Resource.Loading -> {
+                    setUiState(UiState.Loading)
+                }
+            }
         }
-
-        _isUpdatingProgress.value = false
     }
 
     fun onNavigateToTextInput(editModel: ProfileEditModel) {
@@ -93,20 +93,20 @@ class ProfileViewModel @ViewModelInject constructor(
                 value = editModel.value,
                 type = NAME
             )
-
             EDIT_PROFILE_PHONE_NUMBER -> TextInputProperty(
                 id = editModel.id,
                 title = editModel.title,
                 value = editModel.value,
                 type = PHONE_NUM
             )
-
             else -> throw IllegalStateException("Unknown edit model: ${editModel.id}")
         }
     }
 
     private suspend fun buildProfileListModels(userDetail: UserDetail?): List<ProfileListModel> {
-        if (userDetail == null) return emptyList()
+        if (userDetail == null) {
+            return emptyList()
+        }
 
         return buildList {
             // Add warning message section

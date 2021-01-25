@@ -29,10 +29,19 @@ class OrderSuccessFragment : Fragment() {
     ): View {
         binding = FragmentOrderSuccessBinding.inflate(inflater, container, false)
 
+        // Set toolbar title
+        checkoutViewModel.onUpdateToolbarTitle(title = "Completed")
+
+        // Hide submit button
+        checkoutViewModel.onShowSubmitButton(isShow = false)
+
         // Observe dialog back press and navigate up
         checkoutViewModel.backPressed.observe(viewLifecycleOwner) {
+            // if is success, dismiss the dialog
+            // else navigate up
             findNavController().navigateUp()
         }
+
 
         return binding.root
     }

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="userCart"
+            type="com.foobarust.domain.models.cart.UserCart" />
+        <import type="com.foobarust.android.utils.BindingConverters" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cart_bottom_bar_card_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/cart_bottom_bar_height"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardBackgroundColor="?attr/colorPrimarySurface"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="@dimen/elevation_medium"
+        app:rippleColor="?attr/colorOnPrimary">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/spacing_large">
+
+            <TextView
+                android:id="@+id/cart_items_count_text_view"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:gravity="center"
+                android:background="@drawable/shape_circle"
+                android:backgroundTint="?attr/colorOnPrimarySurface"
+                android:text="@{@string/cart_bottom_bar_format_items_count(userCart.itemsCount)}"
+                android:textColor="?attr/colorPrimary"
+                android:textStyle="bold"
+                android:textAppearance="?attr/textAppearanceSubtitle2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:text="4"/>
+
+            <TextView
+                android:id="@+id/cart_title_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_large"
+                android:text="@string/cart_bottom_bar_title_items_count"
+                android:textAppearance="?attr/textAppearanceSubtitle2"
+                android:textColor="?attr/colorOnPrimarySurface"
+                app:layout_constraintStart_toEndOf="@id/cart_items_count_text_view"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <TextView
+                android:id="@+id/cart_total_price_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{@string/cart_bottom_bar_format_total_price(userCart.totalCost)}"
+                android:textAppearance="?attr/textAppearanceBody1"
+                android:textColor="?attr/colorSecondary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:text="$ 234.5"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</layout>

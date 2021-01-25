@@ -39,7 +39,6 @@
             android:textColor="@color/material_on_surface_emphasis_medium"
             android:textAppearance="?attr/textAppearanceBody2"
             android:drawablePadding="@dimen/spacing_large"
-            app:drawableScale="@{1.0}"
             app:drawableTint="@color/material_on_surface_emphasis_medium"
             app:drawableStartCompat="@drawable/ic_event"
             tools:text="2020-12-22"/>
@@ -54,7 +53,6 @@
             android:textColor="@color/material_on_surface_emphasis_medium"
             android:textAppearance="?attr/textAppearanceBody2"
             android:drawablePadding="@dimen/spacing_large"
-            app:drawableScale="@{1.0}"
             app:drawableTint="@color/material_on_surface_emphasis_medium"
             app:drawableStartCompat="@drawable/ic_access_time"
             tools:text="Dues at 12:00 PM"/>
@@ -69,7 +67,6 @@
             android:textColor="@color/material_on_surface_emphasis_medium"
             android:textAppearance="?attr/textAppearanceBody2"
             android:drawablePadding="@dimen/spacing_large"
-            app:drawableScale="@{1.0}"
             app:drawableTint="@color/material_on_surface_emphasis_medium"
             app:drawableStartCompat="@drawable/ic_local_shipping"
             tools:text="Deliver at 12:30 PM" />
@@ -84,7 +81,6 @@
             android:textColor="@color/material_on_surface_emphasis_medium"
             android:textAppearance="?attr/textAppearanceBody2"
             android:drawablePadding="@dimen/spacing_large"
-            app:drawableScale="@{1.0}"
             app:drawableTint="@color/material_on_surface_emphasis_medium"
             app:drawableStartCompat="@drawable/ic_shopping_bag"
             tools:text="Pick Up at HKUST"/>

@@ -29,16 +29,14 @@ import kotlinx.coroutines.launch
 class MainViewModel @ViewModelInject constructor(
     @ApplicationContext private val context: Context,
     private val workManager: WorkManager,
-    getUserCartUseCase: GetUserCartUseCase,
+    private val getUserCartUseCase: GetUserCartUseCase,
     private val checkCartTimeOutUseCase: CheckCartTimeOutUseCase,
     private val clearUserCartUseCase: ClearUserCartUseCase,
     private val getOnboardingCompletedUseCase: GetOnboardingCompletedUseCase,
     private val updateOnboardingCompletedUseCase: UpdateOnboardingCompletedUseCase,
 ) : BaseViewModel() {
 
-    private val userCart: Flow<Resource<UserCart?>> = getUserCartUseCase(Unit)
-
-    val userCartLiveData: LiveData<UserCart?> = userCart
+    val userCartLiveData: LiveData<UserCart?> = getUserCartUseCase(Unit)
         .map { it.getSuccessDataOr(null) }
         .asLiveData(viewModelScope.coroutineContext)
 
@@ -52,9 +50,8 @@ class MainViewModel @ViewModelInject constructor(
     private val _currentNavGraphId = MutableStateFlow<Int?>(null)
 
     val showCartBottomBar: LiveData<Boolean> = _currentNavGraphId
-        .asStateFlow()
         .combine(
-            userCart.map { it.getSuccessDataOr(null) }
+            getUserCartUseCase(Unit).map { it.getSuccessDataOr(null) }
         ) { currentGraphId, userCart ->
             // Show bottom bar only in seller tab
             currentGraphId == R.id.navigation_seller &&
@@ -76,17 +73,18 @@ class MainViewModel @ViewModelInject constructor(
     val navigateToTimeoutDialog: LiveData<CartTimeoutProperty>
         get() = _navigateToTimeoutDialog
 
-    private val _showOnboardingTutorial = SingleLiveEvent<Unit>()
-    val showOnboardingTutorial: LiveData<Unit>
-        get() = _showOnboardingTutorial
+    private val _navigateToOnboardingTutorial = SingleLiveEvent<Unit>()
+    val navigateToOnboardingTutorial: LiveData<Unit>
+        get() = _navigateToOnboardingTutorial
 
     private val _launchCustomTab = SingleLiveEvent<String>()
     val launchCustomTab: LiveData<String>
         get() = _launchCustomTab
 
     private var hasCheckedCartTimeout: Boolean = false
-
     private var currentDestinationId: Int = 0
+
+    private var currentUserCart: UserCart? = null
 
     init {
         showOnboardingTutorial()
@@ -94,15 +92,18 @@ class MainViewModel @ViewModelInject constructor(
     }
 
     private fun fetchUserCart() = viewModelScope.launch {
-        userCart.collect { result ->
-            when (result) {
+        getUserCartUseCase(Unit).collect {
+            when (it) {
                 is Resource.Success -> {
-                    val userCart = result.data
+                    val userCart = it.data
+                    currentUserCart = userCart
                     if (!hasCheckedCartTimeout && userCart != null) {
                         checkUserCartTimeout(userCart = userCart)
                     }
                 }
-                is Resource.Error -> showToastMessage(result.message)
+                is Resource.Error -> {
+                    currentUserCart = null
+                }
                 is Resource.Loading -> Unit
             }
         }
@@ -164,14 +165,12 @@ class MainViewModel @ViewModelInject constructor(
         _launchCustomTab.value = url
     }
 
-    suspend fun getCurrentUserCart(): UserCart? {
-        return (userCart.first { it is Resource.Success } as Resource.Success).data
-    }
+    fun getCurrentUserCart(): UserCart? = currentUserCart
 
     private fun showOnboardingTutorial() = viewModelScope.launch {
         val completed = getOnboardingCompletedUseCase(Unit).getSuccessDataOr(false)
         if (!completed) {
-            _showOnboardingTutorial.value = Unit
+            _navigateToOnboardingTutorial.value = Unit
         }
     }
 

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.foobarust.android.common.FullScreenDialogFragment
 import com.foobarust.android.databinding.FragmentLicenseBinding
 import com.foobarust.android.utils.AutoClearedValue
@@ -20,7 +21,9 @@ class LicenseFragment : FullScreenDialogFragment() {
         binding = FragmentLicenseBinding.inflate(inflater, container, false)
 
         // Dismiss dialog
-        binding.toolbar.setNavigationOnClickListener { dismiss() }
+        binding.toolbar.setNavigationOnClickListener {
+            findNavController().navigateUp()
+        }
 
         return binding.root
     }

@@ -7,13 +7,14 @@ import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.foobarust.android.NavigationSellerDirections
 import com.foobarust.android.R
 import com.foobarust.android.common.FullScreenDialogFragment
 import com.foobarust.android.databinding.FragmentSellerDetailBinding
 import com.foobarust.android.utils.*
-import com.foobarust.domain.models.seller.getNormalizedTitle
+import com.foobarust.domain.models.seller.*
 import com.google.android.material.chip.Chip
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
@@ -30,13 +31,13 @@ import kotlinx.coroutines.launch
 class SellerDetailFragment : FullScreenDialogFragment() {
 
     private var binding: FragmentSellerDetailBinding by AutoClearedValue(this)
-    private val sellerDetailViewModel: SellerDetailViewModel by viewModels()
-    private val args: SellerDetailFragmentArgs by navArgs()
+    private val viewModel: SellerDetailViewModel by viewModels()
+    private val navArgs: SellerDetailFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Receive seller id argument
-        sellerDetailViewModel.onFetchSellerDetailWithCatalogs(sellerId = args.sellerId)
+        viewModel.onFetchSellerDetail(navArgs.property)
     }
 
     override fun onCreateView(
@@ -45,74 +46,76 @@ class SellerDetailFragment : FullScreenDialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSellerDetailBinding.inflate(inflater, container, false).apply {
-            viewModel = this@SellerDetailFragment.sellerDetailViewModel
+            viewModel = this@SellerDetailFragment.viewModel
             lifecycleOwner = viewLifecycleOwner
         }
 
         // Remove listener on CollapsingToolbarLayout, so that toolbar top padding can work properly
         // Issue: https://github.com/material-components/material-components-android/issues/1310
         ViewCompat.setOnApplyWindowInsetsListener(binding.collapsingToolbarLayout, null)
+        // Load at most two consecutive pages for view pager at once
+        binding.itemsViewPager.offscreenPageLimit = 2
+
+        // Navigation back arrow button
+        binding.toolbar.setNavigationOnClickListener {
+            findNavController().navigateUp()
+        }
+
+        binding.showMiscButton.setOnClickListener {
+            viewModel.onNavigateToSellerMisc()
+        }
+
+        // Cart bottom bar
+        binding.cartBottomBar.cartBottomBarCardView.setOnClickListener {
+            findNavController(R.id.sellerDetailFragment)?.navigate(
+                NavigationSellerDirections.actionGlobalCheckoutFragment()
+            )
+        }
+
+        // Retry
+        binding.loadErrorLayout.retryButton.setOnClickListener {
+            viewModel.onFetchSellerDetail(navArgs.property)
+        }
 
         // Set up tab layout and view pager when seller detail is successfully fetched
-        sellerDetailViewModel.sellerDetailWithCatalogs.observe(viewLifecycleOwner) { sellerDetailWithCatalogs ->
+        viewModel.sellerDetailWithCatalogs.observe(viewLifecycleOwner) { sellerDetailWithCatalogs ->
             sellerDetailWithCatalogs?.let {
-                val catalogPagerAdapter = SellerCatalogPagerAdapter(
-                    fragmentManager = childFragmentManager,
-                    lifecycle = viewLifecycleOwner.lifecycle,
-                    sellerId = args.sellerId,
-                    sellerCatalogs = it.catalogs
-                )
-
-                binding.itemsViewPager.adapter = catalogPagerAdapter
-
-                TabLayoutMediator(binding.categoryTabLayout, binding.itemsViewPager) { tab, position ->
-                    tab.text = it.catalogs[position].getNormalizedTitle()
-                }.attach()
+                setupCatalogViewPager(it.catalogs)
             }
         }
 
         // Show toast message
-        sellerDetailViewModel.toastMessage.observe(viewLifecycleOwner) {
+        viewModel.toastMessage.observe(viewLifecycleOwner) {
             showShortToast(it)
         }
 
-        // Load at most two consecutive pages for view pager at once
-        binding.itemsViewPager.offscreenPageLimit = 2
 
         // Show toolbar title only when collapsed
         viewLifecycleOwner.lifecycleScope.launch {
             binding.appBarLayout.doOnOffsetChanged().collect {
-                sellerDetailViewModel.onShowToolbarTitleChanged(
-                    isShow = it == AppBarStateChangedListener.State.COLLAPSED
+                viewModel.onToolbarCollapsed(
+                    isCollapsed = it == AppBarStateChangedListener.State.COLLAPSED
                 )
             }
         }
 
-        // Navigation back arrow button
-        binding.toolbar.setNavigationOnClickListener { dismiss() }
-
-        // Navigate to SellerMiscFragment
-        binding.miscButton.setOnClickListener {
-            sellerDetailViewModel.onShowSellerMisc()
-        }
-
-        sellerDetailViewModel.navigateToSellerMisc.observe(viewLifecycleOwner) {
+        viewModel.navigateToSellerMisc.observe(viewLifecycleOwner) {
             findNavController(R.id.sellerDetailFragment)?.navigate(
                 SellerDetailFragmentDirections.actionSellerDetailFragmentToSellerMiscFragment(
-                    sellerId = args.sellerId
+                    sellerId = navArgs.property.sellerId
                 )
             )
         }
 
         // Navigate to ItemDetailDialog
-        sellerDetailViewModel.navigateToItemDetail.observe(viewLifecycleOwner) {
+        viewModel.navigateToItemDetail.observe(viewLifecycleOwner) {
             findNavController(R.id.sellerDetailFragment)?.navigate(
                 SellerDetailFragmentDirections.actionSellerDetailFragmentToSellerItemDetailFragment(it)
             )
         }
 
         // Setup action chips
-        sellerDetailViewModel.detailActions.observe(viewLifecycleOwner) { detailActions ->
+        viewModel.detailActions.observe(viewLifecycleOwner) { detailActions ->
             val chips = detailActions.map { action ->
                 Chip(requireContext(), null, R.attr.sellerActionChipStyle).apply {
                     hide()
@@ -132,17 +135,31 @@ class SellerDetailFragment : FullScreenDialogFragment() {
         }
 
         // SnackBar
-        sellerDetailViewModel.showSnackBarMessage.observe(viewLifecycleOwner) {
+        viewModel.snackBarMessage.observe(viewLifecycleOwner) {
             showMessageSnackBar(message = it)
         }
 
-        binding.cartBottomBar.cartBottomBarCardView.setOnClickListener {
-            findNavController(R.id.sellerDetailFragment)?.navigate(
-                NavigationSellerDirections.actionGlobalCheckoutFragment()
-            )
+        // Seller info
+        viewModel.sellerInfoLine.observe(viewLifecycleOwner) {
+            binding.infoTextView.text = it
         }
 
         return binding.root
+    }
+
+    private fun setupCatalogViewPager(catalogs: List<SellerCatalog>) {
+        val catalogPagerAdapter = SellerCatalogPagerAdapter(
+            fragmentManager = childFragmentManager,
+            lifecycle = viewLifecycleOwner.lifecycle,
+            sellerId = navArgs.property.sellerId,
+            sellerCatalogs = catalogs
+        )
+
+        binding.itemsViewPager.adapter = catalogPagerAdapter
+
+        TabLayoutMediator(binding.categoryTabLayout, binding.itemsViewPager) { tab, position ->
+            tab.text = catalogs[position].getNormalizedTitle()
+        }.attach()
     }
 
     private fun setupChipActions(actionId: String) {

@@ -29,6 +29,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.foobarust.android.R
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -38,6 +40,11 @@ import kotlin.math.round
 
 interface OnTextViewClickableSpanListener {
     fun onClickableSpanEndClicked(view: View)
+}
+
+@BindingAdapter("collapseIf")
+fun AppBarLayout.bindCollapseIf(collapse: Boolean) {
+    setExpanded(!collapse)
 }
 
 @BindingAdapter("clearFocusWhenDone")
@@ -83,6 +90,36 @@ fun ViewGroup.bindBottomSheetBackground(
     }
 }
 
+@BindingAdapter("bottomSheetHideIf")
+fun ViewGroup.bottomSheetHideIf(hide: Boolean) {
+    BottomSheetBehavior.from(this).run {
+        isHideable = true
+        state = if (hide) BottomSheetBehavior.STATE_HIDDEN else BottomSheetBehavior.STATE_COLLAPSED
+        isHideable = false
+    }
+}
+
+@BindingAdapter(
+    "marginTopAttr",
+    "marginBottomAttr",
+    "marginStartAttr",
+    "marginEndAttr",
+    requireAll = false
+)
+fun View.bindMargin(
+    @AttrRes marginTopAttrRes: Int?,
+    @AttrRes marginBottomAttrRes: Int?,
+    @AttrRes marginStartAttrRes: Int?,
+    @AttrRes marginEndAttrRes: Int?,
+) {
+    val marginTop = marginTopAttrRes?.let { context.themeFloat(it) }
+    val marginBottom = marginBottomAttrRes?.let { context.themeFloat(it) }
+    val marginStart = marginStartAttrRes?.let { context.themeFloat(it) }
+    val marginEnd = marginEndAttrRes?.let { context.themeFloat(it) }
+
+    bindMargin(marginTop, marginBottom, marginStart, marginEnd)
+}
+
 @BindingAdapter(
     "marginTop",
     "marginBottom",
@@ -98,10 +135,10 @@ fun View.bindMargin(
 ) {
     val layoutParams = layoutParams as ViewGroup.MarginLayoutParams
 
-    marginTop?.let { layoutParams.topMargin = it.toInt() }
-    marginBottom?.let { layoutParams.bottomMargin = it.toInt() }
-    marginStart?.let { layoutParams.marginStart = it.toInt() }
-    marginEnd?.let { layoutParams.marginEnd = it.toInt() }
+    marginTop?.let { layoutParams.topMargin += it.toInt() }
+    marginBottom?.let { layoutParams.bottomMargin += it.toInt() }
+    marginStart?.let { layoutParams.marginStart += it.toInt() }
+    marginEnd?.let { layoutParams.marginEnd += it.toInt() }
 
     setLayoutParams(layoutParams)
 }
@@ -114,10 +151,10 @@ fun View.bindMargin(
     requireAll = false
 )
 fun View.bindPadding(
-    paddingTop: Float?,
-    paddingBottom: Float?,
-    paddingStart: Float?,
-    paddingEnd: Float?
+    paddingTop: Float? = null,
+    paddingBottom: Float? = null,
+    paddingStart: Float? = null,
+    paddingEnd: Float? = null
 ) {
     paddingTop?.let { updatePadding(top = (getPaddingTop() + it).toInt()) }
     paddingBottom?.let { updatePadding(bottom = (getPaddingBottom() + it).toInt()) }
@@ -154,10 +191,10 @@ fun Spinner.bindPopupElevationOverlay(popupElevationOverlay: Float) {
 @BindingAdapter(
     "drawableScale"
 )
-fun TextView.bindDrawableScale(scale: Double?) {
-    if (scale == null) return
+fun TextView.bindDrawableScale(drawableScale: Double?) {
+    if (drawableScale == null) return
 
-    val drawableSize = round(lineHeight * scale).toInt()
+    val drawableSize = round(lineHeight * drawableScale).toInt()
     val updatedDrawables = compoundDrawablesRelative.map {
         (it as Drawable?)?.setBounds(0, 0, drawableSize, drawableSize)
         it
@@ -175,21 +212,27 @@ fun TextView.bindDrawableScale(scale: Double?) {
     "drawableLeft",
     "drawableRight",
     "drawableTop",
-    "DrawableBottom",
+    "drawableBottom",
     requireAll = false
 )
 fun TextView.bindDrawableRes(
     @DrawableRes drawableStartRes: Int?,
     @DrawableRes drawableEndRes: Int?,
     @DrawableRes drawableTopRes: Int?,
-    @DrawableRes drawableBottomRes: Int?
+    @DrawableRes drawableBottomRes: Int?,
 ) {
-    val drawableLeft = drawableStartRes?.let { context.getDrawableOrNull(it) }
-    val drawableRight = drawableEndRes?.let { context.getDrawableOrNull(it) }
-    val drawableTop = drawableTopRes?.let { context.getDrawableOrNull(it) }
-    val drawableBottom = drawableBottomRes?.let { context.getDrawableOrNull(it) }
+    val drawables = listOf(
+        drawableStartRes, drawableEndRes, drawableTopRes, drawableBottomRes
+    ).map {
+        context.getDrawableOrNull(it)
+    }
 
-    setCompoundDrawables(drawableLeft, drawableTop, drawableRight, drawableBottom)
+    setCompoundDrawables(
+        drawables[0],
+        drawables[1],
+        drawables[2],
+        drawables[3]
+    )
 }
 
 @BindingAdapter("linkMovementMethod")

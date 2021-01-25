@@ -5,10 +5,10 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.foobarust.android.InsertFakeDataActivity
 import com.foobarust.data.common.Constants.SELLERS_CATALOGS_SUB_COLLECTION
 import com.foobarust.data.common.Constants.SELLERS_COLLECTION
-import com.foobarust.data.models.seller.SellerBasicEntity
-import com.foobarust.data.models.seller.SellerCatalogEntity
-import com.foobarust.data.models.seller.SellerDetailEntity
-import com.foobarust.data.models.seller.SellerLocationEntity
+import com.foobarust.data.models.seller.GeolocationDto
+import com.foobarust.data.models.seller.SellerBasicDto
+import com.foobarust.data.models.seller.SellerCatalogDto
+import com.foobarust.data.models.seller.SellerDetailDto
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -114,7 +114,7 @@ private data class SellerSerialized(
     val description_zh: String? = null,
     val website: String? = null,
     val phone_num: String,
-    val location: LocationSerialized,
+    val location: GeolocationSerialized,
     val image_url: String? = null,
     val min_spend: Double,
     val rating: Double,
@@ -126,14 +126,14 @@ private data class SellerSerialized(
     val tags: List<String>,
     val deliveryCost: Double? = null
 ) {
-    fun toSellerDetailEntity(): SellerDetailEntity {
-        val location = SellerLocationEntity(
-            address = this.location.address,
-            addressZh = this.location.address_zh,
-            geoPoint = GeoPoint(this.location.geopoint.lat, this.location.geopoint.long)
+    fun toSellerDetailEntity(): SellerDetailDto {
+        val location = GeolocationDto(
+            address = location.address,
+            addressZh = location.address_zh,
+            geoPoint = GeoPoint(location.geopoint.lat, location.geopoint.long)
         )
 
-        return SellerDetailEntity(
+        return SellerDetailDto(
             id = id,
             name = name,
             nameZh = name_zh,
@@ -154,8 +154,8 @@ private data class SellerSerialized(
         )
     }
 
-    fun toSellerBasicEntity(): SellerBasicEntity {
-        return SellerBasicEntity(
+    fun toSellerBasicEntity(): SellerBasicDto {
+        return SellerBasicDto(
             id = id,
             name = name,
             nameZh = name_zh,
@@ -171,14 +171,14 @@ private data class SellerSerialized(
 }
 
 @Serializable
-private data class LocationSerialized(
+data class GeolocationSerialized(
     val address: String,
     val address_zh: String,
     val geopoint: GeoPointSerialized
 )
 
 @Serializable
-private data class GeoPointSerialized(
+data class GeoPointSerialized(
     val lat: Double,
     val long: Double
 )
@@ -191,8 +191,8 @@ private data class SellerCatalogSerialized(
     val title_zh: String? = null,
     val available: Boolean
 ) {
-    fun toSellerCatalogEntity(): SellerCatalogEntity {
-        return SellerCatalogEntity(
+    fun toSellerCatalogEntity(): SellerCatalogDto {
+        return SellerCatalogDto(
             id = id,
             title = title,
             titleZh = title_zh,

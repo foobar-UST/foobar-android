@@ -20,7 +20,7 @@
         <item name="bottomSheetStyle">@style/Widget.Foobar.BottomSheet</item>
         <item name="android:windowIsFloating">false</item>
         <item name="android:windowSoftInputMode">adjustPan</item>
-        <!--item name="android:windowBackground">?attr/scrimBackground</item-->
+        <item name="android:backgroundDimAmount">0.32</item>
     </style>
 
     <style name="Theme.Foobar.Onboarding.DayNight" parent="Theme.Foobar.Onboarding"/>
@@ -73,14 +73,12 @@
         <item name="motionInterpolatorIncoming">@android:interpolator/decelerate_cubic</item>
         <item name="motionInterpolatorOutgoing">@android:interpolator/accelerate_cubic</item>
 
-        <item name="scrimBackground">@color/white_alpha_20</item>
-
         <item name="bottomSheetDialogTheme">@style/ThemeOverlay.Foobar.BottomSheetDialog.DayNight</item>
         <item name="alertDialogTheme">@style/ThemeOverlay.Foobar.AlertDialog</item>
 
         <!-- Styles -->
         <item name="radioButtonStyle">@style/Widget.Foobar.RadioButton</item>
-        <item name="checkboxStyle">@style/Widget.Foobar.CheckBox</item>
+        <!--item name="checkboxStyle">@style/Widget.Foobar.CheckBox</item-->
         <item name="bottomSheetStyle">@style/Widget.Foobar.BottomSheet</item>
         <item name="sellerActionChipStyle">@style/Widget.Foobar.Chip.SellerAction</item>
 

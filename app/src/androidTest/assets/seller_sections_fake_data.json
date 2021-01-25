@@ -6,9 +6,16 @@
     "group_id": "64477299-cefb-4d0e-b6d1-c7a1603881cb",
     "seller_id": "kZr4pBjju7gQniYGS0kN",
     "seller_name": "Foobarify",
+    "delivery_cost": 20,
     "delivery_time": "2020-12-27 23:40",
-    "delivery_location": "Atrium, HKUST",
-    "delivery_location_zh": "中庭，香港科技大學",
+    "delivery_location": {
+      "address": "Atrium, HKUST",
+      "address_zh": "中庭，香港科技大學",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
+    },
     "cutoff_time": "2020-12-27 23:30",
     "description": "Ordering food delivery for a group - whether for an office lunch or dinner at home—just got easier.",
     "description_zh": "為團體訂購食物（無論是在家中辦公室午餐還是晚餐），都變得更加容易。",
@@ -41,9 +48,16 @@
     "group_id": "64477299-cefb-4d0e-b6d1-c7a1603881cb",
     "seller_id": "kZr4pBjju7gQniYGS0kN",
     "seller_name": "Foobarify",
+    "delivery_cost": 20,
     "delivery_time": "2020-12-28 12:30",
-    "delivery_location": "Atrium, HKUST",
-    "delivery_location_zh": "中庭，香港科技大學",
+    "delivery_location": {
+      "address": "Atrium, HKUST",
+      "address_zh": "中庭，香港科技大學",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
+    },
     "cutoff_time": "2020-12-28 12:00",
     "description": "Ordering food delivery for a group - whether for an office lunch or dinner at home—just got easier.",
     "description_zh": "為團體訂購食物（無論是在家中辦公室午餐還是晚餐），都變得更加容易。",
@@ -76,9 +90,16 @@
     "group_id": "64477299-cefb-4d0e-b6d1-c7a1603881cb",
     "seller_id": "kZr4pBjju7gQniYGS0kN",
     "seller_name": "Foobarify",
+    "delivery_cost": 20,
     "delivery_time": "2020-12-29 12:30",
-    "delivery_location": "Atrium, HKUST",
-    "delivery_location_zh": "中庭，香港科技大學",
+    "delivery_location": {
+      "address": "Atrium, HKUST",
+      "address_zh": "中庭，香港科技大學",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
+    },
     "cutoff_time": "2020-12-29 12:00",
     "description": "Ordering food delivery for a group - whether for an office lunch or dinner at home—just got easier.",
     "description_zh": "為團體訂購食物（無論是在家中辦公室午餐還是晚餐），都變得更加容易。",
@@ -111,9 +132,16 @@
     "group_id": "64477299-cefb-4d0e-b6d1-c7a1603881cb",
     "seller_id": "kZr4pBjju7gQniYGS0kN",
     "seller_name": "Foobarify",
+    "delivery_cost": 20,
     "delivery_time": "2020-12-30 12:30",
-    "delivery_location": "Atrium, HKUST",
-    "delivery_location_zh": "中庭，香港科技大學",
+    "delivery_location": {
+      "address": "Atrium, HKUST",
+      "address_zh": "中庭，香港科技大學",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
+    },
     "cutoff_time": "2020-12-30 12:00",
     "description": "Ordering food delivery for a group - whether for an office lunch or dinner at home—just got easier.",
     "description_zh": "為團體訂購食物（無論是在家中辦公室午餐還是晚餐），都變得更加容易。",
@@ -146,9 +174,16 @@
     "group_id": "64477299-cefb-4d0e-b6d1-c7a1603881cb",
     "seller_id": "kZr4pBjju7gQniYGS0kN",
     "seller_name": "Foobarify",
+    "delivery_cost": 20,
     "delivery_time": "2020-12-30 12:30",
-    "delivery_location": "Atrium, HKUST",
-    "delivery_location_zh": "中庭，香港科技大學",
+    "delivery_location": {
+      "address": "Atrium, HKUST",
+      "address_zh": "中庭，香港科技大學",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
+    },
     "cutoff_time": "2020-12-30 12:00",
     "description": "Ordering food delivery for a group - whether for an office lunch or dinner at home—just got easier.",
     "description_zh": "為團體訂購食物（無論是在家中辦公室午餐還是晚餐），都變得更加容易。",
@@ -182,9 +217,16 @@
     "group_id": "64477299-cefb-4d0e-b6d1-c7a1603881cb",
     "seller_id": "kZr4pBjju7gQniYGS0kN",
     "seller_name": "Foobarify",
+    "delivery_cost": 20,
     "delivery_time": "2020-12-31 12:30",
-    "delivery_location": "Atrium, HKUST",
-    "delivery_location_zh": "中庭，香港科技大學",
+    "delivery_location": {
+      "address": "Atrium, HKUST",
+      "address_zh": "中庭，香港科技大學",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
+    },
     "cutoff_time": "2020-12-31 12:00",
     "description": "Ordering food delivery for a group - whether for an office lunch or dinner at home—just got easier.",
     "description_zh": "為團體訂購食物（無論是在家中辦公室午餐還是晚餐），都變得更加容易。",
@@ -217,9 +259,16 @@
     "group_id": "64477299-cefb-4d0e-b6d1-c7a1603881cb",
     "seller_id": "kZr4pBjju7gQniYGS0kN",
     "seller_name": "Foobarify",
+    "delivery_cost": 20,
     "delivery_time": "2021-01-01 12:30",
-    "delivery_location": "Atrium, HKUST",
-    "delivery_location_zh": "中庭，香港科技大學",
+    "delivery_location": {
+      "address": "Atrium, HKUST",
+      "address_zh": "中庭，香港科技大學",
+      "geopoint": {
+        "lat": 22.336263,
+        "long": 114.263532
+      }
+    },
     "cutoff_time": "2021-01-01 12:00",
     "description": "Ordering food delivery for a group - whether for an office lunch or dinner at home—just got easier.",
     "description_zh": "為團體訂購食物（無論是在家中辦公室午餐還是晚餐），都變得更加容易。",

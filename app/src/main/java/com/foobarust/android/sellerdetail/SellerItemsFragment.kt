@@ -14,7 +14,6 @@ import com.foobarust.android.databinding.FragmentSellerItemsBinding
 import com.foobarust.android.utils.AutoClearedValue
 import com.foobarust.android.utils.anyError
 import com.foobarust.android.utils.parentViewModels
-import com.foobarust.domain.models.seller.SellerItemBasic
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -30,14 +29,14 @@ class SellerItemsFragment : Fragment(), SellerItemsAdapter.SellerItemsAdapterLis
     private val sellerDetailViewModel: SellerDetailViewModel by parentViewModels()
     private val sellerItemsViewModel: SellerItemsViewModel by viewModels()
 
+    private val property: SellerItemsProperty by lazy {
+        requireArguments().getParcelable<SellerItemsProperty>(ARG_PROPERTY) ?:
+            throw IllegalArgumentException("SellerItemsProperty not found.")
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // Receive category argument
-        sellerItemsViewModel.onFetchItemsForCategory(
-            sellerId = requireArguments().getString(ARG_SELLER_ID) ?: throw IllegalArgumentException("Seller id not found."),
-            catalogId = requireArguments().getString(ARG_CATEGORY_ID) ?: throw IllegalArgumentException("Category id not found.")
-        )
+        sellerItemsViewModel.onFetchItemsForCategory(property)
     }
 
     override fun onCreateView(
@@ -60,7 +59,7 @@ class SellerItemsFragment : Fragment(), SellerItemsAdapter.SellerItemsAdapterLis
 
         // Submit paging data to adapter
         viewLifecycleOwner.lifecycleScope.launch {
-            sellerItemsViewModel.sellerItems.collectLatest {
+            sellerItemsViewModel.itemsListModels.collectLatest {
                 sellerItemsAdapter.submitData(it)
             }
         }
@@ -93,27 +92,21 @@ class SellerItemsFragment : Fragment(), SellerItemsAdapter.SellerItemsAdapterLis
         binding.itemsLayout.layoutTransition.setAnimateParentHierarchy(false)
     }
 
-    override fun onSellerItemClicked(sellerItemBasic: SellerItemBasic) {
-        val sellerId = requireArguments().getString(ARG_SELLER_ID)
-            ?: throw IllegalArgumentException("Seller id not found.")
-
-        sellerDetailViewModel.onShowItemDetailDialog(
-            sellerId = sellerId,
-            itemId = sellerItemBasic.id
+    override fun onSellerItemClicked(itemId: String) {
+        sellerDetailViewModel.onNavigateToSellerItemDetail(
+            sellerId = property.sellerId,
+            itemId = itemId
         )
     }
 
     companion object {
-        const val ARG_SELLER_ID = "arg_seller_id"
-        const val ARG_SECTION_ID = "arg_section_id"
-        const val ARG_CATEGORY_ID = "arg_category_id"
+        const val ARG_PROPERTY = "arg_property"
 
         @JvmStatic
-        fun newInstance(sellerId: String, categoryId: String): SellerItemsFragment {
+        fun newInstance(property: SellerItemsProperty): SellerItemsFragment {
             return SellerItemsFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_SELLER_ID, sellerId)
-                    putString(ARG_CATEGORY_ID, categoryId)
+                    putParcelable(ARG_PROPERTY, property)
                 }
             }
         }

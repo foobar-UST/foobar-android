@@ -4,12 +4,13 @@ import androidx.test.ext.junit.rules.activityScenarioRule
 import androidx.test.platform.app.InstrumentationRegistry
 import com.foobarust.android.InsertFakeDataActivity
 import com.foobarust.data.common.Constants.SELLERS_COLLECTION
-import com.foobarust.data.common.Constants.SELLER_SECTIONS_BASIC_SUB_COLLECTION
 import com.foobarust.data.common.Constants.SELLER_SECTIONS_SUB_COLLECTION
-import com.foobarust.data.models.seller.SellerSectionBasicEntity
-import com.foobarust.data.models.seller.SellerSectionDetailEntity
+import com.foobarust.data.models.seller.GeolocationDto
+import com.foobarust.data.models.seller.SellerSectionBasicDto
+import com.foobarust.data.models.seller.SellerSectionDetailDto
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.GeoPoint
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.Dispatchers
@@ -62,6 +63,7 @@ class InsertSellerSectionFakeData {
             }
     }
 
+    /*
     @Test
     fun insert_seller_sections_basic_fake_data() = runBlocking(Dispatchers.IO) {
         val serializedList: List<SellerSectionSerialized> = Json.decodeFromString(
@@ -78,6 +80,8 @@ class InsertSellerSectionFakeData {
                 ).set(it).await()
             }
     }
+
+     */
 
     private fun decodeSectionJson(): String {
         val jsonInputStream = InstrumentationRegistry.getInstrumentation()
@@ -97,9 +101,9 @@ private data class SellerSectionSerialized(
     val seller_id: String,
     val seller_name: String,
     val seller_name_zh: String? = null,
+    val delivery_cost: Double,
     val delivery_time: String,
-    val delivery_location: String,
-    val delivery_location_zh: String? = null,
+    val delivery_location: GeolocationSerialized,
     val description: String,
     val description_zh: String? = null,
     val cutoff_time: String,
@@ -110,8 +114,14 @@ private data class SellerSectionSerialized(
     val state: String,
     val available: Boolean
 ) {
-    fun toSellerSectionDetailEntity(index: Int): SellerSectionDetailEntity {
-        return SellerSectionDetailEntity(
+    fun toSellerSectionDetailEntity(index: Int): SellerSectionDetailDto {
+        val deliveryLocation = GeolocationDto(
+            address = delivery_location.address,
+            addressZh = delivery_location.address_zh,
+            geoPoint = GeoPoint(delivery_location.geopoint.lat, delivery_location.geopoint.long)
+        )
+
+        return SellerSectionDetailDto(
             id = id,
             title = title,
             titleZh = title_zh,
@@ -121,9 +131,9 @@ private data class SellerSectionSerialized(
             sellerNameZh = seller_name_zh,
             description = description,
             descriptionZh = description_zh,
+            deliveryCost = delivery_cost,
             deliveryTime = parseTimestamp(delivery_time, index),
-            deliveryLocation = delivery_location,
-            deliveryLocationZh = delivery_location_zh,
+            deliveryLocation = deliveryLocation,
             cutoffTime = parseTimestamp(cutoff_time, index),
             maxUsers = max_users,
             joinedUsersCount = joined_users_count,
@@ -134,8 +144,8 @@ private data class SellerSectionSerialized(
         )
     }
 
-    fun toSellerSectionBasicEntity(index: Int): SellerSectionBasicEntity {
-        return SellerSectionBasicEntity(
+    fun toSellerSectionBasicEntity(index: Int): SellerSectionBasicDto {
+        return SellerSectionBasicDto(
             id = id,
             title = title,
             titleZh = title_zh,
@@ -156,12 +166,18 @@ private data class SellerSectionSerialized(
         val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US)
         formatter.timeZone = TimeZone.getTimeZone("Asia/Hong_Kong")
 
-        val calendar = Calendar.getInstance().apply {
+        val inputCalendar = Calendar.getInstance().apply {
             timeZone = TimeZone.getTimeZone("Asia/Hong_Kong")
-            setTime(Date())
+            setTime(formatter.parse(time)!!)
+        }
+
+        val newCalendar = Calendar.getInstance().apply {
+            timeZone = TimeZone.getTimeZone("Asia/Hong_Kong")
+            set(Calendar.HOUR_OF_DAY, inputCalendar.get(Calendar.HOUR_OF_DAY))
+            set(Calendar.MINUTE, inputCalendar.get(Calendar.MINUTE))
             add(Calendar.DATE, index)
         }
 
-        return Timestamp(calendar.time)
+        return Timestamp(newCalendar.time)
     }
 }

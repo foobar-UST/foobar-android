@@ -6,8 +6,8 @@ import com.foobarust.android.InsertFakeDataActivity
 import com.foobarust.data.common.Constants.ADVERTISES_BASIC_COLLECTION
 import com.foobarust.data.common.Constants.SUGGESTS_BASIC_COLLECTION
 import com.foobarust.data.common.Constants.USERS_COLLECTION
-import com.foobarust.data.models.promotion.AdvertiseBasicEntity
-import com.foobarust.data.models.promotion.SuggestBasicEntity
+import com.foobarust.data.models.promotion.AdvertiseBasicDto
+import com.foobarust.data.models.promotion.SuggestBasicDto
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -94,8 +94,8 @@ private data class AdvertiseBasicSerialized(
     val url: String,
     val image_url: String
 ) {
-    fun toAdvertiseBasicEntity(): AdvertiseBasicEntity {
-        return AdvertiseBasicEntity(
+    fun toAdvertiseBasicEntity(): AdvertiseBasicDto {
+        return AdvertiseBasicDto(
             id = id,
             url = url,
             imageUrl = image_url
@@ -111,8 +111,8 @@ private data class SuggestBasicSerialized(
     val seller_name: String,
     val image_url: String
 ) {
-    fun toSuggestBasicEntity(): SuggestBasicEntity {
-        return SuggestBasicEntity(
+    fun toSuggestBasicEntity(): SuggestBasicDto {
+        return SuggestBasicDto(
             id = id,
             itemId = item_id,
             itemTitle = item_title,

@@ -8,6 +8,7 @@
         <variable
             name="viewModel"
             type="com.foobarust.android.settings.ProfileViewModel" />
+        <import type="com.foobarust.android.common.UiState" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -36,12 +37,13 @@
                 app:navigationIconTint="?attr/colorOnSurface" />
 
             <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/loading_progress_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:indeterminate="true"
                 app:showAnimationBehavior="outward"
                 app:hideAnimationBehavior="outward"
-                app:progressHideIf="@{!viewModel.isUpdatingProgress}"/>
+                app:progressHideIf="@{!(viewModel.uiState instanceof UiState.Loading)}"/>
 
         </com.google.android.material.appbar.AppBarLayout>
 

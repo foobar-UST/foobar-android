@@ -3,7 +3,8 @@
     <item
         android:id="@+id/action_seller_add_favorite"
         android:title="@string/seller_action_add_favorite"
-        android:icon="@drawable/ic_favorite"/>
+        android:icon="@drawable/ic_favorite"
+        />
 
     <item
         android:id="@+id/action_seller_ratings"

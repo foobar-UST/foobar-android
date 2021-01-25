@@ -20,13 +20,17 @@ interface SellerRepository {
 
     fun getSellerItems(sellerId: String, catalogId: String): Flow<PagingData<SellerItemBasic>>
 
+    suspend fun getSellerItemsRecent(sellerId: String, limit: Int): List<SellerItemBasic>
+
     suspend fun getSellerItemDetail(sellerId: String, itemId: String): SellerItemDetail
+
+    suspend fun getSellerSectionBasic(sellerId: String, sectionId: String): SellerSectionBasic
 
     fun getSellerSectionBasics(): Flow<PagingData<SellerSectionBasic>>
 
-    fun getSellerSectionsBasic(sellerId: String) : Flow<PagingData<SellerSectionBasic>>
+    fun getSellerSectionBasicsFor(sellerId: String) : Flow<PagingData<SellerSectionBasic>>
 
-    suspend fun getSellerSectionBasics(sellerId: String, numOfSections: Int): List<SellerSectionBasic>
+    suspend fun getSellerSectionBasicsFor(sellerId: String, numOfSections: Int): List<SellerSectionBasic>
 
     suspend fun getSellerSectionDetail(sellerId: String, sectionId: String): SellerSectionDetail
 }

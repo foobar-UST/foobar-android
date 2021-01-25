@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView.OVER_SCROLL_NEVER
 import com.foobarust.android.common.FullScreenDialogFragment
 import com.foobarust.android.databinding.FragmentTutorialBinding
@@ -45,7 +46,9 @@ class TutorialFragment : FullScreenDialogFragment() {
         TabLayoutMediator(binding.indicatorTabLayout, binding.viewPager) { _, _ -> }.attach()
 
         // Dismiss tutorial
-        tutorialViewModel.dismissTutorial.observe(viewLifecycleOwner) { dismiss() }
+        tutorialViewModel.dismissTutorial.observe(viewLifecycleOwner) {
+            findNavController().navigateUp()
+        }
 
         return binding.root
     }

@@ -18,7 +18,10 @@ interface AuthRepository {
 
     suspend fun getIdToken(): String
 
-    fun getAuthProfileObservable(): Flow<Resource<AuthProfile>>
+    /**
+     * Return a observable of auth profile, null if the user is not signed in.
+     */
+    fun getAuthProfileObservable(): Flow<Resource<AuthProfile?>>
 
     suspend fun sendEmailWithSignInLink(email: String)
 

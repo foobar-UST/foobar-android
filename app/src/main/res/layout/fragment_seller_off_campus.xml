@@ -8,7 +8,7 @@
         <variable
             name="viewModel"
             type="com.foobarust.android.seller.SellerOffCampusViewModel" />
-        <import type="com.foobarust.android.states.UiState" />
+        <import type="com.foobarust.android.common.UiState" />
     </data>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

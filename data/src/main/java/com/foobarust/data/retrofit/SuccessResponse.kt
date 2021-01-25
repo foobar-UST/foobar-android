@@ -1,6 +1,6 @@
 package com.foobarust.data.retrofit
 
-import com.foobarust.data.common.Constants.CF_SUCCESS_RESPONSE_DATA_OBJECT
+import com.foobarust.data.common.Constants.REMOTE_SUCCESS_RESPONSE_DATA_OBJECT
 import com.google.gson.annotations.SerializedName
 
 /**
@@ -8,6 +8,6 @@ import com.google.gson.annotations.SerializedName
  */
 
 data class SuccessResponse<T>(
-    @SerializedName(CF_SUCCESS_RESPONSE_DATA_OBJECT)
+    @SerializedName(REMOTE_SUCCESS_RESPONSE_DATA_OBJECT)
     val data: T
 )

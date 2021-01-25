@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.foobarust.android.R
-import com.foobarust.android.auth.SignInState.VERIFYING
+import com.foobarust.android.auth.AuthState.VERIFYING
 import com.foobarust.android.databinding.FragmentAuthInputBinding
 import com.foobarust.android.utils.AutoClearedValue
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,52 +19,49 @@ import dagger.hilt.android.AndroidEntryPoint
 class AuthInputFragment : Fragment() {
 
     private var binding: FragmentAuthInputBinding by AutoClearedValue(this)
-    private val viewModel: AuthViewModel by activityViewModels()
+    private val authViewModel: AuthViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentAuthInputBinding.inflate(inflater, container, false)
 
         // Pass username input to view model
         binding.usernameEditText.doOnTextChanged { text, _, _, _ ->
-            viewModel.onUsernameUpdated(text.toString())
+            authViewModel.onUsernameUpdated(text.toString())
         }
 
         // Sign-in button
         binding.confirmButton.setOnClickListener {
-            viewModel.onRequestAuthEmail()
+            authViewModel.onRequestAuthEmail()
         }
 
         // Skip login button
         binding.skipSigninButton.setOnClickListener {
-            viewModel.onSignInSkip()
+            authViewModel.onSkipSignIn()
         }
 
-        // Setup email domains drop down
-        viewModel.emailDomains.observe(viewLifecycleOwner) { domains ->
-            val adapter = ArrayAdapter(
-                requireContext(),
-                R.layout.auth_email_domain_item,
-                domains.map { it.title }
-            )
+        // Setup email domains drop down menu
+        val adapter = ArrayAdapter(
+            requireContext(),
+            R.layout.auth_email_domain_item,
+            authViewModel.emailDomains.map { it.title }
+        )
 
-            binding.domainsAutoCompleteTextView.run {
-                setAdapter(adapter)
-                setOnItemClickListener { _, _, position, _ ->
-                    viewModel.onAuthEmailDomainUpdated(domains[position])
-                }
-
-                // Select first item
-                setText(adapter.getItem(0), false)
-                //viewModel.onAuthEmailDomainChanged(domains[0])
+        binding.domainsAutoCompleteTextView.run {
+            setAdapter(adapter)
+            setOnItemClickListener { _, _, position, _ ->
+                authViewModel.onAuthEmailDomainUpdated(authViewModel.emailDomains[position])
             }
+            // Select first item
+            setText(adapter.getItem(0), false)
+            //viewModel.onAuthEmailDomainChanged(domains[0])
         }
 
         // Navigate to VerifyFragment after successfully requesting an email
-        viewModel.signInState.observe(viewLifecycleOwner) { state ->
+        authViewModel.authState.observe(viewLifecycleOwner) { state ->
             if (state == VERIFYING) {
                 findNavController().navigate(
                     AuthInputFragmentDirections.actionAuthInputFragmentToAuthVerifyFragment()

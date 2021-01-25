@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.foobarust.android.R
 import com.foobarust.android.common.FullScreenDialogFragment
@@ -50,7 +51,9 @@ class SellerMiscFragment : FullScreenDialogFragment() {
         }
 
         // Setup toolbar
-        binding.toolbar.setNavigationOnClickListener { dismiss() }
+        binding.toolbar.setNavigationOnClickListener {
+            findNavController().navigateUp()
+        }
 
         // Setup bottom sheet
         viewLifecycleOwner.lifecycleScope.launch {
@@ -64,14 +67,6 @@ class SellerMiscFragment : FullScreenDialogFragment() {
         viewModel.toastMessage.observe(viewLifecycleOwner) {
             showShortToast(it)
         }
-
-        /*
-        // Retry
-        binding.loadErrorLayout.retryButton.setOnClickListener {
-            viewModel.onFetchSellerDetail(sellerId = args.sellerId)
-        }
-
-         */
 
         return binding.root
     }

@@ -1,7 +1,9 @@
 package com.foobarust.data.mappers
 
-import com.foobarust.data.models.checkout.PaymentMethodEntity
+import com.foobarust.data.models.checkout.PaymentMethodDto
+import com.foobarust.data.models.checkout.PlaceOrderResponse
 import com.foobarust.domain.models.checkout.PaymentMethod
+import com.foobarust.domain.models.checkout.PlaceOrderResult
 import javax.inject.Inject
 
 /**
@@ -10,11 +12,18 @@ import javax.inject.Inject
 
 class CheckoutMapper @Inject constructor() {
 
-    fun toPaymentMethod(entity: PaymentMethodEntity): PaymentMethod {
+    fun toPaymentMethod(dto: PaymentMethodDto): PaymentMethod {
         return PaymentMethod(
-            id = entity.id!!,
-            identifier = entity.identifier!!,
-            enabled = entity.enabled ?: false
+            id = dto.id!!,
+            identifier = dto.identifier!!,
+            enabled = dto.enabled ?: false
+        )
+    }
+
+    fun toPlaceOrderResult(placeOrderResponse: PlaceOrderResponse): PlaceOrderResult {
+        return PlaceOrderResult(
+            orderId = placeOrderResponse.orderId,
+            orderIdentifier = placeOrderResponse.orderIdentifier
         )
     }
 }

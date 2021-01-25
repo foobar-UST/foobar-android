@@ -1,5 +1,7 @@
 package com.foobarust.domain.models.seller
 
+import com.foobarust.domain.models.common.Geolocation
+
 /**
  * Created by kevin on 9/27/20
  */
@@ -12,7 +14,7 @@ data class SellerDetail(
     val descriptionZh: String?,
     val phoneNum: String,
     val website: String?,
-    val location: SellerLocation,
+    val location: Geolocation,
     val imageUrl: String?,
     val minSpend: Double,
     val rating: Double,
@@ -21,8 +23,7 @@ data class SellerDetail(
     val online: Boolean,
     val notice: String?,
     val openingHours: String,
-    val tags: List<String>,
-    val deliveryCost: Double?
+    val tags: List<String>
 )
 
 fun SellerDetail.getNormalizedName(): String {

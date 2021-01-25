@@ -5,9 +5,8 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.foobarust.android.databinding.SellerItemsBasicItemBinding
+import com.foobarust.android.databinding.SellerItemsListItemBinding
 import com.foobarust.android.sellerdetail.SellerItemsAdapter.SellerItemsAdapterListener
-import com.foobarust.domain.models.seller.SellerItemBasic
 
 /**
  * Created by kevin on 10/4/20
@@ -15,13 +14,13 @@ import com.foobarust.domain.models.seller.SellerItemBasic
 
 class SellerItemsAdapter(
     private val listener: SellerItemsAdapterListener
-) : PagingDataAdapter<SellerItemBasic, SellerItemsViewHolder>(SellerItemsDiff) {
+) : PagingDataAdapter<SellerItemsListModel, SellerItemsViewHolder>(SellerItemsListModelDiff) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SellerItemsViewHolder {
         val inflater = LayoutInflater.from(parent.context)
 
         return SellerItemsViewHolder(
-            SellerItemsBasicItemBinding.inflate(inflater, parent, false),
+            SellerItemsListItemBinding.inflate(inflater, parent, false),
             listener
         )
     }
@@ -31,28 +30,41 @@ class SellerItemsAdapter(
     }
 
     interface SellerItemsAdapterListener {
-        fun onSellerItemClicked(sellerItemBasic: SellerItemBasic)
+        fun onSellerItemClicked(itemId: String)
     }
 }
 
 class SellerItemsViewHolder(
-    val binding: SellerItemsBasicItemBinding,
+    val binding: SellerItemsListItemBinding,
     val listener: SellerItemsAdapterListener
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(sellerItemBasic: SellerItemBasic) = binding.run {
-        this.sellerItemBasic = sellerItemBasic
+    fun bind(itemModel: SellerItemsListModel) = binding.run {
+        this.itemModel = itemModel
         listener = this@SellerItemsViewHolder.listener
         executePendingBindings()
     }
 }
 
-object SellerItemsDiff : DiffUtil.ItemCallback<SellerItemBasic>() {
-    override fun areItemsTheSame(oldItem: SellerItemBasic, newItem: SellerItemBasic): Boolean {
-        return oldItem.id == newItem.id
+data class SellerItemsListModel(
+    val itemId: String,
+    val itemTitle: String,
+    val itemPrice: Double,
+    val itemPurchasable: Boolean
+)
+
+object SellerItemsListModelDiff : DiffUtil.ItemCallback<SellerItemsListModel>() {
+    override fun areItemsTheSame(
+        oldItem: SellerItemsListModel,
+        newItem: SellerItemsListModel
+    ): Boolean {
+        return oldItem.itemId == newItem.itemId
     }
 
-    override fun areContentsTheSame(oldItem: SellerItemBasic, newItem: SellerItemBasic): Boolean {
+    override fun areContentsTheSame(
+        oldItem: SellerItemsListModel,
+        newItem: SellerItemsListModel
+    ): Boolean {
         return oldItem == newItem
     }
 }

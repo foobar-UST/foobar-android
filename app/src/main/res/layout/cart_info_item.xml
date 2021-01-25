@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="cartInfoItemModel"
+            type="com.foobarust.android.checkout.CartListModel.CartInfoItemModel" />
+        <import type="com.foobarust.domain.models.seller.SellerBasicKt" />
+        <import type="com.foobarust.domain.models.seller.SellerType" />
+        <import type="com.foobarust.android.R" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/spacing_xmedium"
+        android:orientation="vertical">
+
+        <include
+            layout="@layout/notice_banner"
+            android:id="@+id/seller_offline_notice_banner"
+            app:content="@{@string/seller_detail_offline_message}"
+            app:hideWhen="@{cartInfoItemModel.sellerOnline}"
+            app:disableWhen="@{true}"/>
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/seller_image_view"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_margin="@dimen/spacing_large"
+            android:scaleType="centerCrop"
+            android:contentDescription="@{cartInfoItemModel.cartTitle}"
+            app:shapeAppearance="@style/ShapeAppearance.MaterialComponents.SmallComponent"
+            app:glideUrl="@{cartInfoItemModel.cartImageUrl}"
+            app:glideCenterCrop="@{true}"
+            app:glidePlaceholder="@{R.drawable.placeholder_card}"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@sample/sample_image_5"/>
+
+        <include
+            layout="@layout/cart_seller_info_item_option"
+            android:id="@+id/section_option"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:goneIf="@{cartInfoItemModel.sectionId == null}"
+            app:title="@{@string/cart_info_option_subtitle_section}"
+            app:content="@{cartInfoItemModel.cartDeliveryTime}"
+            app:icon="@{R.drawable.ic_today}" />
+
+        <include
+            layout="@layout/cart_seller_info_item_option"
+            android:id="@+id/misc_option"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title="@{@string/cart_info_option_subtitle_misc}"
+            app:content="@{cartInfoItemModel.cartPickupAddress}"
+            app:icon="@{R.drawable.ic_location_on}" />
+
+    </LinearLayout>
+
+</layout>

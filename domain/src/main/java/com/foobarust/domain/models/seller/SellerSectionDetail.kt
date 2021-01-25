@@ -1,5 +1,6 @@
 package com.foobarust.domain.models.seller
 
+import com.foobarust.domain.models.common.Geolocation
 import com.foobarust.domain.utils.DateUtils
 import com.foobarust.domain.utils.TimeUtils
 import java.util.*
@@ -16,9 +17,9 @@ data class SellerSectionDetail(
     val sellerId: String,
     val sellerName: String,
     val sellerNameZh: String?,
+    val deliveryCost: Double,
     val deliveryTime: Date,
-    val deliveryLocation: String,
-    val deliveryLocationZh: String?,
+    val deliveryLocation: Geolocation,
     val description: String,
     val descriptionZh: String?,
     val cutoffTime: Date,
@@ -44,8 +45,9 @@ fun SellerSectionDetail.getNormalizedDescription(): String {
     return if (descriptionZh != null) "$description\n$descriptionZh" else description
 }
 
-fun SellerSectionDetail.getNormalizedDeliveryLocation(): String {
-    return if (deliveryLocationZh != null) "$deliveryLocation\n$deliveryLocationZh" else deliveryLocation
+fun SellerSectionDetail.getNormalizedDeliveryAddress(): String {
+    val (address, addressZh) = deliveryLocation
+    return if (addressZh != null) "$address\n$addressZh" else address
 }
 
 fun SellerSectionDetail.getCutoffTimeString(): String {

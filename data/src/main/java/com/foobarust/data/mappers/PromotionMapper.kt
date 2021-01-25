@@ -1,7 +1,7 @@
 package com.foobarust.data.mappers
 
-import com.foobarust.data.models.promotion.AdvertiseBasicEntity
-import com.foobarust.data.models.promotion.SuggestBasicEntity
+import com.foobarust.data.models.promotion.AdvertiseBasicDto
+import com.foobarust.data.models.promotion.SuggestBasicDto
 import com.foobarust.domain.models.promotion.AdvertiseBasic
 import com.foobarust.domain.models.promotion.SuggestBasic
 import javax.inject.Inject
@@ -12,21 +12,21 @@ import javax.inject.Inject
 
 class PromotionMapper @Inject constructor() {
 
-    fun toAdvertiseBasic(entity: AdvertiseBasicEntity): AdvertiseBasic {
+    fun toAdvertiseBasic(dto: AdvertiseBasicDto): AdvertiseBasic {
         return AdvertiseBasic(
-            id = entity.id!!,
-            url = entity.url!!,
-            imageUrl = entity.imageUrl
+            id = dto.id!!,
+            url = dto.url!!,
+            imageUrl = dto.imageUrl
         )
     }
 
-    fun toSuggestBasic(entity: SuggestBasicEntity): SuggestBasic {
+    fun toSuggestBasic(dto: SuggestBasicDto): SuggestBasic {
         return SuggestBasic(
-            id = entity.id!!,
-            itemId = entity.itemId!!,
-            itemTitle = entity.itemTitle!!,
-            sellerName = entity.sellerName!!,
-            imageUrl = entity.imageUrl
+            id = dto.id!!,
+            itemId = dto.itemId!!,
+            itemTitle = dto.itemTitle!!,
+            sellerName = dto.sellerName!!,
+            imageUrl = dto.imageUrl
         )
     }
 }

@@ -65,11 +65,11 @@ class AuthRepositoryImpl @Inject constructor(
         return tokenResult.token ?: throw Exception(ERROR_GET_ID_TOKEN)
     }
 
-    override fun getAuthProfileObservable(): Flow<Resource<AuthProfile>> = channelFlow {
+    override fun getAuthProfileObservable(): Flow<Resource<AuthProfile?>> = channelFlow {
         val listener = FirebaseAuth.AuthStateListener {
             val currentUser = it.currentUser
             if (currentUser == null) {
-                channel.offer(Resource.Success(AuthProfile()))
+                channel.offer(Resource.Success(null))
             } else {
                 channel.offer(
                     Resource.Success(authMapper.toAuthProfile(currentUser))
@@ -84,7 +84,6 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    @Throws(Exception::class)
     override suspend fun sendEmailWithSignInLink(email: String) {
         val actionCodeSettings = actionCodeSettings {
             url = CONTINUE_URL

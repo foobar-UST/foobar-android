@@ -21,6 +21,7 @@ import com.foobarust.android.utils.AutoClearedValue
 import com.foobarust.android.utils.findNavController
 import com.foobarust.android.utils.getFileExtension
 import com.foobarust.android.utils.showShortToast
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -70,7 +71,14 @@ class ProfileFragment : FullScreenDialogFragment(), ProfileAdapter.ProfileAdapte
         }
 
         // Dismiss dialog
-        binding.toolbar.setNavigationOnClickListener { dismiss() }
+        binding.toolbar.setNavigationOnClickListener {
+            findNavController().navigateUp()
+        }
+
+        // SnackBar
+        profileViewModel.snackBarMessage.observe(viewLifecycleOwner) {
+            showMessageSnackBar(message = it)
+        }
 
         return binding.root
     }
@@ -144,5 +152,9 @@ class ProfileFragment : FullScreenDialogFragment(), ProfileAdapter.ProfileAdapte
             EDIT_PROFILE_NAME -> profileViewModel.updateUserName(result)
             EDIT_PROFILE_PHONE_NUMBER -> profileViewModel.updateUserPhoneNum(result)
         }
+    }
+
+    private fun showMessageSnackBar(message: String) {
+        Snackbar.make(binding.coordinatorLayout, message, Snackbar.LENGTH_SHORT).show()
     }
 }

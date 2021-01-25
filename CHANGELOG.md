@@ -1,4 +1,13 @@
 # Changelog
+## 2020-01-26
+- Refactored CartFragment to a better design.
+- Added PaymentFragment.
+- Added OrderPlacingFragment.
+- Added NetworkCacheResource for local caching feature.
+- Added place order API.
+- Integrated with Room.
+- Many bug fixes.
+
 ## 2020-01-11
 - Refactored photo upload job using WorkManager.
 - Refactored GetUserCartUseCase using SharedFlow.

@@ -1,6 +1,8 @@
 package com.foobarust.android.utils
 
-import androidx.databinding.InverseMethod
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
+import androidx.annotation.ColorInt
 
 /**
  * Created by kevin on 10/31/20
@@ -11,14 +13,9 @@ object BindingConverters {
     @JvmStatic
     fun doubleToFloat(value: Double): Float = value.toFloat()
 
-    @InverseMethod("doubleToFloat")
-    @JvmStatic
-    fun floatToDouble(value: Float): Double = value.toDouble()
-
     @JvmStatic
     fun intToString(value: Int): String = value.toString()
 
-    @InverseMethod("intToString")
     @JvmStatic
-    fun stringToInt(value: String): Int = value.toInt()
+    fun colorToDrawable(@ColorInt color: Int): Drawable = ColorDrawable(color)
 }

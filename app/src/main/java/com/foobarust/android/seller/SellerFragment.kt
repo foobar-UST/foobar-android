@@ -33,39 +33,34 @@ class SellerFragment : Fragment() {
     ): View {
         binding = FragmentSellerBinding.inflate(inflater, container, false)
 
-        // Setup on-campus and off-campus tabs
-        sellerViewModel.sellerPages.observe(viewLifecycleOwner) {
-            val sellerPagerAdapter = SellerPagerAdapter(
-                fragmentManager = childFragmentManager,
-                lifecycle = lifecycle,
-                sellerPages = it
-            )
+        // Setup view pager
+        val sellerPagerAdapter = SellerPagerAdapter(
+            fragmentManager = childFragmentManager,
+            lifecycle = lifecycle,
+            sellerPages = sellerViewModel.sellerPages
+        )
 
-            binding.sellerViewPager.run {
-                adapter = sellerPagerAdapter
-                // Set page limit to prevent scrolling lag
-                offscreenPageLimit = 2
+        binding.sellerViewPager.run {
+            adapter = sellerPagerAdapter
+            // Set page limit to prevent scrolling lag
+            offscreenPageLimit = 2
 
-                registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-                    override fun onPageSelected(position: Int) {
-                        super.onPageSelected(position)
-                        sellerViewModel.currentTabPage = position
-                    }
-                })
-            }
-
-            TabLayoutMediator(binding.sellerTabLayout, binding.sellerViewPager) { tab, position ->
-                // Set tab title
-                tab.text = it[position].title
-            }.attach()
+            registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
+                    sellerViewModel.currentTabPage = position
+                }
+            })
         }
+
+        TabLayoutMediator(binding.sellerTabLayout, binding.sellerViewPager) { tab, position ->
+            tab.text = sellerViewModel.sellerPages[position].title
+        }.attach()
 
         // Navigate to seller detail
         sellerViewModel.navigateToSellerDetail.observe(viewLifecycleOwner) {
             findNavController(R.id.sellerFragment)?.navigate(
-                SellerFragmentDirections.actionSellerFragmentToSellerDetailFragment(
-                    sellerId = it
-                )
+                SellerFragmentDirections.actionSellerFragmentToSellerDetailFragment(property = it)
             )
         }
 
@@ -86,9 +81,7 @@ class SellerFragment : Fragment() {
         // Navigate to seller section detail
         sellerViewModel.navigateToSellerSection.observe(viewLifecycleOwner) {
             findNavController(R.id.sellerFragment)?.navigate(
-                SellerFragmentDirections.actionSellerFragmentToSellerSectionFragment(
-                    sellerSectionProperty = it
-                )
+                SellerFragmentDirections.actionSellerFragmentToSellerSectionFragment(property = it)
             )
         }
 
@@ -99,6 +92,13 @@ class SellerFragment : Fragment() {
                     sellerViewModel.onScrollToTop()
                 }
             }
+        }
+
+        // Navigate to onboarding tutorial
+        mainViewModel.navigateToOnboardingTutorial.observe(viewLifecycleOwner) {
+            findNavController(R.id.sellerFragment)?.navigate(
+                SellerFragmentDirections.actionSellerFragmentToTutorialFragment()
+            )
         }
 
         return binding.root

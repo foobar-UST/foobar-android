@@ -7,7 +7,7 @@ import com.foobarust.data.common.Constants.SELLER_SECTION_CUTOFF_TIME_FIELD
 import com.foobarust.data.common.Constants.SELLER_SECTION_SELLER_ID_FIELD
 import com.foobarust.data.common.Constants.SELLER_SECTION_SELLER_NAME_FIELD
 import com.foobarust.data.mappers.SellerMapper
-import com.foobarust.data.models.seller.SellerSectionBasicEntity
+import com.foobarust.data.models.seller.SellerSectionBasicDto
 import com.foobarust.data.utils.isNetworkData
 import com.foobarust.domain.models.seller.SellerSectionBasic
 import com.google.firebase.firestore.FirebaseFirestore
@@ -56,7 +56,7 @@ class SellerSectionsBasicPagingSource(
             }
 
             LoadResult.Page(
-                data = currentPageData.toObjects(SellerSectionBasicEntity::class.java)
+                data = currentPageData.toObjects(SellerSectionBasicDto::class.java)
                     .map { sellerMapper.toSellerSectionBasic(it) },
                 prevKey = null,
                 nextKey = nextPageQuery

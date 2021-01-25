@@ -24,7 +24,7 @@
             android:scrollbars="none"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:goneIf="@{!(viewModel.loadState instanceof LoadState.NotLoading)}"
-            tools:listitem="@layout/seller_items_basic_item" />
+            tools:listitem="@layout/seller_items_list_item" />
 
         <ProgressBar
             android:id="@+id/items_progress_bar"

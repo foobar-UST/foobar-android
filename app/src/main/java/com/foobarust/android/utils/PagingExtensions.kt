@@ -2,7 +2,7 @@ package com.foobarust.android.utils
 
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
-import com.foobarust.android.states.UiState
+import com.foobarust.android.common.UiState
 
 /**
  * Created by kevin on 9/29/20

@@ -2,8 +2,11 @@ package com.foobarust.domain.usecases.auth
 
 import com.foobarust.domain.di.IoDispatcher
 import com.foobarust.domain.repositories.AuthRepository
-import com.foobarust.domain.usecases.CoroutineUseCase
+import com.foobarust.domain.states.Resource
+import com.foobarust.domain.usecases.FlowUseCase
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 /**
@@ -13,9 +16,10 @@ import javax.inject.Inject
 class GetRequestedEmailUseCase @Inject constructor(
     private val authRepository: AuthRepository,
     @IoDispatcher coroutineDispatcher: CoroutineDispatcher
-) : CoroutineUseCase<Unit, String>(coroutineDispatcher) {
+) : FlowUseCase<Unit, String>(coroutineDispatcher) {
 
-    override suspend fun execute(parameters: Unit): String {
-        return authRepository.getAuthRequestedEmail()
+    override fun execute(parameters: Unit): Flow<Resource<String>> = flow {
+        val email = authRepository.getAuthRequestedEmail()
+        emit(Resource.Success(email))
     }
 }

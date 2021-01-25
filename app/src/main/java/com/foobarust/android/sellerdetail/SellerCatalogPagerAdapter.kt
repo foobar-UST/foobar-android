@@ -21,8 +21,10 @@ class SellerCatalogPagerAdapter(
 
     override fun createFragment(position: Int): Fragment {
         return SellerItemsFragment.newInstance(
-            sellerId = sellerId,
-            categoryId = sellerCatalogs[position].id
+            SellerItemsProperty(
+                sellerId = sellerId,
+                catalogId = sellerCatalogs[position].id
+            )
         )
     }
 }

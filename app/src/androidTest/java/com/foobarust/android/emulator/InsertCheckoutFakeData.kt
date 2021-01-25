@@ -4,7 +4,7 @@ import androidx.test.ext.junit.rules.activityScenarioRule
 import androidx.test.platform.app.InstrumentationRegistry
 import com.foobarust.android.InsertFakeDataActivity
 import com.foobarust.data.common.Constants.PAYMENT_METHODS_COLLECTION
-import com.foobarust.data.models.checkout.PaymentMethodEntity
+import com.foobarust.data.models.checkout.PaymentMethodDto
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -71,8 +71,8 @@ private data class PaymentMethodSerialized(
     val identifier: String,
     val enabled: Boolean
 ) {
-    fun toPaymentMethodEntity(): PaymentMethodEntity {
-        return PaymentMethodEntity(
+    fun toPaymentMethodEntity(): PaymentMethodDto {
+        return PaymentMethodDto(
             id = id,
             identifier = identifier,
             enabled = enabled

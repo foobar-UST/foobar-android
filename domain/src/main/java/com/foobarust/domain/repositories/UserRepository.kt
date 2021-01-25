@@ -15,9 +15,15 @@ interface UserRepository {
 
     suspend fun updateOnboardingCompleted(completed: Boolean)
 
+    /**
+     * Get a observable [UserDetail] from local or network db.
+     * @param userId the id of the user
+     */
     fun getUserDetailObservable(userId: String): Flow<Resource<UserDetail>>
 
-    suspend fun updateUserDetail(userId: String, userDetail: UserDetail)
+    suspend fun updateUserDetail(idToken: String, name: String?, phoneNum: String?)
+
+    suspend fun clearUserDetailCache()
 
     fun uploadUserPhoto(userId: String, uri: String, extension: String): Flow<Resource<Unit>>
 

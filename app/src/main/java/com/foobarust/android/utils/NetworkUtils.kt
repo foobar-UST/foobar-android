@@ -1,18 +1,10 @@
 package com.foobarust.android.utils
 
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.Network
-import android.os.Build
-import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.suspendCancellableCoroutine
-import javax.inject.Inject
-import kotlin.coroutines.resume
-
 /**
  * Created by kevin on 12/31/20
  */
 
+/*
 class NetworkUtils @Inject constructor(@ApplicationContext val context: Context) {
 
     suspend fun hasNetworkConnection(): Boolean {
@@ -46,3 +38,5 @@ class NetworkUtils @Inject constructor(@ApplicationContext val context: Context)
         }
     }
 }
+
+ */

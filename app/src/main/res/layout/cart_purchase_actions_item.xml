@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="menuItemModel"
+            type="com.foobarust.android.checkout.CartListModel.CartPurchaseActionsItemModel" />
+        <variable
+            name="listener"
+            type="com.foobarust.android.checkout.CartAdapter.CartAdapterListener" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorSurface">
+
+        <com.google.android.material.chip.Chip
+            style="@style/Widget.Foobar.Chip.SellerAction"
+            android:id="@+id/add_item_chip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="62dp"
+            android:layout_marginTop="@dimen/spacing_xmedium"
+            android:layout_marginBottom="@dimen/spacing_xmedium"
+            android:text="@string/cart_purchase_actions_add_item"
+            android:onClick="@{() -> listener.onAddMoreItemClicked(menuItemModel.sellerId, menuItemModel.sectionId)}"
+            app:chipIcon="@drawable/ic_add" />
+
+        <com.google.android.material.chip.Chip
+            style="@style/Widget.Foobar.Chip.SellerAction"
+            android:id="@+id/remove_items_chip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_large"
+            android:layout_marginTop="@dimen/spacing_xmedium"
+            android:layout_marginBottom="@dimen/spacing_xmedium"
+            android:text="@string/cart_purchase_actions_remove_items"
+            android:onClick="@{() -> listener.onClearCart()}"
+            app:chipIcon="@drawable/ic_remove" />
+
+    </LinearLayout>
+
+</layout>

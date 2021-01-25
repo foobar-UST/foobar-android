@@ -6,9 +6,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.common.BaseViewModel
-import com.foobarust.android.states.UiState
+import com.foobarust.android.common.UiState
+import com.foobarust.android.sellerdetail.SellerDetailProperty
 import com.foobarust.android.utils.SingleLiveEvent
 import com.foobarust.domain.models.seller.SellerSectionDetail
+import com.foobarust.domain.models.seller.getNormalizedTitle
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.seller.GetSellerSectionDetailParameters
 import com.foobarust.domain.usecases.seller.GetSellerSectionDetailUseCase
@@ -28,21 +30,18 @@ class SellerSectionViewModel @ViewModelInject constructor(
 
     private val _sectionDetail = MutableSharedFlow<SellerSectionDetail?>()
     val sectionDetail: SharedFlow<SellerSectionDetail?> = _sectionDetail
-        .asSharedFlow()
         .shareIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(),
             replay = 1
         )
-    val sectionDetailLiveData: LiveData<SellerSectionDetail?> = sectionDetail
-        .asLiveData(viewModelScope.coroutineContext)
 
     private val _backPressed = SingleLiveEvent<Unit>()
     val backPressed: LiveData<Unit>
         get() = _backPressed
 
-    private val _navigateToSellerDetail = SingleLiveEvent<String>()
-    val navigateToSellerDetail: LiveData<String>
+    private val _navigateToSellerDetail = SingleLiveEvent<SellerDetailProperty>()
+    val navigateToSellerDetail: LiveData<SellerDetailProperty>
         get() = _navigateToSellerDetail
 
     private val _navigateToSellerSection = SingleLiveEvent<SellerSectionProperty>()
@@ -56,6 +55,11 @@ class SellerSectionViewModel @ViewModelInject constructor(
     private val _currentDestination = MutableStateFlow(-1)
 
     private var fetchSectionDetailJob: Job? = null
+
+    val toolbarTitle: LiveData<String> = _sectionDetail
+        .asSharedFlow()
+        .map { it?.getNormalizedTitle() ?: "" }
+        .asLiveData(viewModelScope.coroutineContext)
 
     fun onFetchSectionDetail(property: SellerSectionProperty) {
         fetchSectionDetailJob?.cancelIfActive()
@@ -88,13 +92,20 @@ class SellerSectionViewModel @ViewModelInject constructor(
     }
 
     fun onNavigateToSellerDetail() = viewModelScope.launch {
-        val sellerId = sectionDetail.first()?.sellerId
-        sellerId?.let { _navigateToSellerDetail.value = it }
+        val sectionDetail = sectionDetail.first()
+        sectionDetail?.let {
+            _navigateToSellerDetail.value = SellerDetailProperty(
+                sellerId = it.sellerId,
+                sectionId = it.id
+            )
+        }
     }
 
     fun onNavigateToSellerMisc() = viewModelScope.launch {
-        val sellerId = sectionDetail.first()?.sellerId
-        sellerId?.let { _navigateToSellerMisc.value = it }
+        val sectionDetail = sectionDetail.first()
+        sectionDetail?.let {
+            _navigateToSellerMisc.value = it.sellerId
+        }
     }
 
     fun onNavigateToSellerSection(sectionId: String) = viewModelScope.launch {

@@ -3,7 +3,6 @@ package com.foobarust.android.checkout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.DrawableRes
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -14,7 +13,6 @@ import com.foobarust.android.checkout.CartListModel.*
 import com.foobarust.android.checkout.CartViewHolder.*
 import com.foobarust.android.databinding.*
 import com.foobarust.domain.models.cart.UserCartItem
-import com.foobarust.domain.models.seller.SellerBasic
 
 /**
  * Created by kevin on 12/1/20
@@ -27,8 +25,8 @@ class CartAdapter(
         val inflater = LayoutInflater.from(parent.context)
 
         return when (viewType) {
-            R.layout.cart_seller_info_item -> CartSellerInfoItemViewHolder(
-                CartSellerInfoItemBinding.inflate(inflater, parent, false)
+            R.layout.cart_info_item -> CartInfoItemViewHolder(
+                CartInfoItemBinding.inflate(inflater, parent, false)
             )
 
             R.layout.cart_purchase_item -> CartPurchaseItemViewHolder(
@@ -39,16 +37,16 @@ class CartAdapter(
                 CartTotalPriceItemBinding.inflate(inflater, parent, false)
             )
 
-            R.layout.cart_actions_item -> CartActionsItemViewHolder(
-                CartActionsItemBinding.inflate(inflater, parent, false)
+            R.layout.cart_order_notes_item -> CartOrderNotesItemViewHolder(
+                CartOrderNotesItemBinding.inflate(inflater, parent, false)
             )
 
-            R.layout.cart_delivery_info_item -> CartDeliveryInfoItemViewHolder(
-                CartDeliveryInfoItemBinding.inflate(inflater, parent, false)
+            R.layout.cart_purchase_subtitle_item -> CartPurchaseSubtitleItemViewHolder(
+                CartPurchaseSubtitleItemBinding.inflate(inflater, parent, false)
             )
 
-            R.layout.cart_notes_item -> CartNotesItemViewHolder(
-                CartNotesItemBinding.inflate(inflater, parent, false)
+            R.layout.cart_purchase_actions_item -> CartPurchaseActionsItemViewHolder(
+                CartPurchaseActionsItemBinding.inflate(inflater, parent, false)
             )
 
             else -> throw IllegalStateException("Unknown view type $viewType")
@@ -57,9 +55,24 @@ class CartAdapter(
 
     override fun onBindViewHolder(holder: CartViewHolder, position: Int) {
         when (holder) {
-            is CartSellerInfoItemViewHolder -> holder.binding.run {
-                sellerInfoItemModel = getItem(position) as CartSellerInfoItemModel
-                listener = this@CartAdapter.listener
+            is CartInfoItemViewHolder -> holder.binding.run {
+                val currentItem = getItem(position) as CartInfoItemModel
+                cartInfoItemModel = currentItem
+                // Navigate to SellerSection
+                if (currentItem.sectionId != null) {
+                    sectionOption.itemOption.setOnClickListener {
+                        listener.onSectionOptionClicked(
+                            sellerId = currentItem.sellerId,
+                            sectionId = currentItem.sectionId
+                        )
+                    }
+                }
+                // Navigate to SellerMisc
+                miscOption.itemOption.setOnClickListener {
+                    listener.onSellerMiscOptionClicked(
+                        sellerId = currentItem.sellerId
+                    )
+                }
                 executePendingBindings()
             }
 
@@ -74,22 +87,22 @@ class CartAdapter(
                 executePendingBindings()
             }
 
-            is CartActionsItemViewHolder -> holder.binding.run {
-                actionsModel = getItem(position) as CartActionsItemModel
-                listener = this@CartAdapter.listener
-                executePendingBindings()
-            }
-
-            is CartDeliveryInfoItemViewHolder -> holder.binding.run {
-                deliveryInfoItemModel = getItem(position) as CartDeliveryInfoItemModel
-                listener = this@CartAdapter.listener
-                executePendingBindings()
-            }
-
-            is CartNotesItemViewHolder -> holder.binding.run {
+            is CartOrderNotesItemViewHolder -> holder.binding.run {
+                orderNotesItemModel = getItem(position) as CartOrderNotesItemModel
                 notesEditText.doOnTextChanged { text, _, _, _ ->
-                    listener.onUpdateNotes(notes = text.toString())
+                    listener.onUpdateOrderNotes(notes = text.toString())
                 }
+                executePendingBindings()
+            }
+
+            is CartPurchaseSubtitleItemViewHolder -> holder.binding.run {
+                subtitleItemModel = getItem(position) as CartPurchaseSubtitleItemModel
+                executePendingBindings()
+            }
+
+            is CartPurchaseActionsItemViewHolder -> holder.binding.run {
+                menuItemModel = getItem(position) as CartPurchaseActionsItemModel
+                listener = this@CartAdapter.listener
                 executePendingBindings()
             }
         }
@@ -97,29 +110,29 @@ class CartAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
-            is CartSellerInfoItemModel -> R.layout.cart_seller_info_item
+            is CartInfoItemModel -> R.layout.cart_info_item
             is CartPurchaseItemModel -> R.layout.cart_purchase_item
             is CartTotalPriceItemModel -> R.layout.cart_total_price_item
-            is CartActionsItemModel -> R.layout.cart_actions_item
-            is CartDeliveryInfoItemModel -> R.layout.cart_delivery_info_item
-            is CartNotesItemModel -> R.layout.cart_notes_item
+            is CartOrderNotesItemModel -> R.layout.cart_order_notes_item
+            is CartPurchaseSubtitleItemModel -> R.layout.cart_purchase_subtitle_item
+            is CartPurchaseActionsItemModel -> R.layout.cart_purchase_actions_item
         }
     }
 
     interface CartAdapterListener {
-        fun onNavigateToSellerDetail(sellerId: String)
-        fun onNavigateToSellerMisc(sellerId: String)
-        fun onCartPurchaseItemClicked(userCartItem: UserCartItem)
+        fun onAddMoreItemClicked(sellerId: String, sectionId: String?)
+        fun onSellerMiscOptionClicked(sellerId: String)
+        fun onSectionOptionClicked(sellerId: String, sectionId: String?)
+        fun onCartItemClicked(userCartItem: UserCartItem)
         fun onRemoveCartItem(userCartItem: UserCartItem)
         fun onClearCart()
-        fun onPlaceOrder()
-        fun onUpdateNotes(notes: String)
+        fun onUpdateOrderNotes(notes: String)
     }
 }
 
 sealed class CartViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    class CartSellerInfoItemViewHolder(
-        val binding: CartSellerInfoItemBinding
+    class CartInfoItemViewHolder(
+        val binding: CartInfoItemBinding
     ) : CartViewHolder(binding.root)
 
     class CartPurchaseItemViewHolder(
@@ -130,22 +143,28 @@ sealed class CartViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
         val binding: CartTotalPriceItemBinding
     ) : CartViewHolder(binding.root)
 
-    class CartActionsItemViewHolder(
-        val binding: CartActionsItemBinding
+    class CartOrderNotesItemViewHolder(
+        val binding: CartOrderNotesItemBinding
     ) : CartViewHolder(binding.root)
 
-    class CartDeliveryInfoItemViewHolder(
-        val binding: CartDeliveryInfoItemBinding
+    class CartPurchaseSubtitleItemViewHolder(
+        val binding: CartPurchaseSubtitleItemBinding
     ) : CartViewHolder(binding.root)
 
-    class CartNotesItemViewHolder(
-        val binding: CartNotesItemBinding
+    class CartPurchaseActionsItemViewHolder(
+        val binding: CartPurchaseActionsItemBinding
     ) : CartViewHolder(binding.root)
 }
 
 sealed class CartListModel {
-    data class CartSellerInfoItemModel(
-        val sellerBasic: SellerBasic
+    data class CartInfoItemModel(
+        val cartTitle: String,
+        val cartImageUrl: String?,
+        val cartPickupAddress: String,
+        val cartDeliveryTime: String?,
+        val sellerId: String,
+        val sellerOnline: Boolean,
+        val sectionId: String?
     ) : CartListModel()
 
     data class CartPurchaseItemModel(
@@ -158,43 +177,53 @@ sealed class CartListModel {
         val total: Double
     ) : CartListModel()
 
-    data class CartActionsItemModel(
-        val allowOrder: Boolean
+    data class CartOrderNotesItemModel(
+        val orderNotes: String?
     ) : CartListModel()
 
-    data class CartDeliveryInfoItemModel(
-        val title: String,
-        val address: String,
-        @DrawableRes val drawable: Int
+    data class CartPurchaseSubtitleItemModel(
+        val subtitle: String
     ) : CartListModel()
 
-    object CartNotesItemModel : CartListModel()
+    data class CartPurchaseActionsItemModel(
+        val sellerId: String,
+        val sectionId: String?
+    ) : CartListModel()
 }
 
 object CartListModelDiff : DiffUtil.ItemCallback<CartListModel>() {
     override fun areItemsTheSame(oldItem: CartListModel, newItem: CartListModel): Boolean {
         return when {
-            oldItem is CartSellerInfoItemModel && newItem is CartSellerInfoItemModel -> true
+            oldItem is CartInfoItemModel && newItem is CartInfoItemModel ->
+                true
             oldItem is CartPurchaseItemModel && newItem is CartPurchaseItemModel ->
                 oldItem.userCartItem.id == newItem.userCartItem.id
-            oldItem is CartTotalPriceItemModel && newItem is CartTotalPriceItemModel -> true
-            oldItem is CartActionsItemModel && newItem is CartActionsItemModel -> true
-            oldItem is CartDeliveryInfoItemModel && newItem is CartDeliveryInfoItemModel -> true
-            oldItem is CartNotesItemModel && newItem is CartNotesItemModel -> true
+            oldItem is CartTotalPriceItemModel && newItem is CartTotalPriceItemModel ->
+                true
+            oldItem is CartOrderNotesItemModel && newItem is CartOrderNotesItemModel ->
+                true
+            oldItem is CartPurchaseSubtitleItemModel && newItem is CartPurchaseSubtitleItemModel ->
+                oldItem.subtitle == newItem.subtitle
+            oldItem is CartPurchaseActionsItemModel && newItem is CartPurchaseActionsItemModel ->
+                true
             else -> false
         }
     }
 
     override fun areContentsTheSame(oldItem: CartListModel, newItem: CartListModel): Boolean {
         return when {
-            oldItem is CartSellerInfoItemModel && newItem is CartSellerInfoItemModel ->
-                oldItem.sellerBasic == newItem.sellerBasic
+            oldItem is CartInfoItemModel && newItem is CartInfoItemModel ->
+                oldItem == newItem
             oldItem is CartPurchaseItemModel && newItem is CartPurchaseItemModel ->
                 oldItem.userCartItem == newItem.userCartItem
-            oldItem is CartTotalPriceItemModel && newItem is CartTotalPriceItemModel -> oldItem == newItem
-            oldItem is CartActionsItemModel && newItem is CartActionsItemModel -> oldItem == newItem
-            oldItem is CartDeliveryInfoItemModel && newItem is CartDeliveryInfoItemModel -> oldItem == newItem
-            oldItem is CartNotesItemModel && newItem is CartNotesItemModel -> oldItem == newItem
+            oldItem is CartTotalPriceItemModel && newItem is CartTotalPriceItemModel ->
+                oldItem == newItem
+            oldItem is CartOrderNotesItemModel && newItem is CartOrderNotesItemModel ->
+                oldItem == newItem
+            oldItem is CartPurchaseSubtitleItemModel && newItem is CartPurchaseSubtitleItemModel ->
+                oldItem == newItem
+            oldItem is CartPurchaseActionsItemModel && newItem is CartPurchaseActionsItemModel ->
+                true
             else -> false
         }
     }

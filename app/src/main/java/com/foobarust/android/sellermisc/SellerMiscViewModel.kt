@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.common.BaseViewModel
-import com.foobarust.android.states.UiState
+import com.foobarust.android.common.UiState
 import com.foobarust.domain.models.seller.SellerDetail
 import com.foobarust.domain.models.seller.SellerType
 import com.foobarust.domain.states.Resource
@@ -27,28 +27,27 @@ class SellerMiscViewModel @ViewModelInject constructor(
 ) : BaseViewModel() {
 
     private val _sellerDetail = MutableStateFlow<SellerDetail?>(null)
-    val sellerDetail: LiveData<SellerDetail> = _sellerDetail.asStateFlow()
-        .filterNotNull()
+    val sellerDetail: LiveData<SellerDetail> = _sellerDetail.filterNotNull()
         .asLiveData(viewModelScope.coroutineContext)
 
-    val latLng: LiveData<LatLng> = _sellerDetail.asStateFlow()
+    val latLng: LiveData<LatLng> = _sellerDetail
         .filterNotNull()
         .map {
             LatLng(
-                it.location.geolocation.latitude,
-                it.location.geolocation.longitude
+                it.location.locationPoint.latitude,
+                it.location.locationPoint.longitude
             )
         }
         .asLiveData(viewModelScope.coroutineContext)
 
-    val polyline: LiveData<List<LatLng>?> = _sellerDetail.asStateFlow()
+    val polyline: LiveData<List<LatLng>?> = _sellerDetail
         .filterNotNull()
         .filter { it.type == SellerType.OFF_CAMPUS }
         .map {
             getDirectionsUseCase(
                 GetDirectionsParameters(
-                    sellerLatitude = it.location.geolocation.latitude,
-                    sellerLongitude = it.location.geolocation.longitude
+                    latitude = it.location.locationPoint.latitude,
+                    longitude = it.location.locationPoint.longitude
                 )
             ).getSuccessDataOr(null)
         }
@@ -59,13 +58,19 @@ class SellerMiscViewModel @ViewModelInject constructor(
 
 
     fun onFetchSellerDetail(sellerId: String) = viewModelScope.launch {
-        setUiState(UiState.Loading)
-        when (val result = getSellerDetailUseCase(sellerId)) {
-            is Resource.Success -> {
-                _sellerDetail.value = result.data
-                setUiState(UiState.Success)
+        getSellerDetailUseCase(sellerId).collect {
+            when (it) {
+                is Resource.Success -> {
+                    _sellerDetail.value = it.data
+                    setUiState(UiState.Success)
+                }
+                is Resource.Error -> {
+                    setUiState(UiState.Error(it.message))
+                }
+                is Resource.Loading -> {
+                    setUiState(UiState.Loading)
+                }
             }
-            is Resource.Error -> setUiState(UiState.Error(result.message))
         }
     }
 }

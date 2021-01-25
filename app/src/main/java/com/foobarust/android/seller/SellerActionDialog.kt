@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.foobarust.android.R
 import com.foobarust.android.databinding.DialogSellerActionBinding
 import com.foobarust.android.utils.AutoClearedValue
@@ -23,7 +24,7 @@ class SellerActionDialog : BottomSheetDialogFragment(), NavigationView.OnNavigat
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DialogSellerActionBinding.inflate(inflater, container, false)
 
         // Setup navigation view
@@ -45,7 +46,8 @@ class SellerActionDialog : BottomSheetDialogFragment(), NavigationView.OnNavigat
             }
         }
 
-        dismiss()
+        findNavController().navigateUp()
+
         return true
     }
 }

@@ -5,7 +5,6 @@ import com.foobarust.domain.di.IoDispatcher
 import com.foobarust.domain.models.user.AuthProfile
 import com.foobarust.domain.models.user.UserDetail
 import com.foobarust.domain.models.user.asUserDetail
-import com.foobarust.domain.models.user.isSignedIn
 import com.foobarust.domain.repositories.AuthRepository
 import com.foobarust.domain.repositories.UserRepository
 import com.foobarust.domain.states.Resource
@@ -24,29 +23,36 @@ import javax.inject.Singleton
  * Created by kevin on 9/17/20
  */
 
+/**
+ * If the user is signed in and network is available -> produce data from network db.
+ * If the user is signed in and network in unavailable -> produce data from auth.
+ * If the user is signed out, produce null.
+ */
 @Singleton
 class GetUserDetailUseCase @Inject constructor(
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository,
     @ApplicationScope private val externalScope: CoroutineScope,
     @IoDispatcher private val coroutineDispatcher: CoroutineDispatcher
-) : FlowUseCase<Unit, UserDetail>(coroutineDispatcher) {
+) : FlowUseCase<Unit, UserDetail?>(coroutineDispatcher) {
 
     private var observeUserDetailJob: Job? = null
 
     // Share result to multiple consumers
-    private val sharedResult: SharedFlow<Resource<UserDetail>> = channelFlow<Resource<UserDetail>> {
+    private val sharedResult: SharedFlow<Resource<UserDetail?>> = channelFlow<Resource<UserDetail?>> {
         authRepository.getAuthProfileObservable().collect { result ->
             println("[GetUserDetailUseCase]: AuthProfile collected.")
             stopObserveUserDetail()
             if (result is Resource.Success) {
                 val authProfile = result.data
-                if (authProfile.isSignedIn()) {
-                    println("[GetUserDetailUseCase]: User is signed in. Offer UserDetail.")
-                    startObserveUserDetail(userId = authProfile.id!!, authProfile = authProfile)
+                if (authProfile != null) {
+                    // User is signed in
+                    println("[GetUserDetailUseCase]: User is signed in. Start Observe UserDetail.")
+                    startObserveUserDetail(userId = authProfile.id, authProfile = authProfile)
                 } else {
-                    println("[GetUserDetailUseCase]: User is signed out. Offer AuthProfile.")
-                    channel.offer(Resource.Success(authProfile.asUserDetail()))
+                    // User is signed out
+                    println("[GetUserDetailUseCase]: User is signed out.")
+                    channel.offer(Resource.Success(null))
                 }
             }
         }
@@ -56,7 +62,7 @@ class GetUserDetailUseCase @Inject constructor(
         replay = 1
     )
 
-    override fun execute(parameters: Unit): Flow<Resource<UserDetail>> = sharedResult
+    override fun execute(parameters: Unit): Flow<Resource<UserDetail?>> = sharedResult
 
     private fun ProducerScope<Resource<UserDetail>>.startObserveUserDetail(
         userId: String,
@@ -84,7 +90,7 @@ class GetUserDetailUseCase @Inject constructor(
     }
 
     private fun stopObserveUserDetail() {
-        println("[GetUserDetailUseCase]: Stop observing UserDetail form db.")
+        println("[GetUserDetailUseCase]: Stop observing UserDetail.")
         observeUserDetailJob.cancelIfActive()
     }
 }

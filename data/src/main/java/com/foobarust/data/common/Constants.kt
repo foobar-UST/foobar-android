@@ -5,10 +5,11 @@ package com.foobarust.data.common
  */
 
 object Constants {
-    // Shared Preferences
+    const val APP_DB_NAME = "foobar_db"
     const val PREFS_NAME = "foobarust"
 
     // Users
+    const val USERS_ENTITY = "users"
     const val USERS_COLLECTION = "users"
     const val USERS_DELIVERY_COLLECTION = "users_delivery"
     const val USERS_PUBLIC_COLLECTION = "users_public"
@@ -29,17 +30,24 @@ object Constants {
     const val USER_CARTS_COLLECTION = "user_carts"
     const val USER_CART_ITEMS_SUB_COLLECTION = "cart_items"
 
+    const val USER_CART_USER_ID_FIELD = "user_id"
+    const val USER_CART_TITLE_FIELD = "title"
+    const val USER_CART_TITLE_ZH_FIELD = "title_zh"
     const val USER_CART_SELLER_ID_FIELD = "seller_id"
     const val USER_CART_SELLER_TYPE_FIELD = "seller_type"
-    const val USER_CART_SELLER_SECTION_ID_FIELD = "section_id"
+    const val USER_CART_SECTION_ID_FIELD = "section_id"
+    const val USER_CART_DELIVERY_TIME_FIELD = "delivery_time"
+    const val USER_CART_IMAGE_URL_FIELD = "image_url"
+    const val USER_CART_PICKUP_LOCATION_FIELD = "pickup_location"
     const val USER_CART_ITEMS_COUNT_FIELD = "items_count"
-    const val USER_CART_SUBTOTAL_COST_FIELD = "subtotal_cost"
     const val USER_CART_DELIVERY_COST_FIELD = "delivery_cost"
+    const val USER_CART_SUBTOTAL_COST_FIELD = "subtotal_cost"
     const val USER_CART_TOTAL_COST_FIELD = "total_cost"
     const val USER_CART_SYNC_REQUIRED_FIELD = "sync_required"
     const val USER_CART_UPDATED_AT_FIELD = "updated_at"
 
     const val USER_CART_ITEMS_ID_FIELD = "id"
+    const val USER_CART_ITEMS_USER_ID_FIELD = "user_id"
     const val USER_CART_ITEMS_ITEM_ID_FIELD = "item_id"
     const val USER_CART_ITEMS_ITEM_SELLER_ID_FIELD = "item_seller_id"
     const val USER_CART_ITEMS_ITEM_SECTION_ID_FIELD = "item_section_id"
@@ -75,7 +83,6 @@ object Constants {
     const val SELLER_NOTICE_FIELD = "notice"
     const val SELLER_TAGS_FIELD = "tags"
     const val SELLER_BY_USER_ID = "by_user_id"
-    const val SELLER_DELIVERY_COST = "delivery_cost"
 
     // Seller Location
     const val SELLER_LOCATION_ADDRESS_FIELD = "address"
@@ -100,9 +107,9 @@ object Constants {
     const val SELLER_SECTION_SELLER_ID_FIELD = "seller_id"
     const val SELLER_SECTION_SELLER_NAME_FIELD = "seller_name"
     const val SELLER_SECTION_SELLER_NAME_ZH_FIELD = "seller_name_zh"
+    const val SELLER_SECTION_DELIVERY_COST_FIELD = "delivery_cost"
     const val SELLER_SECTION_DELIVERY_TIME_FIELD = "delivery_time"
     const val SELLER_SECTION_DELIVERY_LOCATION_FIELD = "delivery_location"
-    const val SELLER_SECTION_DELIVERY_LOCATION__ZH_FIELD = "delivery_location_zh"
     const val SELLER_SECTION_CUTOFF_TIME_FIELD = "cutoff_time"
     const val SELLER_SECTION_DESCRIPTION_FIELD = "description"
     const val SELLER_SECTION_DESCRIPTION_ZH_FIELD = "description_zh"
@@ -161,25 +168,41 @@ object Constants {
 
 
     // Cloud Functions APIs
-    const val CF_REQUEST_URL = "https://us-central1-foobar-group-delivery-app.cloudfunctions.net/api/"
-    const val CF_AUTH_HEADER = "Authorization"
+    const val REMOTE_REQUEST_URL = "https://us-central1-foobar-group-delivery-app.cloudfunctions.net/api/"
+    const val REMOTE_AUTH_HEADER = "Authorization"
 
     // Generic Responses
-    const val CF_SUCCESS_RESPONSE_DATA_OBJECT = "data"
-    const val CF_ERROR_RESPONSE_ERROR_OBJECT = "error"
-    const val CF_ERROR_RESPONSE_CODE_FIELD = "code"
-    const val CF_ERROR_RESPONSE_MESSAGE_FIELD = "message"
+    const val REMOTE_SUCCESS_RESPONSE_DATA_OBJECT = "data"
+    const val REMOTE_ERROR_RESPONSE_ERROR_OBJECT = "error"
+    const val REMOTE_ERROR_RESPONSE_CODE_FIELD = "code"
+    const val REMOTE_ERROR_RESPONSE_MESSAGE_FIELD = "message"
 
-    // Google Map Directions APIs
-    const val GM_DIR_URL = "https://maps.googleapis.com/maps/api/"
-    const val GM_DIR_KEY = "key"
-    const val GM_DIR_ORIGIN = "origin"
-    const val GM_DIR_DEST = "destination"
+    // Google Maps APIs
+    const val MAPS_API_URL = "https://maps.googleapis.com/maps/api/"
+    const val MAPS_DIRECTIONS_END_POINT = "directions/json"
+    const val MAPS_DIRECTIONS_PARAM_KEY = "key"
+    const val MAPS_DIRECTIONS_PARAM_ORIGIN = "origin"
+    const val MAPS_DIRECTIONS_PARAM_DEST = "destination"
+    const val MAPS_STATIC_MAP_END_POINT = "staticmap"
+    const val MAPS_STATIC_MAP_PARAM_KEY = "key"
+    const val MAPS_STATIC_MAP_PARAM_AUTO_SCALE = "autoscale"
+    const val MAPS_STATIC_MAP_PARAM_SIZE = "size"
+    const val MAPS_STATIC_MAP_PARAM_MAP_TYPE = "maptype"
+    const val MAPS_STATIC_MAP_PARAM_FORMAT = "format"
+    const val MAPS_STATIC_MAP_PARAM_VISUAL_REFRESH = "visual_refresh"
+    const val MAPS_STATIC_MAP_PARAM_MARKERS = "markers"
 
-    const val ADD_USER_CART_ITEM_REQUEST_SELLER_ID = "seller_id"
+    const val UPDATE_USER_DETAIL_REQUEST_NAME = "name"
+    const val UPDATE_USER_DETAIL_REQUEST_PHONE_NUM = "phone_num"
+
     const val ADD_USER_CART_ITEM_REQUEST_SECTION_ID = "section_id"
     const val ADD_USER_CART_ITEM_REQUEST_ITEM_ID = "item_id"
     const val ADD_USER_CART_ITEM_REQUEST_AMOUNTS = "amounts"
+
+    const val PLACE_ORDER_REQUEST_MESSAGE = "message"
+    const val PLACE_ORDER_REQUEST_PAYMENT_METHOD = "payment_method"
+    const val PLACE_ORDER_RESPONSE_ID = "order_id"
+    const val PLACE_ORDER_RESPONSE_IDENTIFIER = "order_identifier"
 
     const val UPDATE_USER_CART_ITEM_REQUEST_CART_ITEM_ID = "cart_item_id"
     const val UPDATE_USER_CART_ITEM_REQUEST_AMOUNTS = "amounts"

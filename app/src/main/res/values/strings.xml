@@ -18,8 +18,6 @@
     <string name="notification_item_upload_user_photo_complete">Completed</string>
 
     <!-- Actions -->
-    <string name="action_cancel">Cancel</string>
-    <string name="action_save">Save</string>
     <string name="action_clear_text">Clear Text</string>
     <string name="action_search">Search</string>
     <string name="action_detail">Detail</string>
@@ -67,12 +65,8 @@
     <string name="fragment_label_seller">Restaurants</string>
     <string name="fragment_label_seller_search">Search Restaurants</string>
     <string name="fragment_label_order">Order</string>
-    <string name="fragment_label_order_history">My Orders</string>
     <string name="fragment_label_explore">Explore</string>
     <string name="fragment_label_settings">Settings</string>
-    <string name="fragment_label_notification">Notifications</string>
-    <string name="fragment_label_license">License</string>
-    <string name="fragment_label_favorite">Favourite</string>
     <string name="fragment_label_profile">My Profile</string>
 
     <!-- Settings -->
@@ -85,7 +79,6 @@
     <string name="settings_section_features_title">Features</string>
     <string name="settings_section_sign_out_title">Sign Out</string>
     <string name="settings_section_favorite_title">My Favourite</string>
-    <string name="settings_section_orders_title">My Orders</string>
 
     <!-- Profile -->
     <string name="profile_edit_field_name">Name</string>
@@ -93,28 +86,25 @@
     <string name="profile_edit_field_input_not_set">Not Set</string>
     <string name="profile_edit_field_input_invalid">Invalid input.</string>
     <string name="profile_require_data_for_ordering">Profile data have to be set before using ordering service.</string>
-    <string name="profile_user_photo_uploaded_message">Photo uploaded.</string>
+    <string name="profile_user_detail_updated">Profile Updated</string>
 
     <!-- Sign out -->
     <string name="sign_out_dialog_title">Sign Out</string>
     <string name="sign_out_dialog_message">Do you want to sign out with the current account?</string>
 
-    <!-- Input dialogs -->
-    <string name="text_input_title_prefix">Enter your&#160;</string>
-
-    <!-- Seller -->
-    <string name="seller_tab_on_campus">On Campus</string>
-    <string name="seller_tab_off_campus">Off Campus</string>
+    <!-- SellerOnCampus / SellerOffCampus -->
+    <string name="seller_type_on_campus">On Campus</string>
+    <string name="seller_type_off_campus">Off Campus</string>
     <string name="seller_subtitle">Restaurants</string>
-    <string name="seller_deliver_type_pick_up">Pick-up at campus</string>
-    <string name="seller_deliver_type_delivery">Delivery</string>
     <string name="seller_status_online">Opening</string>
     <string name="seller_status_offline">Closed</string>
-    <string name="seller_status_offline_message">Restaurant is closed.</string>
-    <string name="seller_data_format_min_spend_info">$ %.1f Min</string>
-    <string name="seller_data_format_min_spend">%.1f Minimum</string>
-    <string name="seller_type_on_campus">On-Campus</string>
-    <string name="seller_type_off_campus">Off-Campus</string>
+
+    <!-- Seller Detail -->
+    <string name="seller_detail_deliver_type_pick_up">Pickup</string>
+    <string name="seller_detail_deliver_type_delivery">Delivery</string>
+    <string name="seller_detail_offline_message">Restaurant is closed.</string>
+    <string name="seller_detail_format_min_spend">HKD %s Min</string>
+    <string name="seller_detail_format_delivery_cost">HKD %s DELIVERY</string>
 
     <!-- Seller Search -->
     <string name="seller_search_hint_input">Find Restaurants</string>
@@ -125,28 +115,32 @@
     <string name="seller_misc_title_description">Seller Info</string>
     <string name="seller_misc_data_format_phone">Tel: %s</string>
     <string name="seller_misc_data_format_website">Website: %s</string>
-    <string name="seller_misc_button_add_to_favorite">Add to Favorite</string>
 
     <!-- Seller Actions -->
     <string name="seller_action_add_favorite">Add to Favorite</string>
     <string name="seller_action_ratings">View Ratings</string>
     <string name="seller_action_feedback">Send Feedback</string>
+    <string name="seller_action_misc">Seller Details</string>
 
     <!-- Seller Item -->
-    <string name="seller_item_subtitle_amount">Amount</string>
     <string name="seller_item_data_format_price">$ %.1f</string>
-    <string name="seller_item_add_to_cart">Add To Cart ($ %.1f)</string>
+    <string name="seller_item_submit_add">Add To Cart ($ %.1f)</string>
+    <string name="seller_item_submit_update">Update To Cart ($ %.1f)</string>
     <string name="seller_item_info"># %s</string>
 
     <!-- Seller Item Detail -->
-    <string name="seller_item_detail_format_item_count">(%d Left)</string>
+    <string name="seller_item_detail_format_item_count">%d Items Left</string>
     <string name="seller_item_detail_increment_content_desc">Add Item</string>
     <string name="seller_item_detail_decrement_content_desc">Remove Item</string>
     <string name="seller_item_detail_diff_seller_title">Add Item</string>
     <string name="seller_item_detail_diff_seller_message">You can only add items from one seller for each order.</string>
+    <string name="seller_item_detail_subtitle_more_items">Popular Bundles (+$ %.1f)</string>
+    <string name="seller_item_detail_toolbar_title_add">Add Item</string>
+    <string name="seller_item_detail_toolbar_title_update">Update Item</string>
+    <string name="seller_item_detail_type_info_on_campus">Campus Restaurant</string>
+    <string name="seller_item_detail_type_info_off_campus">[%s] %s</string>
 
     <!-- Seller Section -->
-    <string name="seller_section_format_app_bar_title">%s %s</string>
     <string name="seller_section_date">Order opens at %s</string>
     <string name="seller_section_cutoff_time">Order due at %s</string>
     <string name="seller_section_available">Available</string>
@@ -162,41 +156,38 @@
     <string name="seller_section_detail_section_info_format_cutoff_time">Due at %s</string>
     <string name="seller_section_detail_section_info_format_delivery_time">Deliver To %s</string>
     <string name="seller_section_detail_section_info_format_delivery_location">Pick Up At %s</string>
-    <string name="seller_section_detail_seller_info_subtitle">Offered By</string>
     <string name="seller_section_detail_seller_info_ship_from">Detail</string>
-    <string name="seller_section_detail_button_add_items">Add Item to Cart</string>
+    <string name="seller_section_detail_button_menu">Open Menu</string>
     <string name="more_sections_subtitle">More Orders</string>
     <string name="more_sections_section_item_format_delivery_time">Deliver %s</string>
     <string name="more_sections_show_more">More</string>
 
-    <!-- Promotion -->
-    <string name="promotion_subtitle_advertise">What\'s New</string>
-    <string name="promotion_subtitle_suggest">Suggest For You</string>
-
     <!-- Checkout -->
-    <string name="checkout_app_bar_title_cart">%d Items in Cart</string>
-    <string name="checkout_app_bar_title_payment">Payment</string>
-    <string name="checkout_app_bar_title_order_success">Order Success</string>
+    <string name="checkout_toolbar_title_cart">My Cart</string>
+    <string name="checkout_toolbar_title_payment">Payment</string>
+    <string name="checkout_toolbar_title_order_success">Placing Order...</string>
+    <string name="checkout_submit_button_title_cart">Choose Payment</string>
+    <string name="checkout_submit_button_title_payment">Confirm Order</string>
 
     <!-- Cart -->
     <string name="cart_bottom_bar_title_items_count">Items in Cart</string>
     <string name="cart_bottom_bar_format_items_count">%d</string>
-    <string name="cart_bottom_bar_open_cart_content_desc">Open Cart</string>
-    <string name="cart_seller_info_subtitle">Order From</string>
-    <string name="cart_seller_info_title_menu">Menu</string>
-    <string name="cart_seller_info_title_detail">Detail</string>
+    <string name="cart_info_option_subtitle_section">Section</string>
+    <string name="cart_info_option_format_section">%s @ %s</string>
+    <string name="cart_info_option_subtitle_misc">Pick Up</string>
     <string name="cart_total_price_title_total">Total</string>
     <string name="cart_total_price_title_subtotal">Subtotal</string>
     <string name="cart_total_price_title_delivery_fee">Delivery</string>
-    <string name="cart_notes_hint">Leave a message</string>
+    <string name="cart_notes_subtitle">Leave Message</string>
+    <string name="cart_notes_hint">e.g. No cutlery</string>
     <string name="cart_no_item_error">No Item in Cart</string>
-    <string name="cart_item_submitted_message">Added to cart.</string>
     <string name="cart_actions_button_clear_cart">Clear Cart</string>
-    <string name="cart_actions_button_purchase">Proceed Payment</string>
+    <string name="cart_purchase_subtitle">My Items</string>
+    <string name="cart_purchase_actions_add_item">Add Item</string>
+    <string name="cart_purchase_actions_remove_items">Remove All</string>
     <string name="cart_purchase_item_unavailable_message">Item unavailable. Consider remove it from your cart.</string>
     <string name="cart_purchase_item_remove_item_content_desc">Remove Item</string>
     <string name="cart_purchase_item_format_amount">Quantity: %d</string>
-    <string name="cart_purchase_item_format_notes">Notes: %s</string>
     <string name="cart_purchase_item_format_total_price">x $%.1f</string>
     <string name="cart_delivery_info_title_pickup">Pick Up At</string>
     <string name="cart_delivery_info_title_delivery">Deliver to</string>
@@ -206,12 +197,16 @@
     <string name="cart_clear_Cart_dialog_message">Do you want to remove all cart items?</string>
     <string name="cart_sync_required_message">One or more cart items need update.</string>
     <string name="cart_sync_required_action_refresh">Update</string>
-    <string name="cart_sync_required_complete_message">Cart is updated.</string>
-    <string name="cart_timeout_message">Cart items are timeout and cleared.</string>
     <string name="cart_cleared_message">Your cart is cleared.</string>
     <string name="cart_timeout_dialog_title">Continue with your previous order?</string>
     <string name="cart_timeout_dialog_message">You still have %d items left in your cart.</string>
     <string name="cart_timeout_dialog_button_continue">Continue</string>
     <string name="cart_timeout_dialog_button_clear_cart">Clear Cart</string>
+
+    <!-- Payment Methods -->
+    <string name="payment_methods_title_cash_on_delivery">Cash On Delivery</string>
+    <string name="payment_methods_description_cash_on_delivery">Pay when you pick up the order</string>
+    <string name="payment_methods_title_google_pay">Google Pay</string>
+    <string name="payment_methods_description_google_pay">Pay online using Google Pay service</string>
 
 </resources>

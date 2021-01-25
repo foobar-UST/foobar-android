@@ -1,9 +1,5 @@
 package com.foobarust.data.utils
 
-/**
- * Created by kevin on 8/25/20
- */
-
 import android.net.Uri
 import com.foobarust.domain.states.Resource
 import com.google.android.gms.tasks.OnFailureListener
@@ -21,23 +17,27 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 
+/**
+ * Created by kevin on 8/25/20
+ */
+
 const val ERROR_DOCUMENT_NOT_EXIST = "Document does not exist."
 
 /**
  * Check if the query snapshot is came from network data instead of local caches.
  */
-fun QuerySnapshot.isNetworkData(): Boolean {
+internal fun QuerySnapshot.isNetworkData(): Boolean {
     return !metadata.isFromCache
 }
 
-suspend inline fun <reified T, R> CollectionReference.getAwaitResult(mapper: (T) -> R): List<R> {
+internal suspend inline fun <reified T, R> CollectionReference.getAwaitResult(mapper: (T) -> R): List<R> {
     return this.get()
         .await()
         .toObjects(T::class.java)
         .map { mapper(it) }
 }
 
-suspend inline fun <reified T, R> DocumentReference.getAwaitResult(mapper: (T) -> R): R {
+internal suspend inline fun <reified T, R> DocumentReference.getAwaitResult(mapper: (T) -> R): R {
     val result = this.get()
         .await()
         .toObject(T::class.java)
@@ -46,14 +46,14 @@ suspend inline fun <reified T, R> DocumentReference.getAwaitResult(mapper: (T) -
     return mapper(result)
 }
 
-suspend inline fun <reified T, R> Query.getAwaitResult(mapper: (T) -> R): List<R> {
+internal suspend inline fun <reified T, R> Query.getAwaitResult(mapper: (T) -> R): List<R> {
     return this.get()
         .await()
         .toObjects(T::class.java)
         .map { mapper(it) }
 }
 
-inline fun <reified T, R> CollectionReference.snapshotFlow(
+internal inline fun <reified T, R> CollectionReference.snapshotFlow(
     crossinline mapper: (T) -> R,
     keepAlive: Boolean = false
 ): Flow<Resource<List<R>>> = callbackFlow {
@@ -81,7 +81,7 @@ inline fun <reified T, R> CollectionReference.snapshotFlow(
     awaitClose { subscription.remove() }
 }
 
-inline fun <reified T, R> DocumentReference.snapshotFlow(
+internal inline fun <reified T, R> DocumentReference.snapshotFlow(
     crossinline mapper: (T) -> R,
     keepAlive: Boolean = false
 ): Flow<Resource<R>> = callbackFlow {
@@ -112,7 +112,7 @@ inline fun <reified T, R> DocumentReference.snapshotFlow(
     awaitClose { subscription.remove() }
 }
 
-inline fun <reified T, R> Query.snapshotFlow(
+internal inline fun <reified T, R> Query.snapshotFlow(
     crossinline mapper: (T) -> R,
     keepAlive: Boolean = false
 ): Flow<Resource<List<R>>> = callbackFlow {
@@ -141,7 +141,7 @@ inline fun <reified T, R> Query.snapshotFlow(
     awaitClose { subscription.remove() }
 }
 
-fun StorageReference.putFileFlow(uri: Uri): Flow<Resource<Unit>> = callbackFlow {
+internal fun StorageReference.putFileFlow(uri: Uri): Flow<Resource<Unit>> = callbackFlow {
     val progressListener = OnProgressListener<UploadTask.TaskSnapshot> {
         val progress = 100.0 * it.bytesTransferred / it.totalByteCount
         channel.offer(Resource.Loading(progress))

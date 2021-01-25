@@ -1,5 +1,7 @@
 package com.foobarust.domain.repositories
 
+import com.foobarust.domain.models.cart.AddUserCartItem
+import com.foobarust.domain.models.cart.UpdateUserCartItem
 import com.foobarust.domain.models.cart.UserCart
 import com.foobarust.domain.models.cart.UserCartItem
 import com.foobarust.domain.states.Resource
@@ -11,9 +13,9 @@ interface CartRepository {
 
     fun getUserCartItemsObservable(userId: String): Flow<Resource<List<UserCartItem>>>
 
-    suspend fun addUserCartItem(idToken: String, sellerId: String, sectionId: String?, itemId: String, amounts: Int)
+    suspend fun addUserCartItem(idToken: String, addUserCartItem: AddUserCartItem)
 
-    suspend fun removeUserCartItem(idToken: String, cartItemId: String, amounts: Int)
+    suspend fun updateUserCartItem(idToken: String, updateUserCartItem: UpdateUserCartItem)
 
     suspend fun clearUserCart(idToken: String)
 

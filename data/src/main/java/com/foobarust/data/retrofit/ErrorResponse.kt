@@ -1,8 +1,8 @@
 package com.foobarust.data.retrofit
 
-import com.foobarust.data.common.Constants.CF_ERROR_RESPONSE_CODE_FIELD
-import com.foobarust.data.common.Constants.CF_ERROR_RESPONSE_ERROR_OBJECT
-import com.foobarust.data.common.Constants.CF_ERROR_RESPONSE_MESSAGE_FIELD
+import com.foobarust.data.common.Constants.REMOTE_ERROR_RESPONSE_CODE_FIELD
+import com.foobarust.data.common.Constants.REMOTE_ERROR_RESPONSE_ERROR_OBJECT
+import com.foobarust.data.common.Constants.REMOTE_ERROR_RESPONSE_MESSAGE_FIELD
 import com.google.gson.annotations.SerializedName
 
 /**
@@ -10,15 +10,15 @@ import com.google.gson.annotations.SerializedName
  */
 
 data class ErrorResponse(
-    @SerializedName(CF_ERROR_RESPONSE_ERROR_OBJECT)
+    @SerializedName(REMOTE_ERROR_RESPONSE_ERROR_OBJECT)
     val error: ErrorResponseContent
 )
 
 data class ErrorResponseContent(
-    @SerializedName(CF_ERROR_RESPONSE_CODE_FIELD)
+    @SerializedName(REMOTE_ERROR_RESPONSE_CODE_FIELD)
     val code: Int,
 
-    @SerializedName(CF_ERROR_RESPONSE_MESSAGE_FIELD)
+    @SerializedName(REMOTE_ERROR_RESPONSE_MESSAGE_FIELD)
     val message: String?
 ) {
     override fun toString(): String = "Http $code: $message"

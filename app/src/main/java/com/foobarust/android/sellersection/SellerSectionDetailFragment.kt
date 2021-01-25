@@ -37,7 +37,7 @@ class SellerSectionDetailFragment : Fragment(),
         lifecycleScope.launchWhenCreated {
             sectionViewModel.sectionDetail.collect { sectionDetail ->
                 sectionDetail?.let {
-                    sectionDetailViewModel.onReceiveSellerDetail(sectionDetail = it)
+                    sectionDetailViewModel.onFetchSectionDetail(sectionDetail = it)
                 }
             }
         }
@@ -76,7 +76,7 @@ class SellerSectionDetailFragment : Fragment(),
         }
 
         // Add to cart button
-        binding.addItemsButton.setOnClickListener {
+        binding.menuButton.setOnClickListener {
             sectionViewModel.onNavigateToSellerDetail()
         }
 

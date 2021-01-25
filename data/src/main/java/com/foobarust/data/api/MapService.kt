@@ -1,8 +1,9 @@
 package com.foobarust.data.api
 
-import com.foobarust.data.common.Constants.GM_DIR_DEST
-import com.foobarust.data.common.Constants.GM_DIR_KEY
-import com.foobarust.data.common.Constants.GM_DIR_ORIGIN
+import com.foobarust.data.common.Constants.MAPS_DIRECTIONS_END_POINT
+import com.foobarust.data.common.Constants.MAPS_DIRECTIONS_PARAM_DEST
+import com.foobarust.data.common.Constants.MAPS_DIRECTIONS_PARAM_KEY
+import com.foobarust.data.common.Constants.MAPS_DIRECTIONS_PARAM_ORIGIN
 import com.foobarust.data.models.maps.DirectionsResponse
 import com.google.android.gms.maps.model.LatLng
 import retrofit2.http.GET
@@ -20,10 +21,10 @@ interface MapService {
      * @param origin starting place [LatLng] ("latitude+longitude")
      * @param destination [LatLng] destination [LatLng] ("latitude+longitude")
      */
-    @GET("directions/json")
+    @GET(MAPS_DIRECTIONS_END_POINT)
     suspend fun getDirections(
-        @Query(GM_DIR_KEY) key: String,
-        @Query(GM_DIR_ORIGIN) origin: String,
-        @Query(GM_DIR_DEST) destination: String
+        @Query(MAPS_DIRECTIONS_PARAM_KEY) key: String,
+        @Query(MAPS_DIRECTIONS_PARAM_ORIGIN) origin: String,
+        @Query(MAPS_DIRECTIONS_PARAM_DEST) destination: String
     ): DirectionsResponse
 }

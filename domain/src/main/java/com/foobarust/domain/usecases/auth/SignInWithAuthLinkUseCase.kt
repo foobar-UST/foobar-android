@@ -2,8 +2,11 @@ package com.foobarust.domain.usecases.auth
 
 import com.foobarust.domain.di.IoDispatcher
 import com.foobarust.domain.repositories.AuthRepository
-import com.foobarust.domain.usecases.CoroutineUseCase
+import com.foobarust.domain.states.Resource
+import com.foobarust.domain.usecases.FlowUseCase
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 /**
@@ -13,13 +16,16 @@ import javax.inject.Inject
 class SignInWithAuthLinkUseCase @Inject constructor(
     private val authRepository: AuthRepository,
     @IoDispatcher dispatcher: CoroutineDispatcher
-): CoroutineUseCase<SignInWithAuthLinkParameters, Unit>(dispatcher) {
+): FlowUseCase<SignInWithAuthLinkParameters, Unit>(dispatcher) {
 
-    override suspend fun execute(parameters: SignInWithAuthLinkParameters) {
+    override fun execute(
+        parameters: SignInWithAuthLinkParameters
+    ): Flow<Resource<Unit>> = flow {
         authRepository.signInWithEmailLink(
             email = parameters.email,
             emailLink = parameters.authLink
         )
+        emit(Resource.Success(Unit))
     }
 }
 

@@ -1,5 +1,6 @@
 package com.foobarust.android.utils
 
+import android.util.Log
 import com.google.android.material.appbar.AppBarLayout
 import kotlin.math.absoluteValue
 
@@ -12,12 +13,13 @@ abstract class AppBarStateChangedListener : AppBarLayout.OnOffsetChangedListener
     private var currentState: State = State.IDLE
 
     override fun onOffsetChanged(appBarLayout: AppBarLayout, verticalOffset: Int) {
+        Log.d("AppBarStateChanged", "$verticalOffset")
         when {
             verticalOffset == 0 -> {
                 if (currentState != State.EXPANDED) {
                     onStateChanged(appBarLayout, State.EXPANDED)
                 }
-                currentState = State.EXPANDED;
+                currentState = State.EXPANDED
             }
             verticalOffset.absoluteValue >= appBarLayout.totalScrollRange -> {
                 if (currentState != State.COLLAPSED) {

@@ -5,8 +5,8 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.foobarust.android.InsertFakeDataActivity
 import com.foobarust.data.common.Constants.SELLERS_COLLECTION
 import com.foobarust.data.common.Constants.SELLER_ITEMS_SUB_COLLECTION
-import com.foobarust.data.models.seller.SellerItemBasicEntity
-import com.foobarust.data.models.seller.SellerItemDetailEntity
+import com.foobarust.data.models.seller.SellerItemBasicDto
+import com.foobarust.data.models.seller.SellerItemDetailDto
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -104,8 +104,8 @@ private data class SellerItemSerialized(
     val count: Int,
     val available: Boolean
 ) {
-    fun toSellerItemDetailEntity(): SellerItemDetailEntity {
-        return SellerItemDetailEntity(
+    fun toSellerItemDetailEntity(): SellerItemDetailDto {
+        return SellerItemDetailDto(
             id = id,
             title = title,
             titleZh = title_zh,
@@ -120,8 +120,8 @@ private data class SellerItemSerialized(
         )
     }
 
-    fun toSellerItemBasicEntity(): SellerItemBasicEntity {
-        return SellerItemBasicEntity(
+    fun toSellerItemBasicEntity(): SellerItemBasicDto {
+        return SellerItemBasicDto(
             id = id,
             title = title,
             titleZh = title_zh,

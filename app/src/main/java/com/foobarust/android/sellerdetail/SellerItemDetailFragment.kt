@@ -4,18 +4,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.foobarust.android.R
+import com.foobarust.android.common.FullScreenDialogFragment
 import com.foobarust.android.databinding.FragmentSellerItemDetailBinding
 import com.foobarust.android.main.MainViewModel
-import com.foobarust.android.utils.AutoClearedValue
-import com.foobarust.android.utils.showShortToast
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.foobarust.android.utils.*
+import com.foobarust.android.utils.AppBarStateChangedListener.*
+import com.foobarust.domain.models.seller.SellerItemBasic
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 /**
@@ -23,7 +27,7 @@ import kotlinx.coroutines.launch
  */
 
 @AndroidEntryPoint
-class SellerItemDetailFragment : BottomSheetDialogFragment() {
+class SellerItemDetailFragment : FullScreenDialogFragment(), SellerItemDetailAdapter.SellerItemDetailAdapterListener {
 
     private var binding: FragmentSellerItemDetailBinding by AutoClearedValue(this)
     private val mainViewModel: MainViewModel by activityViewModels()
@@ -32,23 +36,8 @@ class SellerItemDetailFragment : BottomSheetDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Receive itemId argument and start fetching ItemDetail
-        itemDetailViewModel.onFetchItemDetail(property = args.sellerItemDetailProperty)
+        itemDetailViewModel.onFetchItemDetail(property = args.property)
     }
-
-    // Block back button when submitting to cart
-    // OnBackPressedCallback doesn't work for dialog,
-    // have to override the method instead.
-    /*
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return object : BottomSheetDialog(requireContext(), theme) {
-            override fun onBackPressed() {
-                if (!viewModel.isSubmittingToCart()) super.onBackPressed()
-            }
-        }
-    }
-
-     */
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -60,27 +49,62 @@ class SellerItemDetailFragment : BottomSheetDialogFragment() {
             lifecycleOwner = viewLifecycleOwner
         }
 
+        // Setup recycler view
+        val itemDetailAdapter = SellerItemDetailAdapter(this)
+        binding.recyclerView.run {
+            adapter = itemDetailAdapter
+            setHasFixedSize(true)
+        }
+
+        itemDetailViewModel.itemDetailListModels.observe(viewLifecycleOwner) {
+            itemDetailAdapter.submitList(it)
+        }
+
+        // Remove listener on CollapsingToolbarLayout, so that toolbar top padding can work properly
+        ViewCompat.setOnApplyWindowInsetsListener(binding.collapsingToolbarLayout, null)
+
+        // Show toolbar title only when collapsed
+        viewLifecycleOwner.lifecycleScope.launch {
+            binding.appBarLayout.doOnOffsetChanged().collect {
+                itemDetailViewModel.onToolbarCollapsed(
+                    isCollapsed = it == State.COLLAPSED
+                )
+            }
+        }
+
         // Setup amount widget
         binding.amountIncrementButton.setOnClickListener {
-            itemDetailViewModel.onAmountIncremented()
+            itemDetailViewModel.onAmountIncrement()
         }
 
         binding.amountDecrementButton.setOnClickListener {
-            itemDetailViewModel.onAmountDecremented()
+            itemDetailViewModel.onAmountDecrement()
+        }
+
+        // Toolbar navigate back
+        binding.toolbar.setNavigationOnClickListener {
+            findNavController().navigateUp()
         }
 
         // Setup submit button
-        binding.submitToCartButton.setOnClickListener {
-            submitItemToCart()
+        binding.submitButton.setOnClickListener {
+            itemDetailViewModel.onSubmitItem(
+                currentUserCart = mainViewModel.getCurrentUserCart()
+            )
         }
 
-        // Dismiss dialog when there is network error
+        // Retry
+        binding.loadErrorLayout.retryButton.setOnClickListener {
+            itemDetailViewModel.onFetchItemDetail(args.property)
+        }
+
+        // Dismiss dialog when finish submitting
         itemDetailViewModel.dismissDialog.observe(viewLifecycleOwner) {
-            dismiss()
+            findNavController().navigateUp()
         }
 
         // Prevent dismissing dialog when submitting to cart
-        itemDetailViewModel.cartItemSubmitting.observe(viewLifecycleOwner) { submitting ->
+        itemDetailViewModel.isSubmitting.observe(viewLifecycleOwner) { submitting ->
             requireDialog().setCancelable(!submitting)
         }
 
@@ -97,11 +121,19 @@ class SellerItemDetailFragment : BottomSheetDialogFragment() {
         return binding.root
     }
 
-    private fun submitItemToCart() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            val userCart = mainViewModel.getCurrentUserCart()
-            itemDetailViewModel.onSubmitItemToCart(userCart = userCart)
-        }
+    override fun onMoreItemClicked(itemBasic: SellerItemBasic) {
+        findNavController(R.id.sellerItemDetailFragment)?.navigate(
+            SellerItemDetailFragmentDirections.actionSellerItemDetailFragmentSelf(
+                SellerItemDetailProperty(
+                    sellerId = args.property.sellerId,
+                    itemId = itemBasic.id
+                )
+            )
+        )
+    }
+
+    override fun onMoreItemCheckedChange(itemBasic: SellerItemBasic, isChecked: Boolean) {
+        itemDetailViewModel.onExtraItemCheckedChange(itemBasic, isChecked)
     }
 
     private fun showDiffSellerDialog() {
@@ -111,22 +143,4 @@ class SellerItemDetailFragment : BottomSheetDialogFragment() {
             .setPositiveButton(android.R.string.ok) { dialog, _ -> dialog.dismiss() }
             .show()
     }
-
-    /*
-    private fun getScreenHeightPixels(): Int {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            val windowMetrics = requireActivity().windowManager.currentWindowMetrics
-            val insets = windowMetrics.windowInsets
-                .getInsetsIgnoringVisibility(WindowInsets.Type.systemBars())
-
-            windowMetrics.bounds.height() - insets.top - insets.bottom
-        } else {
-            val displayMetrics = DisplayMetrics()
-            requireActivity().windowManager.defaultDisplay.getMetrics(displayMetrics)
-
-            displayMetrics.heightPixels
-        }
-    }
-
-     */
 }

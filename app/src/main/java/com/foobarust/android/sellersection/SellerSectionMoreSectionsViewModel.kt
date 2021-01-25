@@ -24,7 +24,6 @@ class SellerSectionMoreSectionsViewModel @ViewModelInject constructor(
     private val _moreSectionsFilter = MutableStateFlow<MoreSectionsFilter?>(null)
 
     val sectionsListModels: Flow<PagingData<SellerSectionsListModel>> = _moreSectionsFilter
-        .asStateFlow()
         .filterNotNull()
         .flatMapLatest {
             getSellerSectionsUseCase(

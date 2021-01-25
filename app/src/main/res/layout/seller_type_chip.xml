@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="sellerType"
+            type="com.foobarust.domain.models.seller.SellerType" />
+        <import type="com.foobarust.domain.models.seller.SellerType"/>
+    </data>
+
+    <TextView
+        android:id="@+id/seller_type_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/spacing_medium"
+        android:paddingBottom="@dimen/spacing_medium"
+        android:paddingStart="@dimen/spacing_xmedium"
+        android:paddingEnd="@dimen/spacing_xmedium"
+        android:text="@{sellerType == SellerType.ON_CAMPUS ? @string/seller_type_on_campus : @string/seller_type_off_campus}"
+        android:textColor="?attr/colorOnSecondary"
+        android:textAppearance="?attr/textAppearanceOverline"
+        android:background="@drawable/shape_round_rect"
+        android:backgroundTint="@{sellerType == SellerType.ON_CAMPUS ? @color/mint_100 : @color/maroon_100}"
+        tools:text="On Campus"
+        tools:backgroundTint="@color/mint_100"/>
+
+</layout>

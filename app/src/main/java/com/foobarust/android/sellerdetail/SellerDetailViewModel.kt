@@ -1,6 +1,7 @@
 package com.foobarust.android.sellerdetail
 
 import android.content.Context
+import android.os.Parcelable
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,22 +9,22 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.R
 import com.foobarust.android.common.BaseViewModel
-import com.foobarust.android.states.UiState
+import com.foobarust.android.common.UiState
 import com.foobarust.android.utils.SingleLiveEvent
 import com.foobarust.domain.models.cart.UserCart
-import com.foobarust.domain.models.seller.SellerDetail
-import com.foobarust.domain.models.seller.SellerDetailWithCatalogs
-import com.foobarust.domain.models.seller.getNormalizedRatingString
+import com.foobarust.domain.models.seller.*
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.states.getSuccessDataOr
 import com.foobarust.domain.usecases.cart.GetUserCartUseCase
 import com.foobarust.domain.usecases.seller.GetSellerDetailWithCatalogsUseCase
+import com.foobarust.domain.usecases.seller.GetSellerSectionBasicParameters
+import com.foobarust.domain.usecases.seller.GetSellerSectionBasicUseCase
+import com.foobarust.domain.utils.cancelIfActive
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.parcelize.Parcelize
 
 /**
  * Created by kevin on 10/4/20
@@ -34,19 +35,22 @@ const val SELLER_DETAIL_ACTION_TAG = "action_tag"
 
 class SellerDetailViewModel @ViewModelInject constructor(
     @ApplicationContext private val context: Context,
+    private val getSellerSectionBasicUseCase: GetSellerSectionBasicUseCase,
     private val getSellerDetailWithCatalogsUseCase: GetSellerDetailWithCatalogsUseCase,
     getUserCartUseCase: GetUserCartUseCase,
 ) : BaseViewModel() {
 
-    private val userCart: Flow<Resource<UserCart?>> = getUserCartUseCase(Unit)
+    private val _detailProperty = MutableStateFlow<SellerDetailProperty?>(null)
 
-    private val _sellerDetailWithCatalogs = MutableLiveData<SellerDetailWithCatalogs?>()
-    val sellerDetailWithCatalogs: LiveData<SellerDetailWithCatalogs?>
-        get() = _sellerDetailWithCatalogs
+    private val _toolbarCollapsed = MutableStateFlow(false)
 
-    private val _showToolbarTitle = MutableLiveData<Boolean>()
-    val showToolbarTitle: LiveData<Boolean>
-        get() = _showToolbarTitle
+    private val _sellerDetailWithCatalogs = MutableStateFlow<SellerDetailWithCatalogs?>(null)
+    val sellerDetailWithCatalogs: LiveData<SellerDetailWithCatalogs?> = _sellerDetailWithCatalogs
+        .asLiveData(viewModelScope.coroutineContext)
+
+    private val _sectionBasic = MutableStateFlow<SellerSectionBasic?>(null)
+    val sectionBasic: LiveData<SellerSectionBasic?> = _sectionBasic
+        .asLiveData(viewModelScope.coroutineContext)
 
     private val _navigateToSellerMisc = SingleLiveEvent<Unit>()
     val navigateToSellerMisc: LiveData<Unit>
@@ -60,21 +64,103 @@ class SellerDetailViewModel @ViewModelInject constructor(
     val detailActions: LiveData<List<SellerDetailAction>>
         get() = _detailActions
 
-    private val _showSnackBarMessage = SingleLiveEvent<String>()
-    val showSnackBarMessage: LiveData<String>
-        get() = _showSnackBarMessage
+    private val _snackBarMessage = SingleLiveEvent<String>()
+    val snackBarMessage: LiveData<String>
+        get() = _snackBarMessage
 
-    val userCartLiveData: LiveData<UserCart?> = userCart
+    val sellerInfoLine: LiveData<String> = _sellerDetailWithCatalogs
+        .filterNotNull()
+        .map { buildSellerInfoLine(it.sellerDetail) }
+        .asLiveData(viewModelScope.coroutineContext)
+
+    val toolbarTitle: LiveData<String?> = _toolbarCollapsed
+        .combine(
+            _sellerDetailWithCatalogs.filterNotNull()
+                .map { it.sellerDetail.getNormalizedName() }
+        ) { collapsed, sellerName ->
+            if (collapsed) sellerName else null
+        }
+        .asLiveData(viewModelScope.coroutineContext)
+
+    val userCart: LiveData<UserCart?> = getUserCartUseCase(Unit)
         .map { it.getSuccessDataOr(null) }
         .asLiveData(viewModelScope.coroutineContext)
 
-    val showCartBottomBar: LiveData<Boolean> = userCart
+    val showCartBottomBar: LiveData<Boolean> = getUserCartUseCase(Unit)
         .map { it.getSuccessDataOr(null) }
         .map { userCart -> userCart != null && userCart.itemsCount > 0 }
         .distinctUntilChanged()
         .asLiveData(viewModelScope.coroutineContext)
 
-    fun onFetchSellerDetailWithCatalogs(sellerId: String) = viewModelScope.launch {
+    val typeInfo: LiveData<String> = _detailProperty
+        .filterNotNull()
+        .combine(_sectionBasic.asStateFlow()) { property, section ->
+            if (property.isOrderSectionState()) {
+                context.getString(
+                    R.string.seller_item_detail_type_info_off_campus,
+                    section?.getDeliveryTimeString(),
+                    section?.getDeliveryDateString()
+                )
+            } else {
+                context.getString(R.string.seller_item_detail_type_info_on_campus)
+            }
+        }
+        .asLiveData(viewModelScope.coroutineContext)
+
+    val noticeInfo: LiveData<String?> = _sellerDetailWithCatalogs
+        .map {
+            when (it?.sellerDetail?.online) {
+                true -> it.sellerDetail.notice
+                false -> context.getString(R.string.seller_detail_offline_message)
+                else -> null
+            }
+        }
+        .asLiveData(viewModelScope.coroutineContext)
+
+    private var fetchSellerDetailJob: Job? = null
+
+    fun onFetchSellerDetail(property: SellerDetailProperty) {
+        _detailProperty.value = property
+        fetchSellerDetailJob?.cancelIfActive()
+        fetchSellerDetailJob = viewModelScope.launch {
+            fetchSellerDetailWithCatalogs(sellerId = property.sellerId)
+            // Fetch section for off-campus section
+            if (property.isOrderSectionState()) {
+                fetchSellerSectionBasic(
+                    sellerId = property.sellerId,
+                    sectionId = property.sectionId!!
+                )
+            }
+        }
+    }
+
+    fun onToolbarCollapsed(isCollapsed: Boolean) {
+        _toolbarCollapsed.value = isCollapsed
+    }
+
+    fun onNavigateToSellerMisc() {
+        _navigateToSellerMisc.value = Unit
+    }
+
+    fun onNavigateToSellerItemDetail(sellerId: String, itemId: String) {
+        val sellerDetail = _sellerDetailWithCatalogs.value?.sellerDetail
+        sellerDetail?.let {
+            if (it.online) {
+                _navigateToItemDetail.value = SellerItemDetailProperty(
+                    sellerId = sellerId,
+                    itemId = itemId,
+                    sectionId = _detailProperty.value?.sectionId
+                )
+            } else {
+                // Deny adding item when the seller is offline
+                _snackBarMessage.value = context.getString(
+                    R.string.seller_detail_offline_message
+                )
+            }
+        }
+    }
+
+    private fun fetchSellerDetailWithCatalogs(sellerId: String) = viewModelScope.launch {
         getSellerDetailWithCatalogsUseCase(sellerId).collect {
             when (it) {
                 is Resource.Success -> {
@@ -88,28 +174,38 @@ class SellerDetailViewModel @ViewModelInject constructor(
         }
     }
 
-    fun onShowToolbarTitleChanged(isShow: Boolean) {
-        _showToolbarTitle.value = isShow
-    }
-
-    fun onShowSellerMisc() {
-        _navigateToSellerMisc.value = Unit
-    }
-
-    fun onShowItemDetailDialog(sellerId: String, itemId: String) {
-        val sellerDetail = _sellerDetailWithCatalogs.value?.sellerDetail
-        sellerDetail?.let {
-            if (it.online) {
-                _navigateToItemDetail.value = SellerItemDetailProperty(
-                    sellerId = sellerId,
-                    itemId = itemId
-                )
-            } else {
-                _showSnackBarMessage.value = context.getString(
-                    R.string.seller_status_offline_message
-                )
+    private fun fetchSellerSectionBasic(sellerId: String, sectionId: String) = viewModelScope.launch {
+        val params = GetSellerSectionBasicParameters(sellerId, sectionId)
+        getSellerSectionBasicUseCase(params).collect {
+            when (it) {
+                is Resource.Success -> _sectionBasic.value = it.data
+                is Resource.Error -> showToastMessage(it.message)
+                is Resource.Loading -> Unit
             }
         }
+    }
+
+    private fun buildSellerInfoLine(sellerDetail: SellerDetail): String {
+        return buildList {
+            // Min spend
+            add(context.getString(
+                R.string.seller_detail_format_min_spend,
+                sellerDetail.getNormalizedRatingString()
+            ))
+            // Delivery type
+            if (sellerDetail.type == SellerType.ON_CAMPUS) {
+                add(context.getString(R.string.seller_detail_deliver_type_pick_up))
+            } else {
+                /*
+                add(getString(
+                    R.string.seller_detail_format_delivery_cost,
+                    sellerDetail.getNormalizedDeliveryCostString()
+                ))
+
+                 */
+            }
+        }
+            .joinToString("  ·  ")
     }
 
     private fun buildActionList(sellerDetail: SellerDetail) {
@@ -131,4 +227,12 @@ class SellerDetailViewModel @ViewModelInject constructor(
             })
         }
     }
+}
+
+@Parcelize
+data class SellerDetailProperty(
+    val sellerId: String,
+    val sectionId: String? = null
+) : Parcelable {
+    fun isOrderSectionState() = sectionId != null
 }

@@ -8,6 +8,7 @@ import com.foobarust.data.common.Constants.SELLERS_CATALOGS_SUB_COLLECTION
 import com.foobarust.data.common.Constants.SELLERS_COLLECTION
 import com.foobarust.data.common.Constants.SELLER_CATALOG_AVAILABLE_FIELD
 import com.foobarust.data.common.Constants.SELLER_ITEMS_SUB_COLLECTION
+import com.foobarust.data.common.Constants.SELLER_ITEM_UPDATED_AT_FIELD
 import com.foobarust.data.common.Constants.SELLER_SECTIONS_BASIC_SUB_COLLECTION
 import com.foobarust.data.common.Constants.SELLER_SECTIONS_SUB_COLLECTION
 import com.foobarust.data.common.Constants.SELLER_SECTION_AVAILABLE_FIELD
@@ -82,11 +83,30 @@ class SellerRepositoryImpl @Inject constructor(
         ).flow
     }
 
+    override suspend fun getSellerItemsRecent(
+        sellerId: String,
+        limit: Int
+    ): List<SellerItemBasic> {
+        return firestore.collection(
+            "$SELLERS_COLLECTION/$sellerId/$SELLER_ITEMS_SUB_COLLECTION"
+        )
+            .orderBy(SELLER_ITEM_UPDATED_AT_FIELD, Query.Direction.DESCENDING)
+            .limit(limit.toLong())
+            .getAwaitResult(sellerMapper::toSellerItemBasic)
+    }
+
     override suspend fun getSellerItemDetail(sellerId: String, itemId: String): SellerItemDetail {
         return firestore.document(
             "$SELLERS_COLLECTION/$sellerId/$SELLER_ITEMS_SUB_COLLECTION/$itemId"
         )
             .getAwaitResult(sellerMapper::toSellerItemDetail)
+    }
+
+    override suspend fun getSellerSectionBasic(sellerId: String, sectionId: String): SellerSectionBasic {
+        return firestore.document(
+            "$SELLERS_COLLECTION/$sellerId/$SELLER_SECTIONS_BASIC_SUB_COLLECTION/$sectionId"
+        )
+            .getAwaitResult(sellerMapper::toSellerSectionBasic)
     }
 
     override fun getSellerSectionBasics(): Flow<PagingData<SellerSectionBasic>> {
@@ -102,7 +122,7 @@ class SellerRepositoryImpl @Inject constructor(
         ).flow
     }
 
-    override suspend fun getSellerSectionBasics(
+    override suspend fun getSellerSectionBasicsFor(
         sellerId: String,
         numOfSections: Int
     ): List<SellerSectionBasic> {
@@ -117,7 +137,7 @@ class SellerRepositoryImpl @Inject constructor(
             .getAwaitResult(sellerMapper::toSellerSectionBasic)
     }
 
-    override fun getSellerSectionsBasic(sellerId: String): Flow<PagingData<SellerSectionBasic>> {
+    override fun getSellerSectionBasicsFor(sellerId: String): Flow<PagingData<SellerSectionBasic>> {
         return Pager(
             config = PagingConfig(
                 initialLoadSize = SELLER_SECTIONS_LIST_PAGE_SIZE * 2,

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.foobarust.android.R
 import com.foobarust.android.common.FullScreenDialogFragment
@@ -43,7 +44,7 @@ class SellerSectionFragment : FullScreenDialogFragment() {
             lifecycleOwner = viewLifecycleOwner
         }
 
-        viewModel.onFetchSectionDetail(property = navArgs.sellerSectionProperty)
+        viewModel.onFetchSectionDetail(property = navArgs.property)
 
         // Setup toolbar
         binding.toolbar.setNavigationOnClickListener {
@@ -54,7 +55,7 @@ class SellerSectionFragment : FullScreenDialogFragment() {
         viewModel.navigateToSellerDetail.observe(viewLifecycleOwner) {
             findNavController(R.id.sellerSectionFragment)?.navigate(
                 SellerSectionFragmentDirections.actionSellerSectionFragmentToSellerDetailFragment(
-                    sellerId = it
+                    property = it
                 )
             )
         }
@@ -72,7 +73,7 @@ class SellerSectionFragment : FullScreenDialogFragment() {
         viewModel.navigateToSellerSection.observe(viewLifecycleOwner) {
             findNavController(R.id.sellerSectionFragment)?.navigate(
                 SellerSectionFragmentDirections.actionSellerSectionFragmentSelf(
-                    sellerSectionProperty = it
+                    property = it
                 )
             )
         }
@@ -84,7 +85,7 @@ class SellerSectionFragment : FullScreenDialogFragment() {
 
         // Retry
         binding.loadErrorLayout.retryButton.setOnClickListener {
-            viewModel.onFetchSectionDetail(property = navArgs.sellerSectionProperty)
+            viewModel.onFetchSectionDetail(property = navArgs.property)
         }
 
         return binding.root
@@ -119,7 +120,7 @@ class SellerSectionFragment : FullScreenDialogFragment() {
         // Dismiss the dialog when back pressing in start destination
         val currentDestination = navController.currentDestination?.id
         if (currentDestination == R.id.sellerSectionDetailFragment) {
-            dismiss()
+            findNavController().navigateUp()
         } else {
             viewModel.onBackPressed()
         }

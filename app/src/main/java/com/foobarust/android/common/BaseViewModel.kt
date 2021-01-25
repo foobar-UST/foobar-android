@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
-import com.foobarust.android.states.UiState
 import com.foobarust.android.utils.SingleLiveEvent
 
 abstract class BaseViewModel : ViewModel() {

@@ -11,13 +11,10 @@ import com.foobarust.android.settings.SettingsListModel.SettingsProfileModel
 import com.foobarust.android.settings.SettingsListModel.SettingsSectionModel
 import com.foobarust.android.utils.SingleLiveEvent
 import com.foobarust.domain.models.user.UserDetail
-import com.foobarust.domain.models.user.isSignedIn
 import com.foobarust.domain.states.Resource
-import com.foobarust.domain.states.getSuccessDataOr
 import com.foobarust.domain.usecases.auth.SignOutUseCase
 import com.foobarust.domain.usecases.user.GetUserDetailUseCase
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -31,7 +28,7 @@ const val SETTINGS_FAVORITE = "setting_favorite"
 
 class SettingsViewModel @ViewModelInject constructor(
     @ApplicationContext private val context: Context,
-    getUserDetailUseCase: GetUserDetailUseCase,
+    private val getUserDetailUseCase: GetUserDetailUseCase,
     private val signOutUseCase: SignOutUseCase
 ) : BaseViewModel() {
 
@@ -43,20 +40,23 @@ class SettingsViewModel @ViewModelInject constructor(
     val navigateToProfile: LiveData<Unit>
         get() = _navigateToProfile
 
-    private val userDetail: Flow<Resource<UserDetail>> = getUserDetailUseCase(Unit)
-
-    val settingsListModels: LiveData<List<SettingsListModel>> = userDetail
-        .map { it.getSuccessDataOr(null) }
-        .map { buildSettingsListModels(userDetail = it) }
+    val settingsListModels: LiveData<List<SettingsListModel>> = getUserDetailUseCase(Unit)
+        .map {
+            when (it) {
+                is Resource.Success -> buildSettingsListModels(userDetail = it.data)
+                is Resource.Error -> buildSettingsListModels()
+                is Resource.Loading -> buildSettingsListModels(loading = true)
+            }
+        }
         .asLiveData(viewModelScope.coroutineContext)
 
     fun onUserAccountClicked() = viewModelScope.launch {
         // Get user detail from replay cache
-        val currentUserDetail = (userDetail
-            .first { it is Resource.Success } as Resource.Success)
-            .data
+        val currentUserDetail = (getUserDetailUseCase(Unit)
+                .first { it is Resource.Success } as Resource.Success
+            ).data
 
-        if (currentUserDetail.isSignedIn()) {
+        if (currentUserDetail != null) {
             _navigateToProfile.value = Unit
         } else {
             _navigateToSignIn.value = Unit
@@ -67,12 +67,15 @@ class SettingsViewModel @ViewModelInject constructor(
         signOutUseCase(Unit)
     }
 
-    private fun buildSettingsListModels(userDetail: UserDetail?): List<SettingsListModel> {
-        if (userDetail == null) return emptyList()
+    private fun buildSettingsListModels(
+        userDetail: UserDetail? = null,
+        loading: Boolean = false
+    ): List<SettingsListModel> {
+        if (loading) return emptyList()
 
         return buildList {
             // Load user section when UserDetail is offered
-            if (userDetail.isSignedIn()) {
+            if (userDetail != null) {
                 // For signed in
                 add(SettingsProfileModel(
                     username = userDetail.username,
@@ -114,7 +117,7 @@ class SettingsViewModel @ViewModelInject constructor(
             ))
 
             // Add sign out button
-            if (userDetail.isSignedIn()) {
+            if (userDetail != null) {
                 add(SettingsSectionModel(
                     id = SETTINGS_SIGN_OUT,
                     icon = R.drawable.ic_exit_to_app,

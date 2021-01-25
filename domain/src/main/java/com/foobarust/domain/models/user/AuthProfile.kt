@@ -5,14 +5,10 @@ package com.foobarust.domain.models.user
  */
 
 data class AuthProfile(
-    val id: String? = null,
-    val email: String? = null,
-    val username: String? = null
+    val id: String,
+    val email: String,
+    val username: String
 )
-
-fun AuthProfile.isSignedIn(): Boolean {
-    return id != null
-}
 
 fun AuthProfile.asUserDetail(): UserDetail {
     return UserDetail(

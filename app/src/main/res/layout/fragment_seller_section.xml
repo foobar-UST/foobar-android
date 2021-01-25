@@ -8,7 +8,7 @@
         <variable
             name="viewModel"
             type="com.foobarust.android.sellersection.SellerSectionViewModel" />
-        <import type="com.foobarust.android.states.UiState"/>
+        <import type="com.foobarust.android.common.UiState"/>
         <import type="com.foobarust.domain.models.seller.SellerSectionDetailKt"/>
     </data>
 
@@ -32,7 +32,7 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:title="@{viewModel.sectionDetailLiveData != null ? SellerSectionDetailKt.getNormalizedTitle(viewModel.sectionDetailLiveData) : ``}"
+                app:title="@{viewModel.toolbarTitle}"
                 app:layout_scrollFlags="noScroll"
                 app:navigationIcon="@drawable/ic_arrow_back"
                 app:navigationIconTint="?attr/colorOnPrimarySurface"

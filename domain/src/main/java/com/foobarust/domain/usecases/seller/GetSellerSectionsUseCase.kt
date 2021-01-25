@@ -24,7 +24,7 @@ class GetSellerSectionsUseCase @Inject constructor(
         return if (parameters.isGetAllSections()) {
             sellerRepository.getSellerSectionBasics()
         } else {
-            sellerRepository.getSellerSectionsBasic(sellerId = parameters.sellerId!!)
+            sellerRepository.getSellerSectionBasicsFor(sellerId = parameters.sellerId!!)
                 .map { pagingData ->
                     // Filter out current section
                     pagingData.filter { it.id != parameters.currentSectionId }

@@ -7,11 +7,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.foobarust.android.NavigationAuthDirections
 import com.foobarust.android.R
-import com.foobarust.android.auth.SignInState.COMPLETED
 import com.foobarust.android.databinding.ActivityAuthBinding
-import com.foobarust.android.main.MainActivity
-import com.foobarust.android.utils.navigateTo
 import com.foobarust.android.utils.showShortToast
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -24,25 +22,28 @@ class AuthActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_auth)
+        binding = DataBindingUtil.setContentView<ActivityAuthBinding>(
+            this,
+            R.layout.activity_auth
+        ).apply {
+            viewModel = this@AuthActivity.viewModel
+        }
 
         // Setup Navigation
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
         navController = navHostFragment.navController
 
-        // Toast
+        // Show toast
         viewModel.toastMessage.observe(this) {
             showShortToast(it)
         }
 
         // When the user is verified or want to skip the sign-in screen,
         // navigate to MainActivity
-        viewModel.signInState.observe(this) { state ->
-            if (state == COMPLETED) {
-                navigateTo(
-                    destination = MainActivity::class,
-                    finishSelf = true
-                )
+        viewModel.authState.observe(this) { state ->
+            if (state == AuthState.COMPLETED) {
+                NavigationAuthDirections.actionGlobalMainActivity()
+                finish()
             }
         }
 
@@ -52,14 +53,12 @@ class AuthActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-
         // Look for sign-in link when the activity resumes
         handleEmailDeepLink(intent)
     }
 
     private fun handleEmailDeepLink(intent: Intent?) {
         val emailLink = intent?.data?.toString()
-
         emailLink?.let {
             viewModel.onVerifyEmailLinkAndSignIn(it)
         }

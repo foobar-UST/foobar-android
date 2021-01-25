@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceFragmentCompat
 import com.foobarust.android.R
 import com.foobarust.android.common.FullScreenDialogFragment
@@ -22,7 +23,9 @@ class NotificationFragment : FullScreenDialogFragment() {
         binding = FragmentNotificationBinding.inflate(inflater, container, false)
 
         // Dismiss dialog
-        binding.toolbar.setNavigationOnClickListener { dismiss() }
+        binding.toolbar.setNavigationOnClickListener {
+            findNavController().navigateUp()
+        }
 
         return binding.root
     }

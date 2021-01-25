@@ -2,6 +2,7 @@ package com.foobarust.domain.usecases.cart
 
 import com.foobarust.domain.common.UseCaseExceptions.ERROR_USER_NOT_SIGNED_IN
 import com.foobarust.domain.di.IoDispatcher
+import com.foobarust.domain.models.cart.AddUserCartItem
 import com.foobarust.domain.repositories.AuthRepository
 import com.foobarust.domain.repositories.CartRepository
 import com.foobarust.domain.states.Resource
@@ -29,30 +30,28 @@ class AddUserCartItemUseCase @Inject constructor(
         }
 
         // Check the user add item from one seller only
-        val currentSellerId = parameters.currentSellerId
-        val itemSellerId = parameters.sellerId
-        if (currentSellerId != null && currentSellerId != itemSellerId) {
+        val cartSellerId = parameters.cartSellerId
+        val itemSellerId = parameters.itemSellerId
+
+        if (cartSellerId != null && cartSellerId != itemSellerId) {
             throw Exception(ERROR_DIFFERENT_SELLER)
         }
 
         val idToken = authRepository.getIdToken()
 
-        cartRepository.addUserCartItem(
-            idToken = idToken,
-            sellerId = parameters.sellerId,
-            sectionId = parameters.sectionId,
-            itemId = parameters.itemId,
-            amounts = parameters.amounts
-        )
+        parameters.addUserCartItems.forEach {
+            cartRepository.addUserCartItem(
+                idToken = idToken,
+                addUserCartItem = it
+            )
+        }
 
         emit(Resource.Success(Unit))
     }
 }
 
 data class AddUserCartItemParameters(
-    val sellerId: String,
-    val sectionId: String? = null,
-    val itemId: String,
-    val amounts: Int,
-    val currentSellerId: String?
+    val addUserCartItems: List<AddUserCartItem>,
+    val itemSellerId: String,
+    val cartSellerId: String? = null // Null when there is no item in cart
 )

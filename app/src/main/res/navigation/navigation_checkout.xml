@@ -26,12 +26,27 @@
         android:name="com.foobarust.android.checkout.PaymentFragment"
         tools:layout="@layout/fragment_payment">
         <action
-            android:id="@+id/action_paymentFragment_to_orderSuccessFragment"
-            app:destination="@id/orderSuccessFragment"
+            android:id="@+id/action_paymentFragment_to_orderPlacingFragment"
+            app:destination="@id/orderPlacingFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+
+    <!-- OrderPlacingFragment -->
+    <fragment
+        android:id="@+id/orderPlacingFragment"
+        android:name="com.foobarust.android.checkout.OrderPlacingFragment"
+        tools:layout="@layout/fragment_order_placing">
+        <action
+            android:id="@+id/action_orderPlacingFragment_to_orderSuccessFragment"
+            app:destination="@id/orderSuccessFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/navigation_checkout" />
     </fragment>
 
     <!-- OrderSuccessFragment -->

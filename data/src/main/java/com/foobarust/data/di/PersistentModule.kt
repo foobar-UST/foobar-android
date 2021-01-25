@@ -2,12 +2,15 @@ package com.foobarust.data.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.room.Room
 import com.foobarust.data.BuildConfig.*
 import com.foobarust.data.api.MapService
 import com.foobarust.data.api.RemoteService
-import com.foobarust.data.common.Constants.CF_REQUEST_URL
-import com.foobarust.data.common.Constants.GM_DIR_URL
+import com.foobarust.data.common.Constants.APP_DB_NAME
+import com.foobarust.data.common.Constants.MAPS_API_URL
 import com.foobarust.data.common.Constants.PREFS_NAME
+import com.foobarust.data.common.Constants.REMOTE_REQUEST_URL
+import com.foobarust.data.db.AppDatabase
 import com.foobarust.data.json.DirectionsDeserializer
 import com.foobarust.data.models.maps.DirectionsResponse
 import com.foobarust.data.retrofit.RemoteResponseInterceptor
@@ -39,6 +42,18 @@ import javax.inject.Singleton
 @Module
 @InstallIn(ApplicationComponent::class)
 object PersistentModule {
+
+    @Singleton
+    @Provides
+    fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
+        return Room.databaseBuilder(
+            context,
+            AppDatabase::class.java,
+            APP_DB_NAME
+        )
+            .fallbackToDestructiveMigration()
+            .build()
+    }
 
     @Singleton
     @Provides
@@ -92,7 +107,7 @@ object PersistentModule {
         val url = if (USE_FIREBASE_EMULATOR) {
             "http://$FIREBASE_EMULATOR_HOST:$FIREBASE_EMULATOR_FUNCTIONS_PORT/foobar-group-delivery-app/us-central1/api/"
         } else {
-            CF_REQUEST_URL
+            REMOTE_REQUEST_URL
         }
 
         val clientBuilder = defaultHttpClientBuilder.apply {
@@ -119,7 +134,7 @@ object PersistentModule {
 
         return Retrofit.Builder()
             .client(defaultHttpClientBuilder.build())
-            .baseUrl(GM_DIR_URL)
+            .baseUrl(MAPS_API_URL)
             .addConverterFactory(GsonConverterFactory.create(customGson))
             .build()
             .create(MapService::class.java)

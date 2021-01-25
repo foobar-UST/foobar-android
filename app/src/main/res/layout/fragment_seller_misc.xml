@@ -8,7 +8,7 @@
         <variable
             name="viewModel"
             type="com.foobarust.android.sellermisc.SellerMiscViewModel" />
-        <import type="com.foobarust.android.states.UiState" />
+        <import type="com.foobarust.android.common.UiState" />
         <import type="com.foobarust.domain.models.seller.SellerDetailKt" />
         <import type="com.foobarust.android.utils.BindingConverters" />
     </data>
@@ -38,14 +38,15 @@
         <androidx.core.widget.NestedScrollView
             android:id="@+id/bottom_sheet"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
             app:marginTopSystemWindowInsets="@{true}"
-            app:bottomSheetBackground="@{true}">
+            app:bottomSheetBackground="@{true}"
+            app:bottomSheetHideIf="@{!(viewModel.uiState instanceof UiState.Success)}">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 tools:background="?attr/colorSurface">
 
                 <androidx.constraintlayout.widget.Group
@@ -176,33 +177,17 @@
                     app:layout_constraintTop_toBottomOf="@id/address_text_view"
                     tools:text="Mon - Fri: 08:00 - 20:00\nSat, Sun &amp; PH: 08:30 - 20:00"/>
 
-                <com.google.android.material.button.MaterialButton
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:id="@+id/favorite_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="44dp"
-                    android:layout_marginTop="@dimen/spacing_xmedium"
-                    android:insetTop="0dp"
-                    android:insetBottom="0dp"
-                    android:text="@string/seller_misc_button_add_to_favorite"
-                    android:textAppearance="?attr/textAppearanceBody2"
-                    app:icon="@drawable/ic_add"
-                    app:iconSize="16dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/opening_hours_text_view"/>
-
                 <TextView
                     android:id="@+id/description_subtitle_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_large"
+                    android:layout_marginTop="@dimen/spacing_xlarge"
                     android:text="@string/seller_misc_title_description"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
                     app:goneIf="@{viewModel.sellerDetail.description == null || viewModel.sellerDetail.description.empty}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/favorite_button"/>
+                    app:layout_constraintTop_toBottomOf="@id/opening_hours_text_view"/>
 
                 <TextView
                     android:id="@+id/description_text_view"
@@ -219,57 +204,22 @@
                     app:goneIf="@{viewModel.sellerDetail.description == null || viewModel.sellerDetail.description.empty}"
                     tools:text="Starbucks offers a range of exceptional products that customers enjoy in our stores, at home, and on the go. Coffee: More than 30 blends and single-origin premium coffees. Handcrafted Beverages: Fresh-brewed coffee, hot and iced espresso beverages, Frappuccino® coffee and non-coffee blended beverages, Starbucks Refreshers® beverages, smoothies and teas. Merchandise: Coffee- and tea-brewing equipment, Verismo® System by Starbucks, mugs and accessories, packaged goods, books and gifts. Fresh Food: Baked pastries, sandwiches, salads, salad and grain bowls, oatmeal, yogurt parfaits and fruit cups.\n\n星巴克提供了一系列出色的產品，客戶可以在我們的商店，家中和旅途中享用。咖啡：30多種混合咖啡和單源優質咖啡。手工飲料：現煮咖啡，冷熱特濃咖啡，星冰樂®咖啡和非咖啡混合飲料，星巴克Refreshers®飲料，冰沙和茶。商品：咖啡和茶釀造設備，星巴克的Verismo®System，杯子和配件，包裝的商品，書籍和禮品。新鮮食品：烘焙糕點，三明治，色拉，色拉和穀物碗，燕麥片，酸奶凍糕和水果杯。"/>
 
-                <!--
-                <ProgressBar
-                    android:id="@+id/progress_bar"
+                <com.google.android.material.button.MaterialButton
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:id="@+id/feedback_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_xlarge"
-                    android:layout_gravity="center_horizontal"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_margin="@dimen/spacing_large"
+                    android:text="Send Feedback"
+                    app:icon="@drawable/ic_email"
+                    app:iconPadding="@dimen/spacing_large"
+                    app:layout_constraintTop_toBottomOf="@id/description_text_view"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:goneIf="@{!(viewModel.uiFetchState instanceof UiFetchState.Loading)}" />
-
-
-                <include
-                    layout="@layout/load_error_layout"
-                    android:id="@+id/load_error_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_xlarge"/>
-                -->
+                    app:layout_constraintBottom_toBottomOf="parent"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.core.widget.NestedScrollView>
-
-
-        <!--
-        <LinearLayout
-            android:id="@+id/bottom_sheet_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycler_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:goneIf="@{!(viewModel.uiFetchState instanceof UiFetchState.Success)}"
-                    tools:listitem="@layout/seller_misc_address_item"
-                    tools:itemCount="1"/>
-
-            </FrameLayout>
-
-        </LinearLayout>
-        -->
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

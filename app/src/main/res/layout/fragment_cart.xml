@@ -8,11 +8,11 @@
         <variable
             name="viewModel"
             type="com.foobarust.android.checkout.CartViewModel" />
-        <import type="com.foobarust.android.states.UiState" />
+        <import type="com.foobarust.android.common.UiState" />
     </data>
 
     <FrameLayout
-        android:id="@+id/coordinator_layout"
+        android:id="@+id/frame_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -20,6 +20,9 @@
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:overScrollMode="never"
+            android:paddingBottom="84dp"
+            android:clipToPadding="false"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:goneIf="@{viewModel.showNoItemLayout}"
             tools:listitem="@layout/cart_purchase_item"/>

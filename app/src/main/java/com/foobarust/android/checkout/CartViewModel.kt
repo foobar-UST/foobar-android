@@ -2,19 +2,18 @@ package com.foobarust.android.checkout
 
 import android.content.Context
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.asFlow
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import com.foobarust.android.R
 import com.foobarust.android.checkout.CartListModel.*
 import com.foobarust.android.common.BaseViewModel
-import com.foobarust.android.states.UiState
-import com.foobarust.android.utils.SingleLiveEvent
-import com.foobarust.domain.models.cart.UserCart
-import com.foobarust.domain.models.cart.UserCartItem
+import com.foobarust.android.common.UiState
+import com.foobarust.domain.models.cart.*
 import com.foobarust.domain.models.seller.SellerBasic
-import com.foobarust.domain.models.seller.SellerType
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.cart.*
-import com.foobarust.domain.usecases.checkout.GetDeliveryAddressUseCase
 import com.foobarust.domain.usecases.seller.GetSellerBasicUseCase
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.*
@@ -23,82 +22,134 @@ import kotlinx.coroutines.launch
 /**
  * Created by kevin on 12/1/20
  */
+
 class CartViewModel @ViewModelInject constructor(
     @ApplicationContext private val context: Context,
     private val getUserCartUseCase: GetUserCartUseCase,
     private val getUserCartItemsUseCase: GetUserCartItemsUseCase,
     private val getSellerBasicUseCase: GetSellerBasicUseCase,
-    private val getDeliveryAddressUseCase: GetDeliveryAddressUseCase,
     private val updateUserCartItemUseCase: UpdateUserCartItemUseCase,
     private val syncUserCartUseCase: SyncUserCartUseCase,
     private val clearUserCartUseCase: ClearUserCartUseCase
 ) : BaseViewModel() {
 
-    private val _cartItems = MutableStateFlow<List<UserCartItem>>(emptyList())
     private val _userCart = MutableStateFlow<UserCart?>(null)
+    private val _cartItems = MutableStateFlow<List<UserCartItem>>(emptyList())
     private val _sellerBasic = MutableStateFlow<SellerBasic?>(null)
-    private val _deliveryAddress = MutableStateFlow<String?>(null)
+    private val _orderNotes = MutableStateFlow<String?>(null)
 
-    private val _cartListModels = MutableLiveData<List<CartListModel>>()
-    val cartListModels: LiveData<List<CartListModel>>
-        get() = _cartListModels
+    // Block user action when the current transaction is not finished
+    private var blockUserAction: Boolean = false
+
+    // Allow submit order when
+    // 1. Cart is already synchronized and up-to-date
+    // 2. All items in cart are available
+    // 3. Seller is currently online
+    val allowSubmitOrder: LiveData<Boolean> = combine(
+        _userCart.filterNotNull(),
+        _cartItems,
+        _sellerBasic.filterNotNull()
+    ) { userCart, cartItems, sellerBasic ->
+        val result = !userCart.syncRequired &&
+            !cartItems.any { !it.available } &&
+            cartItems.isNotEmpty()
+            sellerBasic.online
+        blockUserAction = !result
+        result
+    }
+        .asLiveData(viewModelScope.coroutineContext)
+
+    val cartListModels: LiveData<List<CartListModel>> = combine(
+        _userCart.filterNotNull(),
+        _cartItems,
+        _sellerBasic.filterNotNull(),
+        _orderNotes
+    ) { userCart, cartItems, sellerBasic, orderNotes ->
+        buildCartListModels(userCart, cartItems, sellerBasic, orderNotes)
+    }
+        .asLiveData(viewModelScope.coroutineContext)
 
     // No item layout show when network error or there is no item in cart
     val showNoItemLayout: LiveData<Boolean> = _cartItems
-        .asStateFlow()
         .combine(uiState.asFlow()) { cartItems, uiState ->
-            cartItems.isEmpty() && uiState is UiState.Success || uiState is UiState.Error
+            cartItems.isEmpty() && uiState !is UiState.Loading
         }
         .asLiveData(viewModelScope.coroutineContext)
 
     // Number of cart items show in app bar
     val cartItemsCount: LiveData<Int> = _cartItems
-        .asStateFlow()
         .map { it.size }
         .asLiveData(viewModelScope.coroutineContext)
 
-    // Show cart sync snack bar
-    val isCartSyncRequired: LiveData<Boolean> = _userCart
-        .asStateFlow()
+    val showSyncRequiredSnackBar: LiveData<Boolean> = _userCart
         .filterNotNull()
-        .onEach {
-            // Block the user from modifying cart before synchronization
-            blockUserAction = it.syncRequired
-        }
-        .map { it.syncRequired }
         .distinctUntilChanged()
+        .map { it.syncRequired }
         .asLiveData(viewModelScope.coroutineContext)
 
-    private val _showTimeoutMessage = SingleLiveEvent<Unit>()
-    val showTimeoutMessage: LiveData<Unit>
-        get() = _showTimeoutMessage
-
-    private val _showSnackBarMessage = SingleLiveEvent<String>()
-    val showSnackBarMessage: LiveData<String>
-        get() = _showSnackBarMessage
-
-    // Block user action when the current transaction is not finished
-    private var blockUserAction: Boolean = false
+    val cartToolbarTitle: LiveData<String> = _userCart
+        .map { userCart ->
+            userCart?.getNormalizedTitle() ?:
+            context.getString(R.string.checkout_toolbar_title_cart)
+        }
+        .asLiveData(viewModelScope.coroutineContext)
 
     init {
-        // Fetch data from multiple data sources
-        fetchCartItems()
-        fetchUserCartDetails()
-        fetchSellerDetails()
-        fetchDeliveryAddress()
-
-        // Build list from multiple data sources
+        // Parent coroutine for fetching data from multiple data sources
         viewModelScope.launch {
-            combine(_cartItems.asStateFlow(),
-                _sellerBasic.asStateFlow().filterNotNull(),
-                _userCart.asStateFlow().filterNotNull(),
-                _deliveryAddress.asStateFlow().filterNotNull()
-            ) { cartItems, sellerBasic, userCart, deliveryAddress ->
-                buildCartListModels(cartItems, sellerBasic, userCart, deliveryAddress)
-            }.collect {
-                _cartListModels.value = it
+            fetchUserCart()
+            fetchCartItems()
+            fetchSellerBasic()
+        }
+    }
+
+    fun onRemoveCartItem(userCartItem: UserCartItem) = viewModelScope.launch {
+        if (!blockUserAction) {
+            blockUserAction = true
+            val updateUserCartItem = UpdateUserCartItem(
+                cartItemId = userCartItem.id,
+                amounts = userCartItem.amounts - 1
+            )
+            updateUserCartItemUseCase(updateUserCartItem).collect {
+                when (it) {
+                    is Resource.Success -> {
+                        blockUserAction = false
+                        setUiState(UiState.Success)
+                    }
+                    is Resource.Error -> {
+                        blockUserAction = false
+                        setUiState(UiState.Error(it.message))
+                    }
+                    is Resource.Loading -> {
+                        setUiState(UiState.Loading)
+                    }
+                }
             }
         }
+    }
+
+    fun onSyncUserCart() = viewModelScope.launch {
+        syncUserCartUseCase(Unit).collect {
+            when (it) {
+                is Resource.Success -> setUiState(UiState.Success)
+                is Resource.Error -> setUiState(UiState.Error(it.message))
+                is Resource.Loading -> setUiState(UiState.Loading)
+            }
+        }
+    }
+
+    fun onClearUsersCart() = viewModelScope.launch {
+        clearUserCartUseCase(Unit).collect {
+            when (it) {
+                is Resource.Success -> setUiState(UiState.Success)
+                is Resource.Error -> setUiState(UiState.Error(it.message))
+                is Resource.Loading -> setUiState(UiState.Loading)
+            }
+        }
+    }
+
+    fun onRestoreOrderNotes(notes: String) {
+        _orderNotes.value = notes
     }
 
     private fun fetchCartItems() = viewModelScope.launch {
@@ -120,7 +171,7 @@ class CartViewModel @ViewModelInject constructor(
         }
     }
 
-    private fun fetchUserCartDetails() = viewModelScope.launch {
+    private fun fetchUserCart() = viewModelScope.launch {
         getUserCartUseCase(Unit).collect {
             when (it) {
                 is Resource.Success -> {
@@ -128,7 +179,6 @@ class CartViewModel @ViewModelInject constructor(
                 }
                 is Resource.Error -> {
                     _userCart.value = null
-                    showToastMessage(it.message)
                 }
                 is Resource.Loading -> {
                     _userCart.value = null
@@ -137,11 +187,9 @@ class CartViewModel @ViewModelInject constructor(
         }
     }
 
-    private fun fetchSellerDetails() = viewModelScope.launch {
-        _userCart.asStateFlow()
-            .filterNotNull()
-            .mapNotNull { it.sellerId }
-            .flatMapLatest { getSellerBasicUseCase(it) }
+    private fun fetchSellerBasic() = viewModelScope.launch {
+        _userCart.filterNotNull()
+            .flatMapLatest { getSellerBasicUseCase(it.sellerId) }
             .collect {
                 when (it) {
                     is Resource.Success -> {
@@ -149,7 +197,6 @@ class CartViewModel @ViewModelInject constructor(
                     }
                     is Resource.Error -> {
                         _sellerBasic.value = null
-                        showToastMessage(it.message)
                     }
                     is Resource.Loading -> {
                         _sellerBasic.value = null
@@ -158,112 +205,49 @@ class CartViewModel @ViewModelInject constructor(
             }
     }
 
-    private fun fetchDeliveryAddress() = viewModelScope.launch {
-        _userCart.asStateFlow()
-            .filterNotNull()
-            .filter { it.sellerType != null }
-            .flatMapLatest { getDeliveryAddressUseCase(it) }
-            .collect {
-                when (it) {
-                    is Resource.Success -> {
-                        _deliveryAddress.value = it.data
-                    }
-                    is Resource.Error -> {
-                        _deliveryAddress.value = null
-                        showToastMessage(it.message)
-                    }
-                    is Resource.Loading -> {
-                        _deliveryAddress.value = null
-                    }
-                }
-            }
-    }
-
-    fun onRemoveCartItem(userCartItem: UserCartItem) = viewModelScope.launch {
-        if (!blockUserAction) {
-            blockUserAction = true
-            val params = UpdateUserCartItemParameters(
-                cartItemId = userCartItem.id,
-                amounts = userCartItem.amounts - 1
-            )
-            updateUserCartItemUseCase(params).collect {
-                when (it) {
-                    is Resource.Success -> {
-                        blockUserAction = false
-                        setUiState(UiState.Success)
-                    }
-                    is Resource.Error -> {
-                        blockUserAction = false
-                        setUiState(UiState.Error(it.message))
-                    }
-                    is Resource.Loading -> setUiState(UiState.Loading)
-                }
-            }
-        }
-    }
-
-    fun onSyncUserCart() = viewModelScope.launch {
-        syncUserCartUseCase(Unit).collect {
-            when (it) {
-                is Resource.Success -> {
-                    setUiState(UiState.Success)
-                    _showSnackBarMessage.value = context.getString(
-                        R.string.cart_sync_required_complete_message
-                    )
-                }
-                is Resource.Error -> setUiState(UiState.Error(it.message))
-                is Resource.Loading -> setUiState(UiState.Loading)
-            }
-        }
-    }
-
-    fun onClearUsersCart() = viewModelScope.launch {
-        clearUserCartUseCase(Unit).collect {
-            when (it) {
-                is Resource.Success -> {
-                    setUiState(UiState.Success)
-                    _showSnackBarMessage.value = context.getString(R.string.cart_cleared_message)
-                }
-                is Resource.Error -> setUiState(UiState.Error(it.message))
-                is Resource.Loading -> setUiState(UiState.Loading)
-            }
-        }
-    }
-
     private fun buildCartListModels(
+        userCart: UserCart,
         cartItems: List<UserCartItem>,
         sellerBasic: SellerBasic,
-        userCart: UserCart,
-        deliveryAddress: String
+        orderNotes: String?
     ): List<CartListModel> {
+        // Return if there is no item in cart
         if (cartItems.isEmpty()) return emptyList()
 
         return buildList {
-            // Add seller info section
-            add(CartSellerInfoItemModel(sellerBasic = sellerBasic))
+            add(CartInfoItemModel(
+                cartTitle = userCart.getNormalizedTitle(),
+                cartImageUrl = userCart.imageUrl,
+                cartPickupAddress = userCart.getNormalizedPickupAddress(),
+                cartDeliveryTime = context.getString(
+                    R.string.cart_info_option_format_section,
+                    userCart.getDeliveryDateString(),
+                    userCart.getDeliveryTimeString()
+                ),
+                sellerId = userCart.sellerId,
+                sellerOnline = sellerBasic.online,
+                sectionId = userCart.sectionId
+            ))
 
             // Add cart items section
+            add(CartPurchaseSubtitleItemModel(
+                subtitle = context.getString(R.string.cart_purchase_subtitle)
+            ))
             addAll(cartItems.map {
                 CartPurchaseItemModel(userCartItem = it)
             })
-
-            // Add delivery option section
-            add(CartDeliveryInfoItemModel(
-                title = if (userCart.sellerType == SellerType.ON_CAMPUS) {
-                    context.getString(R.string.cart_delivery_info_title_pickup)
-                } else {
-                    context.getString(R.string.cart_delivery_info_title_delivery)
-                },
-                address = deliveryAddress,
-                drawable = if (userCart.sellerType == SellerType.ON_CAMPUS) {
-                    R.drawable.ic_directions_run
-                } else {
-                    R.drawable.ic_local_shipping
-                }
+            add(CartPurchaseActionsItemModel(
+                sellerId = userCart.sellerId,
+                sectionId = userCart.sectionId
             ))
 
             // Add notes section
-            add(CartNotesItemModel)
+            add(CartPurchaseSubtitleItemModel(
+                subtitle = context.getString(R.string.cart_notes_subtitle)
+            ))
+            add(CartOrderNotesItemModel(
+                orderNotes = orderNotes
+            ))
 
             // Add total price section
             add(CartTotalPriceItemModel(
@@ -271,12 +255,6 @@ class CartViewModel @ViewModelInject constructor(
                 deliveryFee = userCart.deliveryCost,
                 total = userCart.totalCost
             ))
-
-            // Add action buttons section
-            // User can only place order when the cart is up-to-date and
-            // all cart items are available
-            val canPlaceOrder = !userCart.syncRequired && !cartItems.any { !it.available }
-            add(CartActionsItemModel(allowOrder = canPlaceOrder))
         }
     }
 }

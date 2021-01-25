@@ -4,7 +4,7 @@ import androidx.paging.PagingSource
 import com.foobarust.data.common.Constants.SELLERS_BASIC_COLLECTION
 import com.foobarust.data.common.Constants.SELLER_TYPE_FIELD
 import com.foobarust.data.mappers.SellerMapper
-import com.foobarust.data.models.seller.SellerBasicEntity
+import com.foobarust.data.models.seller.SellerBasicDto
 import com.foobarust.data.utils.isNetworkData
 import com.foobarust.domain.models.seller.SellerBasic
 import com.foobarust.domain.models.seller.SellerType
@@ -42,7 +42,7 @@ class SellerBasicsPagingSource(
             }
 
             LoadResult.Page(
-                data = currentPageData.toObjects(SellerBasicEntity::class.java)
+                data = currentPageData.toObjects(SellerBasicDto::class.java)
                     .map { sellerMapper.toSellerBasic(it) },
                 prevKey = null,
                 nextKey = nextPageQuery

@@ -3,7 +3,6 @@ package com.foobarust.domain.usecases.cart
 import com.foobarust.domain.di.ApplicationScope
 import com.foobarust.domain.di.IoDispatcher
 import com.foobarust.domain.models.cart.UserCart
-import com.foobarust.domain.models.user.isSignedIn
 import com.foobarust.domain.repositories.AuthRepository
 import com.foobarust.domain.repositories.CartRepository
 import com.foobarust.domain.states.Resource
@@ -34,12 +33,14 @@ class GetUserCartUseCase @Inject constructor(
             println("[GetUserCartUseCase]: AuthProfile collected.")
             stopObserveUserCart()
             if (result is Resource.Success) {
-                if (result.data.isSignedIn()) {
-                    println("[GetUserCartUseCase]: User is signed in. Offer UserCart.")
-                    startObserveUserCart(userId = result.data.id!!)
+                val authProfile = result.data
+                if (authProfile != null) {
+                    // User is signed in
+                    println("[GetUserCartUseCase]: User is signed in. Start observe UserCart.")
+                    startObserveUserCart(userId = result.data.id)
                 } else {
-                    // Return null when the user is not signed in
-                    println("[GetUserCartUseCase]: User is signed out. Offer null.")
+                    //  // User is signed out
+                    println("[GetUserCartUseCase]: User is signed out.")
                     channel.offer(Resource.Success(null))
                 }
             }

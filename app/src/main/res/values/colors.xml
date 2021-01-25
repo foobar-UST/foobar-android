@@ -3,13 +3,15 @@
     <color name="white">#ffffff</color>
     <color name="white_alpha_20">#33ffffff</color>
     <color name="white_alpha_60">#99ffffff</color>
-    <color name="background_light">#fafafa</color>
 
     <color name="black">#000000</color>
     <color name="black_alpha_20">#33000000</color>
     <color name="black_alpha_60">#99000000</color>
 
     <color name="grey">#202124</color>
+    <color name="grey_disabled">#cfcfcf</color>
+
+    <color name="background_light">#fafafa</color>
     <color name="background_dark">#121212</color>
 
     <color name="maroon_50">#EFECED</color>

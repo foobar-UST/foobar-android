@@ -8,7 +8,7 @@
         <variable
             name="viewModel"
             type="com.foobarust.android.sellersection.SellerSectionMoreSectionsViewModel" />
-        <import type="com.foobarust.android.states.UiState" />
+        <import type="com.foobarust.android.common.UiState" />
     </data>
 
     <FrameLayout

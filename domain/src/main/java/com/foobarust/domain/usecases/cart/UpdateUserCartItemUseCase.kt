@@ -2,6 +2,7 @@ package com.foobarust.domain.usecases.cart
 
 import com.foobarust.domain.common.UseCaseExceptions.ERROR_USER_NOT_SIGNED_IN
 import com.foobarust.domain.di.IoDispatcher
+import com.foobarust.domain.models.cart.UpdateUserCartItem
 import com.foobarust.domain.repositories.AuthRepository
 import com.foobarust.domain.repositories.CartRepository
 import com.foobarust.domain.states.Resource
@@ -18,26 +19,20 @@ class UpdateUserCartItemUseCase @Inject constructor(
     private val authRepository: AuthRepository,
     private val cartRepository: CartRepository,
     @IoDispatcher coroutineDispatcher: CoroutineDispatcher
-) : FlowUseCase<UpdateUserCartItemParameters, Unit>(coroutineDispatcher) {
+) : FlowUseCase<UpdateUserCartItem, Unit>(coroutineDispatcher) {
 
-    override fun execute(parameters: UpdateUserCartItemParameters): Flow<Resource<Unit>> = flow {
+    override fun execute(parameters: UpdateUserCartItem): Flow<Resource<Unit>> = flow {
         if (!authRepository.isSignedIn()) {
             throw Exception(ERROR_USER_NOT_SIGNED_IN)
         }
 
         val idToken = authRepository.getIdToken()
 
-        cartRepository.removeUserCartItem(
+        cartRepository.updateUserCartItem(
             idToken = idToken,
-            cartItemId = parameters.cartItemId,
-            amounts = parameters.amounts
+            updateUserCartItem = parameters
         )
 
         emit(Resource.Success(Unit))
     }
 }
-
-data class UpdateUserCartItemParameters(
-    val cartItemId: String,
-    val amounts: Int
-)

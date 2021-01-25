@@ -22,7 +22,7 @@
             android:layout_alignBottom="@id/total_value_text_view"
             android:gravity="center_vertical"
             android:text="@string/cart_total_price_title_total"
-            android:textAppearance="?attr/textAppearanceSubtitle2"/>
+            android:textAppearance="?attr/textAppearanceSubtitle1"/>
 
         <TextView
             android:id="@+id/total_value_text_view"
@@ -41,7 +41,7 @@
             android:layout_marginTop="@dimen/spacing_xmedium"
             android:layout_below="@id/total_title_text_view"
             android:text="@string/cart_total_price_title_subtotal"
-            android:textAppearance="?attr/textAppearanceSubtitle2"/>
+            android:textAppearance="?attr/textAppearanceSubtitle1"/>
 
         <TextView
             android:id="@+id/subtotal_value_text_view"
@@ -52,7 +52,7 @@
             android:layout_below="@id/total_value_text_view"
             android:text="@{@string/cart_total_price_format_cost(totalPriceItemModel.subtotal)}"
             android:textColor="?attr/colorPrimary"
-            android:textAppearance="?attr/textAppearanceSubtitle2"
+            android:textAppearance="?attr/textAppearanceBody1"
             tools:text="$914.00"/>
 
         <TextView
@@ -62,7 +62,7 @@
             android:layout_marginTop="@dimen/spacing_xmedium"
             android:layout_below="@id/subtotal_title_text_view"
             android:text="@string/cart_total_price_title_delivery_fee"
-            android:textAppearance="?attr/textAppearanceSubtitle2"/>
+            android:textAppearance="?attr/textAppearanceSubtitle1"/>
 
         <TextView
             android:id="@+id/delivery_fee_value_text_view"
@@ -73,7 +73,7 @@
             android:layout_below="@id/subtotal_value_text_view"
             android:text="@{@string/cart_total_price_format_cost(totalPriceItemModel.deliveryFee)}"
             android:textColor="?attr/colorPrimary"
-            android:textAppearance="?attr/textAppearanceSubtitle2"
+            android:textAppearance="?attr/textAppearanceBody1"
             tools:text="$84.00"/>
 
     </RelativeLayout>

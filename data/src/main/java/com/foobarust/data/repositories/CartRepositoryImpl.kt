@@ -5,9 +5,9 @@ import com.foobarust.data.common.Constants.USERS_COLLECTION
 import com.foobarust.data.common.Constants.USER_CARTS_COLLECTION
 import com.foobarust.data.common.Constants.USER_CART_ITEMS_SUB_COLLECTION
 import com.foobarust.data.mappers.CartMapper
-import com.foobarust.data.models.cart.AddUserCartItemRequest
-import com.foobarust.data.models.cart.UpdateUserCartItemRequest
 import com.foobarust.data.utils.snapshotFlow
+import com.foobarust.domain.models.cart.AddUserCartItem
+import com.foobarust.domain.models.cart.UpdateUserCartItem
 import com.foobarust.domain.models.cart.UserCart
 import com.foobarust.domain.models.cart.UserCartItem
 import com.foobarust.domain.repositories.CartRepository
@@ -34,27 +34,19 @@ class CartRepositoryImpl @Inject constructor(
             .snapshotFlow(cartMapper::toUserCartItem)
     }
 
-    override suspend fun addUserCartItem(
-        idToken: String,
-        sellerId: String,
-        sectionId: String?,
-        itemId: String,
-        amounts: Int
-    ) {
+    override suspend fun addUserCartItem(idToken: String, addUserCartItem: AddUserCartItem) {
+        val request = cartMapper.toAddUserCartItemRequest(addUserCartItem)
         remoteService.addUserCartItem(
             idToken = idToken,
-            addUserCartItemRequest = AddUserCartItemRequest(sellerId, sectionId, itemId, amounts)
+            addUserCartItemRequest = request
         )
     }
 
-    override suspend fun removeUserCartItem(
-        idToken: String,
-        cartItemId: String,
-        amounts: Int
-    ) {
-       remoteService.removeUserCartItem(
+    override suspend fun updateUserCartItem(idToken: String, updateUserCartItem: UpdateUserCartItem) {
+        val request = cartMapper.toUpdateUserCartItemRequest(updateUserCartItem)
+        remoteService.removeUserCartItem(
             idToken = idToken,
-            updateUserCartItemRequest = UpdateUserCartItemRequest(cartItemId, amounts)
+            updateUserCartItemRequest = request
         )
     }
 

@@ -4,7 +4,7 @@ import androidx.test.ext.junit.rules.activityScenarioRule
 import androidx.test.platform.app.InstrumentationRegistry
 import com.foobarust.android.InsertFakeDataActivity
 import com.foobarust.data.common.Constants.USERS_COLLECTION
-import com.foobarust.data.models.user.UserDetailEntity
+import com.foobarust.data.models.user.UserDetailNetworkDto
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -46,7 +46,7 @@ class InsertUserFakeData {
 
     @Test
     fun insert_current_user_fake_data() = runBlocking(Dispatchers.IO) {
-        val userDetail = UserDetailEntity(
+        val userDetail = UserDetailNetworkDto(
             id = firebaseAuth.currentUser!!.uid,
             username = "kthon",
             email = "kthon@connect.ust.hk"
@@ -89,8 +89,8 @@ private data class UserSerialized(
     val photo_url: String? = null,
     val roles: List<String>
 ) {
-    fun toUserDetailEntity(): UserDetailEntity {
-        return UserDetailEntity(
+    fun toUserDetailEntity(): UserDetailNetworkDto {
+        return UserDetailNetworkDto(
             id = id,
             name = name,
             username = username,
