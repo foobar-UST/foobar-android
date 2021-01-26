@@ -69,9 +69,9 @@
                     <include
                         layout="@layout/notice_banner"
                         android:id="@+id/seller_notice_banner"
-                        app:content="@{viewModel.noticeInfo}"
-                        app:hideWhen="@{viewModel.noticeInfo == null}"
-                        app:disableWhen="@{!viewModel.sellerDetailWithCatalogs.sellerDetail.online}"/>
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@id/seller_image_view"/>
 
                     <TextView
                         android:id="@+id/name_text_view"

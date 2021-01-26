@@ -22,9 +22,8 @@
         <include
             layout="@layout/notice_banner"
             android:id="@+id/seller_offline_notice_banner"
-            app:content="@{@string/seller_detail_offline_message}"
-            app:hideWhen="@{cartInfoItemModel.sellerOnline}"
-            app:disableWhen="@{true}"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/seller_image_view"

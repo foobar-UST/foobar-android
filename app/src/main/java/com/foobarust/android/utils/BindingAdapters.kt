@@ -22,6 +22,7 @@ import android.widget.*
 import androidx.annotation.AnimRes
 import androidx.annotation.AttrRes
 import androidx.annotation.DrawableRes
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
 import androidx.databinding.BindingAdapter
@@ -609,10 +610,13 @@ fun View.applySystemWindowInsetsPadding(
     }
 
     doOnApplyWindowInsets { view, insets, padding, _, _ ->
-        val left = if (applyLeft) insets.systemWindowInsetLeft else 0
-        val top = if (applyTop) insets.systemWindowInsetTop else 0
-        val right = if (applyRight) insets.systemWindowInsetRight else 0
-        val bottom = if (applyBottom) insets.systemWindowInsetBottom else 0
+        val systemWindowInsets = WindowInsetsCompat.toWindowInsetsCompat(insets)
+            .getInsets(WindowInsetsCompat.Type.systemBars())
+
+        val left = if (applyLeft) systemWindowInsets.left else 0
+        val top = if (applyTop) systemWindowInsets.top else 0
+        val right = if (applyRight) systemWindowInsets.right else 0
+        val bottom = if (applyBottom) systemWindowInsets.bottom else 0
 
         view.setPadding(
             padding.left + left,
@@ -649,10 +653,13 @@ fun View.applySystemWindowInsetsMargin(
     }
 
     doOnApplyWindowInsets { view, insets, _, margin, _ ->
-        val left = if (applyLeft) insets.systemWindowInsetLeft else 0
-        val top = if (applyTop) insets.systemWindowInsetTop else 0
-        val right = if (applyRight) insets.systemWindowInsetRight else 0
-        val bottom = if (applyBottom) insets.systemWindowInsetBottom else 0
+        val systemWindowInsets = WindowInsetsCompat.toWindowInsetsCompat(insets)
+            .getInsets(WindowInsetsCompat.Type.systemBars())
+
+        val left = if (applyLeft) systemWindowInsets.left else 0
+        val top = if (applyTop) systemWindowInsets.top else 0
+        val right = if (applyRight) systemWindowInsets.right else 0
+        val bottom = if (applyBottom) systemWindowInsets.bottom else 0
 
         view.updateLayoutParams<ViewGroup.MarginLayoutParams> {
             leftMargin = margin.left + left

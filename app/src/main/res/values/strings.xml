@@ -102,7 +102,7 @@
     <!-- Seller Detail -->
     <string name="seller_detail_deliver_type_pick_up">Pickup</string>
     <string name="seller_detail_deliver_type_delivery">Delivery</string>
-    <string name="seller_detail_offline_message">Restaurant is closed.</string>
+    <string name="seller_detail_offline_message">Restaurant is offline.</string>
     <string name="seller_detail_format_min_spend">HKD %s Min</string>
     <string name="seller_detail_format_delivery_cost">HKD %s DELIVERY</string>
 
@@ -153,9 +153,12 @@
     <string name="seller_section_detail_users_subtitle">Participants (%d/%d)</string>
     <string name="seller_section_detail_counter_on_subtitle">Time Left</string>
     <string name="seller_section_detail_counter_off_subtitle">Available On</string>
-    <string name="seller_section_detail_section_info_format_cutoff_time">Due at %s</string>
-    <string name="seller_section_detail_section_info_format_delivery_time">Deliver To %s</string>
-    <string name="seller_section_detail_section_info_format_delivery_location">Pick Up At %s</string>
+
+    <string name="seller_section_detail_title_delivery_date">Delivery Date</string>
+    <string name="seller_section_detail_title_due_time">Due Time</string>
+    <string name="seller_section_detail_title_delivery_time">Delivery Time</string>
+    <string name="seller_section_detail_pick_up_location">Pick Up</string>
+
     <string name="seller_section_detail_seller_info_ship_from">Detail</string>
     <string name="seller_section_detail_button_menu">Open Menu</string>
     <string name="more_sections_subtitle">More Orders</string>

@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.util.TypedValue
 import android.view.animation.AnimationUtils
@@ -84,4 +85,8 @@ fun Context.getColorCompat(@ColorRes color: Int): Int {
 
 fun Context.getColorStateListFrom(@ColorRes color: Int): ColorStateList? {
     return ContextCompat.getColorStateList(this, color)
+}
+
+fun Context.getColorDrawable(colorInt: Int): ColorDrawable {
+    return ColorDrawable(colorInt)
 }

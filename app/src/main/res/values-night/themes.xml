@@ -42,9 +42,7 @@
         <item name="colorOnBackground">@color/white</item>
         <item name="colorOnSurface">@color/white</item>
 
-        <item name="scrimBackground">@color/black_alpha_20</item>
         <item name="elevationOverlayEnabled">true</item>
 
-        <item name="cartBackgroundColor">@color/grey</item>
     </style>
 </resources>

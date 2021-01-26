@@ -10,7 +10,7 @@
             type="com.foobarust.android.sellersection.SellerSectionDetailListModel.SellerSectionDetailSectionInfoItemModel" />
     </data>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_xmedium"
@@ -27,64 +27,100 @@
             android:text="@{sectionInfoItem.description}"
             android:textColor="@color/material_on_surface_emphasis_medium"
             android:textAppearance="?attr/textAppearanceBody2"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="Ordering food delivery for a group - whether for an office lunch or dinner at home—just got easier.\n為團體訂購食物（無論是在家中辦公室午餐還是晚餐），都變得更加容易。" />
+
+        <TextView
+            android:id="@+id/delivery_date_title_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_mlarge"
+            android:text="@string/seller_section_detail_title_delivery_date"
+            android:textAppearance="?attr/textAppearanceBody2"
+            app:layout_constraintTop_toBottomOf="@id/description_text_view"
+            app:layout_constraintStart_toStartOf="parent"/>
 
         <TextView
             android:id="@+id/delivery_date_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_mlarge"
-            android:gravity="center_vertical"
             android:text="@{sectionInfoItem.deliveryDate}"
             android:textColor="@color/material_on_surface_emphasis_medium"
             android:textAppearance="?attr/textAppearanceBody2"
-            android:drawablePadding="@dimen/spacing_large"
-            app:drawableTint="@color/material_on_surface_emphasis_medium"
-            app:drawableStartCompat="@drawable/ic_event"
+            app:layout_constraintTop_toBottomOf="@id/description_text_view"
+            app:layout_constraintEnd_toEndOf="parent"
             tools:text="2020-12-22"/>
+
+        <TextView
+            android:id="@+id/cutoff_time_title_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:text="@string/seller_section_detail_title_due_time"
+            android:textAppearance="?attr/textAppearanceBody2"
+            app:layout_constraintTop_toBottomOf="@id/delivery_date_title_text_view"
+            app:layout_constraintStart_toStartOf="parent"/>
 
         <TextView
             android:id="@+id/cutoff_time_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_large"
-            android:gravity="center_vertical"
-            android:text="@{@string/seller_section_detail_section_info_format_cutoff_time(sectionInfoItem.cutoffTime)}"
+            android:text="@{sectionInfoItem.cutoffTime}"
             android:textColor="@color/material_on_surface_emphasis_medium"
             android:textAppearance="?attr/textAppearanceBody2"
-            android:drawablePadding="@dimen/spacing_large"
-            app:drawableTint="@color/material_on_surface_emphasis_medium"
-            app:drawableStartCompat="@drawable/ic_access_time"
-            tools:text="Dues at 12:00 PM"/>
+            app:layout_constraintTop_toBottomOf="@id/delivery_date_text_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="12:00 PM"/>
+
+        <TextView
+            android:id="@+id/delivery_time_title_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:text="@string/seller_section_detail_title_delivery_time"
+            android:textAppearance="?attr/textAppearanceBody2"
+            app:layout_constraintTop_toBottomOf="@id/cutoff_time_title_text_view"
+            app:layout_constraintStart_toStartOf="parent"/>
 
         <TextView
             android:id="@+id/delivery_time_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_large"
-            android:gravity="center_vertical"
-            android:text="@{@string/seller_section_detail_section_info_format_delivery_time(sectionInfoItem.deliveryTime)}"
+            android:text="@{sectionInfoItem.deliveryTime}"
             android:textColor="@color/material_on_surface_emphasis_medium"
             android:textAppearance="?attr/textAppearanceBody2"
-            android:drawablePadding="@dimen/spacing_large"
-            app:drawableTint="@color/material_on_surface_emphasis_medium"
-            app:drawableStartCompat="@drawable/ic_local_shipping"
-            tools:text="Deliver at 12:30 PM" />
+            app:layout_constraintTop_toBottomOf="@id/cutoff_time_text_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="12:30 PM" />
 
         <TextView
-            android:id="@+id/pick_up_location_text_view"
+            android:id="@+id/pick_up_location_title_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_large"
-            android:gravity="center_vertical"
-            android:text="@{@string/seller_section_detail_section_info_format_delivery_location(sectionInfoItem.deliveryLocation)}"
+            android:text="@string/seller_section_detail_pick_up_location"
+            android:textAppearance="?attr/textAppearanceBody2"
+            app:layout_constraintTop_toBottomOf="@id/delivery_time_title_text_view"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+            android:id="@+id/pick_up_location_text_view"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:gravity="end"
+            android:text="@{sectionInfoItem.deliveryLocation}"
             android:textColor="@color/material_on_surface_emphasis_medium"
             android:textAppearance="?attr/textAppearanceBody2"
-            android:drawablePadding="@dimen/spacing_large"
-            app:drawableTint="@color/material_on_surface_emphasis_medium"
-            app:drawableStartCompat="@drawable/ic_shopping_bag"
-            tools:text="Pick Up at HKUST"/>
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/delivery_time_text_view"
+            tools:text="Atrium, HKUST"/>
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

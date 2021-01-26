@@ -18,7 +18,7 @@
         android:background="?attr/colorSurface">
 
         <com.google.android.material.chip.Chip
-            style="@style/Widget.Foobar.Chip.SellerAction"
+            style="@style/Widget.Foobar.Chip.Action"
             android:id="@+id/add_item_chip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -30,7 +30,7 @@
             app:chipIcon="@drawable/ic_add" />
 
         <com.google.android.material.chip.Chip
-            style="@style/Widget.Foobar.Chip.SellerAction"
+            style="@style/Widget.Foobar.Chip.Action"
             android:id="@+id/remove_items_chip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

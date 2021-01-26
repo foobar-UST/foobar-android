@@ -81,6 +81,7 @@ class SellerDetailFragment : FullScreenDialogFragment() {
         viewModel.sellerDetailWithCatalogs.observe(viewLifecycleOwner) { sellerDetailWithCatalogs ->
             sellerDetailWithCatalogs?.let {
                 setupCatalogViewPager(it.catalogs)
+                setupNoticeBanner(it.sellerDetail)
             }
         }
 
@@ -117,7 +118,7 @@ class SellerDetailFragment : FullScreenDialogFragment() {
         // Setup action chips
         viewModel.detailActions.observe(viewLifecycleOwner) { detailActions ->
             val chips = detailActions.map { action ->
-                Chip(requireContext(), null, R.attr.sellerActionChipStyle).apply {
+                Chip(requireContext(), null, R.attr.actionChipStyle).apply {
                     hide()
                     text = action.title
                     chipIconTint = requireContext().getColorStateListFrom(action.colorRes)
@@ -167,6 +168,24 @@ class SellerDetailFragment : FullScreenDialogFragment() {
             actionId == SELLER_DETAIL_ACTION_RATING -> showShortToast("Rating clicked.")
             actionId.contains(SELLER_DETAIL_ACTION_RATING) -> showShortToast("tag clicked.")
             else -> throw IllegalStateException("Invalid chip action id $actionId")
+        }
+    }
+
+    private fun setupNoticeBanner(sellerDetail: SellerDetail) {
+        with(binding.sellerNoticeBanner.noticeTextView) {
+            bindGoneIf(!sellerDetail.online || sellerDetail.notice == null)
+
+            text = if (sellerDetail.online) {
+                sellerDetail.notice
+            } else {
+                getString(R.string.seller_detail_offline_message)
+            }
+
+            background = if (sellerDetail.online) {
+                context.getColorDrawable(context.themeColor(R.attr.colorSecondaryVariant))
+            } else {
+                context.getColorDrawable(context.getColorCompat(R.color.grey_disabled))
+            }
         }
     }
 

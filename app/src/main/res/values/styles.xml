@@ -6,7 +6,7 @@
     
     <style name="Widget.Foobar.RatingBar" parent="Widget.AppCompat.RatingBar.Small"/>
 
-    <style name="Widget.Foobar.Chip.SellerAction" parent="Widget.MaterialComponents.Chip.Action">
+    <style name="Widget.Foobar.Chip.Action" parent="Widget.MaterialComponents.Chip.Action">
         <item name="android:textAppearance">?attr/textAppearanceCaption</item>
         <item name="android:textColor">@color/material_on_surface_emphasis_medium</item>
         <item name="iconStartPadding">@dimen/spacing_xmedium</item>

@@ -1,5 +1,10 @@
 # Changelog
 ## 2020-01-26
+- Updated Dagger to 2.31.2.
+- Fixed gradient crashing on low API devices.
+- Fixed uneven header heights on AuthFragments.
+
+## 2020-01-26
 - Refactored CartFragment to a better design.
 - Added PaymentFragment.
 - Added OrderPlacingFragment.

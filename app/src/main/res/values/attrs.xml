@@ -4,7 +4,9 @@
     <attr name="motionInterpolatorIncoming" format="float"/>
     <attr name="motionInterpolatorOutgoing" format="float"/>
 
-    <attr name="sellerActionChipStyle" format="reference"/>
-    <attr name="cartBackgroundColor" format="color"/>
+    <attr name="actionChipStyle" format="reference"/>
     <attr name="dividerAlphaRatio" format="float"/>
+
+    <attr name="listScrimBottomStartColor" format="color"/>
+    <attr name="listScrimBottomEndColor" format="color"/>
 </resources>

@@ -1,19 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-        <variable
-            name="content"
-            type="String" />
-        <variable
-            name="hideWhen"
-            type="Boolean" />
-        <variable
-            name="disableWhen"
-            type="Boolean" />
-    </data>
 
     <!--suppress AndroidUnknownAttribute -->
     <TextView
@@ -24,18 +12,13 @@
         android:paddingEnd="@dimen/spacing_large"
         android:paddingTop="@dimen/spacing_xmedium"
         android:paddingBottom="@dimen/spacing_xmedium"
-        android:background="@color/material_secondary_variant_emphasis_high_disabled"
         android:gravity="center_vertical"
-        android:text="@{content}"
         android:textAppearance="?attr/textAppearanceCaption"
         android:textColor="?attr/colorOnSecondary"
         android:selected="@{true}"
-        android:enabled="@{!disableWhen}"
         android:singleLine="true"
         android:ellipsize="marquee"
         android:marqueeRepeatLimit="marquee_forever"
-        app:goneIf="@{hideWhen}"
-        app:layout_constraintTop_toBottomOf="@id/seller_image_view"
         tools:text="🎉 Restaurant notice will be shown here. Hello World. Testing Here." />
 
 </layout>

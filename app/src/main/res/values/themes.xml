@@ -80,13 +80,17 @@
         <item name="radioButtonStyle">@style/Widget.Foobar.RadioButton</item>
         <!--item name="checkboxStyle">@style/Widget.Foobar.CheckBox</item-->
         <item name="bottomSheetStyle">@style/Widget.Foobar.BottomSheet</item>
-        <item name="sellerActionChipStyle">@style/Widget.Foobar.Chip.SellerAction</item>
+        <item name="actionChipStyle">@style/Widget.Foobar.Chip.Action</item>
 
+        <!-- System -->
         <item name="android:statusBarColor">@color/black</item>
         <item name="android:windowBackground">?android:colorBackground</item>
 
-        <item name="cartBackgroundColor">@color/maroon_400</item>
+        <!-- Others -->
         <item name="dividerAlphaRatio">0.12</item>
+        <item name="listScrimBottomStartColor">?android:attr/colorBackground</item>
+        <item name="listScrimBottomEndColor">@android:color/transparent</item>
+
     </style>
 
 </resources>

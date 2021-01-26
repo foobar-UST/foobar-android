@@ -12,6 +12,9 @@ import com.foobarust.android.checkout.CartAdapter.*
 import com.foobarust.android.checkout.CartListModel.*
 import com.foobarust.android.checkout.CartViewHolder.*
 import com.foobarust.android.databinding.*
+import com.foobarust.android.utils.bindGoneIf
+import com.foobarust.android.utils.getColorCompat
+import com.foobarust.android.utils.getColorDrawable
 import com.foobarust.domain.models.cart.UserCartItem
 
 /**
@@ -58,6 +61,7 @@ class CartAdapter(
             is CartInfoItemViewHolder -> holder.binding.run {
                 val currentItem = getItem(position) as CartInfoItemModel
                 cartInfoItemModel = currentItem
+
                 // Navigate to SellerSection
                 if (currentItem.sectionId != null) {
                     sectionOption.itemOption.setOnClickListener {
@@ -67,12 +71,27 @@ class CartAdapter(
                         )
                     }
                 }
+
                 // Navigate to SellerMisc
                 miscOption.itemOption.setOnClickListener {
                     listener.onSellerMiscOptionClicked(
                         sellerId = currentItem.sellerId
                     )
                 }
+
+                // Setup offline banner
+                with(sellerOfflineNoticeBanner.noticeTextView) {
+                    bindGoneIf(currentItem.sellerOnline)
+                    if (!currentItem.sellerOnline) {
+                        background = context.getColorDrawable(
+                            context.getColorCompat(R.color.grey_disabled)
+                        )
+                        text = context.getString(
+                            R.string.seller_detail_offline_message
+                        )
+                    }
+                }
+
                 executePendingBindings()
             }
 
