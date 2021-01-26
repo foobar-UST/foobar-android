@@ -1,6 +1,5 @@
 package com.foobarust.android.checkout
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
@@ -10,14 +9,17 @@ import com.foobarust.android.sellerdetail.SellerItemDetailProperty
 import com.foobarust.android.sellersection.SellerSectionProperty
 import com.foobarust.android.utils.SingleLiveEvent
 import com.foobarust.domain.models.cart.UserCartItem
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * Created by kevin on 1/9/21
  */
 
-class CheckoutViewModel @ViewModelInject constructor() : ViewModel() {
+@HiltViewModel
+class CheckoutViewModel @Inject constructor() : ViewModel() {
 
     private val _toolbarTitle = MutableStateFlow<String?>(null)
     val toolbarTitle: LiveData<String?> = _toolbarTitle

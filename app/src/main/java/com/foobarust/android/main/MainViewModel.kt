@@ -1,7 +1,6 @@
 package com.foobarust.android.main
 
 import android.content.Context
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
@@ -18,15 +17,18 @@ import com.foobarust.domain.usecases.cart.ClearUserCartUseCase
 import com.foobarust.domain.usecases.cart.GetUserCartUseCase
 import com.foobarust.domain.usecases.onboarding.GetOnboardingCompletedUseCase
 import com.foobarust.domain.usecases.onboarding.UpdateOnboardingCompletedUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * Created by kevin on 9/20/20
  */
 
-class MainViewModel @ViewModelInject constructor(
+@HiltViewModel
+class MainViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val workManager: WorkManager,
     private val getUserCartUseCase: GetUserCartUseCase,

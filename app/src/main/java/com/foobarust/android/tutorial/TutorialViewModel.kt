@@ -3,18 +3,19 @@ package com.foobarust.android.tutorial
 import android.content.Context
 import android.os.Parcelable
 import androidx.annotation.DrawableRes
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.R
 import com.foobarust.android.utils.SingleLiveEvent
+import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
+import javax.inject.Inject
 
-
-class TutorialViewModel @ViewModelInject constructor(
+@HiltViewModel
+class TutorialViewModel @Inject constructor(
     @ApplicationContext context: Context
 ) : ViewModel() {
 

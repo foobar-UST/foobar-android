@@ -1,6 +1,5 @@
 package com.foobarust.android.sellermisc
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
@@ -14,14 +13,17 @@ import com.foobarust.domain.usecases.maps.GetDirectionsParameters
 import com.foobarust.domain.usecases.maps.GetDirectionsUseCase
 import com.foobarust.domain.usecases.seller.GetSellerDetailUseCase
 import com.google.android.gms.maps.model.LatLng
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * Created by kevin on 10/11/20
  */
 
-class SellerMiscViewModel @ViewModelInject constructor(
+@HiltViewModel
+class SellerMiscViewModel @Inject constructor(
     private val getSellerDetailUseCase: GetSellerDetailUseCase,
     private val getDirectionsUseCase: GetDirectionsUseCase
 ) : BaseViewModel() {

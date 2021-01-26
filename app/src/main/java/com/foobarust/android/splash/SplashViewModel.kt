@@ -1,17 +1,19 @@
 package com.foobarust.android.splash
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.notification.NotificationHelper
 import com.foobarust.android.utils.SingleLiveEvent
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 private const val SPLASH_DELAY = 800L
 
-class SplashViewModel @ViewModelInject constructor(
+@HiltViewModel
+class SplashViewModel @Inject constructor(
     notificationHelper: NotificationHelper
 ) : ViewModel() {
 

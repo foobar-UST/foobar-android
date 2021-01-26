@@ -1,13 +1,15 @@
 package com.foobarust.android.sellersection
 
-import androidx.hilt.lifecycle.ViewModelInject
 import com.foobarust.android.common.BaseViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
 /**
  * Created by kevin on 1/3/21
  */
 
-class SellerSectionParticipantsViewModel @ViewModelInject constructor(
+@HiltViewModel
+class SellerSectionParticipantsViewModel @Inject constructor(
 
 ) : BaseViewModel() {
 

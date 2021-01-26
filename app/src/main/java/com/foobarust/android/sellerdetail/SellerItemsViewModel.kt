@@ -1,7 +1,6 @@
 package com.foobarust.android.sellerdetail
 
 import android.os.Parcelable
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,14 +13,17 @@ import com.foobarust.domain.models.seller.getNormalizedTitle
 import com.foobarust.domain.models.seller.purchasable
 import com.foobarust.domain.usecases.seller.GetSellerItemsBasicsParameters
 import com.foobarust.domain.usecases.seller.GetSellerItemsUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.parcelize.Parcelize
+import javax.inject.Inject
 
 /**
  * Created by kevin on 10/4/20
  */
 
-class SellerItemsViewModel @ViewModelInject constructor(
+@HiltViewModel
+class SellerItemsViewModel @Inject constructor(
     private val getSellerItemsUseCase: GetSellerItemsUseCase
 ) : ViewModel() {
 

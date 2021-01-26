@@ -1,7 +1,6 @@
 package com.foobarust.android.checkout
 
 import android.content.Context
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.asLiveData
@@ -15,15 +14,18 @@ import com.foobarust.domain.models.seller.SellerBasic
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.cart.*
 import com.foobarust.domain.usecases.seller.GetSellerBasicUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * Created by kevin on 12/1/20
  */
 
-class CartViewModel @ViewModelInject constructor(
+@HiltViewModel
+class CartViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val getUserCartUseCase: GetUserCartUseCase,
     private val getUserCartItemsUseCase: GetUserCartItemsUseCase,

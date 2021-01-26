@@ -1,7 +1,6 @@
 package com.foobarust.android.sellersection
 
 import android.os.Parcelable
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
@@ -15,16 +14,19 @@ import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.seller.GetSellerSectionDetailParameters
 import com.foobarust.domain.usecases.seller.GetSellerSectionDetailUseCase
 import com.foobarust.domain.utils.cancelIfActive
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
+import javax.inject.Inject
 
 /**
  * Created by kevin on 1/3/21
  */
 
-class SellerSectionViewModel @ViewModelInject constructor(
+@HiltViewModel
+class SellerSectionViewModel @Inject constructor(
     private val getSellerSectionDetailUseCase: GetSellerSectionDetailUseCase
 ) : BaseViewModel() {
 

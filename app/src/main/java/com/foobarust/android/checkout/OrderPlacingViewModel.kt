@@ -1,6 +1,5 @@
 package com.foobarust.android.checkout
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
@@ -9,15 +8,18 @@ import com.foobarust.android.common.UiState
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.checkout.PlaceOrderParameters
 import com.foobarust.domain.usecases.checkout.PlaceOrderUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * Created by kevin on 1/26/21
  */
 
-class OrderPlacingViewModel @ViewModelInject constructor(
+@HiltViewModel
+class OrderPlacingViewModel @Inject constructor(
     private val placeOrderUseCase: PlaceOrderUseCase
 ) : BaseViewModel() {
 

@@ -3,7 +3,6 @@ package com.foobarust.android
 import android.util.Log
 import androidx.test.ext.junit.rules.activityScenarioRule
 import com.foobarust.data.api.RemoteService
-import com.foobarust.domain.models.checkout.PaymentMethod
 import com.foobarust.domain.repositories.AuthRepository
 import com.foobarust.domain.repositories.CheckoutRepository
 import com.foobarust.domain.repositories.MapRepository
@@ -14,7 +13,6 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import java.util.*
 import javax.inject.Inject
 
 @HiltAndroidTest
@@ -38,7 +36,9 @@ class RemoteTest {
     lateinit var remoteService: RemoteService
 
     @Before
-    fun init() { hiltRule.inject() }
+    fun init() {
+        hiltRule.inject()
+    }
 
     @Test
     fun hello_world_test() = runBlocking(Dispatchers.IO) {
@@ -67,15 +67,10 @@ class RemoteTest {
 
     @Test
     fun add_new_order_test() = runBlocking(Dispatchers.IO) {
-        val testPaymentMethod = PaymentMethod(
-            id = UUID.randomUUID().toString(),
-            identifier = "cod",
-            enabled = true
-        )
         val result = checkoutRepository.placeOrder(
             idToken = authRepository.getIdToken(),
             message = "test_message",
-            paymentMethod = testPaymentMethod
+            paymentMethodIdentifier = "cash_on_delivery"
         )
 
         Log.d("RemoteTest", result.toString())

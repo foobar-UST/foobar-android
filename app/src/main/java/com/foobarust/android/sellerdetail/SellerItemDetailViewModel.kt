@@ -2,7 +2,6 @@ package com.foobarust.android.sellerdetail
 
 import android.content.Context
 import android.os.Parcelable
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
@@ -25,11 +24,13 @@ import com.foobarust.domain.usecases.seller.GetMoreSellerItemsUseCaseParameters
 import com.foobarust.domain.usecases.seller.GetSellerItemDetailParameters
 import com.foobarust.domain.usecases.seller.GetSellerItemDetailUseCase
 import com.foobarust.domain.utils.cancelIfActive
+import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
+import javax.inject.Inject
 
 /**
  * Created by kevin on 10/13/20
@@ -37,7 +38,8 @@ import kotlinx.parcelize.Parcelize
 
 private const val MORE_ITEMS_SIZE = 5
 
-class SellerItemDetailViewModel @ViewModelInject constructor(
+@HiltViewModel
+class SellerItemDetailViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val getSellerItemDetailUseCase: GetSellerItemDetailUseCase,
     private val getMoreSellerItemsUseCase: GetMoreSellerItemsUseCase,

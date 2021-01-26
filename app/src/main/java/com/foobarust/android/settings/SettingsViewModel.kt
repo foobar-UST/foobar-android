@@ -1,7 +1,6 @@
 package com.foobarust.android.settings
 
 import android.content.Context
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
@@ -14,10 +13,12 @@ import com.foobarust.domain.models.user.UserDetail
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.auth.SignOutUseCase
 import com.foobarust.domain.usecases.user.GetUserDetailUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 const val SETTINGS_NOTIFICATIONS = "settings_notifications"
 const val SETTINGS_CONTACT_US = "settings_contact_us"
@@ -26,7 +27,8 @@ const val SETTINGS_FEATURES = "settings_features"
 const val SETTINGS_SIGN_OUT = "settings_sign_out"
 const val SETTINGS_FAVORITE = "setting_favorite"
 
-class SettingsViewModel @ViewModelInject constructor(
+@HiltViewModel
+class SettingsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val getUserDetailUseCase: GetUserDetailUseCase,
     private val signOutUseCase: SignOutUseCase

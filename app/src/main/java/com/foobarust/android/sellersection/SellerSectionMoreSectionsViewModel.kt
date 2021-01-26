@@ -1,6 +1,5 @@
 package com.foobarust.android.sellersection
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.viewModelScope
 import androidx.paging.LoadState
 import androidx.paging.PagingData
@@ -11,13 +10,16 @@ import com.foobarust.android.utils.asUiFetchState
 import com.foobarust.domain.models.seller.SellerSectionDetail
 import com.foobarust.domain.usecases.seller.GetSellerSectionsParameters
 import com.foobarust.domain.usecases.seller.GetSellerSectionsUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
+import javax.inject.Inject
 
 /**
  * Created by kevin on 1/3/21
  */
 
-class SellerSectionMoreSectionsViewModel @ViewModelInject constructor(
+@HiltViewModel
+class SellerSectionMoreSectionsViewModel @Inject constructor(
     private val getSellerSectionsUseCase: GetSellerSectionsUseCase
 ) : BaseViewModel() {
 
@@ -35,6 +37,7 @@ class SellerSectionMoreSectionsViewModel @ViewModelInject constructor(
         }
         .map { pagingData ->
             pagingData.map {
+                @Suppress("USELESS_CAST")
                 SellerSectionsListModel.SellerSectionsItemModel(it) as SellerSectionsListModel
             }
         }

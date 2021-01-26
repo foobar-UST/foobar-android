@@ -1,7 +1,6 @@
 package com.foobarust.android.seller
 
 import android.content.Context
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import androidx.paging.*
 import com.foobarust.android.R
@@ -13,11 +12,14 @@ import com.foobarust.domain.models.seller.SellerType.*
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.promotion.GetAdvertiseBasicsUseCase
 import com.foobarust.domain.usecases.seller.GetSellersUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.*
+import javax.inject.Inject
 
-class SellerOnCampusViewModel @ViewModelInject constructor(
+@HiltViewModel
+class SellerOnCampusViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     getAdvertiseBasicsUseCase: GetAdvertiseBasicsUseCase,
     getSellersUseCase: GetSellersUseCase,

@@ -1,7 +1,6 @@
 package com.foobarust.android.seller
 
 import android.content.Context
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.R
@@ -13,14 +12,17 @@ import com.foobarust.android.utils.SingleLiveEvent
 import com.foobarust.domain.models.promotion.SuggestBasic
 import com.foobarust.domain.models.seller.SellerBasic
 import com.foobarust.domain.models.seller.SellerSectionBasic
+import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SellerViewModel @ViewModelInject constructor(
-    @ApplicationContext private val context: Context,
+@HiltViewModel
+class SellerViewModel @Inject constructor(
+    @ApplicationContext private val context: Context
 ) : BaseViewModel() {
 
     val sellerPages: List<SellerPage> = listOf(

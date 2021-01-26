@@ -1,7 +1,6 @@
 package com.foobarust.android.settings
 
 import android.content.Context
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
@@ -21,15 +20,18 @@ import com.foobarust.domain.usecases.common.GetFormattedPhoneNumUseCase
 import com.foobarust.domain.usecases.user.GetUserDetailUseCase
 import com.foobarust.domain.usecases.user.UpdateUserDetailParameters
 import com.foobarust.domain.usecases.user.UpdateUserDetailUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 const val EDIT_PROFILE_NAME = "profile_name"
 const val EDIT_PROFILE_PHONE_NUMBER = "profile_phone_number"
 
-class ProfileViewModel @ViewModelInject constructor(
+@HiltViewModel
+class ProfileViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     getUserDetailUseCase: GetUserDetailUseCase,
     private val updateUserDetailUseCase: UpdateUserDetailUseCase,

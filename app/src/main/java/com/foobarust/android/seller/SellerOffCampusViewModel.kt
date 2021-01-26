@@ -1,7 +1,6 @@
 package com.foobarust.android.seller
 
 import android.content.Context
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
@@ -18,15 +17,18 @@ import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.promotion.GetAdvertiseBasicsUseCase
 import com.foobarust.domain.usecases.seller.GetSellerSectionsParameters
 import com.foobarust.domain.usecases.seller.GetSellerSectionsUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.*
+import javax.inject.Inject
 
 /**
  * Created by kevin on 12/21/20
  */
 
-class SellerOffCampusViewModel @ViewModelInject constructor(
+@HiltViewModel
+class SellerOffCampusViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     getAdvertiseBasicsUseCase: GetAdvertiseBasicsUseCase,
     getSellerSectionsUseCase: GetSellerSectionsUseCase

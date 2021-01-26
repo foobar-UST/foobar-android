@@ -122,11 +122,9 @@ dependencies {
     implementation(Dependencies.ROOM_RUNTIME)
     implementation(Dependencies.ROOM_KTX)
 
-
     // Annotation Processors
     kapt(Annotation.ROOM_COMPILER)
     kapt(Annotation.HILT_ANDROID_COMPILER)
-    kapt(Annotation.HILT_ANDROIDX_COMPILER)
 
     // Debug
     //debugImplementation(Dependencies.LEAK_CANARY)

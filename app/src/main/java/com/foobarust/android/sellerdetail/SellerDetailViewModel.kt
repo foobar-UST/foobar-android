@@ -2,7 +2,6 @@ package com.foobarust.android.sellerdetail
 
 import android.content.Context
 import android.os.Parcelable
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
@@ -20,11 +19,13 @@ import com.foobarust.domain.usecases.seller.GetSellerDetailWithCatalogsUseCase
 import com.foobarust.domain.usecases.seller.GetSellerSectionBasicParameters
 import com.foobarust.domain.usecases.seller.GetSellerSectionBasicUseCase
 import com.foobarust.domain.utils.cancelIfActive
+import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
+import javax.inject.Inject
 
 /**
  * Created by kevin on 10/4/20
@@ -33,7 +34,8 @@ import kotlinx.parcelize.Parcelize
 const val SELLER_DETAIL_ACTION_RATING = "action_rating"
 const val SELLER_DETAIL_ACTION_TAG = "action_tag"
 
-class SellerDetailViewModel @ViewModelInject constructor(
+@HiltViewModel
+class SellerDetailViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val getSellerSectionBasicUseCase: GetSellerSectionBasicUseCase,
     private val getSellerDetailWithCatalogsUseCase: GetSellerDetailWithCatalogsUseCase,

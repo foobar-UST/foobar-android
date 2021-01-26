@@ -1,7 +1,6 @@
 package com.foobarust.android.sellersection
 
 import android.content.Context
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
@@ -17,16 +16,19 @@ import com.foobarust.domain.usecases.seller.GetMoreSellerSectionsUseCase
 import com.foobarust.domain.usecases.seller.GetSectionParticipantsParameters
 import com.foobarust.domain.usecases.seller.GetSectionParticipantsUseCase
 import com.foobarust.domain.utils.cancelIfActive
+import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * Created by kevin on 12/27/20
  */
 
-class SellerSectionDetailViewModel @ViewModelInject constructor(
+@HiltViewModel
+class SellerSectionDetailViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val getMoreSellerSectionsUseCase: GetMoreSellerSectionsUseCase,
     private val getSectionParticipantsUseCase: GetSectionParticipantsUseCase

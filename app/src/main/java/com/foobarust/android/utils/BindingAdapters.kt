@@ -195,9 +195,9 @@ fun TextView.bindDrawableScale(drawableScale: Double?) {
     if (drawableScale == null) return
 
     val drawableSize = round(lineHeight * drawableScale).toInt()
-    val updatedDrawables = compoundDrawablesRelative.map {
-        (it as Drawable?)?.setBounds(0, 0, drawableSize, drawableSize)
-        it
+    val updatedDrawables = compoundDrawablesRelative.map { drawable: Drawable? ->
+        drawable?.setBounds(0, 0, drawableSize, drawableSize)
+        drawable
     }
 
     setCompoundDrawables(

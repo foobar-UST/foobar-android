@@ -5,7 +5,7 @@ import com.foobarust.domain.repositories.SellerRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 /**
@@ -15,7 +15,7 @@ import javax.inject.Singleton
 @Module(includes = [
     PersistentModule::class
 ])
-@InstallIn(ApplicationComponent::class)
+@InstallIn(SingletonComponent::class)
 abstract class SellerModule {
 
     @Singleton

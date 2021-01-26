@@ -88,7 +88,6 @@ dependencies {
     // Annotation Processors
     kapt(Annotation.ROOM_COMPILER)
     kapt(Annotation.HILT_ANDROID_COMPILER)
-    kapt(Annotation.HILT_ANDROIDX_COMPILER)
 
     // Unit Test
     testImplementation(Dependencies.ARCH_CORE_TESTING)

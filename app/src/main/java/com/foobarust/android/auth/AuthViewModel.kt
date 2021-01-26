@@ -2,7 +2,6 @@ package com.foobarust.android.auth
 
 import android.content.Context
 import android.util.Log
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -12,14 +11,17 @@ import com.foobarust.android.common.BaseViewModel
 import com.foobarust.android.common.UiState
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.auth.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 private const val RESEND_BUFFER = 5000L
 
-class AuthViewModel @ViewModelInject constructor(
+@HiltViewModel
+class AuthViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val requestAuthEmailUseCase: RequestAuthEmailUseCase,
     private val signInWithAuthLinkUseCase: SignInWithAuthLinkUseCase,
