@@ -13,6 +13,14 @@
         android:label="@string/fragment_label_order"
         tools:layout="@layout/fragment_order">
         <deepLink app:uri="foobarust://navigation_order" />
+        <action
+            android:id="@+id/action_orderFragment_to_orderDetailFragment"
+            app:destination="@id/orderDetailFragment" />
     </fragment>
+
+    <dialog
+        android:id="@+id/orderDetailFragment"
+        android:name="com.foobarust.android.order.OrderDetailFragment"
+        tools:layout="@layout/fragment_order_detail"/>
 
 </navigation>

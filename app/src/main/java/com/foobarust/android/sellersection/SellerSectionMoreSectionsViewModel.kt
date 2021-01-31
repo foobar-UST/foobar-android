@@ -6,7 +6,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.foobarust.android.common.BaseViewModel
-import com.foobarust.android.utils.asUiFetchState
+import com.foobarust.android.utils.asUiState
 import com.foobarust.domain.models.seller.SellerSectionDetail
 import com.foobarust.domain.usecases.seller.GetSellerSectionsParameters
 import com.foobarust.domain.usecases.seller.GetSellerSectionsUseCase
@@ -51,7 +51,7 @@ class SellerSectionMoreSectionsViewModel @Inject constructor(
     }
 
     fun onPagingLoadStateChanged(loadState: LoadState) {
-        setUiState(loadState.asUiFetchState())
+        setUiState(loadState.asUiState())
     }
 }
 

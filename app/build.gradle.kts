@@ -24,28 +24,39 @@ android {
         versionName = Application.VERSION_NAME
         testInstrumentationRunner = Dependencies.HILT_TEST_RUNNER
 
-        // Get Maps API
+
+    }
+
+    buildTypes {
+        // Get local.properties
         val properties = Properties()
         val localProperties = rootProject.file("local.properties")
         properties.load(localProperties.inputStream())
 
-        // Expose API to manifest
-        setManifestPlaceholders(
-            mapOf(
-                "mapsApiKey" to properties.getProperty("MAPS_API_KEY", "")
-                //"crashlyticsCollectionEnabled" to true
-            )
-        )
-    }
-
-    buildTypes {
+        // Config for release build
         getByName("release") {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            // Expose API to manifest
+            setManifestPlaceholders(
+                mapOf(
+                    "mapsApiKey" to properties.getProperty("MAPS_API_KEY", ""),
+                    "clearTextTraffic" to false
+                    //"crashlyticsCollectionEnabled" to true
+                )
+            )
         }
 
+        // Config for debug build
         getByName("debug") {
-
+            // Expose API to manifest
+            setManifestPlaceholders(
+                mapOf(
+                    "mapsApiKey" to properties.getProperty("MAPS_API_KEY", ""),
+                    "clearTextTraffic" to true
+                    //"crashlyticsCollectionEnabled" to true
+                )
+            )
         }
     }
 
@@ -103,7 +114,8 @@ dependencies {
     implementation(Dependencies.LIFECYCLE_VIEWMODEL_SAVEDSTATE)
     implementation(Dependencies.LIFECYCLE_COMMON)
     implementation(Dependencies.HILT)
-    implementation(Dependencies.HILT_VIEWMODEL)
+    implementation(Dependencies.HILT_NAVIGATION)
+    implementation(Dependencies.HILT_WORK)
     implementation(Dependencies.PAGING_RUNTIME)
     implementation(Dependencies.PREFERENCES)
     implementation(Dependencies.SWIPE_REFRESH_LAYOUT)
@@ -118,13 +130,13 @@ dependencies {
     implementation(Dependencies.SPINKIT)
     implementation(Dependencies.MAP)
     implementation(Dependencies.WORK)
-    implementation(Dependencies.HILT_WORK)
     implementation(Dependencies.ROOM_RUNTIME)
     implementation(Dependencies.ROOM_KTX)
 
     // Annotation Processors
     kapt(Annotation.ROOM_COMPILER)
     kapt(Annotation.HILT_ANDROID_COMPILER)
+    kapt(Annotation.HILT_ANDROIDX_EXT_COMPILER)
 
     // Debug
     //debugImplementation(Dependencies.LEAK_CANARY)

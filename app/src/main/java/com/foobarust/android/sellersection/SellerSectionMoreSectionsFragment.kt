@@ -6,9 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.ConcatAdapter
 import com.foobarust.android.R
 import com.foobarust.android.common.PagingLoadStateAdapter
@@ -31,7 +31,7 @@ class SellerSectionMoreSectionsFragment : Fragment(),
     SellerSectionsAdapter.SellerOffCampusAdapterListener {
 
     private var binding: FragmentSellerSectionMoreSectionsBinding by AutoClearedValue(this)
-    private val sectionViewModel: SellerSectionViewModel by navGraphViewModels(R.id.navigation_seller_section)
+    private val sectionViewModel: SellerSectionViewModel by hiltNavGraphViewModels(R.id.navigation_seller_section)
     private val moreSectionsViewModel: SellerSectionMoreSectionsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {

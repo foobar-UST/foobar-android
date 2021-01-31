@@ -35,7 +35,7 @@ class OrderPlacingFragment : Fragment() {
         binding = FragmentOrderPlacingBinding.inflate(inflater, container, false)
 
         // Set toolbar title
-        checkoutViewModel.onUpdateToolbarTitle(title = getString(R.string.checkout_toolbar_title_order_success))
+        checkoutViewModel.onUpdateToolbarTitle(title = getString(R.string.checkout_toolbar_title_order_placing))
 
         // Hide submit button
         checkoutViewModel.onShowSubmitButton(isShow = false)
@@ -57,23 +57,21 @@ class OrderPlacingFragment : Fragment() {
             throw Exception("Payment method not found.")
         )
 
-        // Navigate based on placing result
+        // Clear order cache
         orderPlacingViewModel.placeOrderState.observe(viewLifecycleOwner) {
-            when (it) {
-                PlaceOrderState.SUCCESS -> {
-                    // Navigate to OrderCompleteFragment
-                    findNavController(R.id.orderPlacingFragment)?.navigate(
-                        OrderPlacingFragmentDirections.actionOrderPlacingFragmentToOrderSuccessFragment()
+            if (it is PlaceOrderState.Success) {
+                checkoutViewModel.onClearPreviousOrderData()
+            }
+        }
+
+        // Navigate based on order result
+        orderPlacingViewModel.navigateToOrderResult.observe(viewLifecycleOwner) { property ->
+            property?.let {
+                findNavController(R.id.orderPlacingFragment)?.navigate(
+                    OrderPlacingFragmentDirections.actionOrderPlacingFragmentToOrderResultFragment(
+                        property = it
                     )
-                }
-                PlaceOrderState.FAILURE -> {
-                    // Navigate to OrderCompleteFragment (with different arg)
-                    findNavController(R.id.orderPlacingFragment)?.navigate(
-                        OrderPlacingFragmentDirections.actionOrderPlacingFragmentToOrderSuccessFragment()
-                    )
-                }
-                PlaceOrderState.IDLE -> Unit
-                else -> throw IllegalStateException("Unknown PlaceOrderState.")
+                )
             }
         }
 

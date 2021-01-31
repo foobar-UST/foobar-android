@@ -1,12 +1,9 @@
 package com.foobarust.android.utils
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
-import android.content.ContextWrapper
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.util.TypedValue
 import android.view.animation.AnimationUtils
@@ -17,19 +14,9 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.use
 
 /**
- * Get the hosting activity from context
- */
-tailrec fun Context?.getActivity(): Activity? = when (this) {
-    is Activity -> this
-    else -> (this as? ContextWrapper)?.baseContext?.getActivity()
-}
-
-/**
  * Retrieve a float from the current [android.content.res.Resources.Theme].
  */
-fun Context.themeFloat(
-    @AttrRes attr: Int
-): Float {
+fun Context.themeFloat(@AttrRes attr: Int): Float {
     val tv = TypedValue()
     theme.resolveAttribute(attr, tv, true)
     return tv.float
@@ -40,9 +27,7 @@ fun Context.themeFloat(
  */
 @ColorInt
 @SuppressLint("Recycle")
-fun Context.themeColor(
-    @AttrRes themeAttrId: Int
-): Int {
+fun Context.themeColor(@AttrRes themeAttrId: Int): Int {
     return obtainStyledAttributes(
         intArrayOf(themeAttrId)
     ).use {
@@ -85,8 +70,4 @@ fun Context.getColorCompat(@ColorRes color: Int): Int {
 
 fun Context.getColorStateListFrom(@ColorRes color: Int): ColorStateList? {
     return ContextCompat.getColorStateList(this, color)
-}
-
-fun Context.getColorDrawable(colorInt: Int): ColorDrawable {
-    return ColorDrawable(colorInt)
 }

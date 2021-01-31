@@ -10,14 +10,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.foobarust.android.R
 import com.foobarust.android.common.FullScreenDialogFragment
+import com.foobarust.android.common.UiState
 import com.foobarust.android.databinding.FragmentSellerMiscBinding
-import com.foobarust.android.utils.AutoClearedValue
-import com.foobarust.android.utils.setBottomSheetPeekTo
-import com.foobarust.android.utils.showShortToast
-import com.foobarust.android.utils.themeColor
+import com.foobarust.android.utils.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.maps.android.ktx.addMarker
 import com.google.maps.android.ktx.addPolyline
 import com.google.maps.android.ktx.awaitMap
@@ -57,10 +54,16 @@ class SellerMiscFragment : FullScreenDialogFragment() {
 
         // Setup bottom sheet
         viewLifecycleOwner.lifecycleScope.launch {
-            binding.bottomSheet.setBottomSheetPeekTo(
-                behavior = BottomSheetBehavior.from(binding.bottomSheet),
-                anchorView = binding.headerGroup
+            binding.bottomSheet.bottomSheetPeekUntil(
+                toView = binding.headerGroup
             )
+        }
+
+        binding.bottomSheet.bottomSheetApplyDefaultBackground()
+
+        // Show bottom sheet when loading is success
+        viewModel.uiState.observe(viewLifecycleOwner) {
+            binding.bottomSheet.bottomSheetHideIf(it !is UiState.Success)
         }
 
         // Show toast

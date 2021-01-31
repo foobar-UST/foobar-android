@@ -11,7 +11,7 @@ import com.foobarust.android.common.BaseViewModel
 import com.foobarust.android.common.OnSwipeRefreshListener
 import com.foobarust.android.promotion.PromotionListModel
 import com.foobarust.android.sellersection.SellerSectionsListModel
-import com.foobarust.android.utils.asUiFetchState
+import com.foobarust.android.utils.asUiState
 import com.foobarust.domain.models.seller.isRecentSection
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.promotion.GetAdvertiseBasicsUseCase
@@ -93,6 +93,6 @@ class SellerOffCampusViewModel @Inject constructor(
             _isSwipeRefreshing.value = false
         }
 
-        setUiState(loadState.asUiFetchState())
+        setUiState(loadState.asUiState())
     }
 }

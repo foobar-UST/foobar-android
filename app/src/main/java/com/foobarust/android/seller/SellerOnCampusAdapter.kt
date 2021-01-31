@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.foobarust.android.R
 import com.foobarust.android.databinding.SellerOnCampusItemBinding
-import com.foobarust.android.databinding.SubtitleItemBinding
+import com.foobarust.android.databinding.SubtitleLargeItemBinding
 import com.foobarust.android.seller.SellerOnCampusListModel.SellerOnCampusItemModel
 import com.foobarust.android.seller.SellerOnCampusListModel.SellerOnCampusSubtitleModel
 import com.foobarust.android.seller.SellerOnCampusViewHolder.SellerOnCampusItemViewHolder
@@ -29,14 +29,13 @@ class SellerOnCampusAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SellerOnCampusViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-
         return when (viewType) {
             R.layout.seller_on_campus_item -> SellerOnCampusItemViewHolder(
                 SellerOnCampusItemBinding.inflate(inflater, parent, false)
             )
 
-            R.layout.subtitle_item -> SellerOnCampusSubtitleViewHolder(
-                SubtitleItemBinding.inflate(inflater, parent, false)
+            R.layout.subtitle_large_item -> SellerOnCampusSubtitleViewHolder(
+                SubtitleLargeItemBinding.inflate(inflater, parent, false)
             )
 
             else -> throw IllegalStateException("Unknown view type $viewType")
@@ -95,7 +94,7 @@ class SellerOnCampusAdapter(
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
             is SellerOnCampusItemModel -> R.layout.seller_on_campus_item
-            is SellerOnCampusSubtitleModel -> R.layout.subtitle_item
+            is SellerOnCampusSubtitleModel -> R.layout.subtitle_large_item
             else -> throw IllegalStateException("Unknown view type at: $position")
         }
     }
@@ -112,7 +111,7 @@ sealed class SellerOnCampusViewHolder(itemView: View) : RecyclerView.ViewHolder(
     ) : SellerOnCampusViewHolder(binding.root)
 
     class SellerOnCampusSubtitleViewHolder(
-        val binding: SubtitleItemBinding
+        val binding: SubtitleLargeItemBinding
     ) : SellerOnCampusViewHolder(binding.root)
 }
 

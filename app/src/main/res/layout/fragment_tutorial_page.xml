@@ -20,7 +20,7 @@
             android:layout_width="300dp"
             android:layout_height="300dp"
             android:contentDescription="@{onboardingProperty.title}"
-            app:glideSrc="@{onboardingProperty.imageRes}"
+            app:src="@{onboardingProperty.imageRes}"
             app:layout_constraintBottom_toTopOf="@+id/title_text_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

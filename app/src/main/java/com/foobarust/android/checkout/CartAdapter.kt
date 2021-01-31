@@ -1,8 +1,10 @@
 package com.foobarust.android.checkout
 
+import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -14,7 +16,6 @@ import com.foobarust.android.checkout.CartViewHolder.*
 import com.foobarust.android.databinding.*
 import com.foobarust.android.utils.bindGoneIf
 import com.foobarust.android.utils.getColorCompat
-import com.foobarust.android.utils.getColorDrawable
 import com.foobarust.domain.models.cart.UserCartItem
 
 /**
@@ -44,12 +45,16 @@ class CartAdapter(
                 CartOrderNotesItemBinding.inflate(inflater, parent, false)
             )
 
-            R.layout.cart_purchase_subtitle_item -> CartPurchaseSubtitleItemViewHolder(
-                CartPurchaseSubtitleItemBinding.inflate(inflater, parent, false)
+            R.layout.subtitle_small_item -> CartPurchaseSubtitleItemViewHolder(
+                SubtitleSmallItemBinding.inflate(inflater, parent, false)
             )
 
             R.layout.cart_purchase_actions_item -> CartPurchaseActionsItemViewHolder(
                 CartPurchaseActionsItemBinding.inflate(inflater, parent, false)
+            )
+
+            R.layout.cart_empty_item -> CartEmptyItemViewHolder(
+                CartEmptyItemBinding.inflate(inflater, parent, false)
             )
 
             else -> throw IllegalStateException("Unknown view type $viewType")
@@ -83,7 +88,7 @@ class CartAdapter(
                 with(sellerOfflineNoticeBanner.noticeTextView) {
                     bindGoneIf(currentItem.sellerOnline)
                     if (!currentItem.sellerOnline) {
-                        background = context.getColorDrawable(
+                        background = ColorDrawable(
                             context.getColorCompat(R.color.grey_disabled)
                         )
                         text = context.getString(
@@ -108,20 +113,34 @@ class CartAdapter(
 
             is CartOrderNotesItemViewHolder -> holder.binding.run {
                 orderNotesItemModel = getItem(position) as CartOrderNotesItemModel
+
                 notesEditText.doOnTextChanged { text, _, _, _ ->
                     listener.onUpdateOrderNotes(notes = text.toString())
                 }
+
+                // Clear focus after exit keyboard
+                notesEditText.setOnEditorActionListener { view, actionId, event ->
+                    if (actionId == EditorInfo.IME_ACTION_DONE) {
+                        notesEditText.clearFocus()
+                    }
+                    return@setOnEditorActionListener false
+                }
+
                 executePendingBindings()
             }
 
             is CartPurchaseSubtitleItemViewHolder -> holder.binding.run {
-                subtitleItemModel = getItem(position) as CartPurchaseSubtitleItemModel
+                subtitle = (getItem(position) as CartPurchaseSubtitleItemModel).subtitle
                 executePendingBindings()
             }
 
             is CartPurchaseActionsItemViewHolder -> holder.binding.run {
                 menuItemModel = getItem(position) as CartPurchaseActionsItemModel
                 listener = this@CartAdapter.listener
+                executePendingBindings()
+            }
+
+            is CartEmptyItemViewHolder -> holder.binding.run {
                 executePendingBindings()
             }
         }
@@ -133,8 +152,9 @@ class CartAdapter(
             is CartPurchaseItemModel -> R.layout.cart_purchase_item
             is CartTotalPriceItemModel -> R.layout.cart_total_price_item
             is CartOrderNotesItemModel -> R.layout.cart_order_notes_item
-            is CartPurchaseSubtitleItemModel -> R.layout.cart_purchase_subtitle_item
+            is CartPurchaseSubtitleItemModel -> R.layout.subtitle_small_item
             is CartPurchaseActionsItemModel -> R.layout.cart_purchase_actions_item
+            is CartEmptyItemModel -> R.layout.cart_empty_item
         }
     }
 
@@ -167,11 +187,15 @@ sealed class CartViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
     ) : CartViewHolder(binding.root)
 
     class CartPurchaseSubtitleItemViewHolder(
-        val binding: CartPurchaseSubtitleItemBinding
+        val binding: SubtitleSmallItemBinding
     ) : CartViewHolder(binding.root)
 
     class CartPurchaseActionsItemViewHolder(
         val binding: CartPurchaseActionsItemBinding
+    ) : CartViewHolder(binding.root)
+
+    class CartEmptyItemViewHolder(
+        val binding: CartEmptyItemBinding
     ) : CartViewHolder(binding.root)
 }
 
@@ -208,6 +232,8 @@ sealed class CartListModel {
         val sellerId: String,
         val sectionId: String?
     ) : CartListModel()
+
+    object CartEmptyItemModel : CartListModel()
 }
 
 object CartListModelDiff : DiffUtil.ItemCallback<CartListModel>() {
@@ -224,6 +250,8 @@ object CartListModelDiff : DiffUtil.ItemCallback<CartListModel>() {
             oldItem is CartPurchaseSubtitleItemModel && newItem is CartPurchaseSubtitleItemModel ->
                 oldItem.subtitle == newItem.subtitle
             oldItem is CartPurchaseActionsItemModel && newItem is CartPurchaseActionsItemModel ->
+                true
+            oldItem is CartEmptyItemModel && newItem is CartEmptyItemModel ->
                 true
             else -> false
         }
@@ -242,6 +270,8 @@ object CartListModelDiff : DiffUtil.ItemCallback<CartListModel>() {
             oldItem is CartPurchaseSubtitleItemModel && newItem is CartPurchaseSubtitleItemModel ->
                 oldItem == newItem
             oldItem is CartPurchaseActionsItemModel && newItem is CartPurchaseActionsItemModel ->
+                true
+            oldItem is CartEmptyItemModel && newItem is CartEmptyItemModel ->
                 true
             else -> false
         }

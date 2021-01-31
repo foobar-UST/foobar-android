@@ -33,8 +33,8 @@ class SellerSectionsAdapter(
                 SellerSectionsItemUpcomingBinding.inflate(inflater, parent, false)
             )
 
-            R.layout.subtitle_item -> SellerSectionsSubtitleViewHolder(
-                SubtitleItemBinding.inflate(inflater, parent, false)
+            R.layout.subtitle_large_item -> SellerSectionsSubtitleViewHolder(
+                SubtitleLargeItemBinding.inflate(inflater, parent, false)
             )
 
             else -> throw IllegalStateException("Unknown view type $viewType")
@@ -71,7 +71,7 @@ class SellerSectionsAdapter(
                     R.layout.seller_sections_item_upcoming
                 }
             }
-            is SellerSectionsSubtitleModel -> R.layout.subtitle_item
+            is SellerSectionsSubtitleModel -> R.layout.subtitle_large_item
             else -> throw IllegalStateException("Unknown view type at: $position")
         }
     }
@@ -92,7 +92,7 @@ sealed class SellerSectionsViewHolder(itemView: View) : RecyclerView.ViewHolder(
     ) : SellerSectionsViewHolder(binding.root)
 
     class SellerSectionsSubtitleViewHolder(
-        val binding: SubtitleItemBinding
+        val binding: SubtitleLargeItemBinding
     ) : SellerSectionsViewHolder(binding.root)
 }
 

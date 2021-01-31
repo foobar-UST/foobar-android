@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="deliveredItemModel"
+            type="com.foobarust.android.order.OrderRecentListModel.OrderRecentDeliveredItemModel" />
+        <variable
+            name="listener"
+            type="com.foobarust.android.order.OrderRecentAdapter.OrderRecentAdapterListener" />
+        <import type="com.foobarust.android.R"/>
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:onClick="@{() -> listener.onOrderClicked(deliveredItemModel.orderId)}"
+        app:cardElevation="@dimen/elevation_none"
+        app:cardCornerRadius="0dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/spacing_large">
+
+            <TextView
+                android:id="@+id/identifier_title_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{deliveredItemModel.orderIdentifierTitle}"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="[#EA2PE] Order is delivered!"/>
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/order_image_view"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:scaleType="centerCrop"
+                app:shapeAppearance="@style/ShapeAppearance.Foobar.SmallComponent"
+                app:glideUrl="@{deliveredItemModel.orderImageUrl}"
+                app:glideCenterCrop="@{true}"
+                app:glidePlaceholder="@{R.drawable.placeholder_card}"
+                app:layout_constraintTop_toBottomOf="@id/identifier_title_text_view"
+                app:goneIf="@{deliveredItemModel.orderImageUrl == null}"/>
+
+            <TextView
+                android:id="@+id/order_title_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:text="@{deliveredItemModel.orderTitle}"
+                android:textColor="@color/material_on_surface_emphasis_medium"
+                android:textAppearance="?attr/textAppearanceCaption"
+                android:gravity="center_vertical"
+                android:drawablePadding="@dimen/spacing_large"
+                android:maxLines="1"
+                app:drawableStartCompat="@drawable/ic_fastfood"
+                app:drawableTint="@color/material_on_surface_emphasis_medium"
+                app:layout_constraintTop_toBottomOf="@id/order_image_view"
+                app:drawableFitVertical="@{true}"
+                tools:text="[On-Campus] Happy Restaurant"/>
+
+            <TextView
+                android:id="@+id/rate_order_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:text="@string/order_recent_delivered_item_rate_order"
+                android:textColor="?attr/colorPrimary"
+                android:textAppearance="?attr/textAppearanceButton"
+                android:gravity="center_vertical"
+                android:drawablePadding="@dimen/spacing_xmedium"
+                app:drawableStartCompat="@drawable/ic_arrow_forward"
+                app:drawableTint="?attr/colorPrimary"
+                app:layout_constraintTop_toBottomOf="@id/order_title_text_view"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</layout>

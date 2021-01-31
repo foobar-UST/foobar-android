@@ -41,7 +41,7 @@
             android:drawablePadding="@dimen/spacing_xmedium"
             app:drawableStartCompat="@drawable/ic_local_offer"
             app:drawableTint="@color/material_on_surface_emphasis_medium"
-            app:drawableScale="@{1.0}"
+            app:drawableFitVertical="@{true}"
             app:layout_constraintTop_toBottomOf="@id/title_text_view"
             app:layout_constraintStart_toStartOf="parent"
             tools:text="@string/seller_item_detail_format_item_count"/>
@@ -53,7 +53,6 @@
             android:text="@{@string/seller_item_data_format_price(infoItemModel.itemPrice)}"
             android:textAppearance="?attr/textAppearanceHeadline6"
             android:textColor="?attr/colorSecondary"
-            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="$ 56.0"/>

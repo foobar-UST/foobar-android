@@ -1,182 +1,85 @@
 package com.foobarust.android.utils
 
 import android.content.Context
-import android.content.res.ColorStateList
-import android.graphics.Typeface.BOLD
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
-import android.text.Spannable
-import android.text.SpannableStringBuilder
-import android.text.TextPaint
-import android.text.method.LinkMovementMethod
-import android.text.style.ClickableSpan
-import android.text.style.ForegroundColorSpan
-import android.text.style.StyleSpan
 import android.view.View
 import android.view.View.*
 import android.view.ViewGroup
 import android.view.WindowInsets
 import android.view.animation.AnimationUtils
-import android.view.inputmethod.EditorInfo
-import android.widget.*
+import android.widget.ImageView
+import android.widget.Spinner
+import android.widget.TextView
 import androidx.annotation.AnimRes
-import androidx.annotation.AttrRes
 import androidx.annotation.DrawableRes
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
-import androidx.core.view.updatePadding
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.foobarust.android.R
 import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.progressindicator.LinearProgressIndicator
-import com.google.android.material.shape.MaterialShapeDrawable
-import kotlin.math.round
 
-interface OnTextViewClickableSpanListener {
-    fun onClickableSpanEndClicked(view: View)
+/**
+ * Expand the [AppBarLayout].
+ * @param expand the expand condition.
+ */
+@BindingAdapter("expandIf")
+fun AppBarLayout.bindExpandIf(expand: Boolean) {
+    setExpanded(expand)
 }
 
-@BindingAdapter("collapseIf")
-fun AppBarLayout.bindCollapseIf(collapse: Boolean) {
-    setExpanded(!collapse)
-}
-
-@BindingAdapter("clearFocusWhenDone")
-fun EditText.bindClearFocusWhenDone(clear: Boolean) {
-    if (!clear) return
-    setOnEditorActionListener { view, actionId, event ->
-        if (actionId == EditorInfo.IME_ACTION_DONE) {
-            clearFocus()
-        }
-        return@setOnEditorActionListener false
-    }
-}
-
-@BindingAdapter("attachAnim")
-fun View.bindAttachAnimation(@AnimRes animRes: Int?) {
+/**
+ * Start view animation when the view is loaded.
+ * @param animRes the resource id of the animation.
+ */
+@BindingAdapter("startAnim")
+fun View.bindStartAnimation(@AnimRes animRes: Int?) {
     if (animRes == null) return
     val animation = AnimationUtils.loadAnimation(context, animRes)
     startAnimation(animation)
 }
 
+/**
+ * Hide progress indicator in a given condition.
+ * @param hide the hide condition.
+ */
 @BindingAdapter("progressHideIf")
 fun LinearProgressIndicator.bindProgressHideIf(hide: Boolean) {
     if (hide) hide() else show()
 }
 
-@BindingAdapter("bottomSheetBackground")
-fun ViewGroup.bindBottomSheetBackground(
-    bottomSheetBackground: Boolean
-) {
-    if (!bottomSheetBackground) return
-
-    background = MaterialShapeDrawable(
-        context,
-        null,
-        R.attr.bottomSheetStyle,
-        0
-    ).apply {
-        fillColor = ColorStateList.valueOf(
-            context.themeColor(R.attr.colorSurface)
-        )
-        elevation = resources.getDimension(R.dimen.elevation_xmedium)
-        initializeElevationOverlay(context)
-    }
-}
-
-@BindingAdapter("bottomSheetHideIf")
-fun ViewGroup.bottomSheetHideIf(hide: Boolean) {
-    BottomSheetBehavior.from(this).run {
-        isHideable = true
-        state = if (hide) BottomSheetBehavior.STATE_HIDDEN else BottomSheetBehavior.STATE_COLLAPSED
-        isHideable = false
-    }
-}
-
-@BindingAdapter(
-    "marginTopAttr",
-    "marginBottomAttr",
-    "marginStartAttr",
-    "marginEndAttr",
-    requireAll = false
-)
-fun View.bindMargin(
-    @AttrRes marginTopAttrRes: Int?,
-    @AttrRes marginBottomAttrRes: Int?,
-    @AttrRes marginStartAttrRes: Int?,
-    @AttrRes marginEndAttrRes: Int?,
-) {
-    val marginTop = marginTopAttrRes?.let { context.themeFloat(it) }
-    val marginBottom = marginBottomAttrRes?.let { context.themeFloat(it) }
-    val marginStart = marginStartAttrRes?.let { context.themeFloat(it) }
-    val marginEnd = marginEndAttrRes?.let { context.themeFloat(it) }
-
-    bindMargin(marginTop, marginBottom, marginStart, marginEnd)
-}
-
-@BindingAdapter(
-    "marginTop",
-    "marginBottom",
-    "marginStart",
-    "marginEnd",
-    requireAll = false
-)
-fun View.bindMargin(
-    marginTop: Float?,
-    marginBottom: Float?,
-    marginStart: Float?,
-    marginEnd: Float?
-) {
-    val layoutParams = layoutParams as ViewGroup.MarginLayoutParams
-
-    marginTop?.let { layoutParams.topMargin += it.toInt() }
-    marginBottom?.let { layoutParams.bottomMargin += it.toInt() }
-    marginStart?.let { layoutParams.marginStart += it.toInt() }
-    marginEnd?.let { layoutParams.marginEnd += it.toInt() }
-
-    setLayoutParams(layoutParams)
-}
-
-@BindingAdapter(
-    "paddingTop",
-    "paddingBottom",
-    "paddingStart",
-    "paddingEnd",
-    requireAll = false
-)
-fun View.bindPadding(
-    paddingTop: Float? = null,
-    paddingBottom: Float? = null,
-    paddingStart: Float? = null,
-    paddingEnd: Float? = null
-) {
-    paddingTop?.let { updatePadding(top = (getPaddingTop() + it).toInt()) }
-    paddingBottom?.let { updatePadding(bottom = (getPaddingBottom() + it).toInt()) }
-    paddingStart?.let { updatePadding(left = (paddingLeft + it).toInt()) }
-    paddingEnd?.let { updatePadding(right = (paddingRight + it).toInt()) }
-}
-
+/**
+ * Set the [MaterialButton] icon from a given [Drawable] resource.
+ * @param iconRes the resource id of the drawable.
+ */
 @BindingAdapter("iconRes")
-fun MaterialButton.bindIconRes(@DrawableRes drawableRes: Int?) {
-    if (drawableRes == null) return
-    setIconResource(drawableRes)
+fun MaterialButton.bindIconRes(@DrawableRes iconRes: Int?) {
+    if (iconRes == null) return
+    setIconResource(iconRes)
 }
 
+/**
+ * Control the visibility of the [FloatingActionButton].
+ * @param show the condition for showing the button.
+ */
 @BindingAdapter("showIf")
 fun FloatingActionButton.showIf(show: Boolean) {
     if (show) show() else hide()
 }
 
+/**
+ * Request focus for a specific view.
+ * @param focus the condition for requesting focus.
+ */
 @BindingAdapter("requestFocus")
-fun View.bindRequestFocus(requestFocus: Boolean) {
-    if (requestFocus) requestFocus()
+fun View.bindRequestFocus(focus: Boolean) {
+    if (focus) requestFocus()
 }
 
 @BindingAdapter("popupElevationOverlay")
@@ -189,197 +92,57 @@ fun Spinner.bindPopupElevationOverlay(popupElevationOverlay: Float) {
     )
 }
 
+/**
+ * Set the [Drawable]s in a [TextView] using resource ids.
+ * @param drawableLeft the resource id of the left drawable.
+ * @param drawableTop the resource id of the top drawable.
+ * @param drawableRight the resource id of the right drawable.
+ * @param drawableBottom the resource id of the bottom drawable.
+ */
 @BindingAdapter(
-    "drawableScale"
+    "drawableLeft",
+    "drawableTop",
+    "drawableRight",
+    "drawableBottom",
+    requireAll = false
 )
-fun TextView.bindDrawableScale(drawableScale: Double?) {
-    if (drawableScale == null) return
+fun TextView.bindDrawables(
+    @DrawableRes drawableLeft: Int? = null,
+    @DrawableRes drawableTop: Int? = null,
+    @DrawableRes drawableRight: Int? = null,
+    @DrawableRes drawableBottom: Int? = null
+) {
+    setCompoundDrawablesWithIntrinsicBounds(
+        context.getDrawableOrNull(drawableLeft),
+        context.getDrawableOrNull(drawableTop),
+        context.getDrawableOrNull(drawableRight),
+        context.getDrawableOrNull(drawableBottom)
+    )
+}
 
-    val drawableSize = round(lineHeight * drawableScale).toInt()
+@BindingAdapter(
+    "drawableFitVertical"
+)
+fun TextView.bindDrawableFitVertical(fitVertical: Boolean) {
+    if (!fitVertical) return
+
+    val drawableSize = lineHeight
     val updatedDrawables = compoundDrawablesRelative.map { drawable: Drawable? ->
         drawable?.setBounds(0, 0, drawableSize, drawableSize)
         drawable
     }
 
     setCompoundDrawables(
-        updatedDrawables[0],        // left
-        updatedDrawables[1],        // top
-        updatedDrawables[2],        // right
-        updatedDrawables[3]         // bottom
+        updatedDrawables[0],        /* left */
+        updatedDrawables[1],        /* top */
+        updatedDrawables[2],        /* right */
+        updatedDrawables[3]         /* bottom */
     )
 }
-
-@BindingAdapter(
-    "drawableLeft",
-    "drawableRight",
-    "drawableTop",
-    "drawableBottom",
-    requireAll = false
-)
-fun TextView.bindDrawableRes(
-    @DrawableRes drawableStartRes: Int?,
-    @DrawableRes drawableEndRes: Int?,
-    @DrawableRes drawableTopRes: Int?,
-    @DrawableRes drawableBottomRes: Int?,
-) {
-    val drawables = listOf(
-        drawableStartRes, drawableEndRes, drawableTopRes, drawableBottomRes
-    ).map {
-        context.getDrawableOrNull(it)
-    }
-
-    setCompoundDrawables(
-        drawables[0],
-        drawables[1],
-        drawables[2],
-        drawables[3]
-    )
-}
-
-@BindingAdapter("linkMovementMethod")
-fun TextView.bindLinkMovementMethod(
-    enableLink: Boolean
-) {
-    if (enableLink) {
-        movementMethod = LinkMovementMethod.getInstance()
-    }
-}
-
-@BindingAdapter(
-    "drawableStart",
-    "drawableLeft",
-    "drawableTop",
-    "drawableEnd",
-    "drawableRight",
-    "drawableBottom",
-    requireAll = false
-)
-fun TextView.bindDrawables(
-    @DrawableRes drawableStart: Int? = null,
-    @DrawableRes drawableLeft: Int? = null,
-    @DrawableRes drawableTop: Int? = null,
-    @DrawableRes drawableEnd: Int? = null,
-    @DrawableRes drawableRight: Int? = null,
-    @DrawableRes drawableBottom: Int? = null
-) {
-    setCompoundDrawablesWithIntrinsicBounds(
-        context.getDrawableOrNull(drawableStart ?: drawableLeft),
-        context.getDrawableOrNull(drawableTop),
-        context.getDrawableOrNull(drawableEnd ?: drawableRight),
-        context.getDrawableOrNull(drawableBottom)
-    )
-}
-
-@BindingAdapter(
-    "colorSpanStart",
-    "colorSpanEnd",
-    "colorSpanBold",
-    "colorSpanColor",
-    requireAll = false
-)
-fun TextView.bindColorSpan(
-    spanStart: String? = null,
-    spanEnd: String? = null,
-    spanBold: Boolean = false,
-    @AttrRes spanColor: Int? = null
-) {
-    if (text.isNullOrBlank()) return
-
-    val color = if (spanColor != null) {
-        context.themeColor(spanColor)
-    } else {
-        context.themeColor(R.attr.colorPrimary)
-    }
-    val builder = SpannableStringBuilder(text)
-    val styles = mutableListOf<Any>(ForegroundColorSpan(color))
-
-    if (spanBold) styles.add(StyleSpan(BOLD))
-
-    spanStart?.let { start ->
-        builder.insert(0, start)
-        styles.forEach { style ->
-            builder.setSpan(
-                style,
-                0,
-                spanStart.length,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-        }
-    }
-
-    spanEnd?.let { end ->
-        builder.insert(0, end)
-        styles.forEach { style ->
-            builder.setSpan(
-                style,
-                builder.length - end.length,
-                builder.length,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-        }
-    }
-
-    setText(builder, TextView.BufferType.SPANNABLE)
-}
-
-@BindingAdapter(
-    "clickableSpanStart",
-    "clickableSpanEnd",
-    "clickableSpanListener",
-    "clickableSpanBold",
-    requireAll = false
-)
-fun TextView.bindClickableSpan(
-    spanStart: String? = null,
-    spanEnd: String? = null,
-    spanListener: OnTextViewClickableSpanListener? = null,
-    spanBold: Boolean = false
-) {
-    if (text.isNullOrBlank()) return
-    if (spanListener == null) return
-
-    val builder = SpannableStringBuilder(text)
-    val clickableSpan = object : ClickableSpan() {
-        override fun onClick(view: View) {
-            spanListener.onClickableSpanEndClicked(view)
-            view.invalidate()
-        }
-
-        override fun updateDrawState(textPaint: TextPaint) {
-            textPaint.color = context.themeColor(R.attr.colorPrimary)
-            if (spanBold) textPaint.isFakeBoldText = true
-        }
-    }
-
-    spanStart?.let {
-        builder.insert(0, it)
-        builder.setSpan(
-            clickableSpan,
-            0,
-            it.length,
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-    }
-
-    spanEnd?.let {
-        builder.append(it)
-        builder.setSpan(
-            clickableSpan,
-            builder.length - it.length,
-            builder.length,
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-    }
-
-    movementMethod = LinkMovementMethod.getInstance()
-    setText(builder, TextView.BufferType.SPANNABLE)
-}
-
 
 /*
 /**
  * Set a Chip's leading icon using Glide.
- *
  * Optionally set the image to be center cropped and/or cropped to a circle.
  */
 @BindingAdapter(
@@ -423,56 +186,13 @@ fun Chip.bindGlideChipSrc(
         resources.getDimensionPixelSize(R.dimen.chip_icon_diameter)
     )
 }
-*/
 
-@BindingAdapter(
-    "glideUrl",
-    "glideCenterCrop",
-    "glideCircularCrop",
-    "glidePlaceholder",
-    requireAll = false
-)
-fun ImageButton.bindGlideUrl(
-    imageUrl: String?,
-    centerCrop: Boolean = false,
-    circularCrop: Boolean = false,
-    @DrawableRes placeholder: Int? = null
-) {
-    if (imageUrl == null) {
-        bindGlideSrc(placeholder, centerCrop, circularCrop)
-        return
-    }
+ */
 
-    createGlideRequest(
-        context,
-        imageUrl,
-        centerCrop,
-        circularCrop,
-        placeholder
-    ).into(this)
-}
-
-@BindingAdapter(
-    "glideSrc",
-    "glideCenterCrop",
-    "glideCircularCrop",
-    requireAll = false
-)
-fun ImageButton.bindGlideSrc(
-    @DrawableRes drawableRes: Int?,
-    centerCrop: Boolean = false,
-    circularCrop: Boolean = false
-) {
-    if (drawableRes == null) return
-
-    createGlideRequest(
-        context,
-        drawableRes,
-        centerCrop,
-        circularCrop
-    ).into(this)
-}
-
+/**
+ * Set the [ImageView] using a [Drawable] resource.
+ * @param drawableRes the resource id of the drawable.
+ */
 @BindingAdapter(
     "src"
 )
@@ -480,11 +200,18 @@ fun ImageView.bindSrc(
     @DrawableRes drawableRes: Int?
 ) {
     if (drawableRes == null) return
-
     val drawable = context.getDrawableOrNull(drawableRes)
     drawable?.let { setImageDrawable(it) }
 }
 
+/**
+ * Set the [ImageView] by loading an image using a given url.
+ * @param imageUrl the url of the image.
+ * @param centerCrop whether to apply center cropping the image.
+ * @param circularCrop whether to apply circular cropping to the image.
+ * @param placeholder the resource id of the fallback drawable if there is
+ * network error.
+ */
 @BindingAdapter(
     "glideUrl",
     "glideCenterCrop",
@@ -498,6 +225,7 @@ fun ImageView.bindGlideUrl(
     circularCrop: Boolean = false,
     @DrawableRes placeholder: Int? = null
 ) {
+    // Use local drawable if the given url is null.
     if (imageUrl == null) {
         bindGlideSrc(placeholder, centerCrop, circularCrop)
         return
@@ -512,6 +240,12 @@ fun ImageView.bindGlideUrl(
     ).into(this)
 }
 
+/**
+ * Set the [ImageView] by loading an image using a [Drawable] resource.
+ * @param drawableRes the resource id of the drawable.
+ * @param centerCrop whether to apply center cropping the image.
+ * @param circularCrop whether to apply circular cropping to the image.
+ */
 @BindingAdapter(
     "glideSrc",
     "glideCenterCrop",
@@ -535,11 +269,11 @@ fun ImageView.bindGlideSrc(
 
 private fun createGlideRequest(
     context: Context,
-    @DrawableRes src: Int,
+    @DrawableRes drawableRes: Int,
     centerCrop: Boolean,
     circularCrop: Boolean
 ): RequestBuilder<Drawable> {
-    val req = Glide.with(context).load(src)
+    val req = Glide.with(context).load(drawableRes)
         .transition(DrawableTransitionOptions.withCrossFade())
 
     if (centerCrop) req.centerCrop()

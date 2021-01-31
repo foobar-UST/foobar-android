@@ -27,12 +27,17 @@
         <item name="android:textColor">@color/material_on_surface_emphasis_medium</item>
     </style>
     
-    <style name="Widget.Foobar.TabLayout.Dot" parent="Widget.MaterialComponents.TabLayout">
+    <style name="Widget.Foobar.TabLayout.Stepper" parent="Widget.MaterialComponents.TabLayout">
         <item name="tabBackground">@drawable/tab_pager_selector</item>
         <item name="tabGravity">center</item>
         <item name="tabIndicatorHeight">0dp</item>
         <item name="tabRippleColor">@null</item>
         <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="Widget.Foobar.TabLayout" parent="Widget.MaterialComponents.TabLayout">
+        <item name="android:background">?android:attr/colorBackground</item>
+        <item name="tabIndicatorFullWidth">false</item>
     </style>
     
     <style name="Widget.Foobar.BottomSheet" parent="Widget.MaterialComponents.BottomSheet">

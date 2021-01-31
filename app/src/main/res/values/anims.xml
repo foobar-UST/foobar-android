@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="fullscreen_dialog_animation" >
+    <style name="Animation"/>
+    <style name="Animation.Foobar"/>
+
+    <style name="Animation.Foobar.FullScreenDialogFragment">
         <item name="android:windowEnterAnimation">@anim/slide_in</item>
         <item name="android:windowExitAnimation">@anim/slide_out</item>
     </style>
+
+    <style name="Animation.Foobar.FullScreenDialogFragment.Restore">
+        <item name="android:windowEnterAnimation">@null</item>
+    </style>
+
 </resources>

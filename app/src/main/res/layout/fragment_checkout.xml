@@ -31,7 +31,6 @@
                 app:expandedTitleGravity="top"
                 app:expandedTitleMarginTop="?attr/actionBarSize"
                 app:expandedTitleTextAppearance="?attr/textAppearanceHeadline5"
-                app:collapsedTitleTextAppearance="?attr/textAppearanceSubtitle1"
                 app:maxLines="2"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
                 tools:title="Gold Rice Bowl Delicious Food 金飯碗美食">

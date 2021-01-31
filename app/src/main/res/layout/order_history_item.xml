@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="historyItemModel"
+            type="com.foobarust.android.order.OrderHistoryListModel.OrderHistoryItemModel" />
+        <variable
+            name="listener"
+            type="com.foobarust.android.order.OrderHistoryAdapter.OrderHistoryAdapterListener" />
+        <import type="com.foobarust.android.R"/>
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/spacing_medium"
+        android:clickable="true"
+        android:focusable="true"
+        android:onClick="@{() -> listener.onOrderClicked(historyItemModel.orderId)}"
+        app:cardElevation="@dimen/elevation_none"
+        app:cardCornerRadius="0dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/spacing_large">
+
+            <TextView
+                android:id="@+id/identifier_title_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{historyItemModel.orderIdentifierTitle}"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:lineSpacingMultiplier="1.2"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="[#EA2PE] Happy Restaurant"/>
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/order_image_view"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:scaleType="centerCrop"
+                app:shapeAppearance="@style/ShapeAppearance.Foobar.SmallComponent"
+                app:glideUrl="@{historyItemModel.orderImageUrl}"
+                app:glideCenterCrop="@{true}"
+                app:glidePlaceholder="@{R.drawable.placeholder_card}"
+                app:layout_constraintTop_toBottomOf="@id/identifier_title_text_view"
+                app:goneIf="@{historyItemModel.orderImageUrl == null}"/>
+
+            <TextView
+                android:id="@+id/delivery_date_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:text="@{historyItemModel.orderDeliveryDate}"
+                android:textColor="@color/material_on_surface_emphasis_medium"
+                android:textAppearance="?attr/textAppearanceCaption"
+                android:gravity="center_vertical"
+                android:drawablePadding="@dimen/spacing_large"
+                android:maxLines="1"
+                app:drawableStartCompat="@drawable/ic_today"
+                app:drawableTint="@color/material_on_surface_emphasis_medium"
+                app:layout_constraintTop_toBottomOf="@id/order_image_view"
+                app:drawableFitVertical="@{true}"
+                tools:text="2020-01-27 15:30" />
+
+            <TextView
+                android:id="@+id/total_cost_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_xmedium"
+                android:text="@{historyItemModel.orderTotalCost}"
+                android:textColor="@color/material_on_surface_emphasis_medium"
+                android:textAppearance="?attr/textAppearanceCaption"
+                android:gravity="center_vertical"
+                android:drawablePadding="@dimen/spacing_large"
+                android:maxLines="1"
+                android:ellipsize="end"
+                app:drawableStartCompat="@drawable/ic_attach_money"
+                app:drawableTint="@color/material_on_surface_emphasis_medium"
+                app:layout_constraintTop_toBottomOf="@id/delivery_date_text_view"
+                app:drawableFitVertical="@{true}"
+                tools:text="HKD $56.8" />
+
+            <TextView
+                android:id="@+id/show_detail_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:text="@string/order_recent_item_view_order"
+                android:textColor="?attr/colorPrimary"
+                android:textAppearance="?attr/textAppearanceButton"
+                android:gravity="center_vertical"
+                android:drawablePadding="@dimen/spacing_xmedium"
+                app:drawableStartCompat="@drawable/ic_arrow_forward"
+                app:drawableTint="?attr/colorPrimary"
+                app:layout_constraintTop_toBottomOf="@id/total_cost_text_view"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</layout>

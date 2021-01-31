@@ -54,8 +54,8 @@ class SellerSectionDetailAdapter(
             R.layout.seller_section_detail_more_sections_item -> SellerSectionDetailMoreSectionsItemViewHolder(
                 SellerSectionDetailMoreSectionsItemBinding.inflate(inflater, parent, false)
             )
-            R.layout.subtitle_item -> SellerSectionDetailSubtitleItemViewHolder(
-                SubtitleItemBinding.inflate(inflater, parent, false)
+            R.layout.subtitle_large_item -> SellerSectionDetailSubtitleItemViewHolder(
+                SubtitleLargeItemBinding.inflate(inflater, parent, false)
             )
             else -> throw IllegalStateException("Unknown view type $viewType")
         }
@@ -169,7 +169,7 @@ class SellerSectionDetailAdapter(
             is SellerSectionDetailSectionInfoItemModel -> R.layout.seller_section_detail_section_info_item
             is SellerSectionDetailSellerInfoItemModel -> R.layout.seller_section_detail_seller_info_item
             is SellerSectionDetailMoreSectionsItemModel -> R.layout.seller_section_detail_more_sections_item
-            is SellerSectionDetailSubtitleItemModel -> R.layout.subtitle_item
+            is SellerSectionDetailSubtitleItemModel -> R.layout.subtitle_large_item
         }
     }
 
@@ -238,7 +238,7 @@ sealed class SellerSectionDetailViewHolder(itemView: View) : RecyclerView.ViewHo
     ) : SellerSectionDetailViewHolder(binding.root)
 
     data class SellerSectionDetailSubtitleItemViewHolder(
-        val binding: SubtitleItemBinding
+        val binding: SubtitleLargeItemBinding
     ) : SellerSectionDetailViewHolder(binding.root)
 }
 

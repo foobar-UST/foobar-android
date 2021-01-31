@@ -2,8 +2,8 @@ package com.foobarust.data.mappers
 
 import com.foobarust.data.common.Constants.SELLER_SECTION_STATE_AVAILABLE
 import com.foobarust.data.common.Constants.SELLER_SECTION_STATE_DELIVERED
-import com.foobarust.data.common.Constants.SELLER_SECTION_STATE_PENDING
 import com.foobarust.data.common.Constants.SELLER_SECTION_STATE_PREPARING
+import com.foobarust.data.common.Constants.SELLER_SECTION_STATE_PROCESSING
 import com.foobarust.data.common.Constants.SELLER_SECTION_STATE_SHIPPED
 import com.foobarust.data.models.seller.*
 import com.foobarust.domain.models.seller.*
@@ -133,7 +133,7 @@ class SellerMapper @Inject constructor() {
     private fun parseSectionState(sectionState: String): SellerSectionState {
         return when (sectionState) {
             SELLER_SECTION_STATE_AVAILABLE -> SellerSectionState.AVAILABLE
-            SELLER_SECTION_STATE_PENDING -> SellerSectionState.PENDING
+            SELLER_SECTION_STATE_PROCESSING -> SellerSectionState.PROCESSING
             SELLER_SECTION_STATE_PREPARING -> SellerSectionState.PREPARING
             SELLER_SECTION_STATE_SHIPPED -> SellerSectionState.SHIPPED
             SELLER_SECTION_STATE_DELIVERED -> SellerSectionState.DELIVERED

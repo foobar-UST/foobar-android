@@ -16,9 +16,9 @@ import javax.inject.Inject
 class GetSellerItemsUseCase @Inject constructor(
     private val sellerRepository: SellerRepository,
     @IoDispatcher coroutineDispatcher: CoroutineDispatcher
-) : PagingUseCase<GetSellerItemsBasicsParameters, SellerItemBasic>(coroutineDispatcher) {
+) : PagingUseCase<GetSellerItemsParameters, SellerItemBasic>(coroutineDispatcher) {
 
-    override fun execute(parameters: GetSellerItemsBasicsParameters): Flow<PagingData<SellerItemBasic>> {
+    override fun execute(parameters: GetSellerItemsParameters): Flow<PagingData<SellerItemBasic>> {
         return sellerRepository.getSellerItems(
             sellerId = parameters.sellerId,
             catalogId = parameters.catalogId
@@ -26,7 +26,7 @@ class GetSellerItemsUseCase @Inject constructor(
     }
 }
 
-data class GetSellerItemsBasicsParameters(
+data class GetSellerItemsParameters(
     val sellerId: String,
     val catalogId: String
 )

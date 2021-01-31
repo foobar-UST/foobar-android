@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 /**
  * Created by kevin on 8/14/20
  */
+
 @MainThread
 inline fun <reified VM : ViewModel> Fragment.parentViewModels(
     noinline factoryProducer: (() -> ViewModelProvider.Factory)? = null

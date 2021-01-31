@@ -31,9 +31,9 @@ import javax.inject.Inject
  * Created by kevin on 9/27/20
  */
 
-private const val SELLER_BASICS_LIST_PAGE_SIZE = 7
-private const val SELLER_ITEMS_LIST_PAGE_SIZE = 10
-private const val SELLER_SECTIONS_LIST_PAGE_SIZE = 8
+private const val SELLER_BASICS_PAGE_SIZE = 7
+private const val SELLER_ITEMS_PAGE_SIZE = 10
+private const val SELLER_SECTIONS_PAGE_SIZE = 8
 
 class SellerRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
@@ -43,8 +43,8 @@ class SellerRepositoryImpl @Inject constructor(
     override fun getSellerBasics(sellerType: SellerType): Flow<PagingData<SellerBasic>> {
         return Pager(
             config = PagingConfig(
-                initialLoadSize = SELLER_BASICS_LIST_PAGE_SIZE * 2,
-                pageSize = SELLER_BASICS_LIST_PAGE_SIZE,
+                initialLoadSize = SELLER_BASICS_PAGE_SIZE * 2,
+                pageSize = SELLER_BASICS_PAGE_SIZE,
                 enablePlaceholders = false
             ),
             pagingSourceFactory = {
@@ -74,8 +74,8 @@ class SellerRepositoryImpl @Inject constructor(
     override fun getSellerItems(sellerId: String, catalogId: String): Flow<PagingData<SellerItemBasic>> {
         return Pager(
             config = PagingConfig(
-                initialLoadSize = SELLER_ITEMS_LIST_PAGE_SIZE * 2,
-                pageSize = SELLER_ITEMS_LIST_PAGE_SIZE
+                initialLoadSize = SELLER_ITEMS_PAGE_SIZE * 2,
+                pageSize = SELLER_ITEMS_PAGE_SIZE
             ),
             pagingSourceFactory = {
                 SellerItemBasicsPagingSource(firestore, sellerMapper, sellerId, catalogId)
@@ -112,8 +112,8 @@ class SellerRepositoryImpl @Inject constructor(
     override fun getSellerSectionBasics(): Flow<PagingData<SellerSectionBasic>> {
         return Pager(
             config = PagingConfig(
-                initialLoadSize = SELLER_SECTIONS_LIST_PAGE_SIZE * 2,
-                pageSize = SELLER_SECTIONS_LIST_PAGE_SIZE,
+                initialLoadSize = SELLER_SECTIONS_PAGE_SIZE * 2,
+                pageSize = SELLER_SECTIONS_PAGE_SIZE,
                 enablePlaceholders = false
             ),
             pagingSourceFactory = {
@@ -140,8 +140,8 @@ class SellerRepositoryImpl @Inject constructor(
     override fun getSellerSectionBasicsFor(sellerId: String): Flow<PagingData<SellerSectionBasic>> {
         return Pager(
             config = PagingConfig(
-                initialLoadSize = SELLER_SECTIONS_LIST_PAGE_SIZE * 2,
-                pageSize = SELLER_SECTIONS_LIST_PAGE_SIZE,
+                initialLoadSize = SELLER_SECTIONS_PAGE_SIZE * 2,
+                pageSize = SELLER_SECTIONS_PAGE_SIZE,
                 enablePlaceholders = false
             ),
             pagingSourceFactory = {

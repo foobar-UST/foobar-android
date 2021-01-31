@@ -33,7 +33,6 @@ class CheckoutViewModel @Inject constructor() : ViewModel() {
     val showSubmitButton: LiveData<Boolean> = _showSubmitButton
         .asLiveData(viewModelScope.coroutineContext)
 
-
     private val _showUpdatingProgress = MutableStateFlow(false)
     val showUpdatingProgress: LiveData<Boolean> = _showUpdatingProgress
         .asLiveData(viewModelScope.coroutineContext)
@@ -58,6 +57,10 @@ class CheckoutViewModel @Inject constructor() : ViewModel() {
     private val _backPressed = SingleLiveEvent<Unit>()
     val backPressed: LiveData<Unit>
         get() = _backPressed
+
+    private val _dismissCheckoutDialog = SingleLiveEvent<Unit>()
+    val dismissCheckoutDialog: LiveData<Unit>
+        get() = _dismissCheckoutDialog
 
     // Handle submit button click event, will be observed by multiple child fragments
     private val _onClickSubmitButton = MutableSharedFlow<Unit>()
@@ -131,5 +134,14 @@ class CheckoutViewModel @Inject constructor() : ViewModel() {
 
     fun onUpdateSubmitButtonTitle(title: String) {
         _submitButtonTitle.value = title
+    }
+
+    fun onDismissCheckoutDialog() {
+        _dismissCheckoutDialog.value = Unit
+    }
+
+    fun onClearPreviousOrderData() {
+        savedOrderNotes = null
+        savedPaymentIdentifier = null
     }
 }

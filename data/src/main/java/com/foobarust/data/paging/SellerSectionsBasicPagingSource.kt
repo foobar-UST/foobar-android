@@ -1,6 +1,7 @@
 package com.foobarust.data.paging
 
 import androidx.paging.PagingSource
+import androidx.paging.PagingState
 import com.foobarust.data.common.Constants.SELLER_SECTIONS_BASIC_SUB_COLLECTION
 import com.foobarust.data.common.Constants.SELLER_SECTION_AVAILABLE_FIELD
 import com.foobarust.data.common.Constants.SELLER_SECTION_CUTOFF_TIME_FIELD
@@ -27,26 +28,27 @@ class SellerSectionsBasicPagingSource(
     private val sellerId: String? = null
 ) : PagingSource<Query, SellerSectionBasic>() {
 
+    private var initialPageQuery: Query? = null
+
     override suspend fun load(params: LoadParams<Query>): LoadResult<Query, SellerSectionBasic> {
         return try {
-            val requestQuery = firestore.collectionGroup(SELLER_SECTIONS_BASIC_SUB_COLLECTION)
+            initialPageQuery = initialPageQuery ?: firestore.collectionGroup(SELLER_SECTIONS_BASIC_SUB_COLLECTION)
                 .whereEqualTo(SELLER_SECTION_AVAILABLE_FIELD, true)
                 .whereGreaterThan(SELLER_SECTION_CUTOFF_TIME_FIELD, Date())
 
             if (sellerId != null) {
-                requestQuery.whereEqualTo(SELLER_SECTION_SELLER_ID_FIELD, sellerId)
+                initialPageQuery!!.whereEqualTo(SELLER_SECTION_SELLER_ID_FIELD, sellerId)
             }
 
-            requestQuery
-                .orderBy(SELLER_SECTION_CUTOFF_TIME_FIELD, Query.Direction.ASCENDING)
+            initialPageQuery!!.orderBy(SELLER_SECTION_CUTOFF_TIME_FIELD, Query.Direction.ASCENDING)
                 .orderBy(SELLER_SECTION_SELLER_NAME_FIELD, Query.Direction.ASCENDING)
                 .limit(params.loadSize.toLong())
 
-            val currentPageQuery = params.key ?: requestQuery
+            val currentPageQuery = params.key ?: initialPageQuery!!
             val currentPageData = currentPageQuery.get().await()
             val nextPageQuery = if (!currentPageData.isEmpty) {
                 val lastVisibleItem = currentPageData.documents[currentPageData.size() - 1]
-                requestQuery.startAfter(lastVisibleItem)
+                initialPageQuery!!.startAfter(lastVisibleItem)
             } else {
                 null
             }
@@ -77,4 +79,6 @@ class SellerSectionsBasicPagingSource(
         formatter.timeZone = TimeZone.getTimeZone("Asia/Hong_Kong")
         return formatter.format(Date())
     }
+
+    override fun getRefreshKey(state: PagingState<Query, SellerSectionBasic>): Query? = initialPageQuery
 }

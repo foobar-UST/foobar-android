@@ -40,8 +40,8 @@
         android:name="com.foobarust.android.checkout.OrderPlacingFragment"
         tools:layout="@layout/fragment_order_placing">
         <action
-            android:id="@+id/action_orderPlacingFragment_to_orderSuccessFragment"
-            app:destination="@id/orderSuccessFragment"
+            android:id="@+id/action_orderPlacingFragment_to_orderResultFragment"
+            app:destination="@id/orderResultFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
@@ -49,10 +49,23 @@
             app:popUpTo="@id/navigation_checkout" />
     </fragment>
 
-    <!-- OrderSuccessFragment -->
+    <!-- OrderCompleteFragment -->
     <fragment
-        android:id="@+id/orderSuccessFragment"
-        android:name="com.foobarust.android.checkout.OrderSuccessFragment"
-        tools:layout="@layout/fragment_order_success"/>
+        android:id="@+id/orderResultFragment"
+        android:name="com.foobarust.android.checkout.OrderResultFragment"
+        tools:layout="@layout/fragment_order_result">
+        <argument
+            android:name="property"
+            app:argType="com.foobarust.android.checkout.OrderResultProperty"/>
+        <action
+            android:id="@+id/action_orderResultFragment_to_cartFragment"
+            app:destination="@id/cartFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/cartFragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
 
 </navigation>

@@ -39,8 +39,22 @@ class ProfileViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     val profileListModels: LiveData<List<ProfileListModel>> = getUserDetailUseCase(Unit)
-        .map { it.getSuccessDataOr(null) }
-        .map { buildProfileListModels(userDetail = it) }
+        .map {
+            when (it) {
+                is Resource.Success -> {
+                    setUiState(UiState.Success)
+                    buildProfileListModels(userDetail = it.data)
+                }
+                is Resource.Error -> {
+                    setUiState(UiState.Error(it.message))
+                    emptyList()
+                }
+                is Resource.Loading -> {
+                    setUiState(UiState.Loading)
+                    emptyList()
+                }
+            }
+        }
         .asLiveData(viewModelScope.coroutineContext)
 
     private val _navigateToTextInput = SingleLiveEvent<TextInputProperty>()

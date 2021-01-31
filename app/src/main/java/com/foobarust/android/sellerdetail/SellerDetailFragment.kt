@@ -1,5 +1,6 @@
 package com.foobarust.android.sellerdetail
 
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -90,12 +91,11 @@ class SellerDetailFragment : FullScreenDialogFragment() {
             showShortToast(it)
         }
 
-
-        // Show toolbar title only when collapsed
+        // Show toolbar title when collapsed
         viewLifecycleOwner.lifecycleScope.launch {
-            binding.appBarLayout.doOnOffsetChanged().collect {
-                viewModel.onToolbarCollapsed(
-                    isCollapsed = it == AppBarStateChangedListener.State.COLLAPSED
+            binding.appBarLayout.state().collect { state ->
+                viewModel.onToolbarScrollStateChanged(
+                    isCollapsed = state == AppBarLayoutState.COLLAPSED
                 )
             }
         }
@@ -119,7 +119,7 @@ class SellerDetailFragment : FullScreenDialogFragment() {
         viewModel.detailActions.observe(viewLifecycleOwner) { detailActions ->
             val chips = detailActions.map { action ->
                 Chip(requireContext(), null, R.attr.actionChipStyle).apply {
-                    hide()
+                    visibility = View.GONE
                     text = action.title
                     chipIconTint = requireContext().getColorStateListFrom(action.colorRes)
                     action.drawableRes?.let {
@@ -128,7 +128,7 @@ class SellerDetailFragment : FullScreenDialogFragment() {
                     setOnClickListener { setupChipActions(action.id) }
                     // Fix chip flicker when changing typeface
                     // See: https://github.com/material-components/material-components-android/issues/675
-                    post { show() }
+                    post { visibility = View.VISIBLE }
                 }
             }
 
@@ -182,9 +182,9 @@ class SellerDetailFragment : FullScreenDialogFragment() {
             }
 
             background = if (sellerDetail.online) {
-                context.getColorDrawable(context.themeColor(R.attr.colorSecondaryVariant))
+                ColorDrawable(context.themeColor(R.attr.colorSecondaryVariant))
             } else {
-                context.getColorDrawable(context.getColorCompat(R.color.grey_disabled))
+                ColorDrawable(context.getColorCompat(R.color.grey_disabled))
             }
         }
     }

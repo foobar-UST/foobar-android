@@ -53,18 +53,18 @@ class SellerOffCampusFragment : Fragment(),
         }
 
         // Setup off-campus list
-        val concatAdapter = ConcatAdapter()
         val promotionAdapter = PromotionAdapter(
             lifecycle = viewLifecycleOwner.lifecycle,
             advertiseAdapterListener = this,
             suggestAdapterListener = this
         )
         val sectionsAdapter = SellerSectionsAdapter(this)
-
-        concatAdapter.addAdapter(promotionAdapter)
-        concatAdapter.addAdapter(sectionsAdapter.withLoadStateFooter(
-            footer = PagingLoadStateAdapter { sectionsAdapter.retry() }
-        ))
+        val concatAdapter = ConcatAdapter(
+            promotionAdapter,
+            sectionsAdapter.withLoadStateFooter(
+                footer = PagingLoadStateAdapter { sectionsAdapter.retry() }
+            )
+        )
 
         binding.recyclerView.run {
             adapter = concatAdapter
@@ -110,8 +110,8 @@ class SellerOffCampusFragment : Fragment(),
 
         // Scroll to top when the tab is reselected
         viewLifecycleOwner.lifecycleScope.launch {
-            sellerViewModel.scrollToTop.collect { pagePosition ->
-                if (pagePosition == 1) {
+            sellerViewModel.pageScrollToTop.collect { page ->
+                if (page == TAG) {
                     binding.recyclerView.smoothScrollToTop()
                 }
             }
@@ -141,6 +141,11 @@ class SellerOffCampusFragment : Fragment(),
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.frameLayout.layoutTransition.setAnimateParentHierarchy(false)
+    }
+
     override fun onSellerSectionItemClicked(sectionBasic: SellerSectionBasic) {
         sellerViewModel.onNavigateToSellerSection(sectionBasic)
     }
@@ -163,5 +168,9 @@ class SellerOffCampusFragment : Fragment(),
         viewLifecycleOwner.lifecycleScope.launch {
             promotionAdapter.scrollToTopWhenFirstItemInserted(binding.recyclerView)
         }
+    }
+
+    companion object {
+        const val TAG = "SellerOffCampusFragment"
     }
 }

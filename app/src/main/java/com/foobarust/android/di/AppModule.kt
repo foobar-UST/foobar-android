@@ -3,6 +3,7 @@ package com.foobarust.android.di
 import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.PackageManager
+import android.net.ConnectivityManager
 import androidx.core.content.ContextCompat
 import androidx.work.WorkManager
 import com.foobarust.domain.di.DispatcherModule
@@ -33,6 +34,12 @@ object AppModule {
     @Singleton
     fun providePackageManager(@ApplicationContext context: Context): PackageManager {
         return context.packageManager
+    }
+
+    @Provides
+    @Singleton
+    fun provideConnectivityManager(@ApplicationContext context: Context): ConnectivityManager {
+        return context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     }
 
     @Provides

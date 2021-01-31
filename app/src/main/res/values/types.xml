@@ -1,68 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="TextAppearance.Foobar.Headline1" parent="TextAppearance.MaterialComponents.Headline1">
-        <item name="fontFamily">@font/montserrat</item>
-        <item name="android:fontFamily">@font/montserrat</item>
+        <item name="fontFamily">@font/montserrat_light</item>
+        <item name="android:fontFamily">@font/montserrat_light</item>
         <item name="android:textSize">97sp</item>
+        <item name="android:letterSpacing">0.094</item>
     </style>
     <style name="TextAppearance.Foobar.Headline2" parent="TextAppearance.MaterialComponents.Headline2">
-        <item name="fontFamily">@font/montserrat</item>
-        <item name="android:fontFamily">@font/montserrat</item>
+        <item name="fontFamily">@font/montserrat_light</item>
+        <item name="android:fontFamily">@font/montserrat_light</item>
         <item name="android:textSize">61sp</item>
+        <item name="android:letterSpacing">0.031</item>
     </style>
     <style name="TextAppearance.Foobar.Headline3" parent="TextAppearance.MaterialComponents.Headline3">
-        <item name="fontFamily">@font/montserrat</item>
-        <item name="android:fontFamily">@font/montserrat</item>
+        <item name="fontFamily">@font/montserrat_regular</item>
+        <item name="android:fontFamily">@font/montserrat_regular</item>
         <item name="android:textSize">48sp</item>
+        <item name="android:letterSpacing">0</item>
     </style>
     <style name="TextAppearance.Foobar.Headline4" parent="TextAppearance.MaterialComponents.Headline4">
-        <item name="fontFamily">@font/montserrat</item>
-        <item name="android:fontFamily">@font/montserrat</item>
+        <item name="fontFamily">@font/montserrat_regular</item>
+        <item name="android:fontFamily">@font/montserrat_regular</item>
         <item name="android:textSize">34sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.016</item>
     </style>
     <style name="TextAppearance.Foobar.Headline5" parent="TextAppearance.MaterialComponents.Headline5">
-        <item name="fontFamily">@font/montserrat</item>
-        <item name="android:fontFamily">@font/montserrat</item>
+        <item name="fontFamily">@font/montserrat_regular</item>
+        <item name="android:fontFamily">@font/montserrat_regular</item>
         <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0</item>
     </style>
     <style name="TextAppearance.Foobar.Headline6" parent="TextAppearance.MaterialComponents.Headline6">
-        <item name="fontFamily">@font/montserrat</item>
-        <item name="android:fontFamily">@font/montserrat</item>
+        <item name="fontFamily">@font/montserrat_medium</item>
+        <item name="android:fontFamily">@font/montserrat_medium</item>
         <item name="android:textSize">20sp</item>
+        <item name="android:letterSpacing">0.009</item>
     </style>
     <style name="TextAppearance.Foobar.Subtitle1" parent="TextAppearance.MaterialComponents.Subtitle1">
-        <item name="fontFamily">@font/montserrat</item>
-        <item name="android:fontFamily">@font/montserrat</item>
+        <item name="fontFamily">@font/montserrat_regular</item>
+        <item name="android:fontFamily">@font/montserrat_regular</item>
         <item name="android:textSize">16sp</item>
+        <item name="android:letterSpacing">0.009</item>
     </style>
     <style name="TextAppearance.Foobar.Subtitle2" parent="TextAppearance.MaterialComponents.Subtitle2">
-        <item name="fontFamily">@font/montserrat</item>
-        <item name="android:fontFamily">@font/montserrat</item>
+        <item name="fontFamily">@font/montserrat_medium</item>
+        <item name="android:fontFamily">@font/montserrat_medium</item>
         <item name="android:textSize">14sp</item>
+        <item name="android:letterSpacing">0.006</item>
     </style>
     <style name="TextAppearance.Foobar.Body1" parent="TextAppearance.MaterialComponents.Body1">
-        <item name="fontFamily">@font/montserrat</item>
-        <item name="android:fontFamily">@font/montserrat</item>
+        <item name="fontFamily">@font/montserrat_regular</item>
+        <item name="android:fontFamily">@font/montserrat_regular</item>
         <item name="android:textSize">16sp</item>
+        <item name="android:letterSpacing">0.031</item>
     </style>
     <style name="TextAppearance.Foobar.Body2" parent="TextAppearance.MaterialComponents.Body2">
-        <item name="fontFamily">@font/montserrat</item>
-        <item name="android:fontFamily">@font/montserrat</item>
+        <item name="fontFamily">@font/montserrat_regular</item>
+        <item name="android:fontFamily">@font/montserrat_regular</item>
         <item name="android:textSize">14sp</item>
+        <item name="android:letterSpacing">0.002</item>
     </style>
     <style name="TextAppearance.Foobar.Button" parent="TextAppearance.MaterialComponents.Button">
-        <item name="fontFamily">@font/montserrat</item>
-        <item name="android:fontFamily">@font/montserrat</item>
+        <item name="fontFamily">@font/montserrat_medium</item>
+        <item name="android:fontFamily">@font/montserrat_medium</item>
         <item name="android:textSize">14sp</item>
+        <item name="android:letterSpacing">0.078</item>
     </style>
     <style name="TextAppearance.Foobar.Caption" parent="TextAppearance.MaterialComponents.Caption">
-        <item name="fontFamily">@font/montserrat</item>
-        <item name="android:fontFamily">@font/montserrat</item>
+        <item name="fontFamily">@font/montserrat_regular</item>
+        <item name="android:fontFamily">@font/montserrat_regular</item>
         <item name="android:textSize">12sp</item>
+        <item name="android:letterSpacing">0.025</item>
     </style>
     <style name="TextAppearance.Foobar.Overline" parent="TextAppearance.MaterialComponents.Overline">
-        <item name="fontFamily">@font/montserrat</item>
-        <item name="android:fontFamily">@font/montserrat</item>
+        <item name="fontFamily">@font/montserrat_medium</item>
+        <item name="android:fontFamily">@font/montserrat_medium</item>
         <item name="android:textSize">10sp</item>
+        <item name="android:letterSpacing">0.094</item>
     </style>
 </resources>

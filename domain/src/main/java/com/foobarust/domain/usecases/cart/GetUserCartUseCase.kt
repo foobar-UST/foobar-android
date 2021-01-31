@@ -39,7 +39,7 @@ class GetUserCartUseCase @Inject constructor(
                     println("[GetUserCartUseCase]: User is signed in. Start observe UserCart.")
                     startObserveUserCart(userId = result.data.id)
                 } else {
-                    //  // User is signed out
+                    // User is signed out
                     println("[GetUserCartUseCase]: User is signed out.")
                     channel.offer(Resource.Success(null))
                 }

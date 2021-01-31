@@ -35,12 +35,15 @@ class MainViewModel @Inject constructor(
     private val checkCartTimeOutUseCase: CheckCartTimeOutUseCase,
     private val clearUserCartUseCase: ClearUserCartUseCase,
     private val getOnboardingCompletedUseCase: GetOnboardingCompletedUseCase,
-    private val updateOnboardingCompletedUseCase: UpdateOnboardingCompletedUseCase,
+    private val updateOnboardingCompletedUseCase: UpdateOnboardingCompletedUseCase
 ) : BaseViewModel() {
 
-    val userCartLiveData: LiveData<UserCart?> = getUserCartUseCase(Unit)
-        .map { it.getSuccessDataOr(null) }
-        .asLiveData(viewModelScope.coroutineContext)
+    val navGraphIds = listOf(
+        R.navigation.navigation_seller,
+        R.navigation.navigation_order,
+        R.navigation.navigation_explore,
+        R.navigation.navigation_settings
+    )
 
     val topLevelDestinations = listOf(
         R.id.sellerFragment,
@@ -49,13 +52,17 @@ class MainViewModel @Inject constructor(
         R.id.settingsFragment
     )
 
+    val userCart: LiveData<UserCart?> = getUserCartUseCase(Unit)
+        .map { it.getSuccessDataOr(null) }
+        .asLiveData(viewModelScope.coroutineContext)
+
     private val _currentNavGraphId = MutableStateFlow<Int?>(null)
 
     val showCartBottomBar: LiveData<Boolean> = _currentNavGraphId
         .combine(
             getUserCartUseCase(Unit).map { it.getSuccessDataOr(null) }
         ) { currentGraphId, userCart ->
-            // Show bottom bar only in seller tab
+            // Show bottom bar only in seller page
             currentGraphId == R.id.navigation_seller &&
                 userCart != null &&
                 userCart.itemsCount > 0
@@ -111,11 +118,8 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun onCurrentNavGraphChanged(graphId: Int) {
+    fun onCurrentDestinationChanged(graphId: Int, destinationId: Int) {
         _currentNavGraphId.value = graphId
-    }
-
-    fun onCurrentDestinationChanged(destinationId: Int) {
         currentDestinationId = destinationId
     }
 
@@ -128,6 +132,7 @@ class MainViewModel @Inject constructor(
             UploadUserPhotoWorker.USER_PHOTO_URL to uri,
             UploadUserPhotoWorker.USER_PHOTO_EXTENSION to extension
         )
+
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()

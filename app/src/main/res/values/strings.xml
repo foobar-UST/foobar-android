@@ -35,22 +35,22 @@
     <string name="loading_error_title">No connection</string>
     <string name="loading_error_content">Please check your internet connection and try again.</string>
 
-    <!-- Sign in -->
-    <string name="signin_input_title">Login</string>
-    <string name="signin_input_description">Login using your ITSC username.</string>
-    <string name="signin_input_username_hint">Username</string>
-    <string name="signin_input_email_domain_hint">Domain</string>
-    <string name="signin_input_confirm">Login</string>
-    <string name="signin_input_skip_sigin">Skip</string>
-    <string name="signin_input_username_empty">Please enter your username to login.</string>
-    <string name="signin_verify_title">We have sent you a sign-in link</string>
-    <string name="signin_verify_description">Please check your ITSC mailbox.</string>
-    <string name="signin_verify_no_email">Didn\'t receive the email?&#160;</string>
-    <string name="signin_verify_resend_email">Resend Email</string>
-    <string name="signin_error">Sign-in error. Please try again.</string>
-    <string name="signin_cancel">Sign-in canceled.</string>
-    <string name="signin_auth_email_sent">Authentication email is sent.</string>
-    <string name="signin_auth_email_resend_interval">Please try a few seconds later.</string>
+    <!-- Auth -->
+    <string name="auth_input_title">Login</string>
+    <string name="auth_input_description">Login using your ITSC username.</string>
+    <string name="auth_input_hint_username">Username</string>
+    <string name="auth_input_email_hint_domain">Domain</string>
+    <string name="auth_input_confirm">Login</string>
+    <string name="auth_input_skip">Skip</string>
+    <string name="auth_input_username_empty">Please enter your username to login.</string>
+    <string name="auth_verify_title">We have sent you a sign-in link</string>
+    <string name="auth_verify_description">Please check your ITSC mailbox.</string>
+    <string name="auth_verify_no_email">Didn\'t receive the email?&#160;</string>
+    <string name="auth_verify_resend_email">Resend Email</string>
+    <string name="auth_error_message">Sign-in error. Please try again.</string>
+    <string name="auth_cancel_message">Sign-in canceled.</string>
+    <string name="auth_signed_in_message">Already signed in.</string>
+    <string name="auth_email_resend_timer_message">Please try a few seconds later.</string>
 
     <!-- Onboarding -->
     <string name="onboarding_get_started">Get Started</string>
@@ -92,9 +92,13 @@
     <string name="sign_out_dialog_title">Sign Out</string>
     <string name="sign_out_dialog_message">Do you want to sign out with the current account?</string>
 
-    <!-- SellerOnCampus / SellerOffCampus -->
+    <!-- Seller Type -->
     <string name="seller_type_on_campus">On Campus</string>
     <string name="seller_type_off_campus">Off Campus</string>
+
+    <!-- SellerOnCampus / SellerOffCampus -->
+    <string name="seller_tab_on_campus">On Campus</string>
+    <string name="seller_tab_off_campus">Off Campus</string>
     <string name="seller_subtitle">Restaurants</string>
     <string name="seller_status_online">Opening</string>
     <string name="seller_status_offline">Closed</string>
@@ -146,7 +150,7 @@
     <string name="seller_section_available">Available</string>
     <string name="seller_section_upcoming"># Upcoming</string>
     <string name="seller_section_user_counts">%d/%d Joined</string>
-    <string name="seller_section_subtitle_recent">Recent Orders</string>
+    <string name="seller_section_subtitle_recent">Recent Sections</string>
     <string name="seller_section_subtitle_upcoming">Upcoming</string>
 
     <!-- Seller Section Detail -->
@@ -168,9 +172,21 @@
     <!-- Checkout -->
     <string name="checkout_toolbar_title_cart">My Cart</string>
     <string name="checkout_toolbar_title_payment">Payment</string>
-    <string name="checkout_toolbar_title_order_success">Placing Order...</string>
+    <string name="checkout_toolbar_title_order_placing">Placing Order…</string>
+    <string name="checkout_toolbar_title_order_result_success">Success!</string>
+    <string name="checkout_toolbar_title_order_result_failed">Something went wrong!</string>
     <string name="checkout_submit_button_title_cart">Choose Payment</string>
     <string name="checkout_submit_button_title_payment">Confirm Order</string>
+
+    <!-- OrderPlacing -->
+    <string name="order_placing_message">Please wait while we were placing your order. This may take a while.</string>
+
+    <!-- OrderResult -->
+    <string name="order_result_title_order_code">Your Order Code:</string>
+    <string name="order_result_format_order_code"># %s</string>
+    <string name="order_result_message_order_code">Order code will be used for identification when you pick up the order.</string>
+    <string name="order_result_button_order_detail">See Order</string>
+    <string name="order_result_button_return">Return to Cart</string>
 
     <!-- Cart -->
     <string name="cart_bottom_bar_title_items_count">Items in Cart</string>
@@ -201,15 +217,43 @@
     <string name="cart_sync_required_message">One or more cart items need update.</string>
     <string name="cart_sync_required_action_refresh">Update</string>
     <string name="cart_cleared_message">Your cart is cleared.</string>
-    <string name="cart_timeout_dialog_title">Continue with your previous order?</string>
+    <string name="cart_timeout_dialog_title">Continue with previous order?</string>
     <string name="cart_timeout_dialog_message">You still have %d items left in your cart.</string>
     <string name="cart_timeout_dialog_button_continue">Continue</string>
     <string name="cart_timeout_dialog_button_clear_cart">Clear Cart</string>
 
+    <!-- Order -->
+    <string name="order_tab_recent">Recent</string>
+    <string name="order_tab_history">History</string>
+
+    <!-- Order Recent -->
+    <string name="order_recent_item_identifier_title">[#%s] %s</string>
+    <string name="order_recent_item_view_order">View Order</string>
+    <string name="order_recent_item_subtitle_delivered">Delivered</string>
+    <string name="order_recent_active_item_order_title">[%s] %s</string>
+    <string name="order_recent_active_item_last_updated">Last Update %s</string>
+    <string name="order_recent_delivered_item_rate_order">Rate Order</string>
+    <string name="order_recent_empty_item_title">No Recent Order</string>
+
+    <!-- Order History -->
+    <string name="order_history_item_identifier_title">[#%s] %s</string>
+    <string name="order_history_empty_item_title">No Order History</string>
+    <string name="order_history_ordered_date">Ordered on %s</string>
+    <string name="order_history_total_cost">HKD $%.1f</string>
+
+    <!-- Order State Description -->
+    <string name="order_state_description_processing">Processing Order…</string>
+    <string name="order_state_description_preparing">Preparing Order…</string>
+    <string name="order_state_description_in_transit">Delivering order…</string>
+    <string name="order_state_description_ready_for_pick_up">Ready for Pickup!</string>
+    <string name="order_state_description_delivered">Order is delivered!</string>
+    <string name="order_state_description_archived">Order is archived.</string>
+    <string name="order_state_description_cancelled">Order is cancelled.</string>
+
     <!-- Payment Methods -->
     <string name="payment_methods_title_cash_on_delivery">Cash On Delivery</string>
-    <string name="payment_methods_description_cash_on_delivery">Pay when you pick up the order</string>
+    <string name="payment_methods_description_cash_on_delivery">Pay when you pick up the order.</string>
     <string name="payment_methods_title_google_pay">Google Pay</string>
-    <string name="payment_methods_description_google_pay">Pay online using Google Pay service</string>
+    <string name="payment_methods_description_google_pay">Pay online using Google Pay service.</string>
 
 </resources>

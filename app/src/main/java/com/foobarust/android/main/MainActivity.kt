@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
         }
 
         if (savedInstanceState == null) {
-            setupNavigation()
+            setupBottomNavigation()
         }
 
         // Setup toolbar item
@@ -61,7 +61,9 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
 
         // Navigate to cart timeout dialog
         viewModel.navigateToTimeoutDialog.observe(this) {
-            showCartTimeoutDialog(property = it)
+            if (savedInstanceState == null) {
+                navigateToCartTimeOutDialog(property = it)
+            }
         }
 
         // Launch chrome tab
@@ -77,12 +79,12 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
         // BottomNavigationBar has restored its instance state
         // and its selectedItemId, we can proceed with setting up the
         // BottomNavigationBar with Navigation
-        setupNavigation()
+        setupBottomNavigation()
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        // When the user is signed in, restart MainActivity to reload the data.
+        // When the user is signed in through deep link, restart MainActivity to reload the data.
         finish()
         startActivity(intent)
     }
@@ -95,61 +97,62 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
         return true
     }
 
-    private fun setupNavigation() {
-        val navGraphIds = listOf(
-            R.navigation.navigation_seller,
-            R.navigation.navigation_order,
-            R.navigation.navigation_explore,
-            R.navigation.navigation_settings
-        )
+    private fun setupBottomNavigation() {
         val navController = binding.bottomNavigationView.setupWithNavController(
-            navGraphIds = navGraphIds,
+            navGraphIds = viewModel.navGraphIds,
             fragmentManager = supportFragmentManager,
             containerId = R.id.nav_host_container,
             intent = intent,
-            itemReselected = { viewModel.onScrollToTop() }
+            navReselected = { viewModel.onScrollToTop() }
         )
-        val listener = NavController.OnDestinationChangedListener { controller, destination, arguments ->
-            // Keep track of the current graph and destination
-            viewModel.onCurrentNavGraphChanged(controller.graph.id)
-            viewModel.onCurrentDestinationChanged(destination.id)
 
-            // Setup views for top level destinations
+        val listener = NavController.OnDestinationChangedListener { controller, destination, arguments ->
+            viewModel.onCurrentDestinationChanged(
+                graphId = controller.graph.id,
+                destinationId = destination.id
+            )
+
             if (destination.id in viewModel.topLevelDestinations) {
-                setupTopLevelDestinationsViews(destination.id)
+                setupTopLevelDestinations(destination.id)
             } else {
-                setupInnerDestinationsViews()
+                setupInnerDestinations()
+
             }
         }
 
-        navController.observe(this) {
+        navController.observe(this) { controller ->
             // Setup toolbar
             binding.toolbar.setupWithNavController(
-                navController = it,
-                configuration = AppBarConfiguration(setOf(it.graph.startDestination))
+                navController = controller,
+                configuration = AppBarConfiguration(
+                    setOf(controller.graph.startDestination)
+                )
             )
-            // Setup views for different tab navigation
-            it.registerOnDestinationChangedListener(listener)
+
             // Restore app bar height
             binding.appBarLayout.setExpanded(true, true)
+
+            // Setup views for different tab navigation
+            controller.registerOnDestinationChangedListener(listener)
         }
 
         currentNavController = navController
 
         // TODO: Setup badge
-        binding.bottomNavigationView.getOrCreateBadge(R.id.navigation_explore).run {
-            isVisible = true
+        with(binding.bottomNavigationView) {
+            getOrCreateBadge(R.id.navigation_explore).isVisible = true
         }
     }
 
-    private fun setupTopLevelDestinationsViews(destinationId: Int) {
-        when (destinationId) {
-            R.id.sellerFragment -> binding.toolbar.inflateMenu(R.menu.menu_toolbar_main)
-            else -> binding.toolbar.menu.clear()
+    private fun setupTopLevelDestinations(destinationId: Int) {
+        if (destinationId == R.id.sellerFragment) {
+            binding.toolbar.inflateMenu(R.menu.menu_toolbar_main)
+        } else {
+            binding.toolbar.menu.clear()
         }
     }
 
-    private fun setupInnerDestinationsViews() {
+    private fun setupInnerDestinations() {
         binding.toolbar.menu.clear()
     }
 
@@ -159,7 +162,7 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
         )
     }
 
-    private fun showCartTimeoutDialog(property: CartTimeoutProperty) {
+    private fun navigateToCartTimeOutDialog(property: CartTimeoutProperty) {
         CartTimeoutDialog.newInstance(property).show(
             supportFragmentManager,
             CartTimeoutDialog.TAG

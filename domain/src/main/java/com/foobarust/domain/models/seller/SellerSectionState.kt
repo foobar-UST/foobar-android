@@ -6,7 +6,7 @@ package com.foobarust.domain.models.seller
 
 enum class SellerSectionState {
     AVAILABLE,
-    PENDING,
+    PROCESSING,
     PREPARING,
     SHIPPED,
     DELIVERED

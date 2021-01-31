@@ -122,7 +122,7 @@ object Constants {
     const val SELLER_SECTION_UPDATED_AT_FIELD = "updated_at"
 
     const val SELLER_SECTION_STATE_AVAILABLE = "available"
-    const val SELLER_SECTION_STATE_PENDING = "pending"
+    const val SELLER_SECTION_STATE_PROCESSING = "processing"
     const val SELLER_SECTION_STATE_PREPARING = "preparing"
     const val SELLER_SECTION_STATE_SHIPPED = "shipped"
     const val SELLER_SECTION_STATE_DELIVERED = "delivered"
@@ -158,6 +158,54 @@ object Constants {
     const val SELLER_ITEM_COUNT_FIELD = "count"
     const val SELLER_ITEM_AVAILABLE_FIELD = "available"
     const val SELLER_ITEM_UPDATED_AT_FIELD = "updated_at"
+
+    // Order
+    const val ORDERS_COLLECTION = "orders"
+    const val ORDERS_BASIC_COLLECTION = "orders_basic"
+
+    const val ORDER_ID_FIELD = "id"
+    const val ORDER_TITLE_FIELD = "title"
+    const val ORDER_TITLE_ZH_FIELD = "title_zh"
+    const val ORDER_USER_ID_FIELD = "user_id"
+    const val ORDER_SELLER_ID_FIELD = "seller_id"
+    const val ORDER_SECTION_ID_FIELD = "section_id"
+    const val ORDER_DELIVERER_ID_FIELD = "deliverer_id"
+    const val ORDER_IDENTIFIER_FIELD = "identifier"
+    const val ORDER_IMAGE_URL_FIELD = "image_url"
+    const val ORDER_TYPE_FIELD = "type"
+    const val ORDER_ORDER_ITEMS_FIELD = "order_items"
+    const val ORDER_STATE_FIELD = "state"
+    const val ORDER_IS_PAID_FIELD = "is_paid"
+    const val ORDER_PAYMENT_METHOD_FIELD = "payment_method"
+    const val ORDER_MESSAGE_FIELD = "message"
+    const val ORDER_DELIVERY_LOCATION_FIELD = "delivery_location"
+    const val ORDER_SUBTOTAL_COST_FIELD = "subtotal_cost"
+    const val ORDER_DELIVERY_COST_FIELD = "delivery_cost"
+    const val ORDER_TOTAL_COST_FIELD = "total_cost"
+    const val ORDER_CRATED_AT_FIELD = "created_at"
+    const val ORDER_UPDATED_AT_FIELD = "updated_at"
+    const val ORDER_BASIC_DELIVERY_ADDRESS_FIELD = "delivery_address"
+    const val ORDER_BASIC_DELIVERY_ADDRESS_ZH_FIELD = "delivery_address_zh"
+
+    // Order Item
+    const val ORDER_ITEM_ID_FIELD = "id"
+    const val ORDER_ITEM_ITEM_ID_FIELD = "item_id"
+    const val ORDER_ITEM_ITEM_SELLER_ID_FIELD = "item_seller_id"
+    const val ORDER_ITEM_ITEM_TITLE_FIELD = "item_title"
+    const val ORDER_ITEM_ITEM_TITLE_ZH_FIELD = "item_title_zh"
+    const val ORDER_ITEM_ITEM_PRICE_FIELD = "item_price"
+    const val ORDER_ITEM_ITEM_IMAGE_URL_FIELD = "item_image_url"
+    const val ORDER_ITEM_AMOUNTS_FIELD = "amounts"
+    const val ORDER_ITEM_TOTAL_PRICE_FIELD = "total_price"
+
+    // Order States
+    const val ORDER_STATE_PROCESSING = "processing"
+    const val ORDER_STATE_PREPARING = "preparing"
+    const val ORDER_STATE_IN_TRANSIT = "in_transit"
+    const val ORDER_STATE_READY_FOR_PICK_UP = "ready_for_pick_up"
+    const val ORDER_STATE_DELIVERED = "delivered"
+    const val ORDER_STATE_ARCHIVED = "archived"
+    const val ORDER_STATE_CANCELLED = "cancelled"
 
     // Payment Methods
     const val PAYMENT_METHODS_COLLECTION = "payment_methods"

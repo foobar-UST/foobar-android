@@ -1,6 +1,7 @@
 package com.foobarust.data.paging
 
 import androidx.paging.PagingSource
+import androidx.paging.PagingState
 import com.foobarust.data.common.Constants.SELLERS_COLLECTION
 import com.foobarust.data.common.Constants.SELLER_ITEMS_BASIC_SUB_COLLECTION
 import com.foobarust.data.common.Constants.SELLER_ITEM_CATALOG_ID_FIELD
@@ -23,9 +24,11 @@ class SellerItemBasicsPagingSource(
     private val catalogId: String
 ) : PagingSource<Query, SellerItemBasic>() {
 
+    private var initialPageQuery: Query? = null
+
     override suspend fun load(params: LoadParams<Query>): LoadResult<Query, SellerItemBasic> {
         return try {
-            val requestQuery = firestore.collection(
+            initialPageQuery = initialPageQuery ?: firestore.collection(
                 "$SELLERS_COLLECTION/$sellerId/$SELLER_ITEMS_BASIC_SUB_COLLECTION"
             )
                 .whereEqualTo(SELLER_ITEM_CATALOG_ID_FIELD, catalogId)
@@ -34,11 +37,11 @@ class SellerItemBasicsPagingSource(
                 //.whereEqualTo(SELLER_ITEM_AVAILABLE_FIELD, true)        // Get available items only
                 .limit(params.loadSize.toLong())
 
-            val currentPageQuery = params.key ?: requestQuery
+            val currentPageQuery = params.key ?: initialPageQuery!!
             val currentPageData = currentPageQuery.get().await()
             val nextPageQuery = if (!currentPageData.isEmpty) {
                 val lastVisibleItem = currentPageData.documents[currentPageData.size() - 1]
-                requestQuery.startAfter(lastVisibleItem)
+                initialPageQuery!!.startAfter(lastVisibleItem)
             } else {
                 null
             }
@@ -57,4 +60,6 @@ class SellerItemBasicsPagingSource(
             LoadResult.Error(e)
         }
     }
+
+    override fun getRefreshKey(state: PagingState<Query, SellerItemBasic>): Query? = initialPageQuery
 }

@@ -29,8 +29,7 @@
             android:inputType="text|textCapSentences"
             android:imeOptions="actionDone"
             app:drawableStartCompat="@drawable/ic_create"
-            app:drawableTint="@color/material_on_surface_emphasis_medium"
-            app:clearFocusWhenDone="@{true}"/>
+            app:drawableTint="@color/material_on_surface_emphasis_medium" />
 
     </FrameLayout>
 

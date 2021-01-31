@@ -27,8 +27,8 @@
     <!-- Main theme -->
     <style name="Theme.Foobar.DayNight" parent="Theme.Foobar.Dark"/>
     <style name="Theme.Foobar.Dark" parent="Theme.Foobar">
-        <item name="colorPrimary">@color/maroon_400</item>
-        <item name="colorPrimaryVariant">@color/maroon_400</item>
+        <item name="colorPrimary">@color/maroon_300</item>
+        <item name="colorPrimaryVariant">@color/maroon_300</item>
         <item name="colorSecondary">@color/mint_400</item>
         <item name="colorSecondaryVariant">@color/mint_400</item>
         <item name="colorError">@color/red_400</item>

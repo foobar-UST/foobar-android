@@ -1,6 +1,5 @@
 package com.foobarust.android.sellersection
 
-import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +13,7 @@ import com.foobarust.android.common.FullScreenDialogFragment
 import com.foobarust.android.databinding.FragmentSellerSectionBinding
 import com.foobarust.android.utils.AutoClearedValue
 import com.foobarust.android.utils.findNavController
-import com.foobarust.android.utils.getNavGraphViewModel
+import com.foobarust.android.utils.getHiltNavGraphViewModel
 import com.foobarust.android.utils.showShortToast
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -26,22 +25,38 @@ import dagger.hilt.android.AndroidEntryPoint
 class SellerSectionFragment : FullScreenDialogFragment() {
 
     private var binding: FragmentSellerSectionBinding by AutoClearedValue(this)
-    private lateinit var viewModel: SellerSectionViewModel
     private lateinit var navController: NavController
+    private lateinit var  viewModel: SellerSectionViewModel
     private val navArgs: SellerSectionFragmentArgs by navArgs()
+
+    override var onBackPressed: (() -> Unit)? = { handleBackPressed() }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentSellerSectionBinding.inflate(inflater, container, false)
-
-        setupNavigation()
-
-        binding.run {
-            viewModel = this@SellerSectionFragment.viewModel
+        binding = FragmentSellerSectionBinding.inflate(inflater, container, false).apply {
             lifecycleOwner = viewLifecycleOwner
+        }
+
+        // Get navigation controller
+        val navHostFragment = childFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
+        navController = navHostFragment.navController
+        navController.setGraph(R.navigation.navigation_seller_section)
+
+        // Get the nav graph viewModel instance
+        viewModel = getHiltNavGraphViewModel(
+            navGraphId = R.id.navigation_seller_section,
+            navController = navController
+        )
+
+        // Bind viewModel
+        binding.viewModel = viewModel
+
+        // Record current destination
+        navController.addOnDestinationChangedListener { controller, destination, arguments ->
+            viewModel.onUpdateCurrentDestination(destination.id)
         }
 
         viewModel.onFetchSectionDetail(property = navArgs.property)
@@ -89,31 +104,6 @@ class SellerSectionFragment : FullScreenDialogFragment() {
         }
 
         return binding.root
-    }
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return object : Dialog(requireContext(), theme) {
-            override fun onBackPressed() {
-                handleBackPressed()
-            }
-        }
-    }
-
-    private fun setupNavigation() {
-        val navHostFragment = childFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
-        navController = navHostFragment.navController
-        navController.setGraph(R.navigation.navigation_seller_section)
-
-        // Cannot initialize ViewModel using navGraphViewModels() as findNavController() is broken at the moment
-        viewModel = getNavGraphViewModel(
-            navGraphId = R.id.navigation_seller_section,
-            navController = navController
-        )
-
-        // Record current destination
-        navController.addOnDestinationChangedListener { controller, destination, arguments ->
-            viewModel.onUpdateCurrentDestination(destination.id)
-        }
     }
 
     private fun handleBackPressed() {

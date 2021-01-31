@@ -136,7 +136,7 @@ class SellerDetailViewModel @Inject constructor(
         }
     }
 
-    fun onToolbarCollapsed(isCollapsed: Boolean) {
+    fun onToolbarScrollStateChanged(isCollapsed: Boolean) {
         _toolbarCollapsed.value = isCollapsed
     }
 

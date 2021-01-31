@@ -1,5 +1,10 @@
 # Changelog
-## 2020-01-26
+## 2020-02-01
+- Added OrderFragment.
+- Prepare OrderDetailFragment.
+- Improved Auth screen.
+
+## 2020-01-27
 - Updated Dagger to 2.31.2.
 - Fixed gradient crashing on low API devices.
 - Fixed uneven header heights on AuthFragments.

@@ -8,11 +8,10 @@ import android.widget.ArrayAdapter
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
 import com.foobarust.android.R
-import com.foobarust.android.auth.AuthState.VERIFYING
 import com.foobarust.android.databinding.FragmentAuthInputBinding
 import com.foobarust.android.utils.AutoClearedValue
+import com.foobarust.android.utils.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -26,7 +25,10 @@ class AuthInputFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentAuthInputBinding.inflate(inflater, container, false)
+        binding = FragmentAuthInputBinding.inflate(inflater, container, false).apply {
+            viewModel = authViewModel
+            lifecycleOwner = viewLifecycleOwner
+        }
 
         // Pass username input to view model
         binding.usernameEditText.doOnTextChanged { text, _, _, _ ->
@@ -39,7 +41,7 @@ class AuthInputFragment : Fragment() {
         }
 
         // Skip login button
-        binding.skipSigninButton.setOnClickListener {
+        binding.skipButton.setOnClickListener {
             authViewModel.onSkipSignIn()
         }
 
@@ -60,11 +62,16 @@ class AuthInputFragment : Fragment() {
             //viewModel.onAuthEmailDomainChanged(domains[0])
         }
 
-        // Navigate to VerifyFragment after successfully requesting an email
         authViewModel.authState.observe(viewLifecycleOwner) { state ->
-            if (state == VERIFYING) {
-                findNavController().navigate(
+            if (state == AuthState.VERIFYING) {
+                // Requested email
+                findNavController(R.id.authInputFragment)?.navigate(
                     AuthInputFragmentDirections.actionAuthInputFragmentToAuthVerifyFragment()
+                )
+            } else if (state == AuthState.COMPLETED) {
+                // Skip login screen
+                findNavController(R.id.authInputFragment)?.navigate(
+                    AuthInputFragmentDirections.actionAuthInputFragmentToMainActivity()
                 )
             }
         }

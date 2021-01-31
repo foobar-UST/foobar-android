@@ -3,13 +3,12 @@ package com.foobarust.android.auth
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.R
-import com.foobarust.android.auth.AuthState.*
 import com.foobarust.android.common.BaseViewModel
-import com.foobarust.android.common.UiState
 import com.foobarust.domain.states.Resource
+import com.foobarust.domain.states.getSuccessDataOr
 import com.foobarust.domain.usecases.auth.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -29,6 +28,7 @@ class AuthViewModel @Inject constructor(
     private val updateRequestedEmailUseCase: UpdateRequestedEmailUseCase,
     private val removeRequestedEmailUseCase: RemoveRequestedEmailUseCase,
     private val countDownTimerUseCase: CountDownTimerUseCase,
+    private val getIsUserSignedInUseCase: GetIsUserSignedInUseCase,
     authEmailUtil: AuthEmailUtil
 ) : BaseViewModel() {
 
@@ -44,22 +44,25 @@ class AuthViewModel @Inject constructor(
     private var resendEmailTimerJob: Job? = null
     private var isResendEmailTimerActive: Boolean = false
 
-    private val _authState = MutableLiveData<AuthState>()
-    val authState: LiveData<AuthState>
-        get() = _authState
+    private val _authState = MutableStateFlow(AuthState.INPUT)
+    val authState: LiveData<AuthState> = _authState.asLiveData(viewModelScope.coroutineContext)
+
+    private val _requestingEmail = MutableStateFlow(false)
+    val requestingEmail: LiveData<Boolean> = _requestingEmail
+        .asLiveData(viewModelScope.coroutineContext)
 
     fun onRequestAuthEmail() = viewModelScope.launch {
         val signInEmail = signInEmail.first()
 
         // Check if the username input is empty
         if (_username.value.isBlank()) {
-            showToastMessage(context.getString(R.string.signin_input_username_empty))
+            showToastMessage(context.getString(R.string.auth_input_username_empty))
             return@launch
         }
 
         // Check if the request timer is still active
         if (isResendEmailTimerActive) {
-            showToastMessage(context.getString(R.string.signin_auth_email_resend_interval))
+            showToastMessage(context.getString(R.string.auth_email_resend_timer_message))
             return@launch
         }
 
@@ -72,43 +75,45 @@ class AuthViewModel @Inject constructor(
                 is Resource.Success -> {
                     // Condition 1: Success email request
                     // Navigate to verify screen
-                    setUiState(UiState.Success)
                     updateRequestedEmailUseCase(signInEmail)
-                    _authState.value = VERIFYING
+                    _authState.value = AuthState.VERIFYING
+                    _requestingEmail.value = false
                 }
                 is Resource.Error -> {
                     // Condition 3: Failed email request
                     // When there is something wrong with the request, navigate back to input screen
-                    setUiState(UiState.Error(it.message))
-                    _authState.value = INPUT
+                    showToastMessage(it.message)
+                    _authState.value = AuthState.INPUT
+                    _requestingEmail.value = false
                 }
                 is Resource.Loading -> {
-                    setUiState(UiState.Loading)
+                    _requestingEmail.value = true
                 }
             }
         }
     }
 
     fun onVerifyEmailLinkAndSignIn(emailLink: String) = viewModelScope.launch {
-        _authState.value = VERIFYING
-        // Get cached email address
-        getRequestedEmailUseCase(Unit).collect {
-            when (it) {
-                is Resource.Success -> {
-                    setUiState(UiState.Success)
-                    val signInParams = SignInWithAuthLinkParameters(
-                        email = it.data,
-                        authLink = emailLink
-                    )
-                    signInWithAuthLink(signInParams)
-                }
-                is Resource.Error -> {
-                    // No email is saved for verification, go back to input screen
-                    _authState.value = INPUT
-                    setUiState(UiState.Error(context.getString(R.string.signin_error)))
-                }
-                is Resource.Loading -> {
-                    setUiState(UiState.Loading)
+        if (getIsUserSignedInUseCase(Unit).getSuccessDataOr(false)) {
+            showToastMessage(context.getString(R.string.auth_signed_in_message))
+            _authState.value = AuthState.COMPLETED
+        } else {
+            // Get cached email address
+            getRequestedEmailUseCase(Unit).collect {
+                when (it) {
+                    is Resource.Success -> {
+                        val signInParams = SignInWithAuthLinkParameters(
+                            email = it.data,
+                            authLink = emailLink
+                        )
+                        signInWithAuthLink(signInParams)
+                    }
+                    is Resource.Error -> {
+                        // No email is saved for verification, go back to input screen
+                        showToastMessage(context.getString(R.string.auth_error_message))
+                        _authState.value = AuthState.INPUT
+                    }
+                    is Resource.Loading -> Unit
                 }
             }
         }
@@ -118,18 +123,18 @@ class AuthViewModel @Inject constructor(
         _username.value = username
     }
 
-    fun onAuthEmailDomainUpdated(authEmailDomain: AuthEmailDomain) {
-        _emailDomains.value = authEmailDomain
+    fun onAuthEmailDomainUpdated(domain: AuthEmailDomain) {
+        _emailDomains.value = domain
     }
 
     fun onAuthEmailVerifyingCanceled() = viewModelScope.launch {
         // Condition 4: cancel email verification
-        _authState.value = INPUT
+        _authState.value = AuthState.INPUT
         removeRequestedEmail()
     }
 
     fun onSkipSignIn() {
-        _authState.value = COMPLETED
+        _authState.value = AuthState.COMPLETED
     }
 
     private suspend fun signInWithAuthLink(signInParams: SignInWithAuthLinkParameters) {
@@ -138,17 +143,16 @@ class AuthViewModel @Inject constructor(
                 is Resource.Success -> {
                     // Condition 2: Success email verification
                     removeRequestedEmail()
-                    _authState.value = COMPLETED
-                    setUiState(UiState.Success)
+                    _authState.value = AuthState.COMPLETED
                 }
                 is Resource.Error -> {
                     // Condition 5: Failed email verification
                     // Navigate back to input screen
-                    _authState.value = INPUT
-                    setUiState(UiState.Error(it.message))
+                    showToastMessage(it.message)
+                    _authState.value = AuthState.INPUT
                 }
                 is Resource.Loading -> {
-                    setUiState(UiState.Loading)
+                    _authState.value = AuthState.VERIFYING
                 }
             }
         }

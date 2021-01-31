@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.foobarust.android.R
 import com.foobarust.android.databinding.PromotionAdvertiseSectionBinding
 import com.foobarust.android.databinding.PromotionSuggestSectionBinding
-import com.foobarust.android.databinding.SubtitleItemBinding
+import com.foobarust.android.databinding.SubtitleLargeItemBinding
 import com.foobarust.android.promotion.PromotionAdvertiseAdapter.PromotionAdvertiseAdapterListener
 import com.foobarust.android.promotion.PromotionListModel.*
 import com.foobarust.android.promotion.PromotionSuggestAdapter.PromotionSuggestAdapterListener
@@ -40,8 +40,8 @@ class PromotionAdapter(
                 PromotionSuggestSectionBinding.inflate(inflater, parent, false)
             )
 
-            R.layout.subtitle_item -> PromotionSubtitleViewHolder(
-                SubtitleItemBinding.inflate(inflater, parent, false)
+            R.layout.subtitle_large_item -> PromotionSubtitleViewHolder(
+                SubtitleLargeItemBinding.inflate(inflater, parent, false)
             )
 
             else -> throw IllegalStateException("Unknown view type $viewType")
@@ -97,7 +97,7 @@ class PromotionAdapter(
         return when (getItem(position)) {
             is PromotionAdvertiseModel -> R.layout.promotion_advertise_section
             is PromotionSuggestModel -> R.layout.promotion_suggest_section
-            is PromotionSubtitleModel -> R.layout.subtitle_item
+            is PromotionSubtitleModel -> R.layout.subtitle_large_item
             else -> throw IllegalStateException("Unknown view type at: $position")
         }
     }
@@ -113,7 +113,7 @@ sealed class PromotionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemV
     ) : PromotionViewHolder(binding.root)
 
     class PromotionSubtitleViewHolder(
-        val binding: SubtitleItemBinding
+        val binding: SubtitleLargeItemBinding
     ) : PromotionViewHolder(binding.root)
 }
 

@@ -34,7 +34,7 @@ object Dependencies {
     const val ROOM_RUNTIME = "androidx.room:room-runtime:${Versions.ROOM}"
     const val ROOM_KTX = "androidx.room:room-ktx:${Versions.ROOM}"
     const val HILT = "com.google.dagger:hilt-android:${Versions.HILT}"
-    const val HILT_VIEWMODEL = "androidx.hilt:hilt-lifecycle-viewmodel:${Versions.HILT_LIFECYCLE}"
+    const val HILT_NAVIGATION = "androidx.hilt:hilt-navigation-fragment:${Versions.HILT_NAVIGATION}"
     const val HILT_WORK = "androidx.hilt:hilt-work:${Versions.HILT_WORK}"
     const val PAGING_RUNTIME = "androidx.paging:paging-runtime:${Versions.PAGING}"
     const val PAGING_COMMON = "androidx.paging:paging-common:${Versions.PAGING}"

@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import com.foobarust.android.NavigationAuthDirections
 import com.foobarust.android.R
 import com.foobarust.android.databinding.ActivityAuthBinding
 import com.foobarust.android.utils.showShortToast
@@ -38,15 +37,6 @@ class AuthActivity : AppCompatActivity() {
             showShortToast(it)
         }
 
-        // When the user is verified or want to skip the sign-in screen,
-        // navigate to MainActivity
-        viewModel.authState.observe(this) { state ->
-            if (state == AuthState.COMPLETED) {
-                NavigationAuthDirections.actionGlobalMainActivity()
-                finish()
-            }
-        }
-
         // Look for sign-in link when the activity starts
         handleEmailDeepLink(intent)
     }
@@ -59,8 +49,8 @@ class AuthActivity : AppCompatActivity() {
 
     private fun handleEmailDeepLink(intent: Intent?) {
         val emailLink = intent?.data?.toString()
-        emailLink?.let {
-            viewModel.onVerifyEmailLinkAndSignIn(it)
+        if (emailLink != null) {
+            viewModel.onVerifyEmailLinkAndSignIn(emailLink)
         }
     }
 }

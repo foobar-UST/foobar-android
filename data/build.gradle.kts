@@ -23,22 +23,26 @@ android {
     }
 
     buildTypes {
-        // Get Maps API
+        // Get local.properties
         val properties = Properties()
         val localProperties = rootProject.file("local.properties")
         properties.load(localProperties.inputStream())
-        val mapsApiKey = properties.getProperty("MAPS_API_KEY", "")
 
+        // Config for release build
         getByName("release") {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
+
+        // Config for debug build
         getByName("debug") {
             buildConfigField("Boolean", "USE_FIREBASE_EMULATOR", "true")
             buildConfigField("String", "FIREBASE_EMULATOR_HOST", "\"192.168.128.66\"")
             buildConfigField("String", "FIREBASE_EMULATOR_FIRESTORE_PORT", "\"8080\"")
             buildConfigField("String", "FIREBASE_EMULATOR_FUNCTIONS_PORT", "\"5001\"")
             buildConfigField("int", "FIREBASE_EMULATOR_AUTH_PORT", "9099")
+
+            val mapsApiKey = properties.getProperty("MAPS_API_KEY", "")
             buildConfigField("String", "GOOGLE_MAPS_API_KEY", "\"$mapsApiKey\"")
         }
     }

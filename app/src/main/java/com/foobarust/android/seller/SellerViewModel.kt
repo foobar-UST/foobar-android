@@ -27,11 +27,13 @@ class SellerViewModel @Inject constructor(
 
     val sellerPages: List<SellerPage> = listOf(
         SellerPage(
-            title = context.getString(R.string.seller_type_on_campus),
+            tag = SellerOnCampusFragment.TAG,
+            title = context.getString(R.string.seller_tab_on_campus),
             fragment = { SellerOnCampusFragment() }
         ),
         SellerPage(
-            title = context.getString(R.string.seller_type_off_campus),
+            tag = SellerOffCampusFragment.TAG,
+            title = context.getString(R.string.seller_tab_off_campus),
             fragment = { SellerOffCampusFragment() }
         )
     )
@@ -52,12 +54,13 @@ class SellerViewModel @Inject constructor(
     val navigateToSellerSection: LiveData<SellerSectionProperty>
         get() = _navigateToSellerSection
 
-    // Handle scroll to top event, will be observed by SellerOnCampusFragment and
-    // SellerOffCampusFragment.
-    private val _scrollToTop = MutableSharedFlow<Int>()
-    val scrollToTop: SharedFlow<Int> = _scrollToTop.asSharedFlow()
+    // Emit the index of the page in ViewPager that needs to be scrolled to top, contains
+    // the page tag.
+    private val _pageScrollToTop = MutableSharedFlow<String>()
+    val pageScrollToTop: SharedFlow<String> = _pageScrollToTop.asSharedFlow()
 
-    var currentTabPage: Int = 0
+    // Emit the current scroll state of ViewPager, contains the page tag.
+    var currentPageSelected: String? = null
 
     // From SellerOnCampusFragment
     fun onNavigateToSellerDetail(sellerBasic: SellerBasic) {
@@ -81,7 +84,13 @@ class SellerViewModel @Inject constructor(
         )
     }
 
-    fun onScrollToTop() = viewModelScope.launch {
-        _scrollToTop.emit(currentTabPage)
+    fun onPageScrollToTop() = viewModelScope.launch {
+        currentPageSelected?.let {
+            _pageScrollToTop.emit(it)
+        }
+    }
+
+    fun onCurrentPageChanged(tag: String) {
+        currentPageSelected = tag
     }
 }

@@ -1,6 +1,5 @@
 package com.foobarust.android.checkout
 
-import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +12,7 @@ import com.foobarust.android.common.FullScreenDialogFragment
 import com.foobarust.android.databinding.FragmentCheckoutBinding
 import com.foobarust.android.utils.AutoClearedValue
 import com.foobarust.android.utils.findNavController
-import com.foobarust.android.utils.getNavGraphViewModel
+import com.foobarust.android.utils.getHiltNavGraphViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -26,19 +25,37 @@ class CheckoutFragment : FullScreenDialogFragment() {
     private lateinit var viewModel: CheckoutViewModel
     private lateinit var navController: NavController
 
+    override var onBackPressed: (() -> Unit)? = { handleBackPressed() }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentCheckoutBinding.inflate(inflater, container, false)
+        binding = FragmentCheckoutBinding.inflate(inflater, container, false).apply {
+            lifecycleOwner = viewLifecycleOwner
+        }
 
-        setupNavigation()
+        val navHostFragment = childFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
+        navController = navHostFragment.navController
+        navController.setGraph(R.navigation.navigation_checkout)
+
+        // Scope CheckoutViewModel to navigation graph
+        viewModel = getHiltNavGraphViewModel(
+            navGraphId = R.id.navigation_checkout,
+            navController = navController
+        )
+
+        binding.viewModel = viewModel
+
+        // Record current destination
+        navController.addOnDestinationChangedListener { controller, destination, arguments ->
+            viewModel.onUpdateCurrentDestination(destination.id)
+        }
 
         // Setup binding
         binding.run {
             viewModel = this@CheckoutFragment.viewModel
-            lifecycleOwner = viewLifecycleOwner
         }
 
         // Setup toolbar navigation button
@@ -90,33 +107,12 @@ class CheckoutFragment : FullScreenDialogFragment() {
             binding.appBarLayout.setExpanded(true, true)
         }
 
+        // Dismiss dialog (when the order is placed and return using back pressed)
+        viewModel.dismissCheckoutDialog.observe(viewLifecycleOwner) {
+            dismiss()
+        }
+
         return binding.root
-    }
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return object : Dialog(requireContext(), theme) {
-            override fun onBackPressed() {
-                handleBackPressed()
-            }
-        }
-    }
-
-    private fun setupNavigation() {
-        val navHostFragment = childFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
-        navController = navHostFragment.navController
-        navController.setGraph(R.navigation.navigation_checkout)
-
-        // Scope CheckoutViewModel to navigation graph
-        viewModel = getNavGraphViewModel(
-            navGraphId = R.id.navigation_checkout,
-            navController = navController
-        )
-
-        // Record current destination
-        navController.addOnDestinationChangedListener { controller, destination, arguments ->
-            // Keep track of current fragment destination
-            viewModel.onUpdateCurrentDestination(destination.id)
-        }
     }
 
     private fun handleBackPressed() {

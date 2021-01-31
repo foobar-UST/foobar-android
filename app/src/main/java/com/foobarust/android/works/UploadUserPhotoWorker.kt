@@ -3,8 +3,7 @@ package com.foobarust.android.works
 import android.app.NotificationManager
 import android.content.Context
 import android.util.Log
-import androidx.hilt.Assisted
-import androidx.hilt.work.WorkerInject
+import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.foobarust.android.R
@@ -17,6 +16,8 @@ import com.foobarust.domain.di.IoDispatcher
 import com.foobarust.domain.repositories.AuthRepository
 import com.foobarust.domain.repositories.UserRepository
 import com.foobarust.domain.states.Resource
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -26,7 +27,8 @@ import kotlinx.coroutines.withContext
  * Created by kevin on 1/8/21
  */
 
-class UploadUserPhotoWorker @WorkerInject constructor(
+@HiltWorker
+class UploadUserPhotoWorker @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted workerParams: WorkerParameters,
     private val authRepository: AuthRepository,

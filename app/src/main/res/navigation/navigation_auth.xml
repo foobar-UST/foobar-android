@@ -16,7 +16,12 @@
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/authVerifyFragment"
+            app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_authInputFragment_to_mainActivity"
+            app:destination="@id/mainActivity" />
     </fragment>
 
     <fragment
@@ -31,16 +36,15 @@
             app:popEnterAnim="@anim/slide_in_right"
             app:popExitAnim="@anim/slide_out_left"
             app:popUpTo="@id/authInputFragment"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_authVerifyFragment_to_mainActivity"
+            app:destination="@id/mainActivity" />
     </fragment>
 
     <activity
         android:id="@+id/mainActivity"
         android:name="com.foobarust.android.main.MainActivity"
         tools:layout="@layout/activity_main"/>
-
-    <action
-        android:id="@+id/action_global_mainActivity"
-        app:destination="@id/mainActivity" />
 
 </navigation>

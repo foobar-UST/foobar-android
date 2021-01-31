@@ -42,17 +42,18 @@ class SellerFragment : Fragment() {
 
         binding.sellerViewPager.run {
             adapter = sellerPagerAdapter
-            // Set page limit to prevent scrolling lag
-            offscreenPageLimit = 2
+            offscreenPageLimit = 1
 
             registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
-                    super.onPageSelected(position)
-                    sellerViewModel.currentTabPage = position
+                    sellerViewModel.onCurrentPageChanged(
+                        tag = sellerViewModel.sellerPages[position].tag
+                    )
                 }
             })
         }
 
+        // Setup tab layout
         TabLayoutMediator(binding.sellerTabLayout, binding.sellerViewPager) { tab, position ->
             tab.text = sellerViewModel.sellerPages[position].title
         }.attach()
@@ -89,7 +90,7 @@ class SellerFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             mainViewModel.scrollToTop.collect { currentGraph ->
                 if (currentGraph == R.id.sellerFragment) {
-                    sellerViewModel.onScrollToTop()
+                    sellerViewModel.onPageScrollToTop()
                 }
             }
         }

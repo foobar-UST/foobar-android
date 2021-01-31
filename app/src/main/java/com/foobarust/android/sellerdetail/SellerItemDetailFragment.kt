@@ -15,7 +15,6 @@ import com.foobarust.android.common.FullScreenDialogFragment
 import com.foobarust.android.databinding.FragmentSellerItemDetailBinding
 import com.foobarust.android.main.MainViewModel
 import com.foobarust.android.utils.*
-import com.foobarust.android.utils.AppBarStateChangedListener.*
 import com.foobarust.domain.models.seller.SellerItemBasic
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
@@ -65,9 +64,9 @@ class SellerItemDetailFragment : FullScreenDialogFragment(), SellerItemDetailAda
 
         // Show toolbar title only when collapsed
         viewLifecycleOwner.lifecycleScope.launch {
-            binding.appBarLayout.doOnOffsetChanged().collect {
+            binding.appBarLayout.state().collect {
                 itemDetailViewModel.onToolbarCollapsed(
-                    isCollapsed = it == State.COLLAPSED
+                    isCollapsed = it == AppBarLayoutState.COLLAPSED
                 )
             }
         }

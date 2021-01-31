@@ -1,5 +1,6 @@
 package com.foobarust.data.di
 
+import com.foobarust.data.mappers.AuthMapper
 import com.foobarust.data.repositories.AuthRepositoryImpl
 import com.foobarust.domain.repositories.AuthRepository
 import com.google.firebase.auth.FirebaseAuth
@@ -20,17 +21,23 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 abstract class AuthModule {
 
+    @Singleton
+    @Binds
+    abstract fun bindsAuthRepository(
+        authRepositoryImpl: AuthRepositoryImpl
+    ): AuthRepository
+
     companion object {
         @Singleton
         @Provides
         fun provideFirebaseAuth(): FirebaseAuth {
             return Firebase.auth
         }
-    }
 
-    @Singleton
-    @Binds
-    abstract fun bindsAuthRepository(
-        authRepositoryImpl: AuthRepositoryImpl
-    ): AuthRepository
+        @Singleton
+        @Provides
+        fun provideAuthMapper(): AuthMapper {
+            return AuthMapper()
+        }
+    }
 }

@@ -2,6 +2,7 @@ package com.foobarust.android.common
 
 import android.app.Dialog
 import android.os.Bundle
+import android.text.InputFilter
 import android.text.InputType
 import android.view.LayoutInflater
 import androidx.core.widget.doOnTextChanged
@@ -13,7 +14,6 @@ import com.foobarust.android.R
 import com.foobarust.android.common.TextInputType.*
 import com.foobarust.android.databinding.DialogTextInputEntryBinding
 import com.foobarust.android.utils.AutoClearedValue
-import com.foobarust.android.utils.setMaxLength
 import com.foobarust.android.utils.showShortToast
 import com.foobarust.domain.usecases.common.GetFormattedPhoneNumUseCase
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -41,7 +41,10 @@ class TextInputDialog : DialogFragment() {
 
             // Set input constraints
             if (args.property.type == PHONE_NUM) {
-                valueEditText.setMaxLength(GetFormattedPhoneNumUseCase.LENGTH)
+                // Set max length
+                valueEditText.filters = arrayOf<InputFilter>(
+                    InputFilter.LengthFilter(GetFormattedPhoneNumUseCase.LENGTH)
+                )
                 valueTextInputLayout.prefixText = GetFormattedPhoneNumUseCase.AREA_CODE
             }
         }

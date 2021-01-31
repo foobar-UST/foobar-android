@@ -88,7 +88,7 @@
                 app:layout_constraintTop_toTopOf="@id/title_text_view"
                 app:layout_constraintBottom_toBottomOf="@id/title_text_view"
                 app:drawableStartCompat="@drawable/ic_star"
-                app:drawableScale="@{1.0}"
+                app:drawableFitVertical="@{true}"
                 app:drawableTint="@color/yellow"
                 tools:text="4.9"/>
 
@@ -105,7 +105,7 @@
                 android:textColor="@color/material_on_surface_emphasis_medium"
                 android:textAppearance="?attr/textAppearanceOverline"
                 android:drawablePadding="@dimen/spacing_large"
-                app:drawableScale="@{1.0}"
+                app:drawableFitVertical="@{true}"
                 app:drawableTint="@color/material_on_surface_emphasis_medium"
                 app:layout_constraintTop_toBottomOf="@id/title_text_view"
                 tools:text="9 Tong Yin St, Tseung Kwan O\n將軍澳唐賢街9號" />
@@ -123,7 +123,7 @@
                 android:gravity="center_vertical"
                 android:drawablePadding="@dimen/spacing_xmedium"
                 app:drawableStartCompat="@drawable/ic_live_help"
-                app:drawableScale="@{1.0}"
+                app:drawableFitVertical="@{true}"
                 app:drawableTint="?attr/colorPrimarySurface"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/address_text_view"

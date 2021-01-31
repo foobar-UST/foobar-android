@@ -40,9 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-            app:marginTopSystemWindowInsets="@{true}"
-            app:bottomSheetBackground="@{true}"
-            app:bottomSheetHideIf="@{!(viewModel.uiState instanceof UiState.Success)}">
+            app:marginTopSystemWindowInsets="@{true}">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -115,7 +113,7 @@
                     android:drawablePadding="@dimen/spacing_mxlarge"
                     app:drawableStartCompat="@drawable/ic_local_phone"
                     app:drawableTint="@color/material_on_primary_emphasis_medium"
-                    app:drawableScale="@{1.0}"
+                    app:drawableFitVertical="@{true}"
                     app:layout_constraintTop_toBottomOf="@id/rating_text_view"
                     app:layout_constraintStart_toStartOf="parent"
                     tools:text="+852 1234-5678"/>
@@ -134,7 +132,7 @@
                     android:visibility="gone"
                     app:drawableStartCompat="@drawable/ic_public"
                     app:drawableTint="@color/material_on_primary_emphasis_medium"
-                    app:drawableScale="@{1.0}"
+                    app:drawableFitVertical="@{true}"
                     app:layout_constraintTop_toBottomOf="@id/phone_num_text_view"
                     app:layout_constraintStart_toStartOf="parent"
                     app:goneIf="@{viewModel.sellerDetail.website == null}"

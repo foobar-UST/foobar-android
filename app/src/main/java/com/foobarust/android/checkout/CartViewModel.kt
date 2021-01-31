@@ -2,7 +2,6 @@ package com.foobarust.android.checkout
 
 import android.content.Context
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.asFlow
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.R
@@ -69,13 +68,6 @@ class CartViewModel @Inject constructor(
     ) { userCart, cartItems, sellerBasic, orderNotes ->
         buildCartListModels(userCart, cartItems, sellerBasic, orderNotes)
     }
-        .asLiveData(viewModelScope.coroutineContext)
-
-    // No item layout show when network error or there is no item in cart
-    val showNoItemLayout: LiveData<Boolean> = _cartItems
-        .combine(uiState.asFlow()) { cartItems, uiState ->
-            cartItems.isEmpty() && uiState !is UiState.Loading
-        }
         .asLiveData(viewModelScope.coroutineContext)
 
     // Number of cart items show in app bar
@@ -214,7 +206,9 @@ class CartViewModel @Inject constructor(
         orderNotes: String?
     ): List<CartListModel> {
         // Return if there is no item in cart
-        if (cartItems.isEmpty()) return emptyList()
+        if (cartItems.isEmpty()) {
+            return listOf(CartEmptyItemModel)
+        }
 
         return buildList {
             add(CartInfoItemModel(

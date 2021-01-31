@@ -23,6 +23,7 @@ class SellerPagerAdapter(
 }
 
 data class SellerPage(
+    val tag: String,
     val title: String,
     val fragment: () -> Fragment
 )

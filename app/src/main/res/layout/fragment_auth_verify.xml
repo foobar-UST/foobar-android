@@ -6,9 +6,6 @@
         <variable
             name="viewModel"
             type="com.foobarust.android.auth.AuthViewModel" />
-        <variable
-            name="listener"
-            type="com.foobarust.android.utils.OnTextViewClickableSpanListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,7 +27,7 @@
             android:layout_marginBottom="@dimen/spacing_xmedium"
             android:layout_marginStart="@dimen/spacing_xlarge"
             android:layout_marginEnd="@dimen/spacing_xlarge"
-            android:text="@string/signin_input_title"
+            android:text="@string/auth_input_title"
             android:textColor="?attr/colorOnPrimary"
             android:textStyle="bold"
             android:textAppearance="?attr/textAppearanceHeadline4"
@@ -45,7 +42,7 @@
             android:layout_marginStart="@dimen/spacing_xlarge"
             android:layout_marginBottom="@dimen/spacing_xlarge"
             android:layout_marginEnd="@dimen/spacing_xlarge"
-            android:text="@string/signin_input_description"
+            android:text="@string/auth_input_description"
             android:textColor="?attr/colorOnPrimarySurface"
             android:textAppearance="?attr/textAppearanceSubtitle1"
             app:layout_constraintStart_toStartOf="parent"
@@ -62,23 +59,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/header_view"
-            app:layout_constraintBottom_toTopOf="@id/no_email_text_view"/>
+            app:layout_constraintBottom_toTopOf="@id/resend_email_text_view"/>
 
         <TextView
-            android:id="@+id/no_email_text_view"
+            android:id="@+id/resend_email_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/spacing_mxlarge"
-            android:text="@string/signin_verify_no_email"
+            android:text="@string/auth_verify_no_email"
             android:textAppearance="?attr/textAppearanceBody2"
             android:textColor="@color/material_on_surface_emphasis_medium"
-            app:clickableSpanEnd="@{@string/signin_verify_resend_email}"
-            app:clickableSpanListener="@{listener}"
-            app:clickableSpanBold="@{true}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

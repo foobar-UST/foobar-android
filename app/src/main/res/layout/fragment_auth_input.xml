@@ -4,6 +4,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="viewModel"
+            type="com.foobarust.android.auth.AuthViewModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -23,7 +29,7 @@
             android:layout_marginBottom="@dimen/spacing_xmedium"
             android:layout_marginStart="@dimen/spacing_xlarge"
             android:layout_marginEnd="@dimen/spacing_xlarge"
-            android:text="@string/signin_input_title"
+            android:text="@string/auth_input_title"
             android:textColor="?attr/colorOnPrimary"
             android:textStyle="bold"
             android:textAppearance="?attr/textAppearanceHeadline4"
@@ -38,7 +44,7 @@
             android:layout_marginStart="@dimen/spacing_xlarge"
             android:layout_marginBottom="@dimen/spacing_xlarge"
             android:layout_marginEnd="@dimen/spacing_xlarge"
-            android:text="@string/signin_input_description"
+            android:text="@string/auth_input_description"
             android:textColor="?attr/colorOnPrimarySurface"
             android:textAppearance="?attr/textAppearanceSubtitle1"
             app:layout_constraintStart_toStartOf="parent"
@@ -50,13 +56,11 @@
             android:id="@+id/username_text_input_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/spacing_mxlarge"
-            android:layout_marginEnd="@dimen/spacing_mxlarge"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:layout_marginHorizontal="@dimen/spacing_mxlarge"
             android:paddingBottom="@dimen/spacing_medium"
-            android:hint="@string/signin_input_username_hint"
+            android:hint="@string/auth_input_hint_username"
             app:startIconTint="@color/material_on_surface_emphasis_medium"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/header_view"
             app:layout_constraintBottom_toTopOf="@id/email_suffix_text_input_layout">
 
@@ -76,42 +80,58 @@
             android:id="@+id/email_suffix_text_input_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/spacing_mxlarge"
-            android:layout_marginEnd="@dimen/spacing_mxlarge"
+            android:layout_marginTop="@dimen/spacing_xmedium"
+            android:layout_marginHorizontal="@dimen/spacing_mxlarge"
             android:paddingBottom="@dimen/spacing_medium"
-            android:hint="@string/signin_input_email_domain_hint"
+            android:hint="@string/auth_input_email_hint_domain"
             app:startIconTint="@color/material_on_surface_emphasis_medium"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/username_text_input_layout"
-            app:layout_constraintBottom_toTopOf="@id/confirm_button">
+            app:layout_constraintTop_toBottomOf="@id/username_text_input_layout">
 
             <AutoCompleteTextView
                 android:id="@+id/domains_auto_complete_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/signin_input_email_domain_hint"
+                android:hint="@string/auth_input_email_hint_domain"
                 android:textColor="@color/material_on_background_emphasis_medium"
                 android:inputType="none"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/loading_progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            app:layout_constraintTop_toBottomOf="@id/email_suffix_text_input_layout"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:goneIf="@{!viewModel.requestingEmail}"/>
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/button_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="confirm_button,skip_button"
+            app:goneIf="@{viewModel.requestingEmail}" />
+
         <com.google.android.material.button.MaterialButton
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
             android:id="@+id/confirm_button"
             android:layout_width="160dp"
             android:layout_height="wrap_content"
-            android:text="@string/signin_input_confirm"
+            android:text="@string/auth_input_confirm"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/email_suffix_text_input_layout"
-            app:layout_constraintBottom_toTopOf="@id/skip_signin_button"/>
+            app:layout_constraintBottom_toTopOf="@id/skip_button"/>
 
         <com.google.android.material.button.MaterialButton
             style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:id="@+id/skip_signin_button"
+            android:id="@+id/skip_button"
             android:layout_width="160dp"
             android:layout_height="wrap_content"
-            android:text="@string/signin_input_skip_sigin"
+            android:text="@string/auth_input_skip"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/confirm_button"

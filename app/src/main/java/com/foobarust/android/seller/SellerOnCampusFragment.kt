@@ -22,8 +22,7 @@ import com.foobarust.domain.models.promotion.AdvertiseBasic
 import com.foobarust.domain.models.promotion.SuggestBasic
 import com.foobarust.domain.models.seller.SellerBasic
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 /**
@@ -52,7 +51,6 @@ class SellerOnCampusFragment : Fragment(),
         }
 
         // Setup on-campus list
-        val concatAdapter = ConcatAdapter()
         val promotionAdapter = PromotionAdapter(
             lifecycle = viewLifecycleOwner.lifecycle,
             advertiseAdapterListener = this,
@@ -60,10 +58,12 @@ class SellerOnCampusFragment : Fragment(),
         )
         val sellerOnCampusAdapter = SellerOnCampusAdapter(this)
 
-        concatAdapter.addAdapter(promotionAdapter)
-        concatAdapter.addAdapter(sellerOnCampusAdapter.withLoadStateFooter(
-            footer = PagingLoadStateAdapter { sellerOnCampusAdapter.retry() }
-        ))
+        val concatAdapter = ConcatAdapter(
+            promotionAdapter,
+            sellerOnCampusAdapter.withLoadStateFooter(
+                footer = PagingLoadStateAdapter { sellerOnCampusAdapter.retry() }
+            )
+        )
 
         binding.recyclerView.run {
             adapter = concatAdapter
@@ -109,8 +109,8 @@ class SellerOnCampusFragment : Fragment(),
 
         // Scroll to top when the tab is reselected
         viewLifecycleOwner.lifecycleScope.launch {
-            sellerViewModel.scrollToTop.collect { pagePosition ->
-                if (pagePosition == 0) {
+            sellerViewModel.pageScrollToTop.collect { page ->
+                if (page == TAG) {
                     binding.recyclerView.smoothScrollToTop()
                 }
             }
@@ -134,7 +134,6 @@ class SellerOnCampusFragment : Fragment(),
         // Swipe refresh layout
         sellerOnCampusViewModel.isSwipeRefreshing.observe(viewLifecycleOwner) { isRefreshing ->
             binding.swipeRefreshLayout.isRefreshing = isRefreshing
-            //binding.swipeRefreshLayout.isEnabled = !isRefreshing
         }
 
         return binding.root
@@ -163,5 +162,9 @@ class SellerOnCampusFragment : Fragment(),
         viewLifecycleOwner.lifecycleScope.launch {
             promotionAdapter.scrollToTopWhenFirstItemInserted(binding.recyclerView)
         }
+    }
+
+    companion object {
+        const val TAG = "SellerOnCampusFragment"
     }
 }

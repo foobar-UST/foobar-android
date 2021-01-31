@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.paging.LoadState
 import androidx.paging.LoadStateAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.foobarust.android.databinding.LoadStateItemBinding
+import com.foobarust.android.databinding.PagingLoadStateItemBinding
 
 /**
  * Created by kevin on 9/28/20
@@ -22,14 +22,14 @@ class PagingLoadStateAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, loadState: LoadState): PagingLoadStateViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return PagingLoadStateViewHolder(
-            LoadStateItemBinding.inflate(inflater, parent, false),
+            PagingLoadStateItemBinding.inflate(inflater, parent, false),
             retryAction
         )
     }
 }
 
 class PagingLoadStateViewHolder(
-    private val binding: LoadStateItemBinding,
+    private val binding: PagingLoadStateItemBinding,
     private val retryAction: () -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 

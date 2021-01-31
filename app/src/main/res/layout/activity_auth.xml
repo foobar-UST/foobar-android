@@ -23,20 +23,6 @@
             app:defaultNavHost="true"
             app:navGraph="@navigation/navigation_auth"/>
 
-        <!--
-        <com.google.android.material.progressindicator.LinearProgressIndicator
-            android:id="@+id/loading_progress_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:indeterminate="true"
-            android:elevation="@dimen/elevation_small"
-            app:marginTopSystemWindowInsets="@{true}"
-            app:showAnimationBehavior="outward"
-            app:hideAnimationBehavior="outward"
-            app:trackColor="?attr/colorOnPrimarySurface"
-            app:progressHideIf="@{!(viewModel.uiState instanceof UiState.Loading)}"/>
-            -->
-
     </FrameLayout>
 
 </layout>

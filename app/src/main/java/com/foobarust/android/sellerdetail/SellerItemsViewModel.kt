@@ -11,7 +11,7 @@ import androidx.paging.map
 import com.foobarust.android.utils.SingleLiveEvent
 import com.foobarust.domain.models.seller.getNormalizedTitle
 import com.foobarust.domain.models.seller.purchasable
-import com.foobarust.domain.usecases.seller.GetSellerItemsBasicsParameters
+import com.foobarust.domain.usecases.seller.GetSellerItemsParameters
 import com.foobarust.domain.usecases.seller.GetSellerItemsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -32,7 +32,7 @@ class SellerItemsViewModel @Inject constructor(
     val itemsListModels: Flow<PagingData<SellerItemsListModel>> = _itemsProperty
         .filterNotNull()
         .flatMapLatest {
-            val params = GetSellerItemsBasicsParameters(
+            val params = GetSellerItemsParameters(
                 sellerId = it.sellerId,
                 catalogId = it.catalogId
             )

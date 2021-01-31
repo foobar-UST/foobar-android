@@ -15,7 +15,7 @@ fun CombinedLoadStates.anyError(): LoadState.Error? {
         ?: prepend as? LoadState.Error
 }
 
-fun LoadState.asUiFetchState(): UiState {
+fun LoadState.asUiState(): UiState {
     return when (this) {
         is LoadState.NotLoading -> UiState.Success
         LoadState.Loading -> UiState.Loading
