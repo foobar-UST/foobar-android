@@ -2,16 +2,13 @@ package com.foobarust.android.seller
 
 import android.content.Context
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.*
 import com.foobarust.android.R
-import com.foobarust.android.common.BaseViewModel
-import com.foobarust.android.common.OnSwipeRefreshListener
 import com.foobarust.android.promotion.PromotionListModel
 import com.foobarust.android.sellersection.SellerSectionsListModel
-import com.foobarust.android.utils.asUiState
 import com.foobarust.domain.models.seller.isRecentSection
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.promotion.GetAdvertiseBasicsUseCase
@@ -32,7 +29,7 @@ class SellerOffCampusViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     getAdvertiseBasicsUseCase: GetAdvertiseBasicsUseCase,
     getSellerSectionsUseCase: GetSellerSectionsUseCase
-) : BaseViewModel(), OnSwipeRefreshListener {
+) : ViewModel() {
 
     private val _fetchPromotion = ConflatedBroadcastChannel(Unit)
 
@@ -73,26 +70,7 @@ class SellerOffCampusViewModel @Inject constructor(
             }
         }.cachedIn(viewModelScope)
 
-    private val _isSwipeRefreshing = MutableLiveData(false)
-    val isSwipeRefreshing: LiveData<Boolean>
-        get() = _isSwipeRefreshing
-
-    override fun onSwipeRefresh() {
-        _isSwipeRefreshing.value = true
-    }
-
     fun onReloadPromotion() {
         _fetchPromotion.offer(Unit)
-    }
-
-    fun onPagingLoadStateChanged(loadState: LoadState) {
-        if (_isSwipeRefreshing.value == true && loadState is LoadState.Loading) {
-            return
-        }
-        if (loadState is LoadState.NotLoading || loadState is LoadState.Error) {
-            _isSwipeRefreshing.value = false
-        }
-
-        setUiState(loadState.asUiState())
     }
 }

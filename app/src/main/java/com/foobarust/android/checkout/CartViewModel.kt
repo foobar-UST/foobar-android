@@ -10,9 +10,10 @@ import com.foobarust.android.common.BaseViewModel
 import com.foobarust.android.common.UiState
 import com.foobarust.domain.models.cart.*
 import com.foobarust.domain.models.seller.SellerBasic
+import com.foobarust.domain.models.seller.SellerType
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.cart.*
-import com.foobarust.domain.usecases.seller.GetSellerBasicUseCase
+import com.foobarust.domain.usecases.seller.GetSellerUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.*
@@ -28,7 +29,7 @@ class CartViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val getUserCartUseCase: GetUserCartUseCase,
     private val getUserCartItemsUseCase: GetUserCartItemsUseCase,
-    private val getSellerBasicUseCase: GetSellerBasicUseCase,
+    private val getSellerUseCase: GetSellerUseCase,
     private val updateUserCartItemUseCase: UpdateUserCartItemUseCase,
     private val syncUserCartUseCase: SyncUserCartUseCase,
     private val clearUserCartUseCase: ClearUserCartUseCase
@@ -168,22 +169,16 @@ class CartViewModel @Inject constructor(
     private fun fetchUserCart() = viewModelScope.launch {
         getUserCartUseCase(Unit).collect {
             when (it) {
-                is Resource.Success -> {
-                    _userCart.value = it.data
-                }
-                is Resource.Error -> {
-                    _userCart.value = null
-                }
-                is Resource.Loading -> {
-                    _userCart.value = null
-                }
+                is Resource.Success -> _userCart.value = it.data
+                is Resource.Error -> _userCart.value = null
+                is Resource.Loading -> _userCart.value = null
             }
         }
     }
 
     private fun fetchSellerBasic() = viewModelScope.launch {
         _userCart.filterNotNull()
-            .flatMapLatest { getSellerBasicUseCase(it.sellerId) }
+            .flatMapLatest { getSellerUseCase(it.sellerId) }
             .collect {
                 when (it) {
                     is Resource.Success -> {
@@ -211,46 +206,69 @@ class CartViewModel @Inject constructor(
         }
 
         return buildList {
-            add(CartInfoItemModel(
-                cartTitle = userCart.getNormalizedTitle(),
-                cartImageUrl = userCart.imageUrl,
-                cartPickupAddress = userCart.getNormalizedPickupAddress(),
-                cartDeliveryTime = context.getString(
-                    R.string.cart_info_option_format_section,
-                    userCart.getDeliveryDateString(),
-                    userCart.getDeliveryTimeString()
-                ),
-                sellerId = userCart.sellerId,
-                sellerOnline = sellerBasic.online,
-                sectionId = userCart.sectionId
-            ))
+            add(
+                CartInfoItemModel(
+                    cartTitle = userCart.getNormalizedTitle(),
+                    cartImageUrl = userCart.imageUrl,
+                    cartPickupAddress = userCart.getNormalizedPickupAddress(),
+                    cartDeliveryTime = context.getString(
+                        R.string.cart_info_nav_format_section,
+                        userCart.getDeliveryDateString(),
+                        userCart.getDeliveryTimeString()
+                    ),
+                    sellerId = userCart.sellerId,
+                    sellerOnline = sellerBasic.online,
+                    sectionId = userCart.sectionId,
+                    sectionNavSubtitle = context.getString(
+                        R.string.cart_info_nav_subtitle_section,
+                        userCart.getNormalizedSellerName()
+                    ),
+                    miscNavSubtitle = if (userCart.sellerType == SellerType.ON_CAMPUS) {
+                        context.getString(R.string.cart_info_nav_subtitle_misc_on_campus)
+                    } else {
+                        context.getString(R.string.cart_info_nav_subtitle_misc_off_campus)
+                    }
+                )
+            )
 
             // Add cart items section
-            add(CartPurchaseSubtitleItemModel(
-                subtitle = context.getString(R.string.cart_purchase_subtitle)
-            ))
-            addAll(cartItems.map {
-                CartPurchaseItemModel(userCartItem = it)
-            })
-            add(CartPurchaseActionsItemModel(
-                sellerId = userCart.sellerId,
-                sectionId = userCart.sectionId
-            ))
+            add(
+                CartPurchaseSubtitleItemModel(
+                    subtitle = context.getString(R.string.cart_purchase_subtitle)
+                )
+            )
+            addAll(
+                cartItems.map {
+                    CartPurchaseItemModel(userCartItem = it)
+                }
+            )
+            add(
+                CartPurchaseActionsItemModel(
+                    sellerId = userCart.sellerId,
+                    sectionId = userCart.sectionId
+                )
+            )
 
             // Add notes section
-            add(CartPurchaseSubtitleItemModel(
-                subtitle = context.getString(R.string.cart_notes_subtitle)
-            ))
-            add(CartOrderNotesItemModel(
-                orderNotes = orderNotes
-            ))
+            add(
+                CartPurchaseSubtitleItemModel(
+                    subtitle = context.getString(R.string.cart_notes_subtitle)
+                )
+            )
+            add(
+                CartOrderNotesItemModel(
+                    orderNotes = orderNotes
+                )
+            )
 
             // Add total price section
-            add(CartTotalPriceItemModel(
-                subtotal = userCart.subtotalCost,
-                deliveryFee = userCart.deliveryCost,
-                total = userCart.totalCost
-            ))
+            add(
+                CartTotalPriceItemModel(
+                    subtotal = userCart.subtotalCost,
+                    deliveryFee = userCart.deliveryCost,
+                    total = userCart.totalCost
+                )
+            )
         }
     }
 }

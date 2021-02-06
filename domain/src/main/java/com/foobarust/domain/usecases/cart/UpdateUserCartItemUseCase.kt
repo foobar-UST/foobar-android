@@ -22,11 +22,11 @@ class UpdateUserCartItemUseCase @Inject constructor(
 ) : FlowUseCase<UpdateUserCartItem, Unit>(coroutineDispatcher) {
 
     override fun execute(parameters: UpdateUserCartItem): Flow<Resource<Unit>> = flow {
-        if (!authRepository.isSignedIn()) {
+        if (!authRepository.isUserSignedIn()) {
             throw Exception(ERROR_USER_NOT_SIGNED_IN)
         }
 
-        val idToken = authRepository.getIdToken()
+        val idToken = authRepository.getUserIdToken()
 
         cartRepository.updateUserCartItem(
             idToken = idToken,

@@ -34,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{activeItemModel.orderIdentifierTitle}"
-                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:textAppearance="?attr/textAppearanceHeadline6"
                 android:lineSpacingMultiplier="1.2"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="[#EA2PE] Processing your order."/>

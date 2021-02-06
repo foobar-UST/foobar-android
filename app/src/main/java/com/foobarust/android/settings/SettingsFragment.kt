@@ -7,10 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentSettingsBinding
+import com.foobarust.android.main.MainViewModel
 import com.foobarust.android.utils.AutoClearedValue
 import com.foobarust.android.utils.findNavController
 import com.foobarust.android.utils.showShortToast
@@ -21,6 +23,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class SettingsFragment : Fragment(), SettingsAdapter.SettingsAdapterListener {
 
     private var binding: FragmentSettingsBinding by AutoClearedValue(this)
+    private val mainViewModel: MainViewModel by activityViewModels()
     private val settingsViewModel: SettingsViewModel by viewModels()
 
     override fun onCreateView(
@@ -35,7 +38,6 @@ class SettingsFragment : Fragment(), SettingsAdapter.SettingsAdapterListener {
 
         binding.itemRecyclerView.run {
             adapter = settingsAdapter
-            isNestedScrollingEnabled = false
             setHasFixedSize(true)
         }
 
@@ -46,7 +48,7 @@ class SettingsFragment : Fragment(), SettingsAdapter.SettingsAdapterListener {
         // Navigate to SignInActivity
         settingsViewModel.navigateToSignIn.observe(viewLifecycleOwner) {
             findNavController().navigate(
-                SettingsFragmentDirections.actionSettingsFragmentToSignInActivity()
+                SettingsFragmentDirections.actionSettingsFragmentToAuthActivity()
             )
         }
 
@@ -62,14 +64,21 @@ class SettingsFragment : Fragment(), SettingsAdapter.SettingsAdapterListener {
             showShortToast(it)
         }
 
+        // Show signed out message snack bar
+        settingsViewModel.userSignedOut.observe(viewLifecycleOwner) {
+            mainViewModel.onShowSnackBarMessage(
+                message = getString(R.string.auth_signed_out_message)
+            )
+        }
+
         return binding.root
     }
 
-    override fun onSettingsUserProfileClicked() {
-        settingsViewModel.onUserAccountClicked()
+    override fun onUserProfileClicked(isSignedIn: Boolean) {
+        settingsViewModel.onUserAccountClicked(isSignedIn)
     }
 
-    override fun onSettingsSectionClicked(sectionId: String) {
+    override fun onSectionItemClicked(sectionId: String) {
         when (sectionId) {
             SETTINGS_NOTIFICATIONS -> findNavController().navigate(
                 SettingsFragmentDirections.actionSettingsFragmentToNotificationFragment()
@@ -108,7 +117,7 @@ class SettingsFragment : Fragment(), SettingsAdapter.SettingsAdapterListener {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(getString(R.string.sign_out_dialog_title))
             .setMessage(getString(R.string.sign_out_dialog_message))
-            .setPositiveButton(android.R.string.ok) { _, _ -> settingsViewModel.signOut() }
+            .setPositiveButton(android.R.string.ok) { _, _ -> settingsViewModel.onUserSignOut() }
             .setNegativeButton(android.R.string.cancel) { dialog, _ -> dialog.dismiss() }
             .show()
     }

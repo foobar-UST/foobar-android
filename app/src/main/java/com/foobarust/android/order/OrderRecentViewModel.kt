@@ -6,7 +6,6 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.R
 import com.foobarust.android.common.BaseViewModel
-import com.foobarust.android.common.OnSwipeRefreshListener
 import com.foobarust.android.common.UiState
 import com.foobarust.android.order.OrderRecentListModel.*
 import com.foobarust.domain.models.order.*
@@ -16,7 +15,9 @@ import com.foobarust.domain.utils.cancelIfActive
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -29,15 +30,16 @@ import javax.inject.Inject
 class OrderRecentViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val getRecentOrdersUseCase: GetRecentOrdersUseCase,
-    private val orderStateDescriptionUtil: OrderStateDescriptionUtil
-) : BaseViewModel(), OnSwipeRefreshListener {
+    private val orderStateUtil: OrderStateUtil
+) : BaseViewModel() {
 
     private val _orderRecentListModels = MutableStateFlow<List<OrderRecentListModel>>(emptyList())
     val recentListModels: LiveData<List<OrderRecentListModel>> = _orderRecentListModels
         .asLiveData(viewModelScope.coroutineContext)
 
-    private val _isSwipeRefreshing = MutableStateFlow(false)
-    val isSwipeRefreshing: LiveData<Boolean> = _isSwipeRefreshing
+    private val _finishSwipeRefresh = ConflatedBroadcastChannel(Unit)
+    val finishSwipeRefresh: LiveData<Unit> = _finishSwipeRefresh
+        .asFlow()
         .asLiveData(viewModelScope.coroutineContext)
 
     private var fetchOrderItemsJob: Job? = null
@@ -46,25 +48,29 @@ class OrderRecentViewModel @Inject constructor(
         onFetchOrderItems()
     }
 
-    fun onFetchOrderItems() {
+    fun onFetchOrderItems(isSwipeRefresh: Boolean = false) {
         fetchOrderItemsJob?.cancelIfActive()
         fetchOrderItemsJob = viewModelScope.launch {
             getRecentOrdersUseCase(Unit).collect {
                 when (it) {
                     is Resource.Success -> {
                         setUiState(UiState.Success)
-                        _isSwipeRefreshing.value = false
-                        _orderRecentListModels.value = buildOrderRecentListModels(orderItems = it.data)
+                        _finishSwipeRefresh.offer(Unit)
+                        _orderRecentListModels.value = buildOrderRecentListModels(
+                            orderItems = it.data
+                        )
                     }
                     is Resource.Error -> {
                         setUiState(UiState.Error(it.message))
-                        _isSwipeRefreshing.value = false
+                        _finishSwipeRefresh.offer(Unit)
                         _orderRecentListModels.value = buildOrderRecentListModels()
                     }
                     is Resource.Loading -> {
-                        if (!_isSwipeRefreshing.value) {
+                        if (!isSwipeRefresh) {
                             setUiState(UiState.Loading)
                             _orderRecentListModels.value = emptyList()
+                        } else {
+                            _finishSwipeRefresh.offer(Unit)
                         }
                     }
                 }
@@ -72,13 +78,10 @@ class OrderRecentViewModel @Inject constructor(
         }
     }
 
-    override fun onSwipeRefresh() {
-        _isSwipeRefreshing.value = true
-    }
-
     private fun buildOrderRecentListModels(
         orderItems: List<OrderBasic> = emptyList()
     ): List<OrderRecentListModel> {
+        // No item placeholder
         if (orderItems.isEmpty()) {
             return listOf(
                 OrderRecentEmptyItemModel(
@@ -88,11 +91,11 @@ class OrderRecentViewModel @Inject constructor(
         }
 
         val result = mutableListOf<OrderRecentListModel>()
-        orderItems.forEachIndexed { index, orderItem ->
+        orderItems.forEach { orderItem ->
             val orderIdentifierTitle = context.getString(
                 R.string.order_recent_item_identifier_title,
                 orderItem.identifier,
-                orderStateDescriptionUtil.getOrderStateDescription(orderItem.state)
+                orderStateUtil.getOrderStateTitle(orderItem.state)
             )
             val orderTitle = orderItem.getNormalizedTitle()
 

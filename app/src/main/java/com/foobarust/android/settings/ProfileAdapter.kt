@@ -20,7 +20,6 @@ class ProfileAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProfileViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-
         return when (viewType) {
             R.layout.profile_info_item -> ProfileInfoViewHolder(
                 ProfileInfoItemBinding.inflate(inflater, parent, false)

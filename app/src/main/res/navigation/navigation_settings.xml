@@ -4,11 +4,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_settings"
-    app:startDestination="@id/settingsFragment">
+    app:startDestination="@+id/settingsFragment">
 
-    <!-- SignInActivity -->
+    <!-- AuthFragment -->
     <activity
-        android:id="@+id/signInActivity"
+        android:id="@+id/authActivity"
         android:name="com.foobarust.android.auth.AuthActivity"
         tools:layout="@layout/activity_auth"/>
 
@@ -31,8 +31,9 @@
             android:id="@+id/action_settingsFragment_to_tutorialFragment"
             app:destination="@id/tutorialFragment" />
         <action
-            android:id="@+id/action_settingsFragment_to_signInActivity"
-            app:destination="@id/signInActivity" />
+            android:id="@+id/action_settingsFragment_to_authActivity"
+            app:launchSingleTop="true"
+            app:destination="@id/authActivity" />
         <action
             android:id="@+id/action_settingsFragment_to_profileFragment"
             app:destination="@id/profileFragment" />

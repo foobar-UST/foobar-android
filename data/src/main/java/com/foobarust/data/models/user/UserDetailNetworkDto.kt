@@ -1,6 +1,7 @@
 package com.foobarust.data.models.user
 
 import com.foobarust.data.common.Constants.USER_CREATED_REST_FIELD
+import com.foobarust.data.common.Constants.USER_DEVICE_IDS_FIELD
 import com.foobarust.data.common.Constants.USER_EMAIL_FIELD
 import com.foobarust.data.common.Constants.USER_ID_FIELD
 import com.foobarust.data.common.Constants.USER_NAME_FIELD
@@ -43,13 +44,17 @@ data class UserDetailNetworkDto(
     val roles: List<String>? = null,
 
     @JvmField
+    @PropertyName(USER_DEVICE_IDS_FIELD)
+    val deviceIds: List<String>? = null,
+
+    @JvmField
     @ServerTimestamp
     @PropertyName(USER_UPDATED_AT_FIELD)
     val updatedAt: Timestamp? = null,
 
     @JvmField
     @PropertyName(USER_CREATED_REST_FIELD)
-    val createdRest: Boolean? = null
+    val createdRest: Boolean? = null,
 
     // TODO: deviceIds: List<String>
 )

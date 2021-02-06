@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/sellerFragment"
-    android:id="@+id/navigation_seller">
+    android:id="@+id/navigation_seller"
+    app:startDestination="@+id/sellerFragment">
 
     <!-- SellerFragment -->
     <fragment
@@ -12,7 +12,6 @@
         android:name="com.foobarust.android.seller.SellerFragment"
         android:label="@string/app_name"
         tools:layout="@layout/fragment_seller_on_campus">
-        <deepLink app:uri="foobarust://navigation_seller" />
         <action
             android:id="@+id/action_sellerFragment_to_sellerSearchFragment"
             app:destination="@id/sellerSearchFragment" />

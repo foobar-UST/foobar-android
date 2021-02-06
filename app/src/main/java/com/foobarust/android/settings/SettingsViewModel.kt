@@ -4,18 +4,22 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.work.WorkManager
 import com.foobarust.android.R
 import com.foobarust.android.common.BaseViewModel
 import com.foobarust.android.settings.SettingsListModel.SettingsProfileModel
 import com.foobarust.android.settings.SettingsListModel.SettingsSectionModel
 import com.foobarust.android.utils.SingleLiveEvent
+import com.foobarust.android.works.UploadUserPhotoWork
 import com.foobarust.domain.models.user.UserDetail
 import com.foobarust.domain.states.Resource
+import com.foobarust.domain.usecases.AuthState
 import com.foobarust.domain.usecases.auth.SignOutUseCase
-import com.foobarust.domain.usecases.user.GetUserDetailUseCase
+import com.foobarust.domain.usecases.user.DoOnSignOutUseCase
+import com.foobarust.domain.usecases.user.GetUserAuthStateUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -30,8 +34,10 @@ const val SETTINGS_FAVORITE = "setting_favorite"
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val getUserDetailUseCase: GetUserDetailUseCase,
-    private val signOutUseCase: SignOutUseCase
+    private val workManager: WorkManager,
+    getUserAuthStateUseCase: GetUserAuthStateUseCase,
+    private val signOutUseCase: SignOutUseCase,
+    private val doOnSignOutUseCase: DoOnSignOutUseCase
 ) : BaseViewModel() {
 
     private val _navigateToSignIn = SingleLiveEvent<Unit>()
@@ -42,44 +48,54 @@ class SettingsViewModel @Inject constructor(
     val navigateToProfile: LiveData<Unit>
         get() = _navigateToProfile
 
-    val settingsListModels: LiveData<List<SettingsListModel>> = getUserDetailUseCase(Unit)
+    private val _userSignedOut = SingleLiveEvent<Unit>()
+    val userSignedOut: LiveData<Unit>
+        get() = _userSignedOut
+
+    val settingsListModels: LiveData<List<SettingsListModel>> = getUserAuthStateUseCase(Unit)
         .map {
             when (it) {
-                is Resource.Success -> buildSettingsListModels(userDetail = it.data)
-                is Resource.Error -> buildSettingsListModels()
-                is Resource.Loading -> buildSettingsListModels(loading = true)
+                is AuthState.Authenticated -> buildSettingsListModels(it.data)
+                AuthState.Unauthenticated -> buildSettingsListModels()
+                AuthState.Loading -> emptyList()
             }
         }
         .asLiveData(viewModelScope.coroutineContext)
 
-    fun onUserAccountClicked() = viewModelScope.launch {
-        // Get user detail from replay cache
-        val currentUserDetail = (getUserDetailUseCase(Unit)
-                .first { it is Resource.Success } as Resource.Success
-            ).data
-
-        if (currentUserDetail != null) {
+    fun onUserAccountClicked(isSignedIn: Boolean) = viewModelScope.launch {
+        if (isSignedIn) {
             _navigateToProfile.value = Unit
         } else {
             _navigateToSignIn.value = Unit
         }
     }
 
-    fun signOut() = viewModelScope.launch {
-        signOutUseCase(Unit)
+    fun onUserSignOut() = viewModelScope.launch {
+        signOutUseCase(Unit).collect {
+            when (it) {
+                is Resource.Success -> {
+                    doOnSignOutUseCase(Unit)
+                    cancelWorkManagerWorks()
+                    _userSignedOut.value = Unit
+                }
+                is Resource.Error -> {
+                    showToastMessage(it.message)
+                }
+                is Resource.Loading -> Unit
+            }
+        }
     }
 
-    private fun buildSettingsListModels(
-        userDetail: UserDetail? = null,
-        loading: Boolean = false
-    ): List<SettingsListModel> {
-        if (loading) return emptyList()
+    private fun cancelWorkManagerWorks() {
+        workManager.cancelUniqueWork(UploadUserPhotoWork.WORK_NAME)
+    }
 
+    private fun buildSettingsListModels(userDetail: UserDetail? = null): List<SettingsListModel> {
         return buildList {
-            // Load user section when UserDetail is offered
             if (userDetail != null) {
-                // For signed in
+                // User is signed in.
                 add(SettingsProfileModel(
+                    signedIn = true,
                     username = userDetail.username,
                     photoUrl = userDetail.photoUrl
                 ))
@@ -90,8 +106,8 @@ class SettingsViewModel @Inject constructor(
                     title = context.getString(R.string.settings_section_favorite_title)
                 ))
             } else {
-                // For signed out
-                add(SettingsProfileModel())
+                // User is signed out.
+                add(SettingsProfileModel(signedIn = false))
             }
 
             // Setup common sections

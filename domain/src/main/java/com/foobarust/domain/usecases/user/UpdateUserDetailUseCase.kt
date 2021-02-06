@@ -22,15 +22,18 @@ class UpdateUserDetailUseCase @Inject constructor(
 ) : FlowUseCase<UpdateUserDetailParameters, Unit>(coroutineDispatcher) {
 
     override fun execute(parameters: UpdateUserDetailParameters): Flow<Resource<Unit>> = flow {
-        if (!authRepository.isSignedIn()) {
+        if (!authRepository.isUserSignedIn()) {
             throw Exception(ERROR_USER_NOT_SIGNED_IN)
         }
-        val idToken = authRepository.getIdToken()
+
+        val idToken = authRepository.getUserIdToken()
+
         userRepository.updateUserDetail(
             idToken = idToken,
             name = parameters.name,
             phoneNum = parameters.phoneNum
         )
+
         emit(Resource.Success(Unit))
     }
 }

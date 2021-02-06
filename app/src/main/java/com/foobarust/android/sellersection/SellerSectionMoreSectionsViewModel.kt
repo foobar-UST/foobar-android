@@ -1,12 +1,10 @@
 package com.foobarust.android.sellersection
 
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
-import com.foobarust.android.common.BaseViewModel
-import com.foobarust.android.utils.asUiState
 import com.foobarust.domain.models.seller.SellerSectionDetail
 import com.foobarust.domain.usecases.seller.GetSellerSectionsParameters
 import com.foobarust.domain.usecases.seller.GetSellerSectionsUseCase
@@ -21,7 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SellerSectionMoreSectionsViewModel @Inject constructor(
     private val getSellerSectionsUseCase: GetSellerSectionsUseCase
-) : BaseViewModel() {
+) : ViewModel() {
 
     private val _moreSectionsFilter = MutableStateFlow<MoreSectionsFilter?>(null)
 
@@ -48,10 +46,6 @@ class SellerSectionMoreSectionsViewModel @Inject constructor(
             sellerId = sectionDetail.sellerId,
             currentSectionId = sectionDetail.id
         )
-    }
-
-    fun onPagingLoadStateChanged(loadState: LoadState) {
-        setUiState(loadState.asUiState())
     }
 }
 

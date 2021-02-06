@@ -4,11 +4,8 @@ import android.content.Context
 import androidx.lifecycle.*
 import androidx.paging.*
 import com.foobarust.android.R
-import com.foobarust.android.common.BaseViewModel
-import com.foobarust.android.common.OnSwipeRefreshListener
 import com.foobarust.android.promotion.PromotionListModel
 import com.foobarust.android.seller.SellerOnCampusListModel.*
-import com.foobarust.android.utils.asUiState
 import com.foobarust.domain.models.seller.SellerType.*
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.promotion.GetAdvertiseBasicsUseCase
@@ -24,9 +21,8 @@ class SellerOnCampusViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     getAdvertiseBasicsUseCase: GetAdvertiseBasicsUseCase,
     getSellersUseCase: GetSellersUseCase
-) : BaseViewModel(), OnSwipeRefreshListener {
+) : ViewModel() {
 
-    private val _fetchOnCampus = ConflatedBroadcastChannel(Unit)
     private val _fetchPromotion = ConflatedBroadcastChannel(Unit)
 
     val promotionListModels: LiveData<List<PromotionListModel>> = _fetchPromotion
@@ -42,9 +38,7 @@ class SellerOnCampusViewModel @Inject constructor(
         .filter { it.isNotEmpty() }
         .asLiveData(viewModelScope.coroutineContext)
 
-    val onCampusListModels: Flow<PagingData<SellerOnCampusListModel>> = _fetchOnCampus
-        .asFlow()
-        .flatMapLatest { getSellersUseCase(ON_CAMPUS) }
+    val onCampusListModels: Flow<PagingData<SellerOnCampusListModel>> = getSellersUseCase(ON_CAMPUS)
         .map { pagingData ->
             pagingData.map { SellerOnCampusItemModel(it) }
         }
@@ -61,26 +55,12 @@ class SellerOnCampusViewModel @Inject constructor(
         }
         .cachedIn(viewModelScope)
 
-    private val _isSwipeRefreshing = MutableStateFlow(false)
-    val isSwipeRefreshing: LiveData<Boolean> = _isSwipeRefreshing
+    private val _finishSwipeRefresh = ConflatedBroadcastChannel(Unit)
+    val finishSwipeRefresh: LiveData<Unit> = _finishSwipeRefresh
+        .asFlow()
         .asLiveData(viewModelScope.coroutineContext)
-
-    override fun onSwipeRefresh() {
-        _isSwipeRefreshing.value = true
-    }
 
     fun onReloadPromotion() {
         _fetchPromotion.offer(Unit)
-    }
-
-    fun onPagingLoadStateChanged(loadState: LoadState) {
-        if (_isSwipeRefreshing.value && loadState is LoadState.Loading) {
-            return
-        }
-        if (loadState is LoadState.NotLoading || loadState is LoadState.Error) {
-            _isSwipeRefreshing.value = false
-        }
-
-        setUiState(loadState.asUiState())
     }
 }

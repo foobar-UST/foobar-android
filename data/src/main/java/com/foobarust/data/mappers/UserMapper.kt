@@ -1,35 +1,34 @@
 package com.foobarust.data.mappers
 
-import com.foobarust.data.models.user.UserDetailCacheDto
-import com.foobarust.data.models.user.UserDetailNetworkDto
-import com.foobarust.data.models.user.UserPublicDto
+import com.foobarust.data.models.user.*
 import com.foobarust.domain.models.user.UserDetail
+import com.foobarust.domain.models.user.UserNotification
 import com.foobarust.domain.models.user.UserPublic
 import javax.inject.Inject
 
 class UserMapper @Inject constructor() {
 
-    fun fromNetworkDtoToUserDetail(networkDto: UserDetailNetworkDto): UserDetail {
+    fun fromUserDetailNetworkDtoToUserDetail(dto: UserDetailNetworkDto): UserDetail {
         return UserDetail(
-            id = networkDto.id!!,
-            username = networkDto.username!!,
-            email = networkDto.email!!,
-            name = networkDto.name,
-            phoneNum = networkDto.phoneNum,
-            photoUrl = networkDto.photoUrl,
-            updatedAt = networkDto.updatedAt?.toDate()
+            id = dto.id!!,
+            username = dto.username!!,
+            email = dto.email!!,
+            name = dto.name,
+            phoneNum = dto.phoneNum,
+            photoUrl = dto.photoUrl,
+            updatedAt = dto.updatedAt?.toDate()
         )
     }
 
-    fun fromCacheDtoToUserDetail(cacheDto: UserDetailCacheDto): UserDetail {
+    fun fromUserDetailCacheDtoToUserDetail(dto: UserDetailCacheDto): UserDetail {
         return UserDetail(
-            id = cacheDto.id,
-            username = cacheDto.username!!,
-            email = cacheDto.email!!,
-            name = cacheDto.name,
-            phoneNum = cacheDto.phoneNum,
-            photoUrl = cacheDto.photoUrl,
-            updatedAt = cacheDto.updatedAt
+            id = dto.id,
+            username = dto.username!!,
+            email = dto.email!!,
+            name = dto.name,
+            phoneNum = dto.phoneNum,
+            photoUrl = dto.photoUrl,
+            updatedAt = dto.updatedAt
         )
     }
 
@@ -50,6 +49,39 @@ class UserMapper @Inject constructor() {
             id = dto.id!!,
             username = dto.username!!,
             photoUrl = dto.photoUrl
+        )
+    }
+
+    fun fromNotificationNetworkDtoToUserNotification(dto: UserNotificationNetworkDto): UserNotification {
+        return UserNotification(
+            id = dto.id!!,
+            title = dto.title!!,
+            body = dto.body!!,
+            link = dto.link!!,
+            imageUrl = dto.imageUrl,
+            createdAt = dto.createdAt!!.toDate()
+        )
+    }
+
+    fun fromNotificationCacheDtoToUserNotification(dto: UserNotificationCacheDto): UserNotification {
+        return UserNotification(
+            id = dto.id,
+            title = dto.title!!,
+            body = dto.body!!,
+            link = dto.link!!,
+            imageUrl = dto.imageUrl,
+            createdAt = dto.createdAt!!
+        )
+    }
+
+    fun toUserNotificationCacheDto(userNotification: UserNotification): UserNotificationCacheDto {
+        return UserNotificationCacheDto(
+            id = userNotification.id,
+            title = userNotification.title,
+            body = userNotification.body,
+            link = userNotification.link,
+            imageUrl = userNotification.imageUrl,
+            createdAt = userNotification.createdAt
         )
     }
 }

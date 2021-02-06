@@ -17,7 +17,7 @@ import com.foobarust.domain.states.getSuccessDataOr
 import com.foobarust.domain.usecases.cart.GetUserCartUseCase
 import com.foobarust.domain.usecases.seller.GetSellerDetailWithCatalogsUseCase
 import com.foobarust.domain.usecases.seller.GetSellerSectionBasicParameters
-import com.foobarust.domain.usecases.seller.GetSellerSectionBasicUseCase
+import com.foobarust.domain.usecases.seller.GetSellerSectionUseCase
 import com.foobarust.domain.utils.cancelIfActive
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -37,7 +37,7 @@ const val SELLER_DETAIL_ACTION_TAG = "action_tag"
 @HiltViewModel
 class SellerDetailViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val getSellerSectionBasicUseCase: GetSellerSectionBasicUseCase,
+    private val getSellerSectionUseCase: GetSellerSectionUseCase,
     private val getSellerDetailWithCatalogsUseCase: GetSellerDetailWithCatalogsUseCase,
     getUserCartUseCase: GetUserCartUseCase,
 ) : BaseViewModel() {
@@ -178,7 +178,7 @@ class SellerDetailViewModel @Inject constructor(
 
     private fun fetchSellerSectionBasic(sellerId: String, sectionId: String) = viewModelScope.launch {
         val params = GetSellerSectionBasicParameters(sellerId, sectionId)
-        getSellerSectionBasicUseCase(params).collect {
+        getSellerSectionUseCase(params).collect {
             when (it) {
                 is Resource.Success -> _sectionBasic.value = it.data
                 is Resource.Error -> showToastMessage(it.message)

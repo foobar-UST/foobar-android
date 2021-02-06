@@ -41,12 +41,12 @@ class OrderRecentAdapter(
 
     override fun onBindViewHolder(holder: OrderRecentViewHolder, position: Int) {
         when (holder) {
-            is OrderRecentActiveItemViewHolder -> bindOrderRecentItem(
+            is OrderRecentActiveItemViewHolder -> bindOrderRecentActiveItem(
                 binding = holder.binding,
                 activeItemModel = getItem(position) as OrderRecentActiveItemModel
             )
 
-            is OrderRecentDeliveredItemViewHolder -> bindOrderDeliveredItem(
+            is OrderRecentDeliveredItemViewHolder -> bindOrderRecentDeliveredItem(
                 binding = holder.binding,
                 deliveredItemModel = getItem(position) as OrderRecentDeliveredItemModel
             )
@@ -72,25 +72,27 @@ class OrderRecentAdapter(
         }
     }
 
-    private fun bindOrderRecentItem(
+    private fun bindOrderRecentActiveItem(
         binding: OrderRecentActiveItemBinding,
         activeItemModel: OrderRecentActiveItemModel
     ) = binding.run {
+        // Active states: PROCESSING, PROCESSING, IN_TRANSIT, READY_FOR_PICK_UP
         this.activeItemModel = activeItemModel
         listener = this@OrderRecentAdapter.listener
 
         stateProgressBar.setProgressCompat(
-            activeItemModel.orderState.priority * 25,
+            (activeItemModel.orderState.precedence + 1) * 25,
             true
         )
 
         executePendingBindings()
     }
 
-    private fun bindOrderDeliveredItem(
+    private fun bindOrderRecentDeliveredItem(
         binding: OrderRecentDeliveredItemBinding,
         deliveredItemModel: OrderRecentDeliveredItemModel
     ) = binding.run {
+        // Delivered state: DELIVERED
         this.deliveredItemModel = deliveredItemModel
         listener = this@OrderRecentAdapter.listener
 

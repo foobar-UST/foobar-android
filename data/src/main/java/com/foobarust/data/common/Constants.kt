@@ -23,19 +23,23 @@ object Constants {
     const val USER_PHOTO_URL_FIELD = "photo_url"
     const val USER_PHONE_NUM_FIELD = "phone_num"
     const val USER_ROLES_FIELD = "roles"
+    const val USER_DEVICE_IDS_FIELD = "deviceIds"
     const val USER_UPDATED_AT_FIELD = "updated_at"
     const val USER_CREATED_REST_FIELD = "createdRest"
 
-    // Cart
+    // User Cart
     const val USER_CARTS_COLLECTION = "user_carts"
-    const val USER_CART_ITEMS_SUB_COLLECTION = "cart_items"
 
     const val USER_CART_USER_ID_FIELD = "user_id"
     const val USER_CART_TITLE_FIELD = "title"
     const val USER_CART_TITLE_ZH_FIELD = "title_zh"
     const val USER_CART_SELLER_ID_FIELD = "seller_id"
+    const val USER_CART_SELLER_NAME_FIELD = "seller_name"
+    const val USER_CART_SELLER_NAME_ZH_FIELD = "seller_name_zh"
     const val USER_CART_SELLER_TYPE_FIELD = "seller_type"
     const val USER_CART_SECTION_ID_FIELD = "section_id"
+    const val USER_CART_SECTION_TITLE_FIELD = "section_title"
+    const val USER_CART_SECTION_TITLE_ZH_FIELD = "section_title_zh"
     const val USER_CART_DELIVERY_TIME_FIELD = "delivery_time"
     const val USER_CART_IMAGE_URL_FIELD = "image_url"
     const val USER_CART_PICKUP_LOCATION_FIELD = "pickup_location"
@@ -45,6 +49,9 @@ object Constants {
     const val USER_CART_TOTAL_COST_FIELD = "total_cost"
     const val USER_CART_SYNC_REQUIRED_FIELD = "sync_required"
     const val USER_CART_UPDATED_AT_FIELD = "updated_at"
+
+    // Cart items
+    const val USER_CART_ITEMS_SUB_COLLECTION = "cart_items"
 
     const val USER_CART_ITEMS_ID_FIELD = "id"
     const val USER_CART_ITEMS_USER_ID_FIELD = "user_id"
@@ -59,6 +66,17 @@ object Constants {
     const val USER_CART_ITEMS_TOTAL_PRICE_FIELD = "total_price"
     const val USER_CART_ITEMS_AVAILABLE_FIELD = "available"
     const val USER_CART_ITEMS_UPDATED_AT_FIELD = "updated_at"
+
+    // User notifications
+    const val USER_NOTIFICATIONS_ENTITY = "notifications"
+    const val USER_NOTIFICATIONS_SUB_COLLECTION = "notifications"
+
+    const val USER_NOTIFICATION_ID_FIELD = "id"
+    const val USER_NOTIFICATION_TITLE_FIELD = "title"
+    const val USER_NOTIFICATION_BODY_FIELD = "body"
+    const val USER_NOTIFICATION_LINK_FIELD = "link"
+    const val USER_NOTIFICATION_IMAGE_URL_FIELD = "image_url"
+    const val USER_NOTIFICATION_CREATED_AT_FIELD = "created_at"
 
     // Sellers
     const val SELLERS_COLLECTION = "sellers"
@@ -168,7 +186,11 @@ object Constants {
     const val ORDER_TITLE_ZH_FIELD = "title_zh"
     const val ORDER_USER_ID_FIELD = "user_id"
     const val ORDER_SELLER_ID_FIELD = "seller_id"
+    const val ORDER_SELLER_NAME_FIELD = "seller_name"
+    const val ORDER_SELLER_NAME_ZH_FIELD = "seller_name_zh"
     const val ORDER_SECTION_ID_FIELD = "section_id"
+    const val ORDER_SECTION_TITLE_FIELD = "section_title"
+    const val ORDER_SECTION_TITLE_ZH_FIELD = "section_title_zh"
     const val ORDER_DELIVERER_ID_FIELD = "deliverer_id"
     const val ORDER_IDENTIFIER_FIELD = "identifier"
     const val ORDER_IMAGE_URL_FIELD = "image_url"
@@ -216,7 +238,7 @@ object Constants {
 
 
     // Cloud Functions APIs
-    const val REMOTE_REQUEST_URL = "https://us-central1-foobar-group-delivery-app.cloudfunctions.net/api/"
+    const val REMOTE_REQUEST_URL = "https://asia-east2-foobar-group-delivery-app.cloudfunctions.net/api/"
     const val REMOTE_AUTH_HEADER = "Authorization"
 
     // Generic Responses
@@ -235,7 +257,6 @@ object Constants {
     const val MAPS_STATIC_MAP_PARAM_KEY = "key"
     const val MAPS_STATIC_MAP_PARAM_AUTO_SCALE = "autoscale"
     const val MAPS_STATIC_MAP_PARAM_SIZE = "size"
-    const val MAPS_STATIC_MAP_PARAM_MAP_TYPE = "maptype"
     const val MAPS_STATIC_MAP_PARAM_FORMAT = "format"
     const val MAPS_STATIC_MAP_PARAM_VISUAL_REFRESH = "visual_refresh"
     const val MAPS_STATIC_MAP_PARAM_MARKERS = "markers"
@@ -254,4 +275,8 @@ object Constants {
 
     const val UPDATE_USER_CART_ITEM_REQUEST_CART_ITEM_ID = "cart_item_id"
     const val UPDATE_USER_CART_ITEM_REQUEST_AMOUNTS = "amounts"
+
+    const val INSERT_DEVICE_TOKEN_REQUEST_TOKEN = "token"
+    const val LINK_DEVICE_TOKEN_REQUEST_TOKEN = "token"
+    const val UNLINK_DEVICE_TOKEN_REQUEST_TOKEN = "token"
 }

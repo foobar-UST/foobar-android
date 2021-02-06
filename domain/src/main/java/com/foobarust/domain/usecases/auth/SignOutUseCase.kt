@@ -2,9 +2,11 @@ package com.foobarust.domain.usecases.auth
 
 import com.foobarust.domain.di.IoDispatcher
 import com.foobarust.domain.repositories.AuthRepository
-import com.foobarust.domain.repositories.UserRepository
-import com.foobarust.domain.usecases.CoroutineUseCase
+import com.foobarust.domain.states.Resource
+import com.foobarust.domain.usecases.FlowUseCase
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 /**
@@ -13,12 +15,12 @@ import javax.inject.Inject
 
 class SignOutUseCase @Inject constructor(
     private val authRepository: AuthRepository,
-    private val userRepository: UserRepository,
     @IoDispatcher coroutineDispatcher: CoroutineDispatcher
-) : CoroutineUseCase<Unit, Unit>(coroutineDispatcher) {
+) : FlowUseCase<Unit, Unit>(coroutineDispatcher) {
 
-    override suspend fun execute(parameters: Unit) {
+    override fun execute(parameters: Unit): Flow<Resource<Unit>> = flow {
         authRepository.signOut()
-        userRepository.clearUserDetailCache()
+        emit(Resource.Success(Unit))
     }
+
 }

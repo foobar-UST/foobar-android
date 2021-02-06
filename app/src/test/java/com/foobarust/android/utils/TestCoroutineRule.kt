@@ -31,6 +31,6 @@ fun TestCoroutineRule.runBlockingTest(block: suspend() -> Unit) {
     testDispatcher.runBlockingTest { block() }
 }
 
-fun TestCoroutineRule.Coroutinescope(): CoroutineScope {
+fun TestCoroutineRule.coroutineScope(): CoroutineScope {
     return CoroutineScope(testDispatcher)
 }

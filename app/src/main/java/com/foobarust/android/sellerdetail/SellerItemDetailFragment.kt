@@ -88,7 +88,7 @@ class SellerItemDetailFragment : FullScreenDialogFragment(), SellerItemDetailAda
         // Setup submit button
         binding.submitButton.setOnClickListener {
             itemDetailViewModel.onSubmitItem(
-                currentUserCart = mainViewModel.getCurrentUserCart()
+                cartSellerId = mainViewModel.getUserCart()?.sellerId
             )
         }
 

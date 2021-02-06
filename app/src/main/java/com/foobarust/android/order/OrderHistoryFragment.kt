@@ -1,6 +1,7 @@
 package com.foobarust.android.order
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,10 +32,7 @@ class OrderHistoryFragment : Fragment(), OrderHistoryAdapter.OrderHistoryAdapter
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentOrderHistoryBinding.inflate(inflater, container, false).apply {
-            viewModel = orderHistoryViewModel
-            lifecycleOwner = viewLifecycleOwner
-        }
+        binding = FragmentOrderHistoryBinding.inflate(inflater, container, false)
 
         // Setup recycler view
         val historyAdapter = OrderHistoryAdapter(this)
@@ -52,18 +50,23 @@ class OrderHistoryFragment : Fragment(), OrderHistoryAdapter.OrderHistoryAdapter
             }
         }
 
-
         // Control views corresponding to load states
         historyAdapter.addLoadStateListener { loadStates ->
-            orderHistoryViewModel.onPagingLoadStateChanged(loadStates.source.refresh)
-            loadStates.anyError()?.let {
-                showShortToast(it.error.message)
+            Log.d("OrderHistory", "${loadStates.refresh}")
+            with(loadStates) {
+                updateViews(
+                    mainLayout = binding.orderItemsRecyclerView,
+                    progressBar = binding.loadingProgressBar,
+                    swipeRefreshLayout = binding.swipeRefreshLayout
+                )
+                anyError()?.let {
+                    showShortToast(it.toString())
+                }
             }
         }
 
         // Swipe to refresh
         binding.swipeRefreshLayout.setOnRefreshListener {
-            orderHistoryViewModel.onSwipeRefresh()
             historyAdapter.refresh()
         }
 
@@ -76,20 +79,10 @@ class OrderHistoryFragment : Fragment(), OrderHistoryAdapter.OrderHistoryAdapter
             }
         }
 
-        // Show toast
-        orderHistoryViewModel.toastMessage.observe(viewLifecycleOwner) {
-            showShortToast(it)
-        }
-
-        // Observe swipe refresh state
-        orderHistoryViewModel.isSwipeRefreshing.observe(viewLifecycleOwner) { isRefreshing ->
-            binding.swipeRefreshLayout.isRefreshing = isRefreshing
-        }
-
         return binding.root
     }
 
     override fun onOrderClicked(orderId: String) {
-        orderViewModel.onNavigateToOrderDetail()
+        orderViewModel.onNavigateToOrderDetail(orderId)
     }
 }

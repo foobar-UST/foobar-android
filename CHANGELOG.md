@@ -1,8 +1,14 @@
 # Changelog
 ## 2020-02-01
+- Prepare for explore page.
+- Added dynamic links for launching from notifications.
+- Added notifications when order is updated.
 - Added OrderFragment.
-- Prepare OrderDetailFragment.
-- Improved Auth screen.
+- Added OrderDetailFragment.
+- Added popular items in seller item detail page.
+- Improved typography.
+- Improved auth screen.
+- Completed checkout workflow.
 
 ## 2020-01-27
 - Updated Dagger to 2.31.2.

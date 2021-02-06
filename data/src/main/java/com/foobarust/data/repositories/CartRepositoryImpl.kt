@@ -27,6 +27,14 @@ class CartRepositoryImpl @Inject constructor(
             .snapshotFlow(cartMapper::toUserCart, keepAlive = true)
     }
 
+    override suspend fun clearUserCart(idToken: String) {
+        remoteService.clearUserCart(idToken)
+    }
+
+    override suspend fun syncUserCart(idToken: String) {
+        remoteService.syncUserCart(idToken)
+    }
+
     override fun getUserCartItemsObservable(userId: String): Flow<Resource<List<UserCartItem>>> {
         return firestore.collection(
             "$USERS_COLLECTION/$userId/$USER_CART_ITEMS_SUB_COLLECTION"
@@ -48,13 +56,5 @@ class CartRepositoryImpl @Inject constructor(
             idToken = idToken,
             updateUserCartItemRequest = request
         )
-    }
-
-    override suspend fun clearUserCart(idToken: String) {
-        remoteService.clearUserCart(idToken)
-    }
-
-    override suspend fun syncUserCart(idToken: String) {
-        remoteService.syncUserCart(idToken)
     }
 }

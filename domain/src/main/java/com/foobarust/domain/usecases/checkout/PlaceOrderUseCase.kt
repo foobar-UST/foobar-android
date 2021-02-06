@@ -23,7 +23,7 @@ class PlaceOrderUseCase @Inject constructor(
 
     override fun execute(parameters: PlaceOrderParameters): Flow<Resource<PlaceOrderResult>> = flow {
         val result = checkoutRepository.placeOrder(
-            idToken = authRepository.getIdToken(),
+            idToken = authRepository.getUserIdToken(),
             message = parameters.orderMessage,
             paymentMethodIdentifier = parameters.paymentMethodIdentifier
         )

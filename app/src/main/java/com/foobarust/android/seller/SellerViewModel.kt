@@ -54,6 +54,10 @@ class SellerViewModel @Inject constructor(
     val navigateToSellerSection: LiveData<SellerSectionProperty>
         get() = _navigateToSellerSection
 
+    private val _navigateToPromotionDetail = SingleLiveEvent<String>()
+    val navigateToPromotionDetail: LiveData<String>
+        get() = _navigateToPromotionDetail
+
     // Emit the index of the page in ViewPager that needs to be scrolled to top, contains
     // the page tag.
     private val _pageScrollToTop = MutableSharedFlow<String>()
@@ -82,6 +86,10 @@ class SellerViewModel @Inject constructor(
             sectionId = sectionBasic.id,
             sellerId = sectionBasic.sellerId
         )
+    }
+
+    fun onNavigateToPromotionDetail(url: String) {
+        _navigateToPromotionDetail.value = url
     }
 
     fun onPageScrollToTop() = viewModelScope.launch {

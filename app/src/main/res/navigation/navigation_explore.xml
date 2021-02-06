@@ -3,16 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/exploreFragment"
-    android:id="@+id/navigation_explore">
+    android:id="@+id/navigation_explore"
+    app:startDestination="@+id/exploreFragment">
 
     <!-- ExploreFragment -->
     <fragment
         android:id="@+id/exploreFragment"
         android:name="com.foobarust.android.explore.ExploreFragment"
         android:label="@string/fragment_label_explore"
-        tools:layout="@layout/fragment_explore">
-        <deepLink app:uri="foobarust://navigation_explore" />
-    </fragment>
+        tools:layout="@layout/fragment_explore"/>
 
 </navigation>

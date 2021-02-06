@@ -5,7 +5,9 @@ import com.foobarust.data.models.cart.AddUserCartItemRequest
 import com.foobarust.data.models.cart.UpdateUserCartItemRequest
 import com.foobarust.data.models.checkout.PlaceOrderRequest
 import com.foobarust.data.models.checkout.PlaceOrderResponse
-import com.foobarust.data.models.common.HelloWorldResponse
+import com.foobarust.data.models.user.InsertDeviceTokenRequest
+import com.foobarust.data.models.user.LinkDeviceTokenRequest
+import com.foobarust.data.models.user.UnlinkDeviceTokenRequest
 import com.foobarust.data.models.user.UpdateUserDetailRequest
 import retrofit2.http.*
 
@@ -15,15 +17,26 @@ import retrofit2.http.*
 
 interface RemoteService {
 
-    @GET("test/hello-world")
-    suspend fun getHelloWorld(
-        @Query("has_error") hasError: Boolean
-    ): HelloWorldResponse
-
     @POST("user/")
     suspend fun updateUserDetail(
         @Header(REMOTE_AUTH_HEADER) idToken: String,
         @Body updateUserDetailRequest: UpdateUserDetailRequest
+    )
+
+    @PUT("device/add")
+    suspend fun insertDeviceToken(
+        @Body insertDeviceTokenRequest: InsertDeviceTokenRequest
+    )
+
+    @POST("device/link")
+    suspend fun linkDeviceToken(
+        @Header(REMOTE_AUTH_HEADER) idToken: String,
+        @Body linkDeviceTokenRequest: LinkDeviceTokenRequest
+    )
+
+    @POST("device/unlink")
+    suspend fun unlinkDeviceToken(
+        @Body unlinkDeviceTokenRequest: UnlinkDeviceTokenRequest
     )
 
     @PUT("cart/")

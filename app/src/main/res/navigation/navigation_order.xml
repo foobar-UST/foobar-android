@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/orderFragment"
-    android:id="@+id/navigation_order">
+    android:id="@+id/navigation_order"
+    app:startDestination="@+id/orderFragment">
 
     <!-- OrderFragment -->
     <fragment
@@ -12,15 +11,23 @@
         android:name="com.foobarust.android.order.OrderFragment"
         android:label="@string/fragment_label_order"
         tools:layout="@layout/fragment_order">
-        <deepLink app:uri="foobarust://navigation_order" />
         <action
             android:id="@+id/action_orderFragment_to_orderDetailFragment"
             app:destination="@id/orderDetailFragment" />
     </fragment>
 
+    <!-- OrderDetailFragment -->
     <dialog
         android:id="@+id/orderDetailFragment"
         android:name="com.foobarust.android.order.OrderDetailFragment"
-        tools:layout="@layout/fragment_order_detail"/>
+        tools:layout="@layout/fragment_order_detail">
+        <argument
+            android:name="orderId"
+            app:argType="string" />
+        <deepLink
+            android:id="@+id/orderDetailDeepLink"
+            android:autoVerify="true"
+            app:uri="foobar-group-delivery-app.web.app/order/{orderId}" />
+    </dialog>
 
 </navigation>

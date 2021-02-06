@@ -23,6 +23,7 @@ import kotlinx.coroutines.launch
 class OrderFragment : Fragment() {
 
     private var binding: FragmentOrderBinding by AutoClearedValue(this)
+    private var orderPagerAdapter: OrderPagerAdapter by AutoClearedValue(this)
     private val mainViewModel: MainViewModel by activityViewModels()
     private val viewModel: OrderViewModel by viewModels()
 
@@ -33,10 +34,9 @@ class OrderFragment : Fragment() {
     ): View {
         binding = FragmentOrderBinding.inflate(inflater, container, false)
 
-        // Setup view pager
-        val orderPagerAdapter = OrderPagerAdapter(
+        orderPagerAdapter = OrderPagerAdapter(
             fragmentManager = childFragmentManager,
-            lifecycle = lifecycle,
+            lifecycle = viewLifecycleOwner.lifecycle,
             orderPages = viewModel.orderPages
         )
 
@@ -69,7 +69,7 @@ class OrderFragment : Fragment() {
         // Navigate to OrderDetailFragment
         viewModel.navigateToOrderDetail.observe(viewLifecycleOwner) {
             findNavController(R.id.orderFragment)?.navigate(
-                OrderFragmentDirections.actionOrderFragmentToOrderDetailFragment()
+                OrderFragmentDirections.actionOrderFragmentToOrderDetailFragment(orderId = it)
             )
         }
 

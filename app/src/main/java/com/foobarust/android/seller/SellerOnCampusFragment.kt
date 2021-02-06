@@ -22,7 +22,8 @@ import com.foobarust.domain.models.promotion.AdvertiseBasic
 import com.foobarust.domain.models.promotion.SuggestBasic
 import com.foobarust.domain.models.seller.SellerBasic
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 /**
@@ -45,10 +46,7 @@ class SellerOnCampusFragment : Fragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentSellerOnCampusBinding.inflate(inflater, container, false).apply {
-            viewModel = this@SellerOnCampusFragment.sellerOnCampusViewModel
-            lifecycleOwner = viewLifecycleOwner
-        }
+        binding = FragmentSellerOnCampusBinding.inflate(inflater, container, false)
 
         // Setup on-campus list
         val promotionAdapter = PromotionAdapter(
@@ -81,7 +79,6 @@ class SellerOnCampusFragment : Fragment(),
         viewLifecycleOwner.lifecycleScope.launch {
             sellerOnCampusViewModel.onCampusListModels.collectLatest {
                 sellerOnCampusAdapter.submitData(it)
-                //binding.swipeRefreshLayout.isRefreshing = false
             }
         }
 
@@ -93,15 +90,21 @@ class SellerOnCampusFragment : Fragment(),
 
         // Control views corresponding to load states
         sellerOnCampusAdapter.addLoadStateListener { loadStates ->
-            sellerOnCampusViewModel.onPagingLoadStateChanged(loadStates.source.refresh)
-            loadStates.anyError()?.let {
-                showShortToast(it.error.message)
+            with(loadStates) {
+                updateViews(
+                    mainLayout = binding.recyclerView,
+                    errorLayout = binding.loadErrorLayout.loadErrorLayout,
+                    progressBar = binding.progressBar,
+                    swipeRefreshLayout = binding.swipeRefreshLayout
+                )
+                anyError()?.let {
+                    showShortToast(it.toString())
+                }
             }
         }
 
-        // Swipe to refresh
+        // Start swipe refresh
         binding.swipeRefreshLayout.setOnRefreshListener {
-            sellerOnCampusViewModel.onSwipeRefresh()
             sellerOnCampusViewModel.onReloadPromotion()
             sellerOnCampusAdapter.refresh()
             normalizeListPosition(promotionAdapter)
@@ -126,21 +129,16 @@ class SellerOnCampusFragment : Fragment(),
             binding.recyclerView.updatePadding(bottom = bottomPadding.toInt())
         }
 
-        // Show toast
-        sellerOnCampusViewModel.toastMessage.observe(viewLifecycleOwner) {
-            showShortToast(it)
-        }
-
-        // Swipe refresh layout
-        sellerOnCampusViewModel.isSwipeRefreshing.observe(viewLifecycleOwner) { isRefreshing ->
-            binding.swipeRefreshLayout.isRefreshing = isRefreshing
+        // Finish swipe refreshing
+        sellerOnCampusViewModel.finishSwipeRefresh.observe(viewLifecycleOwner) {
+            binding.swipeRefreshLayout.isRefreshing = false
         }
 
         return binding.root
     }
 
     override fun onPromotionAdvertiseItemClicked(advertiseBasic: AdvertiseBasic) {
-        mainViewModel.onLaunchCustomTab(url = advertiseBasic.url)
+        sellerViewModel.onNavigateToPromotionDetail(advertiseBasic.url)
     }
 
     override fun onSellerListItemClicked(sellerBasic: SellerBasic) {

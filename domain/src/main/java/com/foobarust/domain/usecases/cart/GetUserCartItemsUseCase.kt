@@ -23,7 +23,7 @@ class GetUserCartItemsUseCase @Inject constructor(
 ) : FlowUseCase<Unit, List<UserCartItem>>(coroutineDispatcher) {
 
     override fun execute(parameters: Unit): Flow<Resource<List<UserCartItem>>> = flow {
-        if (!authRepository.isSignedIn()) {
+        if (!authRepository.isUserSignedIn()) {
             throw Exception(ERROR_USER_NOT_SIGNED_IN)
         }
 

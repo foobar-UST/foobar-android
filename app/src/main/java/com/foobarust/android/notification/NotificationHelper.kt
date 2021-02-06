@@ -30,6 +30,11 @@ class NotificationHelper @Inject constructor(
             channelName = context.getString(R.string.notification_channel_upload_name),
             importance = NotificationManagerCompat.IMPORTANCE_DEFAULT
         ),
+        NotificationChannel(
+            channelId = context.getString(R.string.notification_channel_order_id),
+            channelName = context.getString(R.string.notification_channel_order_name),
+            importance = NotificationManagerCompat.IMPORTANCE_DEFAULT
+        ),
     )
 
     fun createNotificationChannels() {

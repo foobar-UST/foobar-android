@@ -10,27 +10,36 @@ import kotlinx.coroutines.flow.Flow
 
 interface SellerRepository {
 
-    fun getSellerBasics(sellerType: SellerType): Flow<PagingData<SellerBasic>>
-
-    suspend fun getSellerBasic(sellerId: String): SellerBasic
+    /*
+        Sellers
+     */
+    suspend fun getSeller(sellerId: String): SellerBasic
 
     suspend fun getSellerDetail(sellerId: String): SellerDetail
 
     suspend fun getSellerCatalogs(sellerId: String): List<SellerCatalog>
 
-    fun getSellerItems(sellerId: String, catalogId: String): Flow<PagingData<SellerItemBasic>>
+    fun getSellersPagingData(sellerType: SellerType): Flow<PagingData<SellerBasic>>
 
-    suspend fun getSellerItemsRecent(sellerId: String, limit: Int): List<SellerItemBasic>
-
+    /*
+        Seller items
+     */
     suspend fun getSellerItemDetail(sellerId: String, itemId: String): SellerItemDetail
 
-    suspend fun getSellerSectionBasic(sellerId: String, sectionId: String): SellerSectionBasic
+    fun getSellerItemsPagingData(sellerId: String, catalogId: String): Flow<PagingData<SellerItemBasic>>
 
-    fun getSellerSectionBasics(): Flow<PagingData<SellerSectionBasic>>
+    suspend fun getRecentSellerItems(sellerId: String, limit: Int): List<SellerItemBasic>
 
-    fun getSellerSectionBasicsFor(sellerId: String) : Flow<PagingData<SellerSectionBasic>>
-
-    suspend fun getSellerSectionBasicsFor(sellerId: String, numOfSections: Int): List<SellerSectionBasic>
+    /*
+        Seller sections
+     */
+    suspend fun getSellerSection(sellerId: String, sectionId: String): SellerSectionBasic
 
     suspend fun getSellerSectionDetail(sellerId: String, sectionId: String): SellerSectionDetail
+
+    suspend fun getSellerSections(sellerId: String, numOfSections: Int): List<SellerSectionBasic>
+
+    fun getAllSellerSectionsPagingData(): Flow<PagingData<SellerSectionBasic>>
+
+    fun getSellerSectionsPagingData(sellerId: String) : Flow<PagingData<SellerSectionBasic>>
 }

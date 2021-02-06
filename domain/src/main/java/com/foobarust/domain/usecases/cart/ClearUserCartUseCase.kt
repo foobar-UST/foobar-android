@@ -18,11 +18,11 @@ class ClearUserCartUseCase @Inject constructor(
 ) : FlowUseCase<Unit, Unit>(coroutineDispatcher) {
 
     override fun execute(parameters: Unit): Flow<Resource<Unit>> = flow {
-        if (!authRepository.isSignedIn()) {
+        if (!authRepository.isUserSignedIn()) {
             throw Exception(UseCaseExceptions.ERROR_USER_NOT_SIGNED_IN)
         }
 
-        val idToken = authRepository.getIdToken()
+        val idToken = authRepository.getUserIdToken()
 
         cartRepository.clearUserCart(idToken)
 

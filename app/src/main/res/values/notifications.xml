@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notification_channel_default_id" translatable="false">default_notification_channel</string>
+    <string name="notification_channel_default_name">Default</string>
+    <string name="notification_channel_upload_id" translatable="false">upload_notification_channel</string>
+    <string name="notification_channel_upload_name">Upload</string>
+    <string name="notification_channel_order_id" translatable="false">order_notification_channel</string>
+    <string name="notification_channel_order_name">Order Updates</string>
+
+    <string name="notification_upload_user_photo_title">Upload User Photo</string>
+    <string name="notification_upload_user_photo_body">Uploading</string>
+
+    <string name="notification_order_update_state_title">Order #%s</string>
+    <string name="notification_order_update_state_body_processing">Your order has been received!</string>
+    <string name="notification_order_update_state_body_preparing">Your order is getting prepared!</string>
+    <string name="notification_order_update_state_body_in_transit">Your order is on the way!</string>
+    <string name="notification_order_update_state_body_ready_for_pick_up">Your order is ready for pick up!</string>
+    <string name="notification_order_update_state_body_delivered">Your have received your order!</string>
+    <string name="notification_order_update_state_body_cancelled">Your order is cancelled.</string>
+</resources>

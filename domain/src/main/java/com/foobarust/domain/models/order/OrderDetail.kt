@@ -13,7 +13,11 @@ data class OrderDetail(
     val title: String,
     val titleZh: String?,
     val sellerId: String,
+    val sellerName: String,
+    val sellerNameZh: String?,
     val sectionId: String?,
+    val sectionTitle: String?,
+    val sectionTitleZh: String?,
     val delivererId: String?,
     val identifier: String,
     val imageUrl: String?,
@@ -33,6 +37,22 @@ data class OrderDetail(
 
 fun OrderDetail.getNormalizedTitle(): String {
     return if (titleZh != null) "$title $titleZh" else title
+}
+
+fun OrderDetail.getNormalizedSellerName(): String {
+    return if (sellerNameZh != null) "$sellerName $sellerNameZh" else sellerName
+}
+
+fun OrderDetail.getNormalizedSectionTitle(): String? {
+    return if (sectionTitleZh != null) "$sectionTitle $sectionTitleZh" else sectionTitle
+}
+
+fun OrderDetail.getNormalizedTotalCost(): String {
+    return String.format("%.1f", totalCost)
+}
+
+fun OrderDetail.getNormalizedDeliveryAddress(): String {
+    return "${deliveryLocation.address} ${deliveryLocation.addressZh}"
 }
 
 fun OrderDetail.getCreatedAtString(): String {

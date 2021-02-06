@@ -11,21 +11,33 @@ import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
 
-    suspend fun getOnboardingCompleted(): Boolean
-
-    suspend fun updateOnboardingCompleted(completed: Boolean)
-
-    /**
-     * Get a observable [UserDetail] from local or network db.
-     * @param userId the id of the user
-     */
+    /*
+        User detail
+    */
     fun getUserDetailObservable(userId: String): Flow<Resource<UserDetail>>
 
     suspend fun updateUserDetail(idToken: String, name: String?, phoneNum: String?)
 
-    suspend fun clearUserDetailCache()
+    suspend fun removeUserDetailCache()
 
     fun uploadUserPhoto(userId: String, uri: String, extension: String): Flow<Resource<Unit>>
 
-    suspend fun getUserPublicInfo(userId: String): UserPublic
+    /*
+        Notifications
+     */
+    //fun getUserNotificationsPagingData(userId: String): Flow<PagingData<UserNotification>>
+
+    //suspend fun removeUserNotifications()
+
+    /*
+        Onboarding tutorial
+     */
+    suspend fun getHasUserCompleteOnboarding(): Boolean
+
+    suspend fun updateHasUserCompleteOnboarding(completed: Boolean)
+
+    /*
+        Public
+     */
+    suspend fun getUserPublicProfile(userId: String): UserPublic
 }

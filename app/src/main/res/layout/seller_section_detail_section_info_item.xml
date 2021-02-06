@@ -100,7 +100,7 @@
             android:id="@+id/pick_up_location_title_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_large"
+            android:layout_marginTop="@dimen/spacing_mxlarge"
             android:text="@string/seller_section_detail_pick_up_location"
             android:textAppearance="?attr/textAppearanceBody2"
             app:layout_constraintTop_toBottomOf="@id/delivery_time_title_text_view"
@@ -108,17 +108,13 @@
 
         <TextView
             android:id="@+id/pick_up_location_text_view"
-            android:layout_width="150dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_large"
-            android:gravity="end"
+            android:layout_marginTop="@dimen/spacing_xmedium"
             android:text="@{sectionInfoItem.deliveryLocation}"
             android:textColor="@color/material_on_surface_emphasis_medium"
             android:textAppearance="?attr/textAppearanceBody2"
-            android:maxLines="1"
-            android:ellipsize="end"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/delivery_time_text_view"
+            app:layout_constraintTop_toBottomOf="@id/pick_up_location_title_text_view"
             tools:text="Atrium, HKUST"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

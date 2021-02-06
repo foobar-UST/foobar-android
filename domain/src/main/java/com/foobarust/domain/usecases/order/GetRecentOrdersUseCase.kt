@@ -1,43 +1,98 @@
 package com.foobarust.domain.usecases.order
 
+import com.foobarust.domain.common.UseCaseExceptions.ERROR_USER_NOT_SIGNED_IN
+import com.foobarust.domain.di.ApplicationScope
 import com.foobarust.domain.di.IoDispatcher
 import com.foobarust.domain.models.order.OrderBasic
+import com.foobarust.domain.models.order.OrderState
 import com.foobarust.domain.repositories.AuthRepository
 import com.foobarust.domain.repositories.OrderRepository
 import com.foobarust.domain.states.Resource
+import com.foobarust.domain.usecases.AuthState
 import com.foobarust.domain.usecases.FlowUseCase
+import com.foobarust.domain.utils.cancelIfActive
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emitAll
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.ProducerScope
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Created by kevin on 1/29/21
  */
 
+private const val TAG = "GetRecentOrdersUseCase"
+
+@Singleton
 class GetRecentOrdersUseCase @Inject constructor(
     private val authRepository: AuthRepository,
     private val orderRepository: OrderRepository,
-    @IoDispatcher coroutineDispatcher: CoroutineDispatcher
+    @ApplicationScope private val externalScope: CoroutineScope,
+    @IoDispatcher private val coroutineDispatcher: CoroutineDispatcher
 ) : FlowUseCase<Unit, List<OrderBasic>>(coroutineDispatcher) {
 
-    override fun execute(parameters: Unit): Flow<Resource<List<OrderBasic>>> = flow {
-        val userId = authRepository.getUserId()
-        val orderItems = orderRepository.getActiveOrderBasics(userId)
-            .map {
-                when (it) {
-                    is Resource.Success -> Resource.Success(sortByOrderState(it.data))
-                    is Resource.Error -> Resource.Error(it.message)
-                    is Resource.Loading -> Resource.Loading()
+    private var observeRecentOrdersJob: Job? = null
+
+    private val sharedResult: Flow<Resource<List<OrderBasic>>> = channelFlow<Resource<List<OrderBasic>>> {
+        authRepository.getAuthProfileObservable().collect {
+            stopObserveRecentOrders()
+            when (it) {
+                is AuthState.Authenticated -> {
+                    println("[$TAG]: User is signed in. Start observe recent order items.")
+                    startObserveRecentOrders(userId = it.data.id)
+                }
+                AuthState.Unauthenticated -> {
+                    println("[$TAG]: User is signed out.")
+                    channel.offer(Resource.Error(ERROR_USER_NOT_SIGNED_IN))
+                }
+                AuthState.Loading -> {
+                    println("[$TAG]: Loading auth profile...")
+                    channel.offer(Resource.Loading())
                 }
             }
+        }
+    }.shareIn(
+        scope = externalScope,
+        started = SharingStarted.WhileSubscribed(),
+        replay = 1
+    )
 
-        emitAll(orderItems)
-    }
+    override fun execute(parameters: Unit): Flow<Resource<List<OrderBasic>>> = sharedResult
 
     private fun sortByOrderState(orderBasics: List<OrderBasic>): List<OrderBasic> {
-        return orderBasics.sortedByDescending { it.state.priority }
+        // Put delivered orders at the end
+        return orderBasics.sortedWith(
+            compareByDescending<OrderBasic> { it.state != OrderState.DELIVERED }
+                .thenByDescending { it.state.precedence }
+        )
+    }
+
+    private fun ProducerScope<Resource<List<OrderBasic>>>.startObserveRecentOrders(userId: String) {
+        observeRecentOrdersJob = externalScope.launch(coroutineDispatcher) {
+            orderRepository.getActiveOrderItemsObservable(userId).collect {
+                when (it) {
+                    is Resource.Success -> {
+                        println("[$TAG]: Offered recent order items.")
+                        channel.offer(Resource.Success(sortByOrderState(it.data)))
+                    }
+                    is Resource.Error -> {
+                        // Failed to receive order items
+                        println("[$TAG]: Failed to receive order items: ${it.message}")
+                        channel.offer(Resource.Error(it.message))
+                    }
+                    is Resource.Loading -> {
+                        channel.offer(Resource.Loading())
+                    }
+                }
+            }
+        }
+    }
+
+    private fun stopObserveRecentOrders() {
+        println("[$TAG]: Stop observing recent order items.")
+        observeRecentOrdersJob.cancelIfActive()
     }
 }

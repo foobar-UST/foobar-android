@@ -19,7 +19,7 @@ class GetSellerItemsUseCase @Inject constructor(
 ) : PagingUseCase<GetSellerItemsParameters, SellerItemBasic>(coroutineDispatcher) {
 
     override fun execute(parameters: GetSellerItemsParameters): Flow<PagingData<SellerItemBasic>> {
-        return sellerRepository.getSellerItems(
+        return sellerRepository.getSellerItemsPagingData(
             sellerId = parameters.sellerId,
             catalogId = parameters.catalogId
         )

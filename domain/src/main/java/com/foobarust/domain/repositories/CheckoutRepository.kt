@@ -11,9 +11,5 @@ interface CheckoutRepository {
 
     suspend fun getPaymentMethods(): List<PaymentMethod>
 
-    suspend fun placeOrder(
-        idToken: String,
-        message: String?,
-        paymentMethodIdentifier: String
-    ): PlaceOrderResult
+    suspend fun placeOrder(idToken: String, message: String?, paymentMethodIdentifier: String): PlaceOrderResult
 }

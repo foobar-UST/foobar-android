@@ -192,6 +192,7 @@ class SellerSectionDetailAdapter(
 
     override fun onViewRecycled(holder: SellerSectionDetailViewHolder) {
         super.onViewRecycled(holder)
+
         if (holder is SellerSectionDetailUsersItemViewHolder) {
             scrollStatesManager.saveScrollState(
                 layoutPosition = holder.layoutPosition,

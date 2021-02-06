@@ -1,5 +1,3 @@
-package com.foobarust.android.utils
-
 /*
  * Copyright (C) 2018 The Android Open Source Project
  *
@@ -16,30 +14,39 @@ package com.foobarust.android.utils
  * limitations under the License.
  */
 
+package com.foobarust.android.utils
+
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
 /**
- * A lazy property that gets cleaned up when the fragment's view is destroyed.
+ * A lazy property that gets cleaned up when the fragment is destroyed.
  *
- * Accessing this variable while the fragment's view is destroyed will throw NPE.
+ * Accessing this variable in a destroyed fragment will throw NPE.
  */
 class AutoClearedValue<T : Any>(val fragment: Fragment) : ReadWriteProperty<Fragment, T> {
-
     private var _value: T? = null
 
     init {
-        fragment.lifecycle.addObserver(object: DefaultLifecycleObserver {
-            override fun onCreate(owner: LifecycleOwner) {
-                fragment.viewLifecycleOwnerLiveData.observe(fragment) { viewLifecycleOwner ->
-                    viewLifecycleOwner?.lifecycle?.addObserver(object: DefaultLifecycleObserver {
-                        override fun onDestroy(owner: LifecycleOwner) {
-                            _value = null
-                        }
-                    })
+        var observerRegistered = false
+        val viewObserver = object : LifecycleObserver {
+            @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+            fun onDestroyView() {
+                observerRegistered = false
+                _value = null
+            }
+        }
+
+        fragment.lifecycle.addObserver(object : LifecycleObserver {
+            @OnLifecycleEvent(Lifecycle.Event.ON_START)
+            fun onStart() {
+                if (!observerRegistered) {
+                    fragment.viewLifecycleOwner.lifecycle.addObserver(viewObserver)
+                    observerRegistered = true
                 }
             }
         })
@@ -59,5 +66,4 @@ class AutoClearedValue<T : Any>(val fragment: Fragment) : ReadWriteProperty<Frag
 /**
  * Creates an [AutoClearedValue] associated with this fragment.
  */
-fun <T : Any> Fragment.autoCleared() =
-    AutoClearedValue<T>(this)
+fun <T : Any> Fragment.autoCleared() = AutoClearedValue<T>(this)

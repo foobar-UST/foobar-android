@@ -34,8 +34,8 @@ class OrderViewModel @Inject constructor(
         )
     )
 
-    private val _navigateToOrderDetail = SingleLiveEvent<Unit>()
-    val navigateToOrderDetail: LiveData<Unit>
+    private val _navigateToOrderDetail = SingleLiveEvent<String>()
+    val navigateToOrderDetail: LiveData<String>
         get() = _navigateToOrderDetail
 
     private val _scrollToTop = MutableSharedFlow<Int>()
@@ -47,7 +47,7 @@ class OrderViewModel @Inject constructor(
         _scrollToTop.emit(currentTabPage)
     }
 
-    fun onNavigateToOrderDetail() {
-        _navigateToOrderDetail.value = Unit
+    fun onNavigateToOrderDetail(orderId: String) {
+        _navigateToOrderDetail.value = orderId
     }
 }

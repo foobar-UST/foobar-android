@@ -42,7 +42,7 @@ class SettingsAdapter(
                 profileModel = currentItem
                 listener = this@SettingsAdapter.listener
 
-                if (currentItem.isSignedIn() && currentItem.photoUrl != null) {
+                if (currentItem.signedIn && currentItem.photoUrl != null) {
                     avatarImageView.bindGlideUrl(
                         imageUrl = currentItem.photoUrl,
                         centerCrop = true
@@ -73,8 +73,8 @@ class SettingsAdapter(
     }
 
     interface SettingsAdapterListener {
-        fun onSettingsUserProfileClicked()
-        fun onSettingsSectionClicked(sectionId: String)
+        fun onUserProfileClicked(isSignedIn: Boolean)
+        fun onSectionItemClicked(sectionId: String)
     }
 }
 
@@ -90,11 +90,10 @@ sealed class SettingsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVi
 
 sealed class SettingsListModel {
     data class SettingsProfileModel(
+        val signedIn: Boolean,
         val username: String? = null,
         val photoUrl: String? = null
-    ) : SettingsListModel() {
-        fun isSignedIn(): Boolean = username != null
-    }
+    ) : SettingsListModel()
 
     data class SettingsSectionModel(
         val id: String,

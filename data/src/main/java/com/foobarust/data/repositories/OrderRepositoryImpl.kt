@@ -10,7 +10,6 @@ import com.foobarust.data.common.Constants.ORDER_STATE_CANCELLED
 import com.foobarust.data.common.Constants.ORDER_STATE_FIELD
 import com.foobarust.data.mappers.OrderMapper
 import com.foobarust.data.paging.ArchivedOrderBasicsPagingSource
-import com.foobarust.data.utils.getAwaitResult
 import com.foobarust.data.utils.snapshotFlow
 import com.foobarust.domain.models.order.OrderBasic
 import com.foobarust.domain.models.order.OrderDetail
@@ -31,7 +30,7 @@ class OrderRepositoryImpl @Inject constructor(
     private val orderMapper: OrderMapper
 ) : OrderRepository {
 
-    override fun getActiveOrderBasics(userId: String): Flow<Resource<List<OrderBasic>>> {
+    override fun getActiveOrderItemsObservable(userId: String): Flow<Resource<List<OrderBasic>>> {
         return firestore.collection(ORDERS_BASIC_COLLECTION)
             .whereNotIn(
                 ORDER_STATE_FIELD,
@@ -40,7 +39,7 @@ class OrderRepositoryImpl @Inject constructor(
             .snapshotFlow(orderMapper::toOrderBasic, keepAlive = true)
     }
 
-    override fun getArchivedOrderBasics(userId: String): Flow<PagingData<OrderBasic>> {
+    override fun getArchivedOrderItems(userId: String): Flow<PagingData<OrderBasic>> {
         return Pager(
             config = PagingConfig(
                 initialLoadSize = ARCHIVED_ORDERS_PAGE_SIZE * 2,
@@ -53,8 +52,8 @@ class OrderRepositoryImpl @Inject constructor(
         ).flow
     }
 
-    override suspend fun getOrderDetail(orderId: String): OrderDetail {
+    override fun getOrderDetailObservable(orderId: String): Flow<Resource<OrderDetail>> {
         return firestore.document("${ORDERS_COLLECTION}/$orderId")
-            .getAwaitResult(orderMapper::toOrderDetail)
+            .snapshotFlow(orderMapper::toOrderDetail)
     }
 }

@@ -19,7 +19,7 @@ private const val TAG = "NetworkCacheResource"
 internal inline fun <T> networkCacheResource(
     noinline cacheSource: suspend () -> T,
     crossinline networkSource: () -> Flow<Resource<T>>,
-    noinline updateLocal: suspend (T) -> Unit
+    noinline updateCache: suspend (T) -> Unit
 ): Flow<Resource<T>> = channelFlow {
     var observeCacheJob: Job? = null
     networkSource().collect {
@@ -29,7 +29,7 @@ internal inline fun <T> networkCacheResource(
                 observeCacheJob?.cancelIfActive()
                 channel.offer(it)
                 Log.d(TAG, "Offer network resource.")
-                startUpdateCache(updateLocal, it.data)
+                startUpdateCache(updateCache, it.data)
             }
             is Resource.Error -> {
                 // Emit result from cache flow when the network is down.

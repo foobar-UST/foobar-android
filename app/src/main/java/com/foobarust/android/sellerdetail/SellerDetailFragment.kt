@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -128,7 +130,7 @@ class SellerDetailFragment : FullScreenDialogFragment() {
                     setOnClickListener { setupChipActions(action.id) }
                     // Fix chip flicker when changing typeface
                     // See: https://github.com/material-components/material-components-android/issues/675
-                    post { visibility = View.VISIBLE }
+                    post { this.isVisible = true }
                 }
             }
 
@@ -173,7 +175,7 @@ class SellerDetailFragment : FullScreenDialogFragment() {
 
     private fun setupNoticeBanner(sellerDetail: SellerDetail) {
         with(binding.sellerNoticeBanner.noticeTextView) {
-            bindGoneIf(!sellerDetail.online || sellerDetail.notice == null)
+            isGone = !sellerDetail.online || sellerDetail.notice.isNullOrBlank()
 
             text = if (sellerDetail.online) {
                 sellerDetail.notice

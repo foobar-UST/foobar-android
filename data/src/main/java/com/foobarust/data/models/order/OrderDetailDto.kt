@@ -12,7 +12,11 @@ import com.foobarust.data.common.Constants.ORDER_MESSAGE_FIELD
 import com.foobarust.data.common.Constants.ORDER_ORDER_ITEMS_FIELD
 import com.foobarust.data.common.Constants.ORDER_PAYMENT_METHOD_FIELD
 import com.foobarust.data.common.Constants.ORDER_SECTION_ID_FIELD
+import com.foobarust.data.common.Constants.ORDER_SECTION_TITLE_FIELD
+import com.foobarust.data.common.Constants.ORDER_SECTION_TITLE_ZH_FIELD
 import com.foobarust.data.common.Constants.ORDER_SELLER_ID_FIELD
+import com.foobarust.data.common.Constants.ORDER_SELLER_NAME_FIELD
+import com.foobarust.data.common.Constants.ORDER_SELLER_NAME_ZH_FIELD
 import com.foobarust.data.common.Constants.ORDER_STATE_FIELD
 import com.foobarust.data.common.Constants.ORDER_SUBTOTAL_COST_FIELD
 import com.foobarust.data.common.Constants.ORDER_TITLE_FIELD
@@ -51,8 +55,24 @@ data class OrderDetailDto(
     val sellerId: String? = null,
 
     @JvmField
+    @PropertyName(ORDER_SELLER_NAME_FIELD)
+    val sellerName: String? = null,
+
+    @JvmField
+    @PropertyName(ORDER_SELLER_NAME_ZH_FIELD)
+    val sellerNameZh: String? = null,
+
+    @JvmField
     @PropertyName(ORDER_SECTION_ID_FIELD)
     val sectionId: String? = null,
+
+    @JvmField
+    @PropertyName(ORDER_SECTION_TITLE_FIELD)
+    val sectionTitle: String? = null,
+
+    @JvmField
+    @PropertyName(ORDER_SECTION_TITLE_ZH_FIELD)
+    val sectionTitleZh: String? = null,
 
     @JvmField
     @PropertyName(ORDER_DELIVERER_ID_FIELD)

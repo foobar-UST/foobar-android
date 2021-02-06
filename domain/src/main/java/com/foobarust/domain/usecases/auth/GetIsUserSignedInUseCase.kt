@@ -16,6 +16,6 @@ class GetIsUserSignedInUseCase @Inject constructor(
 ) : CoroutineUseCase<Unit, Boolean>(coroutineDispatcher) {
 
     override suspend fun execute(parameters: Unit): Boolean {
-        return authRepository.isSignedIn()
+        return authRepository.isUserSignedIn()
     }
 }

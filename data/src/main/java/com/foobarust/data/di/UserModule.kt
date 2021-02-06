@@ -1,7 +1,8 @@
 package com.foobarust.data.di
 
 import com.foobarust.data.db.AppDatabase
-import com.foobarust.data.db.UserDao
+import com.foobarust.data.db.UserDetailDao
+import com.foobarust.data.db.UserNotificationDao
 import com.foobarust.data.mappers.UserMapper
 import com.foobarust.data.repositories.UserRepositoryImpl
 import com.foobarust.domain.repositories.UserRepository
@@ -29,8 +30,14 @@ abstract class UserModule {
     companion object {
         @Singleton
         @Provides
-        fun provideUserDao(appDatabase: AppDatabase): UserDao {
-            return appDatabase.userDao()
+        fun provideUserDetailDao(appDatabase: AppDatabase): UserDetailDao {
+            return appDatabase.userDetailDao()
+        }
+
+        @Singleton
+        @Provides
+        fun provideUserNotificationDao(appDatabase: AppDatabase): UserNotificationDao {
+            return appDatabase.userNotificationDao()
         }
 
         @Singleton

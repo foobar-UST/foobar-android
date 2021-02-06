@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/spacing_mxlarge"
         android:background="?attr/selectableItemBackground"
-        android:onClick="@{() -> listener.onSettingsUserProfileClicked()}">
+        android:onClick="@{() -> listener.onUserProfileClicked(profileModel.signedIn)}">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/avatar_image_view"

@@ -69,7 +69,7 @@ class CartAdapter(
 
                 // Navigate to SellerSection
                 if (currentItem.sectionId != null) {
-                    sectionOption.itemOption.setOnClickListener {
+                    sectionNav.navLayout.setOnClickListener {
                         listener.onSectionOptionClicked(
                             sellerId = currentItem.sellerId,
                             sectionId = currentItem.sectionId
@@ -78,7 +78,7 @@ class CartAdapter(
                 }
 
                 // Navigate to SellerMisc
-                miscOption.itemOption.setOnClickListener {
+                miscNav.navLayout.setOnClickListener {
                     listener.onSellerMiscOptionClicked(
                         sellerId = currentItem.sellerId
                     )
@@ -207,7 +207,9 @@ sealed class CartListModel {
         val cartDeliveryTime: String?,
         val sellerId: String,
         val sellerOnline: Boolean,
-        val sectionId: String?
+        val sectionId: String?,
+        val sectionNavSubtitle: String,
+        val miscNavSubtitle: String
     ) : CartListModel()
 
     data class CartPurchaseItemModel(

@@ -41,18 +41,6 @@ class RemoteTest {
     }
 
     @Test
-    fun hello_world_test() = runBlocking(Dispatchers.IO) {
-        try {
-            val result = remoteService.getHelloWorld(hasError = false)
-            Log.d("RemoteTest", "result: $result")
-        } catch (e: Exception) {
-            Log.d("RemoteTest", "message: ${e.message}")
-        }
-
-        assert(true)
-    }
-
-    @Test
     fun get_directions_test() = runBlocking(Dispatchers.IO) {
         val result = mapRepository.getDirectionsPath(
             originLatitude = 22.33469,
@@ -68,7 +56,7 @@ class RemoteTest {
     @Test
     fun add_new_order_test() = runBlocking(Dispatchers.IO) {
         val result = checkoutRepository.placeOrder(
-            idToken = authRepository.getIdToken(),
+            idToken = authRepository.getUserIdToken(),
             message = "test_message",
             paymentMethodIdentifier = "cash_on_delivery"
         )

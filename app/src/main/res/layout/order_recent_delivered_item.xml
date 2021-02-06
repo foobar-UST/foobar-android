@@ -33,7 +33,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{deliveredItemModel.orderIdentifierTitle}"
-                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:textAppearance="?attr/textAppearanceHeadline6"
+                android:textColor="@color/material_on_surface_emphasis_medium"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="[#EA2PE] Order is delivered!"/>
 

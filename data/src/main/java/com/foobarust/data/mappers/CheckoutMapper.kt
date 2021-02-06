@@ -20,10 +20,10 @@ class CheckoutMapper @Inject constructor() {
         )
     }
 
-    fun toPlaceOrderResult(placeOrderResponse: PlaceOrderResponse): PlaceOrderResult {
+    fun toPlaceOrderResult(response: PlaceOrderResponse): PlaceOrderResult {
         return PlaceOrderResult(
-            orderId = placeOrderResponse.orderId,
-            orderIdentifier = placeOrderResponse.orderIdentifier
+            orderId = response.orderId,
+            orderIdentifier = response.orderIdentifier
         )
     }
 }

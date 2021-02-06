@@ -21,9 +21,9 @@ class AuthActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = DataBindingUtil.setContentView<ActivityAuthBinding>(
-            this,
-            R.layout.activity_auth
+            this, R.layout.activity_auth
         ).apply {
             viewModel = this@AuthActivity.viewModel
         }
@@ -37,20 +37,27 @@ class AuthActivity : AppCompatActivity() {
             showShortToast(it)
         }
 
+        // Finish activity if the user is already signed in.
+        viewModel.userSignedIn.observe(this) {
+            finish()
+        }
+
         // Look for sign-in link when the activity starts
         handleEmailDeepLink(intent)
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        // Look for sign-in link when the activity resumes
+        // onNewIntent() will be called when AuthActivity is
+        // launched the second time with singleTop launch mode being set,
+        // instead of creating another activity instance.
         handleEmailDeepLink(intent)
     }
 
     private fun handleEmailDeepLink(intent: Intent?) {
         val emailLink = intent?.data?.toString()
         if (emailLink != null) {
-            viewModel.onVerifyEmailLinkAndSignIn(emailLink)
+            viewModel.onSignInWithEmailLink(emailLink)
         }
     }
 }

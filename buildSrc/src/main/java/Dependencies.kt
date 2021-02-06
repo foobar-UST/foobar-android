@@ -83,7 +83,7 @@ object Dependencies {
     const val TEST_CORE = "androidx.test:core:${Versions.TEST_CORE}"
     const val TEST_RUNNER = "androidx.test:rules:${Versions.TEST_RUNNER}"
     const val TEST_RULES = "androidx.test:rules:${Versions.TEST_RULES}"
-    //const val TEST_EXT_JUNIT = "androidx.test.ext:junit:${Versions.TEST_EXT_JUNIT}"
+    const val TEST_EXT_JUNIT = "androidx.test.ext:junit:${Versions.TEST_EXT_JUNIT}"
     const val TEST_EXT_JUNIT_KTX = "androidx.test.ext:junit-ktx:${Versions.TEST_EXT_JUNIT}"
     const val TEST_ESPRESSO_CORE = "androidx.test.espresso:espresso-core:${Versions.TEST_ESPRESSO_CORE}"
     const val FRAGMENT_TESTING = "androidx.fragment:fragment-testing:${Versions.FRAGMENT}"

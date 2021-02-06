@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.work.*
 import com.foobarust.android.R
 import com.foobarust.android.common.BaseViewModel
 import com.foobarust.android.common.TextInputProperty
@@ -12,12 +13,14 @@ import com.foobarust.android.common.TextInputType.PHONE_NUM
 import com.foobarust.android.common.UiState
 import com.foobarust.android.settings.ProfileListModel.*
 import com.foobarust.android.utils.SingleLiveEvent
+import com.foobarust.android.works.UploadUserPhotoWork
 import com.foobarust.domain.models.user.UserDetail
 import com.foobarust.domain.models.user.isDataCompleted
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.states.getSuccessDataOr
+import com.foobarust.domain.usecases.AuthState
 import com.foobarust.domain.usecases.common.GetFormattedPhoneNumUseCase
-import com.foobarust.domain.usecases.user.GetUserDetailUseCase
+import com.foobarust.domain.usecases.user.GetUserAuthStateUseCase
 import com.foobarust.domain.usecases.user.UpdateUserDetailParameters
 import com.foobarust.domain.usecases.user.UpdateUserDetailUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,23 +36,25 @@ const val EDIT_PROFILE_PHONE_NUMBER = "profile_phone_number"
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    getUserDetailUseCase: GetUserDetailUseCase,
+    private val workManager: WorkManager,
+    getUserAuthStateUseCase: GetUserAuthStateUseCase,
     private val updateUserDetailUseCase: UpdateUserDetailUseCase,
     private val getFormattedPhoneNumUseCase: GetFormattedPhoneNumUseCase
 ) : BaseViewModel() {
 
-    val profileListModels: LiveData<List<ProfileListModel>> = getUserDetailUseCase(Unit)
+    val profileListModels: LiveData<List<ProfileListModel>> = getUserAuthStateUseCase(Unit)
         .map {
             when (it) {
-                is Resource.Success -> {
+                is AuthState.Authenticated -> {
                     setUiState(UiState.Success)
                     buildProfileListModels(userDetail = it.data)
                 }
-                is Resource.Error -> {
-                    setUiState(UiState.Error(it.message))
+                AuthState.Unauthenticated -> {
+                    setUiState(UiState.Success)
+                    showToastMessage(context.getString(R.string.auth_signed_out_message))
                     emptyList()
                 }
-                is Resource.Loading -> {
+                AuthState.Loading -> {
                     setUiState(UiState.Loading)
                     emptyList()
                 }
@@ -117,6 +122,28 @@ class ProfileViewModel @Inject constructor(
             )
             else -> throw IllegalStateException("Unknown edit model: ${editModel.id}")
         }
+    }
+
+    fun onUploadUserPhoto(uri: String, extension: String) {
+        val inputData = workDataOf(
+            UploadUserPhotoWork.USER_PHOTO_URL to uri,
+            UploadUserPhotoWork.USER_PHOTO_EXTENSION to extension
+        )
+
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+        val uploadRequest = OneTimeWorkRequestBuilder<UploadUserPhotoWork>()
+            .setInputData(inputData)
+            .setConstraints(constraints)
+            .build()
+
+        workManager.beginUniqueWork(
+            UploadUserPhotoWork.WORK_NAME,
+            ExistingWorkPolicy.REPLACE,
+            uploadRequest
+        ).enqueue()
     }
 
     private suspend fun buildProfileListModels(userDetail: UserDetail?): List<ProfileListModel> {

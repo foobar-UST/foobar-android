@@ -6,10 +6,15 @@ import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import androidx.core.content.ContextCompat
 import androidx.work.WorkManager
+import com.foobarust.android.splash.DynamicLinksUtils
+import com.foobarust.android.utils.ResourceIdentifier
 import com.foobarust.domain.di.DispatcherModule
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.crashlytics.ktx.crashlytics
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
+import com.google.firebase.dynamiclinks.ktx.dynamicLinks
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -50,7 +55,30 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideDynamicLinks(): FirebaseDynamicLinks{
+        return Firebase.dynamicLinks
+    }
+
+    @Provides
+    @Singleton
+    fun provideMessaging(): FirebaseMessaging {
+        return FirebaseMessaging.getInstance()
+    }
+    @Provides
+    @Singleton
     fun provideWorkManager(@ApplicationContext context: Context): WorkManager {
         return WorkManager.getInstance(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideResourceIdentifier(@ApplicationContext context: Context): ResourceIdentifier {
+        return ResourceIdentifier(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDynamicLinksUtils(firebaseDynamicLinks: FirebaseDynamicLinks): DynamicLinksUtils {
+        return DynamicLinksUtils(firebaseDynamicLinks)
     }
 }

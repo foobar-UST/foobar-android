@@ -23,27 +23,27 @@ android {
     }
 
     buildTypes {
-        // Get local.properties
-        val properties = Properties()
-        val localProperties = rootProject.file("local.properties")
-        properties.load(localProperties.inputStream())
+        val localProperties = Properties()
+        localProperties.load(
+            rootProject.file("local.properties").inputStream()
+        )
 
-        // Config for release build
+        // Release build
         getByName("release") {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
 
-        // Config for debug build
+        // Debug build
         getByName("debug") {
-            buildConfigField("Boolean", "USE_FIREBASE_EMULATOR", "true")
-            buildConfigField("String", "FIREBASE_EMULATOR_HOST", "\"192.168.128.66\"")
-            buildConfigField("String", "FIREBASE_EMULATOR_FIRESTORE_PORT", "\"8080\"")
-            buildConfigField("String", "FIREBASE_EMULATOR_FUNCTIONS_PORT", "\"5001\"")
-            buildConfigField("int", "FIREBASE_EMULATOR_AUTH_PORT", "9099")
-
-            val mapsApiKey = properties.getProperty("MAPS_API_KEY", "")
-            buildConfigField("String", "GOOGLE_MAPS_API_KEY", "\"$mapsApiKey\"")
+            buildConfigField("Boolean", "USE_FIREBASE_EMULATOR", "false")
+            buildConfigField("String", "EMULATOR_HOST", "\"192.168.128.66\"")
+            buildConfigField("String", "EMULATOR_FIRESTORE_PORT", "\"8080\"")
+            buildConfigField("String", "EMULATOR_FUNCTIONS_PORT", "\"5001\"")
+            buildConfigField("int", "EMULATOR_AUTH_PORT", "9099")
+            buildConfigField("String", "GOOGLE_MAPS_API_KEY",
+                "\"${localProperties.getProperty("MAPS_API_KEY", "")}\""
+            )
         }
     }
 
@@ -74,20 +74,20 @@ dependencies {
     implementation(Dependencies.COROUTINE_PLAY_SERVICES)
     implementation(Dependencies.CORE)
     implementation(Dependencies.APPCOMPAT)
-    implementation(Dependencies.ROOM_RUNTIME)
-    implementation(Dependencies.ROOM_KTX)
     implementation(Dependencies.HILT)
     implementation(Dependencies.PAGING_RUNTIME)
-    // TODO: fix api exposure
-    api(Dependencies.FIREBASE_AUTH)
-    api(Dependencies.FIREBASE_FIRESTORE)
-    api(Dependencies.FIREBASE_STORAGE)
     implementation(Dependencies.PLAY_SERVICES_AUTH)
     implementation(Dependencies.RETROFIT)
     implementation(Dependencies.RETROFIT_CONVERTER_GSON)
     implementation(Dependencies.OKHTTP_LOGGING_INTERCEPTOR)
     implementation(Dependencies.PLAY_SERVICES_MAP)
     implementation(Dependencies.MAP_UTILS)
+    api(Dependencies.FIREBASE_AUTH)
+    api(Dependencies.FIREBASE_FIRESTORE)
+    api(Dependencies.FIREBASE_STORAGE)
+    api(Dependencies.FIREBASE_MESSAGING)
+    api(Dependencies.ROOM_RUNTIME)
+    api(Dependencies.ROOM_KTX)
 
     // Annotation Processors
     kapt(Annotation.ROOM_COMPILER)

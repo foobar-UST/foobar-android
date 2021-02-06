@@ -25,7 +25,7 @@ class AddUserCartItemUseCase @Inject constructor(
 ) : FlowUseCase<AddUserCartItemParameters, Unit>(coroutineDispatcher) {
 
     override fun execute(parameters: AddUserCartItemParameters): Flow<Resource<Unit>> = flow {
-        if (!authRepository.isSignedIn()) {
+        if (!authRepository.isUserSignedIn()) {
             throw Exception(ERROR_USER_NOT_SIGNED_IN)
         }
 
@@ -37,7 +37,7 @@ class AddUserCartItemUseCase @Inject constructor(
             throw Exception(ERROR_DIFFERENT_SELLER)
         }
 
-        val idToken = authRepository.getIdToken()
+        val idToken = authRepository.getUserIdToken()
 
         parameters.addUserCartItems.forEach {
             cartRepository.addUserCartItem(

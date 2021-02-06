@@ -11,8 +11,12 @@ data class UserCart(
     val title: String,
     val titleZh: String?,
     val sellerId: String,
+    val sellerName: String,
+    val sellerNameZh: String?,
     val sellerType: SellerType,
     val sectionId: String?,
+    val sectionTitle: String?,
+    val sectionTitleZh: String?,
     val deliveryTime: Date?,
     val imageUrl: String?,
     val pickupLocation: Geolocation,
@@ -24,8 +28,18 @@ data class UserCart(
     val updatedAt: Date?
 )
 
+fun UserCart.hasItems(): Boolean = itemsCount > 0
+
 fun UserCart.getNormalizedTitle(): String {
     return if (titleZh != null) "$title $titleZh" else title
+}
+
+fun UserCart.getNormalizedSellerName(): String {
+    return if (sellerNameZh != null) "$sellerName $sellerNameZh" else sellerName
+}
+
+fun UserCart.getNormalizedSectionTitle(): String? {
+    return if (sectionTitleZh != null) "$sectionTitle $sectionTitleZh" else sectionTitle
 }
 
 fun UserCart.getDeliveryDateString(): String? {

@@ -9,14 +9,6 @@
     <string name="shortcut_explore_short_label">Explore</string>
     <string name="shortcut_explore_long_label">Explore</string>
 
-    <string name="notification_channel_default_id" translatable="false">default_notification_channel</string>
-    <string name="notification_channel_default_name">Default</string>
-    <string name="notification_channel_upload_id" translatable="false">upload_notification_channel</string>
-    <string name="notification_channel_upload_name">Upload</string>
-    <string name="notification_item_upload_user_photo_title">Upload User Photo</string>
-    <string name="notification_item_upload_user_photo_body">Uploading</string>
-    <string name="notification_item_upload_user_photo_complete">Completed</string>
-
     <!-- Actions -->
     <string name="action_clear_text">Clear Text</string>
     <string name="action_search">Search</string>
@@ -51,6 +43,8 @@
     <string name="auth_cancel_message">Sign-in canceled.</string>
     <string name="auth_signed_in_message">Already signed in.</string>
     <string name="auth_email_resend_timer_message">Please try a few seconds later.</string>
+    <string name="auth_signed_out_message">Signed out.</string>
+
 
     <!-- Onboarding -->
     <string name="onboarding_get_started">Get Started</string>
@@ -86,7 +80,7 @@
     <string name="profile_edit_field_input_not_set">Not Set</string>
     <string name="profile_edit_field_input_invalid">Invalid input.</string>
     <string name="profile_require_data_for_ordering">Profile data have to be set before using ordering service.</string>
-    <string name="profile_user_detail_updated">Profile Updated</string>
+    <string name="profile_user_detail_updated">Profile Updated.</string>
 
     <!-- Sign out -->
     <string name="sign_out_dialog_title">Sign Out</string>
@@ -150,7 +144,7 @@
     <string name="seller_section_available">Available</string>
     <string name="seller_section_upcoming"># Upcoming</string>
     <string name="seller_section_user_counts">%d/%d Joined</string>
-    <string name="seller_section_subtitle_recent">Recent Sections</string>
+    <string name="seller_section_subtitle_recent">Available</string>
     <string name="seller_section_subtitle_upcoming">Upcoming</string>
 
     <!-- Seller Section Detail -->
@@ -185,15 +179,16 @@
     <string name="order_result_title_order_code">Your Order Code:</string>
     <string name="order_result_format_order_code"># %s</string>
     <string name="order_result_message_order_code">Order code will be used for identification when you pick up the order.</string>
-    <string name="order_result_button_order_detail">See Order</string>
+    <string name="order_result_button_complete">Complete</string>
     <string name="order_result_button_return">Return to Cart</string>
 
     <!-- Cart -->
     <string name="cart_bottom_bar_title_items_count">Items in Cart</string>
     <string name="cart_bottom_bar_format_items_count">%d</string>
-    <string name="cart_info_option_subtitle_section">Section</string>
-    <string name="cart_info_option_format_section">%s @ %s</string>
-    <string name="cart_info_option_subtitle_misc">Pick Up</string>
+    <string name="cart_info_nav_subtitle_section">Section from %s</string>
+    <string name="cart_info_nav_format_section">%s @ %s</string>
+    <string name="cart_info_nav_subtitle_misc_on_campus">[On Campus] Pick Up</string>
+    <string name="cart_info_nav_subtitle_misc_off_campus">[Off Campus] Deliver To</string>
     <string name="cart_total_price_title_total">Total</string>
     <string name="cart_total_price_title_subtotal">Subtotal</string>
     <string name="cart_total_price_title_delivery_fee">Delivery</string>
@@ -240,15 +235,35 @@
     <string name="order_history_empty_item_title">No Order History</string>
     <string name="order_history_ordered_date">Ordered on %s</string>
     <string name="order_history_total_cost">HKD $%.1f</string>
+    <string name="order_history_item_view_order">View Receipt</string>
 
-    <!-- Order State Description -->
-    <string name="order_state_description_processing">Processing Order…</string>
-    <string name="order_state_description_preparing">Preparing Order…</string>
-    <string name="order_state_description_in_transit">Delivering order…</string>
-    <string name="order_state_description_ready_for_pick_up">Ready for Pickup!</string>
-    <string name="order_state_description_delivered">Order is delivered!</string>
-    <string name="order_state_description_archived">Order is archived.</string>
-    <string name="order_state_description_cancelled">Order is cancelled.</string>
+    <!-- Order States -->
+    <string name="order_state_title_processing">Order Confirmed</string>
+    <string name="order_state_title_preparing">Order Preparing</string>
+    <string name="order_state_title_in_transit">Delivery In Progress</string>
+    <string name="order_state_title_ready_for_pick_up">Ready for Pick Up</string>
+    <string name="order_state_title_delivered">Order is delivered</string>
+    <string name="order_state_title_archived">Order is archived</string>
+    <string name="order_state_title_cancelled">Order is cancelled</string>
+
+    <string name="order_state_description_processing">Your order has been received.</string>
+    <string name="order_state_description_preparing">Your order is getting prepared.</string>
+    <string name="order_state_description_in_transit">Your order is on the way!</string>
+    <string name="order_state_description_ready_for_pick_up">Your order is ready for pick up!</string>
+    <string name="order_state_description_delivered">Your have received your order.</string>
+    <string name="order_state_description_archived">Your order is archived.</string>
+    <string name="order_state_description_cancelled">Your order is cancelled.</string>
+
+    <!-- Order Detail -->
+    <string name="order_detail_header_item_delivery_address_title_on_campus">Pick Up At</string>
+    <string name="order_detail_header_item_delivery_address_title_off_campus">Deliver To</string>
+    <string name="order_detail_info_item_identifier_title">Order #%s</string>
+    <string name="order_detail_info_item_total_cost_title">Total Cost</string>
+    <string name="order_detail_info_item_created_at">Created at %s</string>
+    <string name="order_detail_info_item_total_cost">HKD $%.1f</string>
+    <string name="order_detail_purchase_item_format_title">%s x %d</string>
+    <string name="order_detail_purchase_item_format_price">$%.1f</string>
+    <string name="order_detail_payment_item_title">Payment Method</string>
 
     <!-- Payment Methods -->
     <string name="payment_methods_title_cash_on_delivery">Cash On Delivery</string>

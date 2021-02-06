@@ -3,13 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-        <variable
-            name="viewModel"
-            type="com.foobarust.android.order.OrderHistoryViewModel" />
-        <import type="com.foobarust.android.common.UiState" />
-    </data>
-
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
@@ -32,8 +25,7 @@
                 android:id="@+id/loading_progress_bar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                app:goneIf="@{!(viewModel.uiState instanceof UiState.Loading)}"/>
+                android:layout_gravity="center" />
 
         </FrameLayout>
 

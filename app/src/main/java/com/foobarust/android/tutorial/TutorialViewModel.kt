@@ -8,6 +8,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.R
 import com.foobarust.android.utils.SingleLiveEvent
+import com.foobarust.domain.states.getSuccessDataOr
+import com.foobarust.domain.usecases.onboarding.GetHasUserCompleteOnboardingUseCase
+import com.foobarust.domain.usecases.onboarding.UpdateHasUserCompleteOnboardingUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
@@ -16,25 +19,27 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TutorialViewModel @Inject constructor(
-    @ApplicationContext context: Context
+    @ApplicationContext context: Context,
+    private val getHasUserCompleteOnboardingUseCase: GetHasUserCompleteOnboardingUseCase,
+    private val updateHasUserCompleteOnboardingUseCase: UpdateHasUserCompleteOnboardingUseCase
 ) : ViewModel() {
 
     val tutorialProperties = listOf(
         TutorialProperty(
             title = context.getString(R.string.onboarding_browse_food_title),
             description = context.getString(R.string.onboarding_browse_food_description),
-            imageRes = R.drawable.undraw_online_groceries,
+            drawableRes = R.drawable.undraw_online_groceries,
         ),
         TutorialProperty(
             title = context.getString(R.string.onboarding_group_orders_title),
             description = context.getString(R.string.onboarding_group_orders_description),
-            imageRes = R.drawable.undraw_eating_together,
+            drawableRes = R.drawable.undraw_eating_together,
         ),
         TutorialProperty(
             title = context.getString(R.string.onboarding_pick_up_delivery_title),
             description = context.getString(R.string.onboarding_pick_up_delivery_description),
-            imageRes = R.drawable.undraw_takeout_boxes,
-            showCompleteButton = true
+            drawableRes = R.drawable.undraw_takeout_boxes,
+            showDismiss = true
         )
     )
 
@@ -42,7 +47,11 @@ class TutorialViewModel @Inject constructor(
     val dismissTutorial: LiveData<Unit>
         get() = _dismissTutorial
 
-    fun onTutorialCompleted() = viewModelScope.launch {
+    fun onCompleteTutorial() = viewModelScope.launch {
+        val completed = getHasUserCompleteOnboardingUseCase(Unit).getSuccessDataOr(false)
+        if (!completed) {
+            updateHasUserCompleteOnboardingUseCase(true)
+        }
         _dismissTutorial.value = Unit
     }
 }
@@ -51,7 +60,7 @@ class TutorialViewModel @Inject constructor(
 data class TutorialProperty(
     val title: String,
     val description: String,
-    @DrawableRes val imageRes: Int,
-    val showCompleteButton: Boolean = false
+    @DrawableRes val drawableRes: Int,
+    val showDismiss: Boolean = false
 ) : Parcelable
 

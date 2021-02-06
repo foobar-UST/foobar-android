@@ -40,21 +40,21 @@
             tools:src="@sample/sample_image_5"/>
 
         <include
-            layout="@layout/cart_seller_info_item_option"
-            android:id="@+id/section_option"
+            layout="@layout/cart_info_item_nav"
+            android:id="@+id/section_nav"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:goneIf="@{cartInfoItemModel.sectionId == null}"
-            app:title="@{@string/cart_info_option_subtitle_section}"
+            app:title="@{cartInfoItemModel.sectionNavSubtitle}"
             app:content="@{cartInfoItemModel.cartDeliveryTime}"
             app:icon="@{R.drawable.ic_today}" />
 
         <include
-            layout="@layout/cart_seller_info_item_option"
-            android:id="@+id/misc_option"
+            layout="@layout/cart_info_item_nav"
+            android:id="@+id/misc_nav"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:title="@{@string/cart_info_option_subtitle_misc}"
+            app:title="@{cartInfoItemModel.miscNavSubtitle}"
             app:content="@{cartInfoItemModel.cartPickupAddress}"
             app:icon="@{R.drawable.ic_location_on}" />
 

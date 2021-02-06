@@ -23,38 +23,38 @@ android {
         versionCode = Application.VERSION_CODE
         versionName = Application.VERSION_NAME
         testInstrumentationRunner = Dependencies.HILT_TEST_RUNNER
-
-
     }
 
     buildTypes {
-        // Get local.properties
-        val properties = Properties()
-        val localProperties = rootProject.file("local.properties")
-        properties.load(localProperties.inputStream())
+        val localProperties = Properties()
+        localProperties.load(
+            rootProject.file("local.properties").inputStream()
+        )
 
-        // Config for release build
+        // Release build
         getByName("release") {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            // Expose API to manifest
             setManifestPlaceholders(
                 mapOf(
-                    "mapsApiKey" to properties.getProperty("MAPS_API_KEY", ""),
-                    "clearTextTraffic" to false
-                    //"crashlyticsCollectionEnabled" to true
+                    "mapsApiKey" to localProperties.getProperty("MAPS_API_KEY", null),
+                    "clearTextTraffic" to false,
+                    "authLink" to "foobarust2.page.link",
+                    "appLink" to "foobarust.page.link",
+                    "linkScheme" to "https"
                 )
             )
         }
 
-        // Config for debug build
+        // Debug build
         getByName("debug") {
-            // Expose API to manifest
             setManifestPlaceholders(
                 mapOf(
-                    "mapsApiKey" to properties.getProperty("MAPS_API_KEY", ""),
-                    "clearTextTraffic" to true
-                    //"crashlyticsCollectionEnabled" to true
+                    "mapsApiKey" to localProperties.getProperty("MAPS_API_KEY", null),
+                    "clearTextTraffic" to true,
+                    "authLink" to "foobarust2.page.link",
+                    "appLink" to "foobarust.page.link",
+                    "linkScheme" to "https"
                 )
             )
         }
@@ -79,15 +79,6 @@ android {
 
     buildFeatures {
         dataBinding = true
-    }
-
-    sourceSets {
-        /*
-        val test by getting
-        val androidTest by getting
-        test.java.srcDirs("src/sharedTest/java")
-        androidTest.java.srcDirs("src/sharedTest/java")
-         */
     }
 }
 
@@ -121,7 +112,7 @@ dependencies {
     implementation(Dependencies.SWIPE_REFRESH_LAYOUT)
     implementation(Dependencies.BROWSER)
     implementation(Dependencies.FIREBASE_CRASHLYTICS)
-    implementation(Dependencies.FIREBASE_MESSAGING)
+    implementation(Dependencies.FIREBASE_DYNAMIC_LINKS)
     implementation(Dependencies.FIREBASE_ANALYTICS)
     implementation(Dependencies.PLAY_SERVICES_MAP)
     implementation(Dependencies.BANNER_VIEW_PAGER)
@@ -130,11 +121,11 @@ dependencies {
     implementation(Dependencies.SPINKIT)
     implementation(Dependencies.MAP)
     implementation(Dependencies.WORK)
-    implementation(Dependencies.ROOM_RUNTIME)
-    implementation(Dependencies.ROOM_KTX)
+    //implementation(Dependencies.ROOM_RUNTIME)
+    //implementation(Dependencies.ROOM_KTX)
 
     // Annotation Processors
-    kapt(Annotation.ROOM_COMPILER)
+    //kapt(Annotation.ROOM_COMPILER)
     kapt(Annotation.HILT_ANDROID_COMPILER)
     kapt(Annotation.HILT_ANDROIDX_EXT_COMPILER)
 
@@ -155,7 +146,7 @@ dependencies {
     androidTestImplementation(Dependencies.TEST_ESPRESSO_CORE)
     androidTestImplementation(Dependencies.HILT_TESTING)
 
-    kaptAndroidTest(Annotation.HILT_ANDROID_COMPILER)
+    debugImplementation(Dependencies.FRAGMENT_TESTING)
 
-    androidTestAnnotationProcessor(Annotation.HILT_ANDROID_COMPILER)
+    kaptAndroidTest(Annotation.HILT_ANDROID_COMPILER)
 }

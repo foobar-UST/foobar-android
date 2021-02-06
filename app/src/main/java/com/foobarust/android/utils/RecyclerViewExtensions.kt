@@ -10,6 +10,9 @@ import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.foobarust.android.R
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
@@ -36,6 +39,33 @@ fun RecyclerView.drawItemMargin(
     )
 }
 
+/**
+ * Emit number of visible items when [RecyclerView]'s [LinearLayoutManager] has finished drawing.
+ */
+suspend fun RecyclerView.layoutCompletedFlow(): Flow<Int> = callbackFlow {
+    val layoutManager = object : LinearLayoutManager(
+        context,
+        VERTICAL,
+        false
+    ) {
+        override fun onLayoutCompleted(state: RecyclerView.State?) {
+            super.onLayoutCompleted(state)
+            val firstVisibleItemPosition = findFirstVisibleItemPosition()
+            val lastVisibleItemPosition = findLastVisibleItemPosition()
+            val itemsShown = lastVisibleItemPosition - firstVisibleItemPosition + 1
+
+            channel.offer(itemsShown)
+        }
+    }
+
+    this@layoutCompletedFlow.layoutManager = layoutManager
+
+    awaitClose { }
+}
+
+/**
+ * Scroll to top when there is new items inserted at the top of [RecyclerView].
+ */
 suspend fun <VH : RecyclerView.ViewHolder> RecyclerView.Adapter<VH>.scrollToTopWhenFirstItemInserted(
     recyclerView: RecyclerView
 ) {

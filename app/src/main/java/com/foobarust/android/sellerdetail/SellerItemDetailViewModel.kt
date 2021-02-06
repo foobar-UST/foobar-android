@@ -12,7 +12,6 @@ import com.foobarust.android.sellerdetail.SellerItemDetailListModel.*
 import com.foobarust.android.utils.SingleLiveEvent
 import com.foobarust.domain.models.cart.AddUserCartItem
 import com.foobarust.domain.models.cart.UpdateUserCartItem
-import com.foobarust.domain.models.cart.UserCart
 import com.foobarust.domain.models.seller.SellerItemBasic
 import com.foobarust.domain.models.seller.SellerItemDetail
 import com.foobarust.domain.models.seller.getNormalizedDescription
@@ -48,11 +47,8 @@ class SellerItemDetailViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     private val _itemProperty = MutableStateFlow<SellerItemDetailProperty?>(null)
-
     private val _toolbarCollapsed = MutableStateFlow(false)
-
     private val _bundleItems = MutableStateFlow<List<SellerItemBasic>>(emptyList())
-
     private val _checkedBundleItems = MutableStateFlow<List<SellerItemBasic>>(emptyList())
 
     private val _itemDetail = MutableStateFlow<SellerItemDetail?>(null)
@@ -126,6 +122,8 @@ class SellerItemDetailViewModel @Inject constructor(
 
     fun onFetchItemDetail(property: SellerItemDetailProperty) {
         _itemProperty.value = property
+        property.amounts?.let { _amountsInput.value = it }
+
         fetchItemDetailJob?.cancelIfActive()
         fetchItemDetailJob = viewModelScope.launch {
             val params = GetSellerItemDetailParameters(
@@ -148,8 +146,6 @@ class SellerItemDetailViewModel @Inject constructor(
                 }
             }
         }
-        // Setup initial amount for update action
-        property.amounts?.let { _amountsInput.value = it }
     }
 
     fun onAmountIncrement() {
@@ -168,13 +164,14 @@ class SellerItemDetailViewModel @Inject constructor(
         }
     }
 
-    fun onSubmitItem(currentUserCart: UserCart?) = viewModelScope.launch {
+    fun onSubmitItem(cartSellerId: String?) = viewModelScope.launch {
         val property = _itemProperty.value ?: return@launch
+
         if (property.isUpdateItemState()) {
             updateUserCartItem(cartItemId = property.cartItemId!!)
         } else {
             // Require cart seller id for comparison with item's seller id
-            addUserCartItem(cartSellerId = currentUserCart?.sellerId)
+            addUserCartItem(cartSellerId = cartSellerId)
         }
     }
 

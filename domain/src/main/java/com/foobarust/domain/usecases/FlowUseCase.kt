@@ -8,18 +8,17 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onStart
 
 /**
+ *  Created by kevin on 8/9/20
+ */
+
+/**
  * Base usecase using flow pattern
  * P: Input parameters
  * R: Output data
- * Created by kevin on 8/9/20
  */
 abstract class FlowUseCase<in P, R>(
     private val coroutineDispatcher: CoroutineDispatcher
 ) {
-
-    // execute() function call can now be omitted
-    // loadDataUseCase.execute(parameters) is now equals to
-    // loadDataUseCase(parameters)
     operator fun invoke(parameters: P): Flow<Resource<R>> = execute(parameters)
         .onStart { emit(Resource.Loading()) }
         .catch { e -> emit(Resource.Error(e.message)) }

@@ -55,20 +55,19 @@ class AuthInputFragment : Fragment() {
         binding.domainsAutoCompleteTextView.run {
             setAdapter(adapter)
             setOnItemClickListener { _, _, position, _ ->
-                authViewModel.onAuthEmailDomainUpdated(authViewModel.emailDomains[position])
+                authViewModel.onEmailDomainSelected(authViewModel.emailDomains[position])
             }
             // Select first item
             setText(adapter.getItem(0), false)
-            //viewModel.onAuthEmailDomainChanged(domains[0])
         }
 
-        authViewModel.authState.observe(viewLifecycleOwner) { state ->
-            if (state == AuthState.VERIFYING) {
+        authViewModel.authPage.observe(viewLifecycleOwner) { state ->
+            if (state == AuthPage.VERIFYING) {
                 // Requested email
                 findNavController(R.id.authInputFragment)?.navigate(
                     AuthInputFragmentDirections.actionAuthInputFragmentToAuthVerifyFragment()
                 )
-            } else if (state == AuthState.COMPLETED) {
+            } else if (state == AuthPage.COMPLETED) {
                 // Skip login screen
                 findNavController(R.id.authInputFragment)?.navigate(
                     AuthInputFragmentDirections.actionAuthInputFragmentToMainActivity()

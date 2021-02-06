@@ -47,10 +47,7 @@ class SellerOffCampusFragment : Fragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentSellerOffCampusBinding.inflate(inflater, container, false).apply {
-            viewModel = this@SellerOffCampusFragment.sellerOffCampusViewModel
-            lifecycleOwner = viewLifecycleOwner
-        }
+        binding = FragmentSellerOffCampusBinding.inflate(inflater, container, false)
 
         // Setup off-campus list
         val promotionAdapter = PromotionAdapter(
@@ -94,16 +91,22 @@ class SellerOffCampusFragment : Fragment(),
 
         // Control views corresponding to load states
         sectionsAdapter.addLoadStateListener { loadStates ->
-            sellerOffCampusViewModel.onPagingLoadStateChanged(loadStates.source.refresh)
-            loadStates.anyError()?.let {
-                showShortToast(it.error.message)
+            with(loadStates) {
+                updateViews(
+                    mainLayout = binding.recyclerView,
+                    errorLayout = binding.loadErrorLayout.loadErrorLayout,
+                    progressBar = binding.progressBar,
+                    swipeRefreshLayout = binding.swipeRefreshLayout
+                )
+                anyError()?.let {
+                    showShortToast(it.toString())
+                }
             }
         }
 
-        // Swipe to refresh
+        // Start swipe refresh
         binding.swipeRefreshLayout.setOnRefreshListener {
-            sellerOffCampusViewModel.onSwipeRefresh()
-            //sellerOffCampusViewModel.onReloadPromotion()
+            sellerOffCampusViewModel.onReloadPromotion()
             sectionsAdapter.refresh()
             normalizeListPosition(promotionAdapter)
         }
@@ -127,17 +130,6 @@ class SellerOffCampusFragment : Fragment(),
             binding.recyclerView.updatePadding(bottom = bottomPadding.toInt())
         }
 
-        // Show toast
-        sellerOffCampusViewModel.toastMessage.observe(viewLifecycleOwner) {
-            showShortToast(it)
-        }
-
-        // Swipe refresh layout
-        sellerOffCampusViewModel.isSwipeRefreshing.observe(viewLifecycleOwner) { isRefreshing ->
-            binding.swipeRefreshLayout.isRefreshing = isRefreshing
-            //binding.swipeRefreshLayout.isEnabled = !isRefreshing
-        }
-
         return binding.root
     }
 
@@ -155,7 +147,7 @@ class SellerOffCampusFragment : Fragment(),
     }
 
     override fun onPromotionAdvertiseItemClicked(advertiseBasic: AdvertiseBasic) {
-        mainViewModel.onLaunchCustomTab(url = advertiseBasic.url)
+        sellerViewModel.onNavigateToPromotionDetail(advertiseBasic.url)
     }
 
     override fun onPromotionSuggestItemClicked(suggestBasic: SuggestBasic) {

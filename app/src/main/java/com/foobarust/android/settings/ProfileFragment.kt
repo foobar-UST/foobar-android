@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -15,7 +14,6 @@ import androidx.navigation.fragment.findNavController
 import com.foobarust.android.R
 import com.foobarust.android.common.FullScreenDialogFragment
 import com.foobarust.android.databinding.FragmentProfileBinding
-import com.foobarust.android.main.MainViewModel
 import com.foobarust.android.settings.ProfileListModel.ProfileEditModel
 import com.foobarust.android.utils.AutoClearedValue
 import com.foobarust.android.utils.findNavController
@@ -28,7 +26,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class ProfileFragment : FullScreenDialogFragment(), ProfileAdapter.ProfileAdapterListener {
 
     private var binding: FragmentProfileBinding by AutoClearedValue(this)
-    private val mainViewModel: MainViewModel by activityViewModels()
     private val profileViewModel: ProfileViewModel by viewModels()
     private var textInputResultObserver: LifecycleEventObserver? = null
 
@@ -96,11 +93,13 @@ class ProfileFragment : FullScreenDialogFragment(), ProfileAdapter.ProfileAdapte
     }
 
     override fun onProfileAvatarClicked() {
-        // Pick image
         requireActivity().registerForActivityResult(ActivityResultContracts.GetContent()) { returnUri: Uri? ->
             returnUri?.let {
                 val fileExtension = it.getFileExtension(requireContext())
-                mainViewModel.onUploadUserPhoto(uri = it.toString(), extension = fileExtension ?: "")
+                profileViewModel.onUploadUserPhoto(
+                    uri = it.toString(),
+                    extension = fileExtension ?: ""
+                )
             }
         }.launch("image/*")
     }

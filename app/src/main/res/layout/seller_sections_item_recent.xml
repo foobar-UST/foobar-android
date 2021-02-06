@@ -30,38 +30,49 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/section_image_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:scaleType="centerCrop"
+                android:alpha="0.1"
+                android:importantForAccessibility="no"
+                app:glideUrl="@{sectionBasic.imageUrl}"
+                app:glideCenterCrop="@{true}"
+                app:glidePlaceholder="@{R.drawable.placeholder_card}"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
             <TextView
                 android:id="@+id/title_text_view"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_large"
                 android:layout_marginStart="@dimen/spacing_large"
                 android:layout_marginEnd="@dimen/spacing_large"
                 android:text="@{SellerSectionBasicKt.getNormalizedTitleForRecent(sectionBasic)}"
                 android:textColor="@color/material_on_surface_emphasis_high_type"
-                android:textAppearance="?attr/textAppearanceSubtitle1"
-                android:lineSpacingMultiplier="1.2"
-                app:layout_constraintStart_toStartOf="parent"
+                android:textAppearance="?attr/textAppearanceHeadline6"
+                android:maxLines="2"
+                android:ellipsize="end"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/section_image_view"
                 tools:text="(20/12) Lunch Order 午餐訂單 - 12:30 PM" />
 
             <TextView
                 android:id="@+id/delivery_time_text_view"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_xmedium"
                 android:layout_marginStart="@dimen/spacing_large"
                 android:layout_marginEnd="@dimen/spacing_large"
                 android:gravity="center_vertical"
                 android:text="@{@string/seller_section_cutoff_time(SellerSectionBasicKt.getCutoffTimeString(sectionBasic))}"
-                android:textColor="@color/material_on_surface_emphasis_medium"
                 android:textAppearance="?attr/textAppearanceBody2"
-                android:lineSpacingMultiplier="1.2"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/section_image_view"
+                android:textColor="@color/material_on_surface_emphasis_high_type"
+                android:maxLines="1"
+                android:ellipsize="end"
                 app:layout_constraintTop_toBottomOf="@id/title_text_view"
                 tools:text="@string/seller_section_cutoff_time"/>
 
@@ -81,8 +92,8 @@
                 android:layout_marginTop="@dimen/spacing_large"
                 android:layout_marginStart="@dimen/spacing_xmedium"
                 android:text="@string/seller_section_available"
-                android:textColor="@color/material_on_surface_emphasis_medium"
                 android:textAppearance="?attr/textAppearanceOverline"
+                android:textColor="@color/material_on_surface_emphasis_high_type"
                 app:layout_constraintTop_toBottomOf="@id/delivery_time_text_view"
                 app:layout_constraintStart_toEndOf="@id/state_indicator_image_view"/>
 
@@ -128,21 +139,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/bottom_bar_view"
                 app:layout_constraintBottom_toBottomOf="@id/bottom_bar_view"/>
-
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/section_image_view"
-                android:layout_width="90dp"
-                android:layout_height="90dp"
-                android:layout_marginTop="@dimen/spacing_large"
-                android:layout_marginEnd="@dimen/spacing_large"
-                android:scaleType="centerCrop"
-                app:glideUrl="@{sectionBasic.imageUrl}"
-                app:glideCenterCrop="@{true}"
-                app:glidePlaceholder="@{R.drawable.placeholder_card}"
-                app:shapeAppearance="@style/ShapeAppearance.Foobar.SmallComponent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                tools:src="@sample/sample_image_5"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

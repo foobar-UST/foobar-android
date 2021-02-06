@@ -92,7 +92,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_large"
-                android:text="@string/order_recent_item_view_order"
+                android:text="@string/order_history_item_view_order"
                 android:textColor="?attr/colorPrimary"
                 android:textAppearance="?attr/textAppearanceButton"
                 android:gravity="center_vertical"

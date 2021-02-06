@@ -24,7 +24,6 @@
             android:lineSpacingMultiplier="1.2"
             android:text="@{infoItemModel.itemTitle}"
             android:textAppearance="?attr/textAppearanceHeadline6"
-            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/price_text_view"
             app:layout_constraintTop_toTopOf="parent"

@@ -12,8 +12,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentSellerBinding
 import com.foobarust.android.main.MainViewModel
-import com.foobarust.android.utils.AutoClearedValue
-import com.foobarust.android.utils.findNavController
+import com.foobarust.android.utils.*
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -23,6 +22,7 @@ import kotlinx.coroutines.launch
 class SellerFragment : Fragment() {
 
     private var binding: FragmentSellerBinding by AutoClearedValue(this)
+    private var sellerPagerAdapter: SellerPagerAdapter by AutoClearedValue(this)
     private val mainViewModel: MainViewModel by activityViewModels()
     private val sellerViewModel: SellerViewModel by viewModels()
 
@@ -34,9 +34,9 @@ class SellerFragment : Fragment() {
         binding = FragmentSellerBinding.inflate(inflater, container, false)
 
         // Setup view pager
-        val sellerPagerAdapter = SellerPagerAdapter(
+        sellerPagerAdapter = SellerPagerAdapter(
             fragmentManager = childFragmentManager,
-            lifecycle = lifecycle,
+            lifecycle = viewLifecycleOwner.lifecycle,
             sellerPages = sellerViewModel.sellerPages
         )
 
@@ -84,6 +84,17 @@ class SellerFragment : Fragment() {
             findNavController(R.id.sellerFragment)?.navigate(
                 SellerFragmentDirections.actionSellerFragmentToSellerSectionFragment(property = it)
             )
+        }
+
+        // Launch promotion custom tab
+        sellerViewModel.navigateToPromotionDetail.observe(viewLifecycleOwner) {
+            if (!CustomTabHelper.launchCustomTab(
+                    context = requireContext(),
+                    url = it,
+                    colorInt = requireContext().themeColor(R.attr.colorPrimarySurface)
+                )) {
+                showShortToast(getString(R.string.error_resolve_activity_failed))
+            }
         }
 
         // Observe bottom navigation scroll to top, and propagate to view pager

@@ -8,11 +8,9 @@ import com.foobarust.android.R
 import com.foobarust.android.main.MainActivity
 import com.foobarust.android.tutorial.TutorialFragment
 import com.foobarust.android.utils.TestCoroutineRule
-import com.foobarust.android.utils.getOrAwaitValue
-import com.foobarust.android.utils.observeForTesting
 import com.foobarust.android.utils.runBlockingTest
 import com.foobarust.domain.repositories.PreferencesRepository
-import com.foobarust.domain.usecases.onboarding.GetOnboardingCompletedUseCase
+import com.foobarust.domain.usecases.onboarding.GetHasUserCompleteOnboardingUseCase
 import kotlinx.coroutines.delay
 import org.junit.Assert.assertEquals
 import org.junit.Rule
@@ -79,8 +77,8 @@ class SplashViewModelTest {
         )
     }
 
-    private fun createGetOnboardingCompletedUseCase(result: Boolean): GetOnboardingCompletedUseCase {
-        return object : GetOnboardingCompletedUseCase(
+    private fun createGetOnboardingCompletedUseCase(result: Boolean): GetHasUserCompleteOnboardingUseCase {
+        return object : GetHasUserCompleteOnboardingUseCase(
             preferencesRepository = mock(PreferencesRepository::class.java),
             coroutineDispatcher = coroutineRule.testDispatcher
         ) {

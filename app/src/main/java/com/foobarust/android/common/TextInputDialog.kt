@@ -13,7 +13,6 @@ import androidx.navigation.fragment.navArgs
 import com.foobarust.android.R
 import com.foobarust.android.common.TextInputType.*
 import com.foobarust.android.databinding.DialogTextInputEntryBinding
-import com.foobarust.android.utils.AutoClearedValue
 import com.foobarust.android.utils.showShortToast
 import com.foobarust.domain.usecases.common.GetFormattedPhoneNumUseCase
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -22,12 +21,14 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class TextInputDialog : DialogFragment() {
 
-    private var binding: DialogTextInputEntryBinding by AutoClearedValue(this)
+    private var binding: DialogTextInputEntryBinding? = null
     private val viewModel: TextInputViewModel by viewModels()
     private val args: TextInputDialogArgs by navArgs()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        binding = DialogTextInputEntryBinding.inflate(LayoutInflater.from(requireContext())).apply {
+        binding = DialogTextInputEntryBinding.inflate(
+            LayoutInflater.from(requireContext())
+        ).apply {
             textInputProperty = args.property
 
             viewModel.onUpdateTextInputProperty(args.property)
@@ -50,13 +51,13 @@ class TextInputDialog : DialogFragment() {
         }
 
         // Update input value
-        binding.valueEditText.doOnTextChanged { text, _, _, _ ->
+        binding?.valueEditText?.doOnTextChanged { text, _, _, _ ->
             viewModel.inputValue = text.toString()
         }
 
         return MaterialAlertDialogBuilder(requireContext())
             .setTitle(args.property.title)
-            .setView(binding.root)
+            .setView(binding?.root)
             .setPositiveButton(android.R.string.ok) { dialog, _ ->
                 // Check if input valid
                 if (!viewModel.isInputValid()) {
@@ -76,5 +77,10 @@ class TextInputDialog : DialogFragment() {
                 dialog.dismiss()
             }
             .create()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
 }

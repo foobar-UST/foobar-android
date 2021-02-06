@@ -12,9 +12,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface OrderRepository {
 
-    fun getActiveOrderBasics(userId: String): Flow<Resource<List<OrderBasic>>>
+    fun getActiveOrderItemsObservable(userId: String): Flow<Resource<List<OrderBasic>>>
 
-    fun getArchivedOrderBasics(userId: String): Flow<PagingData<OrderBasic>>
+    fun getArchivedOrderItems(userId: String): Flow<PagingData<OrderBasic>>
 
-    suspend fun getOrderDetail(orderId: String): OrderDetail
+    fun getOrderDetailObservable(orderId: String): Flow<Resource<OrderDetail>>
 }

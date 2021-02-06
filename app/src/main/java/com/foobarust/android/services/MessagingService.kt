@@ -2,37 +2,71 @@ package com.foobarust.android.services
 
 import android.app.NotificationManager
 import android.util.Log
-import com.foobarust.android.splash.SplashActivity
+import androidx.work.WorkManager
+import com.foobarust.android.utils.ResourceIdentifier
+import com.foobarust.android.utils.sendImageNotification
 import com.foobarust.android.utils.sendNotification
+import com.foobarust.domain.di.ApplicationScope
+import com.foobarust.domain.states.Resource
+import com.foobarust.domain.usecases.messaging.InsertDeviceTokenUseCase
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val TAG = "MessagingService"
 
 @AndroidEntryPoint
-class FoobarFirebaseMessagingService: FirebaseMessagingService() {
+class MessagingService: FirebaseMessagingService() {
 
+    @ApplicationScope
+    @Inject
+    lateinit var coroutineScope: CoroutineScope
     @Inject
     lateinit var notificationManager: NotificationManager
+    @Inject
+    lateinit var workManager: WorkManager
+    @Inject
+    lateinit var resourceIdentifier: ResourceIdentifier
+    @Inject
+    lateinit var insertDeviceTokenUseCase: InsertDeviceTokenUseCase
 
-    /**
-     * Called when the message is receied
-     */
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        // Check if the message contains a data payload
-        remoteMessage.data.let {
+        remoteMessage.notification?.let { notification ->
+            // Required fields
+            val channelId = notification.channelId ?: return
+            val titleLocId = notification.titleLocalizationKey ?: return
+            val link = notification.link ?: return
 
-        }
+            val titleLocArgs = notification.titleLocalizationArgs
 
-        // Check if the message contains a notification payload
-        remoteMessage.notification?.let {
-            sendNotification(
-                channelId = it.channelId as String,
-                title = it.title as String,
-                messageBody = it.body as String
-            )
+            val bodyLocId = notification.bodyLocalizationKey
+            val imageUrl = notification.imageUrl
+
+            if (imageUrl != null) {
+                coroutineScope.launch {
+                    notificationManager.sendImageNotification(
+                        context = applicationContext,
+                        title = resourceIdentifier.getString(titleLocId, titleLocArgs),
+                        messageBody = bodyLocId?.let { resourceIdentifier.getString(it) },
+                        channelId = notification.channelId.toString(),
+                        imageUrl = imageUrl.toString(),
+                        link = notification.link.toString()
+                    )
+                }
+            } else {
+                notificationManager.sendNotification(
+                    context = applicationContext,
+                    title = resourceIdentifier.getString(titleLocId, titleLocArgs),
+                    messageBody = bodyLocId?.let { resourceIdentifier.getString(it) },
+                    channelId = channelId,
+                    link = link.toString()
+                )
+            }
         }
     }
 
@@ -43,21 +77,19 @@ class FoobarFirebaseMessagingService: FirebaseMessagingService() {
      * the token.
      */
     override fun onNewToken(token: String) {
-        Log.d(TAG, "newToken: $token")
-        sendRegistrationToServer(token)
+        coroutineScope.launch {
+            insertDeviceTokenUseCase(Unit).collect {
+                when (it) {
+                    is Resource.Success -> Log.d(TAG, "Uploaded device token.")
+                    is Resource.Error -> Log.d(TAG, "Failed to upload device token.")
+                    is Resource.Loading -> Log.d(TAG, "Uploading device token.")
+                }
+            }
+        }
     }
 
-    private fun sendRegistrationToServer(token: String) {
-        // To be implemented
-    }
-
-    private fun sendNotification(channelId: String, title: String, messageBody: String) {
-        notificationManager.sendNotification(
-            channelId = channelId,
-            title = title,
-            messageBody = messageBody,
-            context = applicationContext,
-            intentActivity = SplashActivity::class
-        )
+    override fun onDestroy() {
+        super.onDestroy()
+        coroutineScope.cancel()
     }
 }

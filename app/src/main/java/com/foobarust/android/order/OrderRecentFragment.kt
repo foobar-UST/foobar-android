@@ -51,8 +51,7 @@ class OrderRecentFragment : Fragment(), OrderRecentAdapter.OrderRecentAdapterLis
 
         // Setup swipe to refresh
         binding.swipeRefreshLayout.setOnRefreshListener {
-            orderRecentViewModel.onSwipeRefresh()
-            orderRecentViewModel.onFetchOrderItems()
+            orderRecentViewModel.onFetchOrderItems(true)
         }
 
         // Scroll to top when the tab is reselected
@@ -69,16 +68,15 @@ class OrderRecentFragment : Fragment(), OrderRecentAdapter.OrderRecentAdapterLis
             showShortToast(it)
         }
 
-        // Setup swipe refresh layout
-        orderRecentViewModel.isSwipeRefreshing.observe(viewLifecycleOwner) { isRefreshing ->
-            binding.swipeRefreshLayout.isRefreshing = isRefreshing
+        orderRecentViewModel.finishSwipeRefresh.observe(viewLifecycleOwner) { isRefreshing ->
+            binding.swipeRefreshLayout.isRefreshing = false
         }
 
         return binding.root
     }
 
     override fun onOrderClicked(orderId: String) {
-        orderViewModel.onNavigateToOrderDetail()
+        orderViewModel.onNavigateToOrderDetail(orderId)
     }
 
     override fun onOrderRated(orderId: String, rating: Double) {

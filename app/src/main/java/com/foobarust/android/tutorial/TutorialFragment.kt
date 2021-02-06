@@ -1,17 +1,14 @@
 package com.foobarust.android.tutorial
 
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView.OVER_SCROLL_NEVER
 import com.foobarust.android.common.FullScreenDialogFragment
 import com.foobarust.android.databinding.FragmentTutorialBinding
-import com.foobarust.android.main.MainViewModel
 import com.foobarust.android.utils.AutoClearedValue
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,8 +17,11 @@ import dagger.hilt.android.AndroidEntryPoint
 class TutorialFragment : FullScreenDialogFragment() {
 
     private var binding: FragmentTutorialBinding by AutoClearedValue(this)
-    private val mainViewModel: MainViewModel by activityViewModels()
     private val tutorialViewModel: TutorialViewModel by viewModels()
+
+    override var onBackPressed: (() -> Unit)? = {
+        tutorialViewModel.onCompleteTutorial()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,11 +51,6 @@ class TutorialFragment : FullScreenDialogFragment() {
         }
 
         return binding.root
-    }
-
-    override fun onDismiss(dialog: DialogInterface) {
-        super.onDismiss(dialog)
-        mainViewModel.onTutorialDismissed()
     }
 
     companion object {

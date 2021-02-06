@@ -64,21 +64,24 @@ class OrderResultFragment : Fragment() {
 
         resultTitleTextView.text = getString(R.string.order_result_title_order_code)
 
-        resultMessageTextView.text = getString(
-            R.string.order_result_format_order_code,
-            navArgs.property.orderIdentifier
-        )
-        resultMessageTextView.setTypeface(resultInfoTextView.typeface, Typeface.BOLD)
-        resultMessageTextView.setTextColor(
-            requireContext().themeColor(R.attr.colorPrimary)
-        )
+        with(resultMessageTextView) {
+            text = getString(
+                R.string.order_result_format_order_code,
+                navArgs.property.orderIdentifier
+            )
+            setTypeface(resultInfoTextView.typeface, Typeface.BOLD)
+            setTextColor(
+                requireContext().themeColor(R.attr.colorPrimary)
+            )
+        }
 
         resultImageView.setImageResource(R.drawable.undraw_successful_purchase)
 
-        // TODO: Navigate to OrderDetail
-        navigateButton.text = getString(R.string.order_result_button_order_detail)
-        navigateButton.setOnClickListener {
-
+        with(navigateButton) {
+            text = getString(R.string.order_result_button_complete)
+            setOnClickListener {
+                checkoutViewModel.onDismissCheckoutDialog()
+            }
         }
     }
 
@@ -90,17 +93,21 @@ class OrderResultFragment : Fragment() {
         resultTitleTextView.visibility = View.GONE
         resultInfoTextView.visibility = View.GONE
 
-        resultMessageTextView.text = navArgs.property.errorMessage
-        resultMessageTextView.setTextColor(
-            requireContext().getColorCompat(R.color.material_on_surface_emphasis_medium)
-        )
+        with(resultMessageTextView) {
+            text = navArgs.property.errorMessage
+            setTextColor(
+                requireContext().getColorCompat(R.color.material_on_surface_emphasis_medium)
+            )
+        }
 
         resultImageView.setImageResource(R.drawable.undraw_cancel)
 
         // Return to cart fragment
-        navigateButton.text = getString(R.string.order_result_button_return)
-        navigateButton.setOnClickListener {
-            orderFailureNavigateToCartFragment()
+        with(navigateButton) {
+            text = getString(R.string.order_result_button_return)
+            setOnClickListener {
+                orderFailureNavigateToCartFragment()
+            }
         }
     }
 
@@ -115,6 +122,7 @@ class OrderResultFragment : Fragment() {
 data class OrderResultProperty(
     val orderId: String? = null,
     val orderIdentifier: String? = null,
+    val orderLink: String? = null,
     val errorMessage: String? = null
 ) : Parcelable {
     fun isOrderSuccess(): Boolean = orderId != null

@@ -28,13 +28,12 @@ class AuthVerifyFragment : Fragment() {
 
     private val backPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
-            authViewModel.onAuthEmailVerifyingCanceled()
+            authViewModel.onEmailVerificationCanceled()
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         // When back pressed, cancel the email verification and
         // navigate back to input screen
         requireActivity().onBackPressedDispatcher.addCallback(this, backPressedCallback)
@@ -50,12 +49,12 @@ class AuthVerifyFragment : Fragment() {
             lifecycleOwner = viewLifecycleOwner
         }
 
-        authViewModel.authState.observe(viewLifecycleOwner) { state ->
-            if (state == AuthState.INPUT) {
+        authViewModel.authPage.observe(viewLifecycleOwner) { state ->
+            if (state == AuthPage.INPUT) {
                 findNavController(R.id.authVerifyFragment)?.navigate(
                     AuthVerifyFragmentDirections.actionAuthVerifyFragmentToAuthInputFragment()
                 )
-            } else if (state == AuthState.COMPLETED) {
+            } else if (state == AuthPage.COMPLETED) {
                 findNavController(R.id.authVerifyFragment)?.navigate(
                     AuthVerifyFragmentDirections.actionAuthVerifyFragmentToMainActivity()
                 )

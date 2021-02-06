@@ -11,9 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import com.foobarust.android.R
 import com.foobarust.android.common.PagingLoadStateAdapter
 import com.foobarust.android.databinding.FragmentSellerItemsBinding
-import com.foobarust.android.utils.AutoClearedValue
-import com.foobarust.android.utils.anyError
-import com.foobarust.android.utils.parentViewModels
+import com.foobarust.android.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -44,10 +42,7 @@ class SellerItemsFragment : Fragment(), SellerItemsAdapter.SellerItemsAdapterLis
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentSellerItemsBinding.inflate(inflater, container, false).apply {
-            viewModel = this@SellerItemsFragment.sellerItemsViewModel
-            lifecycleOwner = viewLifecycleOwner
-        }
+        binding = FragmentSellerItemsBinding.inflate(inflater, container, false)
 
         // Setup recycler view
         val sellerItemsAdapter = SellerItemsAdapter(this)
@@ -66,9 +61,14 @@ class SellerItemsFragment : Fragment(), SellerItemsAdapter.SellerItemsAdapterLis
 
         // Control views corresponding to load states
         sellerItemsAdapter.addLoadStateListener { loadStates ->
-            sellerItemsViewModel.onLoadStateChanged(loadStates.source.refresh)
-            loadStates.anyError()?.let {
-                sellerDetailViewModel.showToastMessage(it.error.message)
+            with(loadStates) {
+                updateViews(
+                    mainLayout = binding.recyclerView,
+                    progressBar = binding.itemsProgressBar
+                )
+                anyError()?.let {
+                    showShortToast(it.error.message)
+                }
             }
         }
 

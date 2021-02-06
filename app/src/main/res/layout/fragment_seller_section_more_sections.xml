@@ -21,22 +21,19 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:goneIf="@{!(viewModel.uiState instanceof UiState.Success)}"
             tools:listitem="@layout/seller_sections_item_upcoming"/>
 
         <ProgressBar
             android:id="@+id/progress_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            app:goneIf="@{!(viewModel.uiState instanceof UiState.Loading)}"/>
+            android:layout_gravity="center" />
 
         <include
             layout="@layout/load_error_layout"
             android:id="@+id/load_error_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:goneIf="@{!(viewModel.uiState instanceof UiState.Error)}"/>
+            android:layout_height="match_parent" />
 
     </FrameLayout>
 

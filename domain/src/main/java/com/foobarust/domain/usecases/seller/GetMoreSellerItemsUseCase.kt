@@ -20,7 +20,7 @@ class GetMoreSellerItemsUseCase @Inject constructor(
 ) : FlowUseCase<GetMoreSellerItemsUseCaseParameters, List<SellerItemBasic>>(coroutineDispatcher) {
 
     override fun execute(parameters: GetMoreSellerItemsUseCaseParameters): Flow<Resource<List<SellerItemBasic>>> = flow {
-        val moreItems = sellerRepository.getSellerItemsRecent(
+        val moreItems = sellerRepository.getRecentSellerItems(
             sellerId = parameters.sellerId,
             limit = parameters.limit
         )

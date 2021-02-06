@@ -1,38 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="stateItemModel"
+            type="com.foobarust.android.order.OrderDetailListModel.OrderDetailStateItemModel" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/done_image_view"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
+            android:id="@+id/state_image_view"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
             android:padding="@dimen/spacing_xmedium"
             android:background="@drawable/shape_circle"
             android:backgroundTint="@color/mint_100"
             android:src="@drawable/ic_done"
             app:tint="?attr/colorSecondary"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/title_text_view"
-            app:layout_constraintEnd_toStartOf="@id/title_text_view"
-            app:layout_constraintBottom_toBottomOf="@id/description_text_view"/>
+            app:layout_constraintTop_toTopOf="@id/state_title_text_view"
+            app:layout_constraintEnd_toStartOf="@id/state_title_text_view"
+            app:layout_constraintBottom_toBottomOf="@id/state_description_text_view"/>
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/loading_progress_bar"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
             android:indeterminate="true"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/title_text_view"
-            app:layout_constraintTop_toTopOf="@id/title_text_view"
-            app:layout_constraintBottom_toBottomOf="@id/description_text_view" />
+            app:layout_constraintEnd_toStartOf="@id/state_title_text_view"
+            app:layout_constraintTop_toTopOf="@id/state_title_text_view"
+            app:layout_constraintBottom_toBottomOf="@id/state_description_text_view" />
 
         <TextView
-            android:id="@+id/title_text_view"
+            android:id="@+id/state_title_text_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_large"
@@ -40,27 +48,29 @@
             android:layout_marginEnd="@dimen/spacing_large"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="Order Confirmed"
+            android:text="@{stateItemModel.listStateTitle}"
             android:textAppearance="?attr/textAppearanceSubtitle1"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="Order Confirmed"/>
 
         <TextView
-            android:id="@+id/description_text_view"
+            android:id="@+id/state_description_text_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_medium"
             android:layout_marginStart="85dp"
             android:layout_marginEnd="@dimen/spacing_large"
-            android:text="Your order has been received."
+            android:text="@{stateItemModel.listStateDescription}"
             android:textAppearance="?attr/textAppearanceBody2"
             android:textColor="@color/material_on_surface_emphasis_medium"
             android:maxLines="2"
             android:ellipsize="end"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/title_text_view"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/state_title_text_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="Your order has been received."/>
 
         <View
             android:layout_width="0dp"
@@ -68,8 +78,8 @@
             android:layout_marginTop="@dimen/spacing_large"
             android:background="?attr/colorOnSurface"
             android:alpha="?attr/dividerAlphaRatio"
-            app:layout_constraintTop_toBottomOf="@id/description_text_view"
-            app:layout_constraintStart_toStartOf="@id/title_text_view"/>
+            app:layout_constraintTop_toBottomOf="@id/state_description_text_view"
+            app:layout_constraintStart_toStartOf="@id/state_title_text_view"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

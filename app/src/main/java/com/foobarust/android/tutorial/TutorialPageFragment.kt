@@ -32,9 +32,9 @@ class TutorialPageFragment : Fragment() {
         }
 
         // Dismiss dialog when completed
-        if (property.showCompleteButton) {
+        if (property.showDismiss) {
             binding.completeButton.setOnClickListener {
-                viewModel.onTutorialCompleted()
+                viewModel.onCompleteTutorial()
             }
         }
 

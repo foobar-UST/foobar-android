@@ -1,5 +1,6 @@
 package com.foobarust.android.sellermisc
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,8 @@ import com.foobarust.android.databinding.FragmentSellerMiscBinding
 import com.foobarust.android.utils.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.maps.android.ktx.addMarker
 import com.google.maps.android.ktx.addPolyline
 import com.google.maps.android.ktx.awaitMap
@@ -47,24 +50,15 @@ class SellerMiscFragment : FullScreenDialogFragment() {
             lifecycleOwner = viewLifecycleOwner
         }
 
+        setupBottomSheet()
+
+        setupMapFragment()
+
         // Setup toolbar
         binding.toolbar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
 
-        // Setup bottom sheet
-        viewLifecycleOwner.lifecycleScope.launch {
-            binding.bottomSheet.bottomSheetPeekUntil(
-                toView = binding.headerGroup
-            )
-        }
-
-        binding.bottomSheet.bottomSheetApplyDefaultBackground()
-
-        // Show bottom sheet when loading is success
-        viewModel.uiState.observe(viewLifecycleOwner) {
-            binding.bottomSheet.bottomSheetHideIf(it !is UiState.Success)
-        }
 
         // Show toast
         viewModel.toastMessage.observe(viewLifecycleOwner) {
@@ -74,13 +68,10 @@ class SellerMiscFragment : FullScreenDialogFragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    private fun setupMapFragment() {
+        val mapFragment = childFragmentManager.findFragmentById(R.id.map_container) as SupportMapFragment
 
-        // Setup map view
-        val mapFragment = childFragmentManager.findFragmentById(R.id.map_view) as SupportMapFragment
-
-        // Add seller coordinate
+        // Add coordinate
         viewModel.latLng.observe(viewLifecycleOwner) { latLng ->
             viewLifecycleOwner.lifecycleScope.launch {
                 mapFragment.awaitMap().run {
@@ -103,6 +94,37 @@ class SellerMiscFragment : FullScreenDialogFragment() {
                     }
                 }
             }
+        }
+    }
+
+    private fun setupBottomSheet() {
+        val behavior = BottomSheetBehavior.from(binding.bottomSheet)
+
+        with(binding.bottomSheet) {
+            background = MaterialShapeDrawable(
+                context,
+                null,
+                R.attr.bottomSheetStyle,
+                0
+            ).apply {
+                fillColor = ColorStateList.valueOf(
+                    context.themeColor(R.attr.colorSurface)
+                )
+                elevation = resources.getDimension(R.dimen.elevation_xmedium)
+
+                initializeElevationOverlay(context)
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            bottomSheetPeekTo(
+                bottomSheet = binding.bottomSheet,
+                toView = binding.headerGroup
+            )
+        }
+
+        viewModel.uiState.observe(viewLifecycleOwner) {
+            behavior.hideIf(it !is UiState.Success)
         }
     }
 }

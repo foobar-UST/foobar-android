@@ -1,6 +1,7 @@
 package com.foobarust.android.main
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.viewModels
@@ -8,15 +9,35 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.foobarust.android.*
 import com.foobarust.android.databinding.ActivityMainBinding
-import com.foobarust.android.seller.SellerFragmentDirections
 import com.foobarust.android.utils.*
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
+
+private val navGraphIds = listOf(
+    R.navigation.navigation_seller,
+    R.navigation.navigation_order,
+    R.navigation.navigation_explore,
+    R.navigation.navigation_settings
+)
+
+private val topLevelDestinations = listOf(
+    R.id.sellerFragment,
+    R.id.orderFragment,
+    R.id.exploreFragment,
+    R.id.settingsFragment
+)
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
@@ -25,18 +46,21 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
     private var currentNavController: LiveData<NavController>? = null
     private val viewModel: MainViewModel by viewModels()
 
+    @Inject
+    lateinit var firebaseMessaging: FirebaseMessaging
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView<ActivityMainBinding>(
-            this,
-            R.layout.activity_main
-        ).apply {
+        binding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main).apply {
             viewModel = this@MainActivity.viewModel
             lifecycleOwner = this@MainActivity
         }
 
+        // Setup bottom navigation
         if (savedInstanceState == null) {
-            setupBottomNavigation()
+            val deepLink = intent.data
+            intent.data = null
+            setupBottomNavigation(deepLink)
         }
 
         // Setup toolbar item
@@ -48,7 +72,7 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
         }
 
         // Show snack bar
-        viewModel.showSnackBarMessage.observe(this) { message ->
+        viewModel.snackBarMessage.observe(this) { message ->
             Snackbar.make(binding.coordinatorLayout, message, Snackbar.LENGTH_SHORT).show()
         }
 
@@ -65,13 +89,6 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
                 navigateToCartTimeOutDialog(property = it)
             }
         }
-
-        // Launch chrome tab
-        viewModel.launchCustomTab.observe(this) {
-            if (!launchCustomTab(url = it)) {
-                showShortToast(getString(R.string.error_resolve_activity_failed))
-            }
-        }
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
@@ -82,24 +99,31 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
         setupBottomNavigation()
     }
 
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        // When the user is signed in through deep link, restart MainActivity to reload the data.
-        finish()
-        startActivity(intent)
-    }
-
     override fun onMenuItemClick(menuItem: MenuItem?): Boolean {
         when (menuItem?.itemId) {
             R.id.action_seller_search -> navigateToSellerSearch()
         }
-
         return true
     }
 
-    private fun setupBottomNavigation() {
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+
+        // Navigate to deep link
+        val deepLink = intent?.data
+        if (deepLink != null) {
+            intent.data = null
+            navigateToDeepLink(deepLink)
+        }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        return currentNavController?.value?.navigateUp() ?: false
+    }
+
+    private fun setupBottomNavigation(deepLink: Uri? = null) {
         val navController = binding.bottomNavigationView.setupWithNavController(
-            navGraphIds = viewModel.navGraphIds,
+            navGraphIds = navGraphIds,
             fragmentManager = supportFragmentManager,
             containerId = R.id.nav_host_container,
             intent = intent,
@@ -112,16 +136,15 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
                 destinationId = destination.id
             )
 
-            if (destination.id in viewModel.topLevelDestinations) {
+            if (destination.id in topLevelDestinations) {
                 setupTopLevelDestinations(destination.id)
             } else {
                 setupInnerDestinations()
-
             }
         }
 
         navController.observe(this) { controller ->
-            // Setup toolbar
+            // Setup toolbar title
             binding.toolbar.setupWithNavController(
                 navController = controller,
                 configuration = AppBarConfiguration(
@@ -129,19 +152,30 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
                 )
             )
 
-            // Restore app bar height
-            binding.appBarLayout.setExpanded(true, true)
-
             // Setup views for different tab navigation
             controller.registerOnDestinationChangedListener(listener)
         }
 
         currentNavController = navController
 
+        // Navigate to deep link
+        deepLink?.let {
+            navigateToDeepLink(it)
+        }
+
         // TODO: Setup badge
         with(binding.bottomNavigationView) {
             getOrCreateBadge(R.id.navigation_explore).isVisible = true
         }
+    }
+
+    private fun navigateToDeepLink(deepLink: Uri) {
+        binding.bottomNavigationView.navigateDeeplink(
+            navGraphIds = navGraphIds,
+            fragmentManager = supportFragmentManager,
+            containerId = R.id.nav_host_container,
+            uri = deepLink
+        )
     }
 
     private fun setupTopLevelDestinations(destinationId: Int) {
@@ -157,9 +191,20 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
     }
 
     private fun navigateToSellerSearch() {
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                firebaseMessaging.deleteToken().await()
+                firebaseMessaging.token.await()
+            }
+
+        }
+
+        /*
         currentNavController?.value?.navigate(
             SellerFragmentDirections.actionSellerFragmentToSellerSearchFragment()
         )
+
+         */
     }
 
     private fun navigateToCartTimeOutDialog(property: CartTimeoutProperty) {

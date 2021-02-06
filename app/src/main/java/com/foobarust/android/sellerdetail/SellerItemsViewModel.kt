@@ -1,14 +1,11 @@
 package com.foobarust.android.sellerdetail
 
 import android.os.Parcelable
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
-import com.foobarust.android.utils.SingleLiveEvent
 import com.foobarust.domain.models.seller.getNormalizedTitle
 import com.foobarust.domain.models.seller.purchasable
 import com.foobarust.domain.usecases.seller.GetSellerItemsParameters
@@ -32,10 +29,7 @@ class SellerItemsViewModel @Inject constructor(
     val itemsListModels: Flow<PagingData<SellerItemsListModel>> = _itemsProperty
         .filterNotNull()
         .flatMapLatest {
-            val params = GetSellerItemsParameters(
-                sellerId = it.sellerId,
-                catalogId = it.catalogId
-            )
+            val params = GetSellerItemsParameters(sellerId = it.sellerId, catalogId = it.catalogId)
             getSellerItemsUseCase(params)
         }.map { pagingData ->
             pagingData.map {
@@ -49,16 +43,8 @@ class SellerItemsViewModel @Inject constructor(
         }
         .cachedIn(viewModelScope)
 
-    private val _loadState = SingleLiveEvent<LoadState>()
-    val loadState: LiveData<LoadState>
-        get() = _loadState
-
     fun onFetchItemsForCategory(property: SellerItemsProperty)  {
         _itemsProperty.value = property
-    }
-
-    fun onLoadStateChanged(loadState: LoadState) {
-        _loadState.value = loadState
     }
 }
 

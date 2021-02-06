@@ -16,6 +16,7 @@ import com.foobarust.android.databinding.FragmentSellerSectionMoreSectionsBindin
 import com.foobarust.android.utils.AutoClearedValue
 import com.foobarust.android.utils.anyError
 import com.foobarust.android.utils.showShortToast
+import com.foobarust.android.utils.updateViews
 import com.foobarust.domain.models.seller.SellerSectionBasic
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -50,12 +51,7 @@ class SellerSectionMoreSectionsFragment : Fragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentSellerSectionMoreSectionsBinding.inflate(
-            inflater, container, false
-        ).apply {
-            viewModel = this@SellerSectionMoreSectionsFragment.moreSectionsViewModel
-            lifecycleOwner = viewLifecycleOwner
-        }
+        binding = FragmentSellerSectionMoreSectionsBinding.inflate(inflater, container, false)
 
         val concatAdapter = ConcatAdapter()
         val sectionsAdapter = SellerSectionsAdapter(this)
@@ -77,9 +73,15 @@ class SellerSectionMoreSectionsFragment : Fragment(),
 
         // Control views corresponding to load states
         sectionsAdapter.addLoadStateListener { loadStates ->
-            moreSectionsViewModel.onPagingLoadStateChanged(loadStates.source.refresh)
-            loadStates.anyError()?.let {
-                showShortToast(it.error.message)
+            with(loadStates) {
+                updateViews(
+                    mainLayout = binding.recyclerView,
+                    errorLayout = binding.loadErrorLayout.loadErrorLayout,
+                    progressBar = binding.progressBar
+                )
+                anyError()?.let {
+                    showShortToast(it.toString())
+                }
             }
         }
 

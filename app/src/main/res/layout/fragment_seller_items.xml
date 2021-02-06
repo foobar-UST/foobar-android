@@ -4,13 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-        <variable
-            name="viewModel"
-            type="com.foobarust.android.sellerdetail.SellerItemsViewModel" />
-        <import type="androidx.paging.LoadState" />
-    </data>
-
     <FrameLayout
         android:id="@+id/items_layout"
         android:layout_width="match_parent"
@@ -23,22 +16,13 @@
             android:layout_height="match_parent"
             android:scrollbars="none"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:goneIf="@{!(viewModel.loadState instanceof LoadState.NotLoading)}"
             tools:listitem="@layout/seller_items_list_item" />
 
         <ProgressBar
             android:id="@+id/items_progress_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="64dp"
-            app:goneIf="@{!(viewModel.loadState instanceof LoadState.Loading)}"/>
-
-        <!--
-        <include
-            layout="@layout/fragment_seller_items_shimmer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-        -->
+            android:layout_margin="64dp" />
 
     </FrameLayout>
 

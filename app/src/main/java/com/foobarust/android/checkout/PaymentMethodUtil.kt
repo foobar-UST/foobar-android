@@ -4,13 +4,25 @@ import android.content.Context
 import androidx.annotation.DrawableRes
 import com.foobarust.android.R
 import com.foobarust.domain.models.checkout.PaymentMethod
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 /**
  * Created by kevin on 1/25/21
  */
 
-class PaymentMethodUtil @Inject constructor(private val context: Context) {
+class PaymentMethodUtil @Inject constructor(
+    @ApplicationContext private val context: Context
+) {
+
+    fun getPaymentMethodItem(identifier: String): PaymentMethodItem {
+        return PaymentMethodItem(
+            identifier = identifier,
+            title = getMethodTitle(identifier),
+            description = getMethodDescription(identifier),
+            drawable = getMethodDrawable(identifier)
+        )
+    }
 
     fun getPaymentMethodItem(paymentMethod: PaymentMethod): PaymentMethodItem {
         return PaymentMethodItem(

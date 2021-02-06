@@ -58,11 +58,15 @@ object PersistentModule {
     @Singleton
     @Provides
     fun provideFirestore(): FirebaseFirestore {
-        val settings = firestoreSettings {
-            isPersistenceEnabled = false
-            if (USE_FIREBASE_EMULATOR) {
-                host = "$FIREBASE_EMULATOR_HOST:$FIREBASE_EMULATOR_FIRESTORE_PORT"
+        val settings = if (USE_FIREBASE_EMULATOR) {
+            firestoreSettings {
+                isPersistenceEnabled = false
+                host = "$EMULATOR_HOST:$EMULATOR_FIRESTORE_PORT"
                 isSslEnabled = false
+            }
+        } else {
+            firestoreSettings {
+                isPersistenceEnabled = false
             }
         }
 
@@ -105,7 +109,8 @@ object PersistentModule {
     @Provides
     fun provideRemoteService(defaultHttpClientBuilder: OkHttpClient.Builder): RemoteService {
         val url = if (USE_FIREBASE_EMULATOR) {
-            "http://$FIREBASE_EMULATOR_HOST:$FIREBASE_EMULATOR_FUNCTIONS_PORT/foobar-group-delivery-app/us-central1/api/"
+            "http://$EMULATOR_HOST:$EMULATOR_FUNCTIONS_PORT/" +
+                "foobar-group-delivery-app/us-central1/api/"
         } else {
             REMOTE_REQUEST_URL
         }
