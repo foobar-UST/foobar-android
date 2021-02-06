@@ -9,20 +9,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.foobarust.android.*
 import com.foobarust.android.databinding.ActivityMainBinding
+import com.foobarust.android.seller.SellerFragmentDirections
 import com.foobarust.android.utils.*
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 private val navGraphIds = listOf(
@@ -191,20 +187,9 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
     }
 
     private fun navigateToSellerSearch() {
-        lifecycleScope.launch {
-            withContext(Dispatchers.IO) {
-                firebaseMessaging.deleteToken().await()
-                firebaseMessaging.token.await()
-            }
-
-        }
-
-        /*
         currentNavController?.value?.navigate(
             SellerFragmentDirections.actionSellerFragmentToSellerSearchFragment()
         )
-
-         */
     }
 
     private fun navigateToCartTimeOutDialog(property: CartTimeoutProperty) {
