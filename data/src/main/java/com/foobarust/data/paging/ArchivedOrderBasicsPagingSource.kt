@@ -5,10 +5,8 @@ import androidx.paging.PagingState
 import com.foobarust.data.common.Constants.ORDERS_BASIC_COLLECTION
 import com.foobarust.data.common.Constants.ORDER_STATE_ARCHIVED
 import com.foobarust.data.common.Constants.ORDER_STATE_FIELD
-import com.foobarust.data.mappers.OrderMapper
 import com.foobarust.data.models.order.OrderBasicDto
 import com.foobarust.data.utils.isNetworkData
-import com.foobarust.domain.models.order.OrderBasic
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import kotlinx.coroutines.tasks.await
@@ -18,13 +16,12 @@ import kotlinx.coroutines.tasks.await
  */
 
 class ArchivedOrderBasicsPagingSource(
-    private val firestore: FirebaseFirestore,
-    private val orderMapper: OrderMapper
-) : PagingSource<Query, OrderBasic>() {
+    private val firestore: FirebaseFirestore
+) : PagingSource<Query, OrderBasicDto>() {
 
     private var initialPageQuery: Query? = null
 
-    override suspend fun load(params: LoadParams<Query>): LoadResult<Query, OrderBasic> {
+    override suspend fun load(params: LoadParams<Query>): LoadResult<Query, OrderBasicDto> {
         return try {
             initialPageQuery = initialPageQuery ?: firestore.collection(ORDERS_BASIC_COLLECTION)
                 .whereEqualTo(ORDER_STATE_FIELD, ORDER_STATE_ARCHIVED)
@@ -45,8 +42,7 @@ class ArchivedOrderBasicsPagingSource(
             }
 
             LoadResult.Page(
-                data = currentPageData.toObjects(OrderBasicDto::class.java)
-                    .map { orderMapper.toOrderBasic(it) },
+                data = currentPageData.toObjects(OrderBasicDto::class.java),
                 prevKey = null,
                 nextKey = nextPageQuery
             )
@@ -55,5 +51,5 @@ class ArchivedOrderBasicsPagingSource(
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Query, OrderBasic>): Query? = initialPageQuery
+    override fun getRefreshKey(state: PagingState<Query, OrderBasicDto>): Query? = initialPageQuery
 }

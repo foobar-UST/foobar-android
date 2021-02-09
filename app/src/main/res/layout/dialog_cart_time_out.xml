@@ -5,8 +5,8 @@
 
     <data>
         <variable
-            name="property"
-            type="com.foobarust.android.main.CartTimeoutProperty" />
+            name="cartItemsCount"
+            type="Integer" />
     </data>
 
     <LinearLayout
@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_xmedium"
-            android:text="@{@string/cart_timeout_dialog_message(property.cartItemsCount)}"
+            android:text="@{@string/cart_timeout_dialog_message(cartItemsCount)}"
             android:textColor="@color/material_on_surface_emphasis_medium"
             android:textAppearance="?attr/textAppearanceBody2"
             tools:text="You still have 6 items left in your cart." />

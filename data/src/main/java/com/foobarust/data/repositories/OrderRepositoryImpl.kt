@@ -3,6 +3,7 @@ package com.foobarust.data.repositories
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.map
 import com.foobarust.data.common.Constants.ORDERS_BASIC_COLLECTION
 import com.foobarust.data.common.Constants.ORDERS_COLLECTION
 import com.foobarust.data.common.Constants.ORDER_STATE_ARCHIVED
@@ -17,6 +18,7 @@ import com.foobarust.domain.repositories.OrderRepository
 import com.foobarust.domain.states.Resource
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 /**
@@ -46,10 +48,10 @@ class OrderRepositoryImpl @Inject constructor(
                 pageSize = ARCHIVED_ORDERS_PAGE_SIZE,
                 enablePlaceholders = false
             ),
-            pagingSourceFactory = {
-                ArchivedOrderBasicsPagingSource(firestore, orderMapper)
-            }
-        ).flow
+            pagingSourceFactory = { ArchivedOrderBasicsPagingSource(firestore) }
+        ).flow.map { pagingData ->
+            pagingData.map { orderMapper.toOrderBasic(it) }
+        }
     }
 
     override fun getOrderDetailObservable(orderId: String): Flow<Resource<OrderDetail>> {

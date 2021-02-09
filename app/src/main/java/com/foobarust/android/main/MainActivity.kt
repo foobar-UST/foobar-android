@@ -1,6 +1,7 @@
 package com.foobarust.android.main
 
 import android.content.Intent
+import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
@@ -17,9 +18,10 @@ import com.foobarust.android.databinding.ActivityMainBinding
 import com.foobarust.android.seller.SellerFragmentDirections
 import com.foobarust.android.utils.*
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+
+private const val TAG = "MainActivity"
 
 private val navGraphIds = listOf(
     R.navigation.navigation_seller,
@@ -43,7 +45,7 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
     private val viewModel: MainViewModel by viewModels()
 
     @Inject
-    lateinit var firebaseMessaging: FirebaseMessaging
+    lateinit var connectivityManager: ConnectivityManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,13 +79,6 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
             currentNavController?.value?.navigate(
                 NavigationSellerDirections.actionGlobalCheckoutFragment()
             )
-        }
-
-        // Navigate to cart timeout dialog
-        viewModel.navigateToTimeoutDialog.observe(this) {
-            if (savedInstanceState == null) {
-                navigateToCartTimeOutDialog(property = it)
-            }
         }
     }
 
@@ -189,13 +184,6 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
     private fun navigateToSellerSearch() {
         currentNavController?.value?.navigate(
             SellerFragmentDirections.actionSellerFragmentToSellerSearchFragment()
-        )
-    }
-
-    private fun navigateToCartTimeOutDialog(property: CartTimeoutProperty) {
-        CartTimeoutDialog.newInstance(property).show(
-            supportFragmentManager,
-            CartTimeoutDialog.TAG
         )
     }
 }

@@ -7,14 +7,11 @@ import com.foobarust.data.common.Constants.SELLER_SECTION_AVAILABLE_FIELD
 import com.foobarust.data.common.Constants.SELLER_SECTION_CUTOFF_TIME_FIELD
 import com.foobarust.data.common.Constants.SELLER_SECTION_SELLER_ID_FIELD
 import com.foobarust.data.common.Constants.SELLER_SECTION_SELLER_NAME_FIELD
-import com.foobarust.data.mappers.SellerMapper
 import com.foobarust.data.models.seller.SellerSectionBasicDto
 import com.foobarust.data.utils.isNetworkData
-import com.foobarust.domain.models.seller.SellerSectionBasic
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import kotlinx.coroutines.tasks.await
-import java.text.SimpleDateFormat
 import java.util.*
 
 /**
@@ -24,13 +21,12 @@ import java.util.*
 
 class SellerSectionsBasicPagingSource(
     private val firestore: FirebaseFirestore,
-    private val sellerMapper: SellerMapper,
     private val sellerId: String? = null
-) : PagingSource<Query, SellerSectionBasic>() {
+) : PagingSource<Query, SellerSectionBasicDto>() {
 
     private var initialPageQuery: Query? = null
 
-    override suspend fun load(params: LoadParams<Query>): LoadResult<Query, SellerSectionBasic> {
+    override suspend fun load(params: LoadParams<Query>): LoadResult<Query, SellerSectionBasicDto> {
         return try {
             initialPageQuery = initialPageQuery ?: firestore.collectionGroup(SELLER_SECTIONS_BASIC_SUB_COLLECTION)
                 .whereEqualTo(SELLER_SECTION_AVAILABLE_FIELD, true)
@@ -58,8 +54,7 @@ class SellerSectionsBasicPagingSource(
             }
 
             LoadResult.Page(
-                data = currentPageData.toObjects(SellerSectionBasicDto::class.java)
-                    .map { sellerMapper.toSellerSectionBasic(it) },
+                data = currentPageData.toObjects(SellerSectionBasicDto::class.java),
                 prevKey = null,
                 nextKey = nextPageQuery
             )
@@ -68,17 +63,5 @@ class SellerSectionsBasicPagingSource(
         }
     }
 
-    private fun getCurrentDateString(): String {
-        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-        formatter.timeZone = TimeZone.getTimeZone("Asia/Hong_Kong")
-        return formatter.format(Date())
-    }
-
-    private fun getCurrentTimeString(): String {
-        val formatter = SimpleDateFormat("HH:mm", Locale.US)
-        formatter.timeZone = TimeZone.getTimeZone("Asia/Hong_Kong")
-        return formatter.format(Date())
-    }
-
-    override fun getRefreshKey(state: PagingState<Query, SellerSectionBasic>): Query? = initialPageQuery
+    override fun getRefreshKey(state: PagingState<Query, SellerSectionBasicDto>): Query? = initialPageQuery
 }

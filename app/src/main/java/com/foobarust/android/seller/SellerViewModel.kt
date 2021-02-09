@@ -1,10 +1,8 @@
 package com.foobarust.android.seller
 
-import android.content.Context
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.foobarust.android.R
-import com.foobarust.android.common.BaseViewModel
 import com.foobarust.android.sellerdetail.SellerDetailProperty
 import com.foobarust.android.sellerdetail.SellerItemDetailProperty
 import com.foobarust.android.sellersection.SellerSectionProperty
@@ -13,7 +11,6 @@ import com.foobarust.domain.models.promotion.SuggestBasic
 import com.foobarust.domain.models.seller.SellerBasic
 import com.foobarust.domain.models.seller.SellerSectionBasic
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -21,22 +18,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SellerViewModel @Inject constructor(
-    @ApplicationContext private val context: Context
-) : BaseViewModel() {
-
-    val sellerPages: List<SellerPage> = listOf(
-        SellerPage(
-            tag = SellerOnCampusFragment.TAG,
-            title = context.getString(R.string.seller_tab_on_campus),
-            fragment = { SellerOnCampusFragment() }
-        ),
-        SellerPage(
-            tag = SellerOffCampusFragment.TAG,
-            title = context.getString(R.string.seller_tab_off_campus),
-            fragment = { SellerOffCampusFragment() }
-        )
-    )
+class SellerViewModel @Inject constructor() : ViewModel() {
 
     private val _navigateToSellerDetail = SingleLiveEvent<SellerDetailProperty>()
     val navigateToSellerDetail: LiveData<SellerDetailProperty>
@@ -64,7 +46,7 @@ class SellerViewModel @Inject constructor(
     val pageScrollToTop: SharedFlow<String> = _pageScrollToTop.asSharedFlow()
 
     // Emit the current scroll state of ViewPager, contains the page tag.
-    var currentPageSelected: String? = null
+    private var currentPageSelected: String? = null
 
     // From SellerOnCampusFragment
     fun onNavigateToSellerDetail(sellerBasic: SellerBasic) {

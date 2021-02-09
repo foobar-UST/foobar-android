@@ -3,6 +3,10 @@ package com.foobarust.data.repositories
 import android.content.SharedPreferences
 import android.net.Uri
 import androidx.core.content.edit
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.map
 import com.foobarust.data.api.RemoteService
 import com.foobarust.data.cache.networkCacheResource
 import com.foobarust.data.common.Constants.USERS_COLLECTION
@@ -12,22 +16,27 @@ import com.foobarust.data.db.AppDatabase
 import com.foobarust.data.db.UserDetailDao
 import com.foobarust.data.mappers.UserMapper
 import com.foobarust.data.models.user.UpdateUserDetailRequest
+import com.foobarust.data.paging.UserNotificationsPagingSource
 import com.foobarust.data.preferences.PreferencesKeys.ONBOARDING_COMPLETED
 import com.foobarust.data.utils.getAwaitResult
 import com.foobarust.data.utils.putFileFlow
 import com.foobarust.data.utils.snapshotFlow
 import com.foobarust.domain.models.user.UserDetail
+import com.foobarust.domain.models.user.UserNotification
 import com.foobarust.domain.models.user.UserPublic
 import com.foobarust.domain.repositories.UserRepository
 import com.foobarust.domain.states.Resource
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 /**
  * We assume users must be signed in before calling these methods
  */
+
+private const val NOTIFICATIONS_PAGE_SIZE = 8
 
 class UserRepositoryImpl @Inject constructor(
     private val appDatabase: AppDatabase,
@@ -78,6 +87,19 @@ class UserRepositoryImpl @Inject constructor(
         return photoRef.putFileFlow(photoFile)
     }
 
+    override fun getUserNotificationsPagingData(userId: String): Flow<PagingData<UserNotification>> {
+        return Pager(
+            config = PagingConfig(
+                initialLoadSize = NOTIFICATIONS_PAGE_SIZE * 2,
+                pageSize = NOTIFICATIONS_PAGE_SIZE,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { UserNotificationsPagingSource(firestore, userId) }
+        ).flow.map { pagingData ->
+            pagingData.map { userMapper.toUserNotification(it) }
+        }
+    }
+
     /*
     override fun getUserNotificationsPagingData(userId: String): Flow<PagingData<UserNotification>> {
 
@@ -89,11 +111,11 @@ class UserRepositoryImpl @Inject constructor(
 
      */
 
-    override suspend fun getHasUserCompleteOnboarding(): Boolean {
+    override suspend fun getUserCompleteTutorial(): Boolean {
         return preferences.getBoolean(ONBOARDING_COMPLETED, false)
     }
 
-    override suspend fun updateHasUserCompleteOnboarding(completed: Boolean) {
+    override suspend fun updateHasUserCompleteTutorial(completed: Boolean) {
         preferences.edit { putBoolean(ONBOARDING_COMPLETED, completed) }
     }
 

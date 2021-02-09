@@ -134,7 +134,7 @@ dependencies {
 
     // Unit Test
     testImplementation(Dependencies.ARCH_CORE_TESTING)
-    testImplementation(Dependencies.COROUTINE_TEST)
+    //testImplementation(Dependencies.COROUTINE_TEST)
     testImplementation(Dependencies.JUNIT)
     testImplementation(Dependencies.MOCKITO_CORE)
 

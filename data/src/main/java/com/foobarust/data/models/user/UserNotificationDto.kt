@@ -13,7 +13,7 @@ import com.google.firebase.firestore.PropertyName
  * Created by kevin on 2/5/21
  */
 
-data class UserNotificationNetworkDto(
+data class UserNotificationDto(
     @JvmField
     @PropertyName(USER_NOTIFICATION_ID_FIELD)
     val id: String? = null,

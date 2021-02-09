@@ -30,6 +30,9 @@
         <action
             android:id="@+id/action_sellerFragment_to_tutorialFragment"
             app:destination="@+id/tutorialFragment" />
+        <action
+            android:id="@+id/action_sellerFragment_to_cartTimeoutDialog"
+            app:destination="@id/cartTimeoutDialog" />
     </fragment>
 
     <!-- SellerDetailFragment -->
@@ -130,6 +133,16 @@
         <action
             android:id="@+id/action_sellerSectionFragment_self"
             app:destination="@id/sellerSectionFragment" />
+    </dialog>
+
+    <!-- CartTimeoutDialog -->
+    <dialog
+        android:id="@+id/cartTimeoutDialog"
+        android:name="com.foobarust.android.main.CartTimeoutDialog"
+        tools:layout="@layout/dialog_cart_time_out">
+        <argument
+            android:name="cartItemsCount"
+            app:argType="integer"/>
     </dialog>
 
 </navigation>

@@ -14,7 +14,7 @@ import com.foobarust.domain.states.getSuccessDataOr
 import com.foobarust.domain.usecases.cart.CheckCartTimeOutUseCase
 import com.foobarust.domain.usecases.cart.ClearUserCartUseCase
 import com.foobarust.domain.usecases.cart.GetUserCartUseCase
-import com.foobarust.domain.usecases.onboarding.GetHasUserCompleteOnboardingUseCase
+import com.foobarust.domain.usecases.onboarding.GetUserCompleteTutorialUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.*
@@ -31,9 +31,9 @@ private const val TAG = "MainViewModel"
 class MainViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     getUserCartUseCase: GetUserCartUseCase,
-    private val checkCartTimeOutUseCase: CheckCartTimeOutUseCase,
     private val clearUserCartUseCase: ClearUserCartUseCase,
-    private val getHasUserCompleteOnboardingUseCase: GetHasUserCompleteOnboardingUseCase
+    private val checkCartTimeOutUseCase: CheckCartTimeOutUseCase,
+    private val getUserCompleteTutorialUseCase: GetUserCompleteTutorialUseCase
 ) : BaseViewModel() {
 
     private val _currentNavGraphId = MutableStateFlow<Int?>(null)
@@ -63,21 +63,20 @@ class MainViewModel @Inject constructor(
     val snackBarMessage: LiveData<String>
         get() = _snackBarMessage
 
-    private val _navigateToTimeoutDialog = SingleLiveEvent<CartTimeoutProperty>()
-    val navigateToTimeoutDialog: LiveData<CartTimeoutProperty>
-        get() = _navigateToTimeoutDialog
+    private val _navigateToTutorial = SingleLiveEvent<Unit>()
+    val navigateToTutorial: LiveData<Unit>
+        get() = _navigateToTutorial
 
-    private val _navigateToOnboardingTutorial = SingleLiveEvent<Unit>()
-    val navigateToOnboardingTutorial: LiveData<Unit>
-        get() = _navigateToOnboardingTutorial
+    private val _navigateToCartTimeout = SingleLiveEvent<Int>()
+    val navigateToCartTimeout: LiveData<Int>
+        get() = _navigateToCartTimeout
 
     private var checkedCartTimeout: Boolean = false
-
     private var currentDestinationId: Int = 0
 
     init {
-        checkHasUserCompleteOnboarding()
-        checkUserCartTimeout()
+        navigateToTutorial()
+        navigateToCartTimeout()
     }
 
     fun getUserCart(): UserCart? = _userCart.value
@@ -107,20 +106,18 @@ class MainViewModel @Inject constructor(
         _snackBarMessage.value = message
     }
 
-    private fun checkHasUserCompleteOnboarding() = viewModelScope.launch {
-        val completed = getHasUserCompleteOnboardingUseCase(Unit).getSuccessDataOr(false)
+    private fun navigateToTutorial() = viewModelScope.launch {
+        val completed = getUserCompleteTutorialUseCase(Unit).getSuccessDataOr(false)
         if (!completed) {
-            _navigateToOnboardingTutorial.value = Unit
+            _navigateToTutorial.value = Unit
         }
     }
 
-    private fun checkUserCartTimeout() = viewModelScope.launch {
-        _userCart.filterNotNull().collect {
-            val isTimeout = checkCartTimeOutUseCase(it).getSuccessDataOr(false)
-            if (isTimeout) {
-                _navigateToTimeoutDialog.value = CartTimeoutProperty(
-                    cartItemsCount = it.itemsCount
-                )
+    private fun navigateToCartTimeout() = viewModelScope.launch {
+        if (!checkedCartTimeout) {
+            val userCart = _userCart.filterNotNull().first()
+            if (checkCartTimeOutUseCase(userCart).getSuccessDataOr(false)) {
+                _navigateToCartTimeout.value = userCart.itemsCount
             }
             checkedCartTimeout = true
         }

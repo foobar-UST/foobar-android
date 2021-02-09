@@ -14,6 +14,9 @@ dependencies {
     implementation(Dependencies.PAGING_COMMON)
 
     kapt(Annotation.DAGGER_COMPILER)
+
+    testImplementation(Dependencies.JUNIT)
+    testImplementation(Dependencies.COROUTINE_TEST)
 }
 
 java {

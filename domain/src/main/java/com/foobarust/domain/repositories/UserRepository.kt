@@ -1,6 +1,8 @@
 package com.foobarust.domain.repositories
 
+import androidx.paging.PagingData
 import com.foobarust.domain.models.user.UserDetail
+import com.foobarust.domain.models.user.UserNotification
 import com.foobarust.domain.models.user.UserPublic
 import com.foobarust.domain.states.Resource
 import kotlinx.coroutines.flow.Flow
@@ -25,16 +27,16 @@ interface UserRepository {
     /*
         Notifications
      */
-    //fun getUserNotificationsPagingData(userId: String): Flow<PagingData<UserNotification>>
+    fun getUserNotificationsPagingData(userId: String): Flow<PagingData<UserNotification>>
 
     //suspend fun removeUserNotifications()
 
     /*
-        Onboarding tutorial
+        Tutorial
      */
-    suspend fun getHasUserCompleteOnboarding(): Boolean
+    suspend fun getUserCompleteTutorial(): Boolean
 
-    suspend fun updateHasUserCompleteOnboarding(completed: Boolean)
+    suspend fun updateHasUserCompleteTutorial(completed: Boolean)
 
     /*
         Public

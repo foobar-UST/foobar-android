@@ -1,6 +1,9 @@
 package com.foobarust.data.mappers
 
-import com.foobarust.data.models.user.*
+import com.foobarust.data.models.user.UserDetailCacheDto
+import com.foobarust.data.models.user.UserDetailNetworkDto
+import com.foobarust.data.models.user.UserNotificationDto
+import com.foobarust.data.models.user.UserPublicDto
 import com.foobarust.domain.models.user.UserDetail
 import com.foobarust.domain.models.user.UserNotification
 import com.foobarust.domain.models.user.UserPublic
@@ -52,7 +55,7 @@ class UserMapper @Inject constructor() {
         )
     }
 
-    fun fromNotificationNetworkDtoToUserNotification(dto: UserNotificationNetworkDto): UserNotification {
+    fun toUserNotification(dto: UserNotificationDto): UserNotification {
         return UserNotification(
             id = dto.id!!,
             title = dto.title!!,
@@ -60,28 +63,6 @@ class UserMapper @Inject constructor() {
             link = dto.link!!,
             imageUrl = dto.imageUrl,
             createdAt = dto.createdAt!!.toDate()
-        )
-    }
-
-    fun fromNotificationCacheDtoToUserNotification(dto: UserNotificationCacheDto): UserNotification {
-        return UserNotification(
-            id = dto.id,
-            title = dto.title!!,
-            body = dto.body!!,
-            link = dto.link!!,
-            imageUrl = dto.imageUrl,
-            createdAt = dto.createdAt!!
-        )
-    }
-
-    fun toUserNotificationCacheDto(userNotification: UserNotification): UserNotificationCacheDto {
-        return UserNotificationCacheDto(
-            id = userNotification.id,
-            title = userNotification.title,
-            body = userNotification.body,
-            link = userNotification.link,
-            imageUrl = userNotification.imageUrl,
-            createdAt = userNotification.createdAt
         )
     }
 }

@@ -26,7 +26,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_large"
-            android:text="[#928DD] Order Confirmed"
+            android:text="Order Update #928DD"
             android:textAppearance="?attr/textAppearanceSubtitle2"
             android:maxLines="1"
             android:ellipsize="end"

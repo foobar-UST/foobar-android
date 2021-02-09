@@ -9,8 +9,8 @@ import androidx.lifecycle.viewModelScope
 import com.foobarust.android.R
 import com.foobarust.android.utils.SingleLiveEvent
 import com.foobarust.domain.states.getSuccessDataOr
-import com.foobarust.domain.usecases.onboarding.GetHasUserCompleteOnboardingUseCase
-import com.foobarust.domain.usecases.onboarding.UpdateHasUserCompleteOnboardingUseCase
+import com.foobarust.domain.usecases.onboarding.GetUserCompleteTutorialUseCase
+import com.foobarust.domain.usecases.onboarding.UpdateUserCompleteTutorialUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
@@ -20,8 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class TutorialViewModel @Inject constructor(
     @ApplicationContext context: Context,
-    private val getHasUserCompleteOnboardingUseCase: GetHasUserCompleteOnboardingUseCase,
-    private val updateHasUserCompleteOnboardingUseCase: UpdateHasUserCompleteOnboardingUseCase
+    private val getUserCompleteTutorialUseCase: GetUserCompleteTutorialUseCase,
+    private val updateUserCompleteTutorialUseCase: UpdateUserCompleteTutorialUseCase
 ) : ViewModel() {
 
     val tutorialProperties = listOf(
@@ -48,9 +48,9 @@ class TutorialViewModel @Inject constructor(
         get() = _dismissTutorial
 
     fun onCompleteTutorial() = viewModelScope.launch {
-        val completed = getHasUserCompleteOnboardingUseCase(Unit).getSuccessDataOr(false)
+        val completed = getUserCompleteTutorialUseCase(Unit).getSuccessDataOr(false)
         if (!completed) {
-            updateHasUserCompleteOnboardingUseCase(true)
+            updateUserCompleteTutorialUseCase(true)
         }
         _dismissTutorial.value = Unit
     }

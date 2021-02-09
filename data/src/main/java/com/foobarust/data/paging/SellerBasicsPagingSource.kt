@@ -4,10 +4,8 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.foobarust.data.common.Constants.SELLERS_BASIC_COLLECTION
 import com.foobarust.data.common.Constants.SELLER_TYPE_FIELD
-import com.foobarust.data.mappers.SellerMapper
 import com.foobarust.data.models.seller.SellerBasicDto
 import com.foobarust.data.utils.isNetworkData
-import com.foobarust.domain.models.seller.SellerBasic
 import com.foobarust.domain.models.seller.SellerType
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -19,13 +17,12 @@ import kotlinx.coroutines.tasks.await
 
 class SellerBasicsPagingSource(
     private val firestore: FirebaseFirestore,
-    private val sellerType: SellerType,
-    private val sellerMapper: SellerMapper
-) : PagingSource<Query, SellerBasic>() {
+    private val sellerType: SellerType
+) : PagingSource<Query, SellerBasicDto>() {
 
     private var initialPageQuery: Query? = null
 
-    override suspend fun load(params: LoadParams<Query>): LoadResult<Query, SellerBasic> {
+    override suspend fun load(params: LoadParams<Query>): LoadResult<Query, SellerBasicDto> {
         return try {
             initialPageQuery = initialPageQuery ?: firestore.collection(SELLERS_BASIC_COLLECTION)
                 .whereEqualTo(SELLER_TYPE_FIELD, sellerType.ordinal)
@@ -46,8 +43,7 @@ class SellerBasicsPagingSource(
             }
 
             LoadResult.Page(
-                data = currentPageData.toObjects(SellerBasicDto::class.java)
-                    .map { sellerMapper.toSellerBasic(it) },
+                data = currentPageData.toObjects(SellerBasicDto::class.java),
                 prevKey = null,
                 nextKey = nextPageQuery
             )
@@ -56,5 +52,5 @@ class SellerBasicsPagingSource(
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Query, SellerBasic>): Query? = initialPageQuery
+    override fun getRefreshKey(state: PagingState<Query, SellerBasicDto>): Query? = initialPageQuery
 }

@@ -2,40 +2,37 @@ package com.foobarust.data.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.foobarust.data.common.Constants.SELLERS_COLLECTION
-import com.foobarust.data.common.Constants.SELLER_ITEMS_BASIC_SUB_COLLECTION
-import com.foobarust.data.common.Constants.SELLER_ITEM_CATALOG_ID_FIELD
-import com.foobarust.data.models.seller.SellerItemBasicDto
+import com.foobarust.data.common.Constants.USERS_COLLECTION
+import com.foobarust.data.common.Constants.USER_NOTIFICATIONS_SUB_COLLECTION
+import com.foobarust.data.common.Constants.USER_NOTIFICATION_CREATED_AT_FIELD
+import com.foobarust.data.models.user.UserNotificationDto
 import com.foobarust.data.utils.isNetworkData
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import kotlinx.coroutines.tasks.await
 
 /**
- * Created by kevin on 10/5/20
+ * Created by kevin on 2/5/21
  */
 
-class SellerItemBasicsPagingSource(
+class UserNotificationsPagingSource(
     private val firestore: FirebaseFirestore,
-    private val sellerId: String,
-    private val catalogId: String
-) : PagingSource<Query, SellerItemBasicDto>() {
+    private val userId: String
+) : PagingSource<Query, UserNotificationDto>() {
 
     private var initialPageQuery: Query? = null
 
-    override suspend fun load(params: LoadParams<Query>): LoadResult<Query, SellerItemBasicDto> {
+    override suspend fun load(params: LoadParams<Query>): LoadResult<Query, UserNotificationDto> {
         return try {
             initialPageQuery = initialPageQuery ?: firestore.collection(
-                "$SELLERS_COLLECTION/$sellerId/$SELLER_ITEMS_BASIC_SUB_COLLECTION"
+                "$USERS_COLLECTION/$userId/$USER_NOTIFICATIONS_SUB_COLLECTION"
             )
-                .whereEqualTo(SELLER_ITEM_CATALOG_ID_FIELD, catalogId)
-                // TODO: For testing items greyed out
-                //.whereGreaterThan(SELLER_ITEM_COUNT_FIELD, 0)           // Having remaining items
-                //.whereEqualTo(SELLER_ITEM_AVAILABLE_FIELD, true)        // Get available items only
+                .orderBy(USER_NOTIFICATION_CREATED_AT_FIELD, Query.Direction.DESCENDING)
                 .limit(params.loadSize.toLong())
 
             val currentPageQuery = params.key ?: initialPageQuery!!
             val currentPageData = currentPageQuery.get().await()
+
             val nextPageQuery = if (!currentPageData.isEmpty) {
                 val lastVisibleItem = currentPageData.documents[currentPageData.size() - 1]
                 initialPageQuery!!.startAfter(lastVisibleItem)
@@ -48,7 +45,7 @@ class SellerItemBasicsPagingSource(
             }
 
             LoadResult.Page(
-                data = currentPageData.toObjects(SellerItemBasicDto::class.java),
+                data = currentPageData.toObjects(UserNotificationDto::class.java),
                 prevKey = null,
                 nextKey = nextPageQuery
             )
@@ -57,5 +54,5 @@ class SellerItemBasicsPagingSource(
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Query, SellerItemBasicDto>): Query? = initialPageQuery
+    override fun getRefreshKey(state: PagingState<Query, UserNotificationDto>): Query? = initialPageQuery
 }

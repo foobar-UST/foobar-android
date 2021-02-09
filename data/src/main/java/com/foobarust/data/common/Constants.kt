@@ -9,7 +9,7 @@ object Constants {
     const val PREFS_NAME = "foobarust"
 
     // Users
-    const val USERS_ENTITY = "users"
+    const val USERS_CACHE_ENTITY = "users"
     const val USERS_COLLECTION = "users"
     const val USERS_DELIVERY_COLLECTION = "users_delivery"
     const val USERS_PUBLIC_COLLECTION = "users_public"
@@ -68,7 +68,6 @@ object Constants {
     const val USER_CART_ITEMS_UPDATED_AT_FIELD = "updated_at"
 
     // User notifications
-    const val USER_NOTIFICATIONS_ENTITY = "notifications"
     const val USER_NOTIFICATIONS_SUB_COLLECTION = "notifications"
 
     const val USER_NOTIFICATION_ID_FIELD = "id"
@@ -77,6 +76,10 @@ object Constants {
     const val USER_NOTIFICATION_LINK_FIELD = "link"
     const val USER_NOTIFICATION_IMAGE_URL_FIELD = "image_url"
     const val USER_NOTIFICATION_CREATED_AT_FIELD = "created_at"
+
+    const val USER_NOTIFICATIONS_REMOTE_KEYS_NOTIFICATION_ID_FIELD = "notificationId"
+    const val USER_NOTIFICATIONS_REMOTE_KEYS_PREV_KEY_FIELD = "prevKey"
+    const val USER_NOTIFICATIONS_REMOTE_KEYS_NEXT_KEY_FIELD = "nextKey"
 
     // Sellers
     const val SELLERS_COLLECTION = "sellers"

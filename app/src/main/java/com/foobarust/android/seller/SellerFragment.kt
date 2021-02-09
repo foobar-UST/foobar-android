@@ -34,10 +34,23 @@ class SellerFragment : Fragment() {
         binding = FragmentSellerBinding.inflate(inflater, container, false)
 
         // Setup view pager
+        val sellerPages: List<SellerPage> = listOf(
+            SellerPage(
+                tag = SellerOnCampusFragment.TAG,
+                title = requireContext().getString(R.string.seller_tab_on_campus),
+                fragment = { SellerOnCampusFragment() }
+            ),
+            SellerPage(
+                tag = SellerOffCampusFragment.TAG,
+                title = requireContext().getString(R.string.seller_tab_off_campus),
+                fragment = { SellerOffCampusFragment() }
+            )
+        )
+
         sellerPagerAdapter = SellerPagerAdapter(
             fragmentManager = childFragmentManager,
             lifecycle = viewLifecycleOwner.lifecycle,
-            sellerPages = sellerViewModel.sellerPages
+            sellerPages = sellerPages
         )
 
         binding.sellerViewPager.run {
@@ -47,7 +60,7 @@ class SellerFragment : Fragment() {
             registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
                     sellerViewModel.onCurrentPageChanged(
-                        tag = sellerViewModel.sellerPages[position].tag
+                        tag = sellerPages[position].tag
                     )
                 }
             })
@@ -55,8 +68,17 @@ class SellerFragment : Fragment() {
 
         // Setup tab layout
         TabLayoutMediator(binding.sellerTabLayout, binding.sellerViewPager) { tab, position ->
-            tab.text = sellerViewModel.sellerPages[position].title
+            tab.text = sellerPages[position].title
         }.attach()
+
+        // Observe bottom navigation scroll to top, and propagate to view pager
+        viewLifecycleOwner.lifecycleScope.launch {
+            mainViewModel.scrollToTop.collect { currentGraph ->
+                if (currentGraph == R.id.sellerFragment) {
+                    sellerViewModel.onPageScrollToTop()
+                }
+            }
+        }
 
         // Navigate to seller detail
         sellerViewModel.navigateToSellerDetail.observe(viewLifecycleOwner) {
@@ -96,20 +118,17 @@ class SellerFragment : Fragment() {
                 showShortToast(getString(R.string.error_resolve_activity_failed))
             }
         }
-
-        // Observe bottom navigation scroll to top, and propagate to view pager
-        viewLifecycleOwner.lifecycleScope.launch {
-            mainViewModel.scrollToTop.collect { currentGraph ->
-                if (currentGraph == R.id.sellerFragment) {
-                    sellerViewModel.onPageScrollToTop()
-                }
-            }
-        }
-
-        // Navigate to onboarding tutorial
-        mainViewModel.navigateToOnboardingTutorial.observe(viewLifecycleOwner) {
+        // Navigate to tutorial
+        mainViewModel.navigateToTutorial.observe(viewLifecycleOwner) {
             findNavController(R.id.sellerFragment)?.navigate(
                 SellerFragmentDirections.actionSellerFragmentToTutorialFragment()
+            )
+        }
+
+        // Navigate to cart timeout dialog
+        mainViewModel.navigateToCartTimeout.observe(viewLifecycleOwner) {
+            findNavController(R.id.sellerFragment)?.navigate(
+                SellerFragmentDirections.actionSellerFragmentToCartTimeoutDialog(cartItemsCount = it)
             )
         }
 

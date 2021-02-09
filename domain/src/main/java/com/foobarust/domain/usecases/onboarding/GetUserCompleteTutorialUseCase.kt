@@ -10,12 +10,12 @@ import javax.inject.Inject
  * Created by kevin on 9/6/20
  */
 
-class UpdateHasUserCompleteOnboardingUseCase @Inject constructor(
+class GetUserCompleteTutorialUseCase @Inject constructor(
     private val userRepository: UserRepository,
     @IoDispatcher coroutineDispatcher: CoroutineDispatcher
-) : CoroutineUseCase<Boolean, Unit>(coroutineDispatcher) {
+) : CoroutineUseCase<Unit, Boolean>(coroutineDispatcher) {
 
-    override suspend fun execute(parameters: Boolean) {
-        userRepository.updateHasUserCompleteOnboarding(parameters)
+    override suspend fun execute(parameters: Unit): Boolean {
+        return userRepository.getUserCompleteTutorial()
     }
 }
