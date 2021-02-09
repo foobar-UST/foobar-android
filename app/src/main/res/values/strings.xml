@@ -132,7 +132,7 @@
     <string name="seller_item_detail_decrement_content_desc">Remove Item</string>
     <string name="seller_item_detail_diff_seller_title">Add Item</string>
     <string name="seller_item_detail_diff_seller_message">You can only add items from one seller for each order.</string>
-    <string name="seller_item_detail_subtitle_more_items">Popular Bundles (+$ %.1f)</string>
+    <string name="seller_item_detail_subtitle_more_items">Suggest Items (+$ %.1f)</string>
     <string name="seller_item_detail_toolbar_title_add">Add Item</string>
     <string name="seller_item_detail_toolbar_title_update">Update Item</string>
     <string name="seller_item_detail_type_info_on_campus">Campus Restaurant</string>

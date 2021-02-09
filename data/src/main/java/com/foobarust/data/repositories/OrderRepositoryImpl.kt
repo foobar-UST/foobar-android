@@ -9,6 +9,7 @@ import com.foobarust.data.common.Constants.ORDERS_COLLECTION
 import com.foobarust.data.common.Constants.ORDER_STATE_ARCHIVED
 import com.foobarust.data.common.Constants.ORDER_STATE_CANCELLED
 import com.foobarust.data.common.Constants.ORDER_STATE_FIELD
+import com.foobarust.data.common.Constants.ORDER_USER_ID_FIELD
 import com.foobarust.data.mappers.OrderMapper
 import com.foobarust.data.paging.ArchivedOrderBasicsPagingSource
 import com.foobarust.data.utils.snapshotFlow
@@ -34,6 +35,7 @@ class OrderRepositoryImpl @Inject constructor(
 
     override fun getActiveOrderItemsObservable(userId: String): Flow<Resource<List<OrderBasic>>> {
         return firestore.collection(ORDERS_BASIC_COLLECTION)
+            .whereEqualTo(ORDER_USER_ID_FIELD, userId)
             .whereNotIn(
                 ORDER_STATE_FIELD,
                 listOf(ORDER_STATE_ARCHIVED, ORDER_STATE_CANCELLED)
