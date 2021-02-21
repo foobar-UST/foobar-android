@@ -7,7 +7,7 @@
     <data>
         <variable
             name="textInputProperty"
-            type="com.foobarust.android.common.TextInputProperty" />
+            type="com.foobarust.android.settings.TextInputProperty" />
     </data>
 
     <FrameLayout

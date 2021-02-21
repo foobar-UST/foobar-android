@@ -1,10 +1,9 @@
 package com.foobarust.android.sellermisc
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.foobarust.android.common.BaseViewModel
-import com.foobarust.android.common.UiState
 import com.foobarust.domain.models.seller.SellerDetail
 import com.foobarust.domain.models.seller.SellerType
 import com.foobarust.domain.states.Resource
@@ -26,13 +25,14 @@ import javax.inject.Inject
 class SellerMiscViewModel @Inject constructor(
     private val getSellerDetailUseCase: GetSellerDetailUseCase,
     private val getDirectionsUseCase: GetDirectionsUseCase
-) : BaseViewModel() {
+) : ViewModel() {
 
     private val _sellerDetail = MutableStateFlow<SellerDetail?>(null)
-    val sellerDetail: LiveData<SellerDetail> = _sellerDetail.filterNotNull()
+    private val _sellerMiscUiState = MutableStateFlow<SellerMiscUiState>(SellerMiscUiState.Loading)
+    val sellerMiscUiState: LiveData<SellerMiscUiState> = _sellerMiscUiState
         .asLiveData(viewModelScope.coroutineContext)
 
-    val latLng: LiveData<LatLng> = _sellerDetail
+    val sellerLocation: LiveData<LatLng> = _sellerDetail
         .filterNotNull()
         .map {
             LatLng(
@@ -42,7 +42,7 @@ class SellerMiscViewModel @Inject constructor(
         }
         .asLiveData(viewModelScope.coroutineContext)
 
-    val polyline: LiveData<List<LatLng>?> = _sellerDetail
+    val offCampusDeliveryRoute: LiveData<List<LatLng>?> = _sellerDetail
         .filterNotNull()
         .filter { it.type == SellerType.OFF_CAMPUS }
         .map {
@@ -64,15 +64,21 @@ class SellerMiscViewModel @Inject constructor(
             when (it) {
                 is Resource.Success -> {
                     _sellerDetail.value = it.data
-                    setUiState(UiState.Success)
+                    _sellerMiscUiState.value = SellerMiscUiState.Success(it.data)
                 }
                 is Resource.Error -> {
-                    setUiState(UiState.Error(it.message))
+                    _sellerMiscUiState.value = SellerMiscUiState.Error(it.message)
                 }
                 is Resource.Loading -> {
-                    setUiState(UiState.Loading)
+                    _sellerMiscUiState.value = SellerMiscUiState.Loading
                 }
             }
         }
     }
+}
+
+sealed class SellerMiscUiState {
+    data class Success(val sellerDetail: SellerDetail) : SellerMiscUiState()
+    data class Error(val message: String?) : SellerMiscUiState()
+    object Loading : SellerMiscUiState()
 }

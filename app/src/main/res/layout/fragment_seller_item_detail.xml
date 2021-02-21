@@ -7,11 +7,9 @@
     <data>
         <variable
             name="viewModel"
-            type="com.foobarust.android.sellerdetail.SellerItemDetailViewModel" />
-        <import type="com.foobarust.domain.models.seller.SellerItemDetailKt" />
+            type="com.foobarust.android.selleritem.SellerItemDetailViewModel" />
         <import type="com.foobarust.android.R" />
-        <import type="com.foobarust.android.common.UiState" />
-        <import type="com.foobarust.android.utils.BindingConverters" />
+        <import type="com.foobarust.android.selleritem.SellerItemDetailUiState" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -26,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?android:attr/colorBackground"
-            app:expandIf="@{viewModel.itemDetail.imageUrl != null}"
+            app:expandIf="@{viewModel.sellerItemDetail.imageUrl != null}"
             app:elevation="@dimen/elevation_none">
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -38,10 +36,11 @@
                 app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
                 <FrameLayout
+                    android:id="@+id/item_image_layout"
                     android:layout_width="match_parent"
                     android:layout_height="210dp"
                     app:layout_collapseMode="parallax"
-                    app:goneIf="@{!(viewModel.uiState instanceof UiState.Success) || viewModel.itemDetail.imageUrl == null}"
+                    app:goneIf="@{!viewModel.showItemImage}"
                     tools:visibility="visible">
 
                     <View
@@ -56,8 +55,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
-                        android:contentDescription="@{viewModel.itemDetail.title}"
-                        app:glideUrl="@{viewModel.itemDetail.imageUrl}"
+                        android:contentDescription="@{viewModel.sellerItemDetail.title}"
+                        app:glideUrl="@{viewModel.sellerItemDetail.imageUrl}"
                         app:glideCenterCrop="@{true}"
                         app:glidePlaceholder="@{R.drawable.placeholder_card}"
                         tools:src="@sample/sample_image_2"/>
@@ -88,15 +87,14 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
             tools:listitem="@layout/seller_item_detail_info_item"
-            tools:itemCount="1"
-            app:goneIf="@{!(viewModel.uiState instanceof UiState.Success)}"/>
+            tools:itemCount="1" />
 
         <ProgressBar
             android:id="@+id/progress_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            app:goneIf="@{!(viewModel.uiState instanceof UiState.Loading)}" />
+            app:goneIf="@{!(viewModel.sellerItemDetailUiState instanceof SellerItemDetailUiState.Loading)}"/>
 
         <include
             layout="@layout/load_error_layout"
@@ -104,14 +102,20 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            app:goneIf="@{!(viewModel.uiState instanceof UiState.Error)}"/>
+            app:goneIf="@{!(viewModel.sellerItemDetailUiState instanceof SellerItemDetailUiState.Error)}"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="140dp"
             android:layout_gravity="bottom"
-            android:background="?android:attr/colorBackground"
-            app:goneIf="@{!(viewModel.uiState instanceof UiState.Success)}">
+            android:background="?android:attr/colorBackground">
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/modify_buttons_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="amount_increment_button,amount_text_view,amount_decrement_button,submit_button"
+                app:goneIf="@{!viewModel.showModifyButtons}"/>
 
             <ImageButton
                 android:id="@+id/amount_increment_button"
@@ -133,7 +137,7 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="@dimen/spacing_mxlarge"
                 android:paddingEnd="@dimen/spacing_mxlarge"
-                android:text="@{BindingConverters.intToString(viewModel.amountsInput)}"
+                android:text="@{viewModel.amountsInput}"
                 android:textAppearance="?attr/textAppearanceHeadline6"
                 android:textColor="?attr/colorPrimary"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -164,23 +168,21 @@
                 android:layout_height="52dp"
                 android:layout_margin="@dimen/spacing_large"
                 android:text="@{viewModel.submitButtonTitle}"
-                android:clickable="@{!viewModel.isSubmitting}"
                 app:iconGravity="textStart"
                 app:iconPadding="@dimen/spacing_large"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:hideIf="@{viewModel.sellerItemDetailUpdateState instanceof SellerItemDetailUiState.Loading}"
                 tools:text="Add to Cart ($ 56.0)"/>
 
             <ProgressBar
                 android:id="@+id/submit_progress_bar"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:indeterminateTint="?attr/colorOnPrimary"
-                android:elevation="3dp"
-                app:layout_constraintTop_toTopOf="@id/submit_button"
-                app:layout_constraintBottom_toBottomOf="@id/submit_button"
-                app:layout_constraintStart_toStartOf="@id/submit_button"
-                app:layout_constraintEnd_toEndOf="@id/submit_button"
-                app:goneIf="@{!viewModel.isSubmitting}" />
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:goneIf="@{viewModel.showModifyButtons}"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

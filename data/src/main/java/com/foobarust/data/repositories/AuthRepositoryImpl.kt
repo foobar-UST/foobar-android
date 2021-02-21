@@ -3,9 +3,9 @@ package com.foobarust.data.repositories
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
+import com.foobarust.data.common.PreferencesKeys.EMAIL_TO_VERIFY
 import com.foobarust.data.mappers.AuthMapper
-import com.foobarust.data.preferences.PreferencesKeys.EMAIL_TO_VERIFY
-import com.foobarust.domain.models.user.AuthProfile
+import com.foobarust.domain.models.auth.AuthProfile
 import com.foobarust.domain.repositories.AuthRepository
 import com.foobarust.domain.usecases.AuthState
 import com.google.firebase.auth.FirebaseAuth
@@ -28,11 +28,12 @@ class AuthRepositoryImpl @Inject constructor(
     private val authMapper: AuthMapper
 ) : AuthRepository {
 
-    override suspend fun isUserSignedIn(): Boolean {
-        return firebaseAuth.currentUser != null && firebaseAuth.currentUser?.isAnonymous == false
+    override fun isUserSignedIn(): Boolean {
+        return firebaseAuth.currentUser != null &&
+            firebaseAuth.currentUser?.isAnonymous == false
     }
 
-    override suspend fun getUserId(): String {
+    override fun getUserId(): String {
         val currentUser = firebaseAuth.currentUser!!
         return currentUser.uid
     }
@@ -92,10 +93,15 @@ class AuthRepositoryImpl @Inject constructor(
         if (!firebaseAuth.isSignInWithEmailLink(emailLink)) {
             throw Exception("Invalid sign in link.")
         }
-        firebaseAuth.signInWithEmailLink(email, emailLink).await()
+
+        val authResult = firebaseAuth.signInWithEmailLink(email, emailLink).await()
+
+        if (authResult.user == null) {
+            throw Exception("Failed to sign in.")
+        }
     }
 
-    override suspend fun signOut() {
+    override fun signOut() {
         firebaseAuth.signOut()
     }
 }

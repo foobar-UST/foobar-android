@@ -2,18 +2,13 @@ package com.foobarust.android.settings
 
 import android.content.Context
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import androidx.work.*
 import com.foobarust.android.R
-import com.foobarust.android.common.BaseViewModel
-import com.foobarust.android.common.TextInputProperty
-import com.foobarust.android.common.TextInputType.NAME
-import com.foobarust.android.common.TextInputType.PHONE_NUM
-import com.foobarust.android.common.UiState
 import com.foobarust.android.settings.ProfileListModel.*
-import com.foobarust.android.utils.SingleLiveEvent
-import com.foobarust.android.works.UploadUserPhotoWork
+import com.foobarust.android.settings.TextInputType.NAME
+import com.foobarust.android.settings.TextInputType.PHONE_NUM
 import com.foobarust.domain.models.user.UserDetail
 import com.foobarust.domain.models.user.isDataCompleted
 import com.foobarust.domain.states.Resource
@@ -25,8 +20,11 @@ import com.foobarust.domain.usecases.user.UpdateUserDetailParameters
 import com.foobarust.domain.usecases.user.UpdateUserDetailUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -36,54 +34,56 @@ const val EDIT_PROFILE_PHONE_NUMBER = "profile_phone_number"
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val workManager: WorkManager,
-    getUserAuthStateUseCase: GetUserAuthStateUseCase,
     private val updateUserDetailUseCase: UpdateUserDetailUseCase,
-    private val getFormattedPhoneNumUseCase: GetFormattedPhoneNumUseCase
-) : BaseViewModel() {
+    private val getFormattedPhoneNumUseCase: GetFormattedPhoneNumUseCase,
+    getUserAuthStateUseCase: GetUserAuthStateUseCase,
+) : ViewModel() {
 
-    val profileListModels: LiveData<List<ProfileListModel>> = getUserAuthStateUseCase(Unit)
-        .map {
-            when (it) {
-                is AuthState.Authenticated -> {
-                    setUiState(UiState.Success)
-                    buildProfileListModels(userDetail = it.data)
-                }
-                AuthState.Unauthenticated -> {
-                    setUiState(UiState.Success)
-                    showToastMessage(context.getString(R.string.auth_signed_out_message))
-                    emptyList()
-                }
-                AuthState.Loading -> {
-                    setUiState(UiState.Loading)
-                    emptyList()
+    private val _profileListModels = MutableStateFlow<List<ProfileListModel>>(emptyList())
+    val profileListModels: LiveData<List<ProfileListModel>> = _profileListModels
+        .asLiveData(viewModelScope.coroutineContext)
+
+    private val _profileUiState = MutableStateFlow<ProfileUiState>(ProfileUiState.Loading)
+    val profileUiState: LiveData<ProfileUiState> = _profileUiState
+        .asLiveData(viewModelScope.coroutineContext)
+
+    private val _navigateToTextInput = Channel<TextInputProperty>()
+    val navigateToTextInput: Flow<TextInputProperty> = _navigateToTextInput.receiveAsFlow()
+
+    private val _snackBarMessage = Channel<String>()
+    val snackBarMessage: Flow<String> = _snackBarMessage.receiveAsFlow()
+
+    init {
+        // Build profile list
+        viewModelScope.launch {
+            getUserAuthStateUseCase(Unit).collect {
+                when (it) {
+                    is AuthState.Authenticated -> {
+                        _profileListModels.value = buildProfileListModels(userDetail = it.data)
+                        _profileUiState.value = ProfileUiState.Success
+                    }
+                    AuthState.Unauthenticated -> {
+                        _profileUiState.value = ProfileUiState.Error(
+                            context.getString(R.string.auth_signed_out_message)
+                        )
+                    }
+                    AuthState.Loading -> {
+                        _profileUiState.value = ProfileUiState.Loading
+                    }
                 }
             }
         }
-        .asLiveData(viewModelScope.coroutineContext)
-
-    private val _navigateToTextInput = SingleLiveEvent<TextInputProperty>()
-    val navigateToTextInput: LiveData<TextInputProperty>
-        get() = _navigateToTextInput
-
-    private val _snackBarMessage = SingleLiveEvent<String>()
-    val snackBarMessage: LiveData<String>
-        get() = _snackBarMessage
+    }
 
     fun updateUserName(name: String) = viewModelScope.launch {
         val params = UpdateUserDetailParameters(name = name)
         updateUserDetailUseCase(params).collect {
             when (it) {
-                is Resource.Success -> {
-                    setUiState(UiState.Success)
-                    _snackBarMessage.value = context.getString(R.string.profile_user_detail_updated)
-                }
-                is Resource.Error -> {
-                    setUiState(UiState.Error(it.message))
-                }
-                is Resource.Loading -> {
-                    setUiState(UiState.Loading)
-                }
+                is Resource.Success -> _snackBarMessage.offer(
+                    context.getString(R.string.profile_user_detail_updated)
+                )
+                is Resource.Error -> _profileUiState.value = ProfileUiState.Error(it.message)
+                is Resource.Loading -> _profileUiState.value = ProfileUiState.Loading
             }
         }
     }
@@ -92,58 +92,33 @@ class ProfileViewModel @Inject constructor(
         val params = UpdateUserDetailParameters(phoneNum = phoneNum)
         updateUserDetailUseCase(params).collect {
             when (it) {
-                is Resource.Success -> {
-                    setUiState(UiState.Success)
-                    _snackBarMessage.value = context.getString(R.string.profile_user_detail_updated)
-                }
-                is Resource.Error -> {
-                    setUiState(UiState.Error(it.message))
-                }
-                is Resource.Loading -> {
-                    setUiState(UiState.Loading)
-                }
+                is Resource.Success ->_snackBarMessage.offer(
+                    context.getString(R.string.profile_user_detail_updated)
+                )
+                is Resource.Error -> _profileUiState.value = ProfileUiState.Error(it.message)
+                is Resource.Loading -> _profileUiState.value = ProfileUiState.Loading
             }
         }
     }
 
-    fun onNavigateToTextInput(editModel: ProfileEditModel) {
-        _navigateToTextInput.value = when (editModel.id) {
-            EDIT_PROFILE_NAME -> TextInputProperty(
-                id = editModel.id,
-                title = editModel.title,
-                value = editModel.value,
-                type = NAME
-            )
-            EDIT_PROFILE_PHONE_NUMBER -> TextInputProperty(
-                id = editModel.id,
-                title = editModel.title,
-                value = editModel.value,
-                type = PHONE_NUM
-            )
-            else -> throw IllegalStateException("Unknown edit model: ${editModel.id}")
-        }
-    }
-
-    fun onUploadUserPhoto(uri: String, extension: String) {
-        val inputData = workDataOf(
-            UploadUserPhotoWork.USER_PHOTO_URL to uri,
-            UploadUserPhotoWork.USER_PHOTO_EXTENSION to extension
+    fun onNavigateToTextInput(editItemModel: ProfileEditItemModel) {
+        _navigateToTextInput.offer(
+            when (editItemModel.id) {
+                EDIT_PROFILE_NAME -> TextInputProperty(
+                    id = editItemModel.id,
+                    title = editItemModel.title,
+                    value = editItemModel.value,
+                    type = NAME
+                )
+                EDIT_PROFILE_PHONE_NUMBER -> TextInputProperty(
+                    id = editItemModel.id,
+                    title = editItemModel.title,
+                    value = editItemModel.value,
+                    type = PHONE_NUM
+                )
+                else -> throw IllegalStateException("Unknown edit model: ${editItemModel.id}")
+            }
         )
-
-        val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .build()
-
-        val uploadRequest = OneTimeWorkRequestBuilder<UploadUserPhotoWork>()
-            .setInputData(inputData)
-            .setConstraints(constraints)
-            .build()
-
-        workManager.beginUniqueWork(
-            UploadUserPhotoWork.WORK_NAME,
-            ExistingWorkPolicy.REPLACE,
-            uploadRequest
-        ).enqueue()
     }
 
     private suspend fun buildProfileListModels(userDetail: UserDetail?): List<ProfileListModel> {
@@ -154,16 +129,16 @@ class ProfileViewModel @Inject constructor(
         return buildList {
             // Add warning message section
             if (!userDetail.isDataCompleted()) {
-                add(ProfileWarningModel(
+                add(ProfileNoticeItemModel(
                     message = context.getString(R.string.profile_require_data_for_ordering)
                 ))
             }
 
             // Add user avatar section
-            add(ProfileInfoModel(userDetail = userDetail))
+            add(ProfileInfoItemModel(userDetail = userDetail))
 
             // Add user name section
-            add(ProfileEditModel(
+            add(ProfileEditItemModel(
                 id = EDIT_PROFILE_NAME,
                 title = context.getString(R.string.profile_edit_field_name),
                 value = userDetail.name,
@@ -176,7 +151,7 @@ class ProfileViewModel @Inject constructor(
                 getFormattedPhoneNumUseCase(it).getSuccessDataOr(null)
             }
 
-            add(ProfileEditModel(
+            add(ProfileEditItemModel(
                 id = EDIT_PROFILE_PHONE_NUMBER,
                 title = context.getString(R.string.profile_edit_field_phone_number),
                 value = userDetail.phoneNum,
@@ -185,4 +160,10 @@ class ProfileViewModel @Inject constructor(
             ))
         }
     }
+}
+
+sealed class ProfileUiState {
+    object Success : ProfileUiState()
+    data class Error(val message: String?) : ProfileUiState()
+    object Loading : ProfileUiState()
 }

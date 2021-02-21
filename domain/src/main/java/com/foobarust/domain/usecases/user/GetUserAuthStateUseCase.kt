@@ -2,9 +2,9 @@ package com.foobarust.domain.usecases.user
 
 import com.foobarust.domain.di.ApplicationScope
 import com.foobarust.domain.di.IoDispatcher
-import com.foobarust.domain.models.user.AuthProfile
+import com.foobarust.domain.models.auth.AuthProfile
+import com.foobarust.domain.models.auth.asUserDetail
 import com.foobarust.domain.models.user.UserDetail
-import com.foobarust.domain.models.user.asUserDetail
 import com.foobarust.domain.repositories.AuthRepository
 import com.foobarust.domain.repositories.UserRepository
 import com.foobarust.domain.states.Resource

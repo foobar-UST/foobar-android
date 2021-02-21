@@ -34,23 +34,10 @@ class SellerFragment : Fragment() {
         binding = FragmentSellerBinding.inflate(inflater, container, false)
 
         // Setup view pager
-        val sellerPages: List<SellerPage> = listOf(
-            SellerPage(
-                tag = SellerOnCampusFragment.TAG,
-                title = requireContext().getString(R.string.seller_tab_on_campus),
-                fragment = { SellerOnCampusFragment() }
-            ),
-            SellerPage(
-                tag = SellerOffCampusFragment.TAG,
-                title = requireContext().getString(R.string.seller_tab_off_campus),
-                fragment = { SellerOffCampusFragment() }
-            )
-        )
-
         sellerPagerAdapter = SellerPagerAdapter(
             fragmentManager = childFragmentManager,
             lifecycle = viewLifecycleOwner.lifecycle,
-            sellerPages = sellerPages
+            sellerPages = sellerViewModel.sellerPages
         )
 
         binding.sellerViewPager.run {
@@ -60,7 +47,7 @@ class SellerFragment : Fragment() {
             registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
                     sellerViewModel.onCurrentPageChanged(
-                        tag = sellerPages[position].tag
+                        tag = sellerViewModel.sellerPages[position].tag
                     )
                 }
             })
@@ -68,7 +55,7 @@ class SellerFragment : Fragment() {
 
         // Setup tab layout
         TabLayoutMediator(binding.sellerTabLayout, binding.sellerViewPager) { tab, position ->
-            tab.text = sellerPages[position].title
+            tab.text = sellerViewModel.sellerPages[position].title
         }.attach()
 
         // Observe bottom navigation scroll to top, and propagate to view pager
@@ -81,55 +68,45 @@ class SellerFragment : Fragment() {
         }
 
         // Navigate to seller detail
-        sellerViewModel.navigateToSellerDetail.observe(viewLifecycleOwner) {
-            findNavController(R.id.sellerFragment)?.navigate(
-                SellerFragmentDirections.actionSellerFragmentToSellerDetailFragment(property = it)
-            )
+        viewLifecycleOwner.lifecycleScope.launch {
+            sellerViewModel.navigateToSellerDetail.collect {
+                findNavController(R.id.sellerFragment)?.navigate(
+                    SellerFragmentDirections.actionSellerFragmentToSellerDetailFragment(property = it)
+                )
+            }
         }
 
         // Navigate to seller action
-        sellerViewModel.navigateToSellerAction.observe(viewLifecycleOwner) {
-            findNavController(R.id.sellerFragment)?.navigate(
-                SellerFragmentDirections.actionSellerFragmentToSellerActionDialog()
-            )
+        viewLifecycleOwner.lifecycleScope.launch {
+            sellerViewModel.navigateToSellerAction.collect {
+                findNavController(R.id.sellerFragment)?.navigate(
+                    SellerFragmentDirections.actionSellerFragmentToSellerActionDialog()
+                )
+            }
         }
 
-        // Navigate to suggest item
-        sellerViewModel.navigateToSuggestItem.observe(viewLifecycleOwner) {
-            findNavController(R.id.sellerFragment)?.navigate(
-                SellerFragmentDirections.actionSellerFragmentToSellerItemDetailFragment(it)
-            )
-        }
-
-        // Navigate to seller section detail
-        sellerViewModel.navigateToSellerSection.observe(viewLifecycleOwner) {
-            findNavController(R.id.sellerFragment)?.navigate(
-                SellerFragmentDirections.actionSellerFragmentToSellerSectionFragment(property = it)
-            )
+        // Navigate to section detail
+        viewLifecycleOwner.lifecycleScope.launch {
+            sellerViewModel.navigateToSellerSection.collect {
+                findNavController(R.id.sellerFragment)?.navigate(
+                    SellerFragmentDirections.actionSellerFragmentToSellerSectionFragment(it)
+                )
+            }
         }
 
         // Launch promotion custom tab
-        sellerViewModel.navigateToPromotionDetail.observe(viewLifecycleOwner) {
-            if (!CustomTabHelper.launchCustomTab(
+        viewLifecycleOwner.lifecycleScope.launch {
+            sellerViewModel.navigateToPromotionDetail.collect {
+                val launchResult = CustomTabHelper.launchCustomTab(
                     context = requireContext(),
                     url = it,
-                    colorInt = requireContext().themeColor(R.attr.colorPrimarySurface)
-                )) {
-                showShortToast(getString(R.string.error_resolve_activity_failed))
-            }
-        }
-        // Navigate to tutorial
-        mainViewModel.navigateToTutorial.observe(viewLifecycleOwner) {
-            findNavController(R.id.sellerFragment)?.navigate(
-                SellerFragmentDirections.actionSellerFragmentToTutorialFragment()
-            )
-        }
+                    tabColorInt = requireContext().themeColor(R.attr.colorPrimarySurface)
+                )
 
-        // Navigate to cart timeout dialog
-        mainViewModel.navigateToCartTimeout.observe(viewLifecycleOwner) {
-            findNavController(R.id.sellerFragment)?.navigate(
-                SellerFragmentDirections.actionSellerFragmentToCartTimeoutDialog(cartItemsCount = it)
-            )
+                if (!launchResult) {
+                    showShortToast(getString(R.string.error_resolve_activity_failed))
+                }
+            }
         }
 
         return binding.root

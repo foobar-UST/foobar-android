@@ -49,12 +49,12 @@ class AuthVerifyFragment : Fragment() {
             lifecycleOwner = viewLifecycleOwner
         }
 
-        authViewModel.authPage.observe(viewLifecycleOwner) { state ->
-            if (state == AuthPage.INPUT) {
+        authViewModel.authUiState.observe(viewLifecycleOwner) { state ->
+            if (state == AuthUiState.INPUT) {
                 findNavController(R.id.authVerifyFragment)?.navigate(
                     AuthVerifyFragmentDirections.actionAuthVerifyFragmentToAuthInputFragment()
                 )
-            } else if (state == AuthPage.COMPLETED) {
+            } else if (state == AuthUiState.COMPLETED) {
                 findNavController(R.id.authVerifyFragment)?.navigate(
                     AuthVerifyFragmentDirections.actionAuthVerifyFragmentToMainActivity()
                 )

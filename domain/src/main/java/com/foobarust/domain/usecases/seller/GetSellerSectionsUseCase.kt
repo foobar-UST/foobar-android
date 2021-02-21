@@ -27,7 +27,7 @@ class GetSellerSectionsUseCase @Inject constructor(
             sellerRepository.getSellerSectionsPagingData(sellerId = parameters.sellerId!!)
                 .map { pagingData ->
                     // Filter out current section
-                    pagingData.filter { it.id != parameters.currentSectionId }
+                    pagingData.filter { it.id != parameters.ignoreSectionId }
                 }
         }
     }
@@ -35,7 +35,7 @@ class GetSellerSectionsUseCase @Inject constructor(
 
 data class GetSellerSectionsParameters(
     val sellerId: String? = null,
-    val currentSectionId: String? = null
+    val ignoreSectionId: String? = null
 ) {
     fun isGetAllSections(): Boolean = sellerId == null
 }

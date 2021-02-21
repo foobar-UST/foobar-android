@@ -16,7 +16,7 @@ import javax.inject.Inject
  * Created by kevin on 12/1/20
  */
 
-const val ERROR_DIFFERENT_SELLER = "Attempt to add items from multiple seller."
+const val INVALID_SELLER_ERROR = "Attempt to add items from multiple seller."
 
 class AddUserCartItemUseCase @Inject constructor(
     private val authRepository: AuthRepository,
@@ -34,7 +34,7 @@ class AddUserCartItemUseCase @Inject constructor(
         val itemSellerId = parameters.itemSellerId
 
         if (cartSellerId != null && cartSellerId != itemSellerId) {
-            throw Exception(ERROR_DIFFERENT_SELLER)
+            throw Exception(INVALID_SELLER_ERROR)
         }
 
         val idToken = authRepository.getUserIdToken()

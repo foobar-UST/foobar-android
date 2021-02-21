@@ -2,7 +2,7 @@
 <resources>
     <style name="ThemeOverlay.Foobar.Dialog.Fullscreen.DayNight.Search" parent="ThemeOverlay.Foobar.Dialog.Fullscreen.DayNight">
         <item name="android:windowSoftInputMode">stateAlwaysVisible</item>
-        <item name="android:windowBackground">?attr/scrimBackground</item>
+        <item name="android:windowBackground">@color/white_alpha_60</item>
     </style>
     <style name="ThemeOverlay.Foobar.Dialog.Fullscreen.DayNight" parent="ThemeOverlay.Foobar.Dialog.Fullscreen"/>
     <style name="ThemeOverlay.Foobar.Dialog.Fullscreen" parent="ThemeOverlay.MaterialComponents.Dialog">

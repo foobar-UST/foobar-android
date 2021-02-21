@@ -3,12 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-        <variable
-            name="counterItem"
-            type="com.foobarust.android.sellersection.SellerSectionDetailListModel.SellerSectionDetailCounterItemModel" />
-    </data>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -31,7 +25,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_medium"
             android:layout_gravity="center_horizontal"
-            android:text="@{counterItem.recentSection ? @string/seller_section_detail_counter_on_subtitle : @string/seller_section_detail_counter_off_subtitle}"
             android:textAppearance="?attr/textAppearanceCaption"
             android:textColor="@color/material_on_surface_emphasis_medium"
             tools:text="@string/seller_section_detail_counter_on_subtitle"/>

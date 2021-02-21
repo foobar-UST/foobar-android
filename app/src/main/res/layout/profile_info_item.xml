@@ -6,8 +6,8 @@
 
     <data>
         <variable
-            name="infoModel"
-            type="com.foobarust.android.settings.ProfileListModel.ProfileInfoModel" />
+            name="infoItemModel"
+            type="com.foobarust.android.settings.ProfileListModel.ProfileInfoItemModel" />
         <variable
             name="listener"
             type="com.foobarust.android.settings.ProfileAdapter.ProfileAdapterListener" />
@@ -25,7 +25,7 @@
             android:layout_height="110dp"
             android:onClick="@{() -> listener.onProfileAvatarClicked()}"
             app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Foobar.Circle"
-            app:glideUrl="@{infoModel.userDetail.photoUrl}"
+            app:glideUrl="@{infoItemModel.userDetail.photoUrl}"
             app:glideCenterCrop="@{true}"
             app:glidePlaceholder="@{R.drawable.ic_user}"
             app:layout_constraintStart_toStartOf="parent"
@@ -49,7 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_large"
-            android:text="@{infoModel.userDetail.username}"
+            android:text="@{infoItemModel.userDetail.username}"
             android:textAppearance="?attr/textAppearanceHeadline5"
             android:textStyle="bold"
             app:layout_constraintTop_toBottomOf="@id/avatar_image_view"
@@ -62,7 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_xmedium"
-            android:text="@{infoModel.userDetail.email}"
+            android:text="@{infoItemModel.userDetail.email}"
             android:textAppearance="?attr/textAppearanceSubtitle2"
             android:textColor="@color/material_on_background_emphasis_medium"
             app:layout_constraintTop_toBottomOf="@id/username_text_view"

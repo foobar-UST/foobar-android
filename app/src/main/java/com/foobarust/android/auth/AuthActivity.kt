@@ -5,12 +5,14 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.foobarust.android.R
 import com.foobarust.android.databinding.ActivityAuthBinding
 import com.foobarust.android.utils.showShortToast
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class AuthActivity : AppCompatActivity() {
@@ -21,24 +23,22 @@ class AuthActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        binding = DataBindingUtil.setContentView<ActivityAuthBinding>(
-            this, R.layout.activity_auth
-        ).apply {
-            viewModel = this@AuthActivity.viewModel
-        }
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_auth)
 
         // Setup Navigation
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
+        val navHostFragment = supportFragmentManager.findFragmentById(
+            R.id.fragment_container) as NavHostFragment
         navController = navHostFragment.navController
 
         // Show toast
-        viewModel.toastMessage.observe(this) {
-            showShortToast(it)
+        lifecycleScope.launchWhenStarted {
+            viewModel.toastMessage.collect {
+                showShortToast(it)
+            }
         }
 
         // Finish activity if the user is already signed in.
-        viewModel.userSignedIn.observe(this) {
+        viewModel.isUserSignedIn.observe(this) {
             finish()
         }
 

@@ -11,24 +11,16 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 /**
- * Created by kevin on 10/13/20
+ * Created by kevin on 2/20/21
  */
 
 class GetSellerItemDetailUseCase @Inject constructor(
     private val sellerRepository: SellerRepository,
     @IoDispatcher coroutineDispatcher: CoroutineDispatcher
-) : FlowUseCase<GetSellerItemDetailParameters, SellerItemDetail>(coroutineDispatcher) {
+) : FlowUseCase<String, SellerItemDetail>(coroutineDispatcher) {
 
-    override fun execute(parameters: GetSellerItemDetailParameters): Flow<Resource<SellerItemDetail>> = flow {
-        val itemDetail = sellerRepository.getSellerItemDetail(
-            sellerId = parameters.sellerId,
-            itemId = parameters.itemId
-        )
+    override fun execute(parameters: String): Flow<Resource<SellerItemDetail>> = flow {
+        val itemDetail = sellerRepository.getSellerItemDetail(itemId = parameters)
         emit(Resource.Success(itemDetail))
     }
 }
-
-data class GetSellerItemDetailParameters(
-    val sellerId: String,
-    val itemId: String
-)

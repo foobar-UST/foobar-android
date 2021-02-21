@@ -4,23 +4,23 @@
         android:id="@+id/navigation_seller"
         android:icon="@drawable/ic_restaurant"
         android:enabled="true"
-        android:title="@string/fragment_label_seller"/>
+        android:title="@string/nav_title_seller"/>
 
     <item
         android:id="@+id/navigation_order"
         android:icon="@drawable/ic_add_box"
         android:enabled="true"
-        android:title="@string/fragment_label_order"/>
+        android:title="@string/nav_title_order"/>
 
     <item
         android:id="@+id/navigation_explore"
         android:icon="@drawable/ic_explore"
         android:enabled="true"
-        android:title="@string/fragment_label_explore"/>
+        android:title="@string/nav_title_explore"/>
 
     <item
         android:id="@+id/navigation_settings"
         android:icon="@drawable/ic_account"
         android:enabled="true"
-        android:title="@string/fragment_label_settings"/>
+        android:title="@string/nav_title_settings"/>
 </menu>

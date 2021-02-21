@@ -3,16 +3,15 @@ package com.foobarust.android.checkout
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.foobarust.android.common.BaseViewModel
-import com.foobarust.android.common.UiState
+import com.foobarust.android.shared.BaseViewModel
 import com.foobarust.domain.models.checkout.PaymentMethod
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.checkout.GetPaymentMethodsUseCase
+import com.foobarust.domain.utils.cancelIfActive
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,45 +25,70 @@ class PaymentViewModel @Inject constructor(
     private val paymentMethodUtil: PaymentMethodUtil
 ) : BaseViewModel() {
 
-    private val _paymentMethodItemModels = MutableStateFlow<List<PaymentMethodItemModel>>(emptyList())
-    val paymentMethodItemModels: LiveData<List<PaymentMethodItemModel>> = _paymentMethodItemModels
+    private val _paymentMethods = MutableStateFlow<List<PaymentMethod>>(emptyList())
+
+    private val _paymentItemModels = MutableStateFlow<List<PaymentMethodItemModel>>(emptyList())
+    val paymentItemModels: LiveData<List<PaymentMethodItemModel>> = _paymentItemModels
         .asLiveData(viewModelScope.coroutineContext)
 
-    private val _selectedPaymentMethod = MutableStateFlow<String?>(null)
-
-    // Allow payment if the user has selected one of the payment methods
-    val allowProceedPayment: LiveData<Boolean> = _selectedPaymentMethod
-        .map { it != null }
+    private val _paymentUiState = MutableStateFlow<PaymentUiState>(PaymentUiState.Loading)
+    val paymentUiState: LiveData<PaymentUiState> = _paymentUiState
         .asLiveData(viewModelScope.coroutineContext)
+
+    private val _finishSwipeRefresh = Channel<Unit>()
+    val finishSwipeRefresh: Flow<Unit> = _finishSwipeRefresh.receiveAsFlow()
+
+    private var fetchPaymentMethodsJob: Job? = null
 
     init {
-        fetchPaymentMethods()
+        onFetchPaymentMethods()
+
+        // Build payment methods list
+        viewModelScope.launch {
+            _paymentMethods.combine(_paymentUiState) { paymentMethods, uiState ->
+                val selectedIdentifier = (uiState as? PaymentUiState.Ready)?.identifier
+                buildPaymentMethodItemModelsList(
+                    paymentMethods = paymentMethods,
+                    selectedIdentifier = selectedIdentifier
+                )
+            }.collect {
+                _paymentItemModels.value = it
+            }
+        }
     }
 
-    fun onRestoreSelectPaymentMethod(identifier: String?) {
-        _selectedPaymentMethod.value = identifier
-    }
+    fun onFetchPaymentMethods(isSwipeRefresh: Boolean = false) {
+        fetchPaymentMethodsJob?.cancelIfActive()
+        fetchPaymentMethodsJob = viewModelScope.launch {
+            getPaymentMethodsUseCase(Unit).collect {
+                when (it) {
+                    is Resource.Success -> {
+                        _paymentMethods.value = it.data
+                        _paymentUiState.value = PaymentUiState.Success
 
-    private fun fetchPaymentMethods() = viewModelScope.launch {
-        getPaymentMethodsUseCase(Unit).combine(_selectedPaymentMethod) { paymentMethods, selectedMethod ->
-            when (paymentMethods) {
-                is Resource.Success -> {
-                    setUiState(UiState.Success)
-                    buildPaymentMethodItemModelsList(
-                        paymentMethods.data,
-                        selectedMethod
-                    )
-                }
-                is Resource.Error -> {
-                    setUiState(UiState.Error(paymentMethods.message))
-                    emptyList()
-                }
-                is Resource.Loading -> {
-                    setUiState(UiState.Loading)
-                    emptyList()
+                        if (isSwipeRefresh) {
+                            _finishSwipeRefresh.offer(Unit)
+                        }
+                    }
+                    is Resource.Error -> {
+                        _paymentUiState.value = PaymentUiState.Error(it.message)
+
+                        if (isSwipeRefresh) {
+                            _finishSwipeRefresh.offer(Unit)
+                        }
+                    }
+                    is Resource.Loading -> {
+                        if (!isSwipeRefresh) {
+                            _paymentUiState.value = PaymentUiState.Loading
+                        }
+                    }
                 }
             }
-        }.collect { _paymentMethodItemModels.value = it }
+        }
+    }
+
+    fun onSelectPaymentMethod(identifier: String) {
+        _paymentUiState.value = PaymentUiState.Ready(identifier)
     }
 
     private fun buildPaymentMethodItemModelsList(
@@ -80,4 +104,11 @@ class PaymentViewModel @Inject constructor(
             )
         }
     }
+}
+
+sealed class PaymentUiState {
+    object Success: PaymentUiState()
+    data class Ready(val identifier: String) : PaymentUiState()
+    data class Error(val message: String?) : PaymentUiState()
+    object Loading : PaymentUiState()
 }

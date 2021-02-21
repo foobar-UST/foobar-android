@@ -10,29 +10,31 @@ import com.foobarust.android.utils.AutoClearedValue
 import com.foobarust.android.utils.parentViewModels
 import dagger.hilt.android.AndroidEntryPoint
 
-private const val TUTORIAL_PROPERTY = "tutorial_property"
+private const val ARG_TUTORIAL_PAGE = "tutorial_page"
 
 @AndroidEntryPoint
 class TutorialPageFragment : Fragment() {
 
     private var binding: FragmentTutorialPageBinding by AutoClearedValue(this)
     private val viewModel: TutorialViewModel by parentViewModels()
+    private val tutorialPage: TutorialPage by lazy {
+        requireArguments().getParcelable<TutorialPage>(ARG_TUTORIAL_PAGE) ?:
+        throw IllegalArgumentException("Tutorial property not found.")
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val property = requireArguments().getParcelable<TutorialProperty>(TUTORIAL_PROPERTY) ?:
-            throw IllegalArgumentException("Tutorial property not found.")
 
         binding = FragmentTutorialPageBinding.inflate(inflater, container, false).apply {
+            tutorialPage = this@TutorialPageFragment.tutorialPage
             lifecycleOwner = viewLifecycleOwner
-            onboardingProperty = property
         }
 
         // Dismiss dialog when completed
-        if (property.showDismiss) {
+        if (tutorialPage.showDismiss) {
             binding.completeButton.setOnClickListener {
                 viewModel.onCompleteTutorial()
             }
@@ -42,10 +44,10 @@ class TutorialPageFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(property: TutorialProperty): TutorialPageFragment {
+        fun newInstance(property: TutorialPage): TutorialPageFragment {
             return TutorialPageFragment().apply {
                 arguments = Bundle().apply {
-                    putParcelable(TUTORIAL_PROPERTY, property)
+                    putParcelable(ARG_TUTORIAL_PAGE, property)
                 }
             }
         }

@@ -19,7 +19,9 @@ import com.foobarust.domain.models.order.OrderState
  * Created by kevin on 2/1/21
  */
 
-class OrderDetailAdapter: ListAdapter<OrderDetailListModel, OrderDetailViewHolder>(OrderDetailListModelDiff) {
+class OrderDetailAdapter(
+    private val listener: OrderDetailAdapterListener
+): ListAdapter<OrderDetailListModel, OrderDetailViewHolder>(OrderDetailListModelDiff) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrderDetailViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -41,6 +43,9 @@ class OrderDetailAdapter: ListAdapter<OrderDetailListModel, OrderDetailViewHolde
             )
             R.layout.order_detail_payment_item -> OrderDetailPaymentItemViewHolder(
                 OrderDetailPaymentItemBinding.inflate(inflater, parent, false)
+            )
+            R.layout.order_detail_actions_item -> OrderDetailActionsItemViewHolder(
+                OrderDetailActionsItemBinding.inflate(inflater, parent, false)
             )
             else -> throw IllegalStateException("Unknown view type $viewType")
         }
@@ -70,6 +75,11 @@ class OrderDetailAdapter: ListAdapter<OrderDetailListModel, OrderDetailViewHolde
             }
             is OrderDetailPaymentItemViewHolder -> holder.binding.run {
                 paymentItemModel = getItem(position) as OrderDetailPaymentItemModel
+                executePendingBindings()
+            }
+            is OrderDetailActionsItemViewHolder -> holder.binding.run {
+                actionsItemModel = getItem(position) as OrderDetailActionsItemModel
+                listener = this@OrderDetailAdapter.listener
                 executePendingBindings()
             }
         }
@@ -118,7 +128,12 @@ class OrderDetailAdapter: ListAdapter<OrderDetailListModel, OrderDetailViewHolde
             is OrderDetailPurchaseItemModel -> R.layout.order_detail_purchase_item
             is OrderDetailCostItemModel -> R.layout.order_detail_cost_item
             is OrderDetailPaymentItemModel -> R.layout.order_detail_payment_item
+            is OrderDetailActionsItemModel -> R.layout.order_detail_actions_item
         }
+    }
+
+    interface OrderDetailAdapterListener {
+        fun onNavigateToSellerContact()
     }
 }
 
@@ -146,6 +161,10 @@ sealed class OrderDetailViewHolder(itemView: View) : RecyclerView.ViewHolder(ite
     class OrderDetailPaymentItemViewHolder(
         val binding: OrderDetailPaymentItemBinding
     ) : OrderDetailViewHolder(binding.root)
+
+    class OrderDetailActionsItemViewHolder(
+        val binding: OrderDetailActionsItemBinding
+    ) : OrderDetailViewHolder(binding.root)
 }
 
 sealed class OrderDetailListModel {
@@ -165,6 +184,7 @@ sealed class OrderDetailListModel {
         val orderIdentifierTitle: String,
         val orderTitle: String,
         val orderCreatedDate: String,
+        val orderUpdatedDate: String,
         val orderTotalCost: String,
         val orderMessage: String?,
         val orderItemImageUrl: String?
@@ -186,6 +206,8 @@ sealed class OrderDetailListModel {
     data class OrderDetailPaymentItemModel(
         val paymentMethodItem: PaymentMethodItem
     ) : OrderDetailListModel()
+
+    object OrderDetailActionsItemModel : OrderDetailListModel()
 }
 
 object OrderDetailListModelDiff : DiffUtil.ItemCallback<OrderDetailListModel>() {
@@ -205,6 +227,8 @@ object OrderDetailListModelDiff : DiffUtil.ItemCallback<OrderDetailListModel>() 
             oldItem is OrderDetailCostItemModel && newItem is OrderDetailCostItemModel ->
                 true
             oldItem is OrderDetailPaymentItemModel && newItem is OrderDetailPaymentItemModel ->
+                true
+            oldItem is OrderDetailActionsItemModel && newItem is OrderDetailActionsItemModel ->
                 true
             else -> false
         }
@@ -227,6 +251,8 @@ object OrderDetailListModelDiff : DiffUtil.ItemCallback<OrderDetailListModel>() 
                 oldItem == newItem
             oldItem is OrderDetailPaymentItemModel && newItem is OrderDetailPaymentItemModel ->
                 oldItem == newItem
+            oldItem is OrderDetailActionsItemModel && newItem is OrderDetailActionsItemModel ->
+                true
             else -> false
         }
     }

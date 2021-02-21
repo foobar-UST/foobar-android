@@ -8,14 +8,35 @@
         <variable
             name="viewModel"
             type="com.foobarust.android.checkout.PaymentViewModel" />
-        <import type="com.foobarust.android.common.UiState" />
+        <import type="com.foobarust.android.checkout.PaymentUiState" />
     </data>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/payment_methods_recycler_view"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/payment_method_item"/>
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:animateLayoutChanges="true">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/payment_methods_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/payment_method_item"/>
+
+            <include
+                layout="@layout/load_error_layout"
+                android:id="@+id/load_error_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:goneIf="@{!(viewModel.paymentUiState instanceof PaymentUiState.Error)}"/>
+
+        </FrameLayout>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </layout>

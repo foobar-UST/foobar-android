@@ -2,14 +2,13 @@ package com.foobarust.android.settings
 
 import android.content.Context
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkManager
 import com.foobarust.android.R
-import com.foobarust.android.common.BaseViewModel
-import com.foobarust.android.settings.SettingsListModel.SettingsProfileModel
-import com.foobarust.android.settings.SettingsListModel.SettingsSectionModel
-import com.foobarust.android.utils.SingleLiveEvent
+import com.foobarust.android.settings.SettingsListModel.SettingsAccountItemModel
+import com.foobarust.android.settings.SettingsListModel.SettingsSectionItemModel
 import com.foobarust.android.works.UploadUserPhotoWork
 import com.foobarust.domain.models.user.UserDetail
 import com.foobarust.domain.states.Resource
@@ -19,8 +18,11 @@ import com.foobarust.domain.usecases.user.DoOnSignOutUseCase
 import com.foobarust.domain.usecases.user.GetUserAuthStateUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -35,38 +37,57 @@ const val SETTINGS_FAVORITE = "setting_favorite"
 class SettingsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val workManager: WorkManager,
-    getUserAuthStateUseCase: GetUserAuthStateUseCase,
     private val signOutUseCase: SignOutUseCase,
-    private val doOnSignOutUseCase: DoOnSignOutUseCase
-) : BaseViewModel() {
+    private val doOnSignOutUseCase: DoOnSignOutUseCase,
+    getUserAuthStateUseCase: GetUserAuthStateUseCase,
+) : ViewModel() {
 
-    private val _navigateToSignIn = SingleLiveEvent<Unit>()
-    val navigateToSignIn: LiveData<Unit>
-        get() = _navigateToSignIn
-
-    private val _navigateToProfile = SingleLiveEvent<Unit>()
-    val navigateToProfile: LiveData<Unit>
-        get() = _navigateToProfile
-
-    private val _userSignedOut = SingleLiveEvent<Unit>()
-    val userSignedOut: LiveData<Unit>
-        get() = _userSignedOut
-
-    val settingsListModels: LiveData<List<SettingsListModel>> = getUserAuthStateUseCase(Unit)
-        .map {
-            when (it) {
-                is AuthState.Authenticated -> buildSettingsListModels(it.data)
-                AuthState.Unauthenticated -> buildSettingsListModels()
-                AuthState.Loading -> emptyList()
-            }
-        }
+    private val _settingsListModels = MutableStateFlow<List<SettingsListModel>>(emptyList())
+    val settingsListModels: LiveData<List<SettingsListModel>> = _settingsListModels
         .asLiveData(viewModelScope.coroutineContext)
 
-    fun onUserAccountClicked(isSignedIn: Boolean) = viewModelScope.launch {
+    private val _settingsUiState = MutableStateFlow(SettingsUiState.LOADING)
+    val settingsUiState: LiveData<SettingsUiState> = _settingsUiState
+        .asLiveData(viewModelScope.coroutineContext)
+
+    private val _navigateToSignIn = Channel<Unit>()
+    val navigateToSignIn: Flow<Unit> = _navigateToSignIn.receiveAsFlow()
+
+    private val _navigateToProfile = Channel<Unit>()
+    val navigateToProfile: Flow<Unit> = _navigateToProfile.receiveAsFlow()
+
+    private val _isUserSignedOut = Channel<Unit>()
+    val isUserSignedOut: Flow<Unit> = _isUserSignedOut.receiveAsFlow()
+
+    private val _toastMessage = Channel<String>()
+    val toastMessage: Flow<String> = _toastMessage.receiveAsFlow()
+
+    init {
+        // Build settings list
+        viewModelScope.launch {
+            getUserAuthStateUseCase(Unit).collect {
+                when (it) {
+                    is AuthState.Authenticated -> {
+                        _settingsListModels.value = buildAuthenticatedListModels(userDetail = it.data)
+                        _settingsUiState.value = SettingsUiState.COMPLETED
+                    }
+                    AuthState.Unauthenticated -> {
+                        _settingsListModels.value =  buildUnauthenticatedListModels()
+                        _settingsUiState.value = SettingsUiState.COMPLETED
+                    }
+                    AuthState.Loading -> {
+                        _settingsUiState.value = SettingsUiState.LOADING
+                    }
+                }
+            }
+        }
+    }
+
+    fun onNavigateToProfileOrSignIn(isSignedIn: Boolean) = viewModelScope.launch {
         if (isSignedIn) {
-            _navigateToProfile.value = Unit
+            _navigateToProfile.offer(Unit)
         } else {
-            _navigateToSignIn.value = Unit
+            _navigateToSignIn.offer(Unit)
         }
     }
 
@@ -76,10 +97,12 @@ class SettingsViewModel @Inject constructor(
                 is Resource.Success -> {
                     doOnSignOutUseCase(Unit)
                     cancelWorkManagerWorks()
-                    _userSignedOut.value = Unit
+                    _isUserSignedOut.offer(Unit)
                 }
                 is Resource.Error -> {
-                    showToastMessage(it.message)
+                    it.message?.let {
+                        _toastMessage.offer(it)
+                    }
                 }
                 is Resource.Loading -> Unit
             }
@@ -90,59 +113,63 @@ class SettingsViewModel @Inject constructor(
         workManager.cancelUniqueWork(UploadUserPhotoWork.WORK_NAME)
     }
 
-    private fun buildSettingsListModels(userDetail: UserDetail? = null): List<SettingsListModel> {
-        return buildList {
-            if (userDetail != null) {
-                // User is signed in.
-                add(SettingsProfileModel(
-                    signedIn = true,
-                    username = userDetail.username,
-                    photoUrl = userDetail.photoUrl
-                ))
+    private fun buildAuthenticatedListModels(
+        userDetail: UserDetail
+    ): List<SettingsListModel> = buildList {
+        add(SettingsAccountItemModel(
+            signedIn = true,
+            username = userDetail.username,
+            photoUrl = userDetail.photoUrl
+        ))
 
-                add(SettingsSectionModel(
-                    id = SETTINGS_FAVORITE,
-                    icon = R.drawable.ic_loyalty,
-                    title = context.getString(R.string.settings_section_favorite_title)
-                ))
-            } else {
-                // User is signed out.
-                add(SettingsProfileModel(signedIn = false))
-            }
+        add(SettingsSectionItemModel(
+            id = SETTINGS_FAVORITE,
+            drawableRes = R.drawable.ic_loyalty,
+            title = context.getString(R.string.settings_section_favorite_title)
+        ))
 
-            // Setup common sections
-            addAll(listOf(
-                SettingsSectionModel(
-                    id = SETTINGS_NOTIFICATIONS,
-                    icon = R.drawable.ic_notification_important,
-                    title = context.getString(R.string.settings_section_notifications_title)
-                ),
-                SettingsSectionModel(
-                    id = SETTINGS_FEATURES,
-                    icon = R.drawable.ic_whatshot,
-                    title = context.getString(R.string.settings_section_features_title)
-                ),
-                SettingsSectionModel(
-                    id = SETTINGS_CONTACT_US,
-                    icon = R.drawable.ic_live_help,
-                    title = context.getString(R.string.settings_section_contact_us_title)
-                ),
-                SettingsSectionModel(
-                    id = SETTINGS_TERMS_CONDITIONS,
-                    icon = R.drawable.ic_copyright,
-                    title = context.getString(R.string.settings_section_license_title)
-                )
-            ))
+        addAll(buildCommonListModels())
 
-            // Add sign out button
-            if (userDetail != null) {
-                add(SettingsSectionModel(
-                    id = SETTINGS_SIGN_OUT,
-                    icon = R.drawable.ic_exit_to_app,
-                    title = context.getString(R.string.settings_section_sign_out_title)
-                ))
-            }
-        }
+        add(SettingsSectionItemModel(
+            id = SETTINGS_SIGN_OUT,
+            drawableRes = R.drawable.ic_exit_to_app,
+            title = context.getString(R.string.settings_section_sign_out_title)
+        ))
     }
- }
+
+    private fun buildUnauthenticatedListModels(): List<SettingsListModel> = buildList {
+        add(SettingsAccountItemModel(signedIn = false))
+        addAll(buildCommonListModels())
+    }
+
+    private fun buildCommonListModels(): List<SettingsListModel> = buildList {
+        addAll(listOf(
+            SettingsSectionItemModel(
+                id = SETTINGS_NOTIFICATIONS,
+                drawableRes = R.drawable.ic_notification_important,
+                title = context.getString(R.string.settings_section_notifications_title)
+            ),
+            SettingsSectionItemModel(
+                id = SETTINGS_FEATURES,
+                drawableRes = R.drawable.ic_whatshot,
+                title = context.getString(R.string.settings_section_features_title)
+            ),
+            SettingsSectionItemModel(
+                id = SETTINGS_CONTACT_US,
+                drawableRes = R.drawable.ic_live_help,
+                title = context.getString(R.string.settings_section_contact_us_title)
+            ),
+            SettingsSectionItemModel(
+                id = SETTINGS_TERMS_CONDITIONS,
+                drawableRes = R.drawable.ic_copyright,
+                title = context.getString(R.string.settings_section_license_title)
+            )
+        ))
+    }
+}
+
+enum class SettingsUiState {
+    COMPLETED,
+    LOADING
+}
 

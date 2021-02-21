@@ -113,7 +113,6 @@ class OrderRecentAdapter(
 
     interface OrderRecentAdapterListener {
         fun onOrderClicked(orderId: String)
-        fun onOrderRated(orderId: String, rating: Double)
     }
 }
 

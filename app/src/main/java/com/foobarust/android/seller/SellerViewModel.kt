@@ -1,77 +1,74 @@
 package com.foobarust.android.seller
 
-import androidx.lifecycle.LiveData
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.foobarust.android.R
 import com.foobarust.android.sellerdetail.SellerDetailProperty
-import com.foobarust.android.sellerdetail.SellerItemDetailProperty
-import com.foobarust.android.sellersection.SellerSectionProperty
-import com.foobarust.android.utils.SingleLiveEvent
-import com.foobarust.domain.models.promotion.SuggestBasic
 import com.foobarust.domain.models.seller.SellerBasic
-import com.foobarust.domain.models.seller.SellerSectionBasic
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SellerViewModel @Inject constructor() : ViewModel() {
+class SellerViewModel @Inject constructor(
+    @ApplicationContext private val context: Context
+) : ViewModel() {
 
-    private val _navigateToSellerDetail = SingleLiveEvent<SellerDetailProperty>()
-    val navigateToSellerDetail: LiveData<SellerDetailProperty>
-        get() = _navigateToSellerDetail
+    val sellerPages: List<SellerPage> = listOf(
+        SellerPage(
+            tag = SellerOnCampusFragment.TAG,
+            title = context.getString(R.string.seller_tab_on_campus),
+            fragment = { SellerOnCampusFragment() }
+        ),
+        SellerPage(
+            tag = SellerOffCampusFragment.TAG,
+            title = context.getString(R.string.seller_tab_off_campus),
+            fragment = { SellerOffCampusFragment() }
+        )
+    )
 
-    private val _navigateToSellerAction = SingleLiveEvent<Unit>()
-    val navigateToSellerAction: LiveData<Unit>
-        get() = _navigateToSellerAction
+    private val _navigateToSellerDetail = Channel<SellerDetailProperty>()
+    val navigateToSellerDetail: Flow<SellerDetailProperty> = _navigateToSellerDetail.receiveAsFlow()
 
-    private val _navigateToSuggestItem = SingleLiveEvent<SellerItemDetailProperty>()
-    val navigateToSuggestItem: LiveData<SellerItemDetailProperty>
-        get() = _navigateToSuggestItem
+    private val _navigateToSellerAction = Channel<Unit>()
+    val navigateToSellerAction: Flow<Unit> = _navigateToSellerAction.receiveAsFlow()
 
-    private val _navigateToSellerSection = SingleLiveEvent<SellerSectionProperty>()
-    val navigateToSellerSection: LiveData<SellerSectionProperty>
-        get() = _navigateToSellerSection
+    // Argument: section id
+    private val _navigateToSellerSection = Channel<String>()
+    val navigateToSellerSection: Flow<String> = _navigateToSellerSection.receiveAsFlow()
 
-    private val _navigateToPromotionDetail = SingleLiveEvent<String>()
-    val navigateToPromotionDetail: LiveData<String>
-        get() = _navigateToPromotionDetail
 
-    // Emit the index of the page in ViewPager that needs to be scrolled to top, contains
-    // the page tag.
+    private val _navigateToPromotionDetail = Channel<String>()
+    val navigateToPromotionDetail: Flow<String> = _navigateToPromotionDetail.receiveAsFlow()
+
+    // Emit the index of the page in ViewPager that needs to be scrolled to top,
+    // contains the page tag.
     private val _pageScrollToTop = MutableSharedFlow<String>()
     val pageScrollToTop: SharedFlow<String> = _pageScrollToTop.asSharedFlow()
 
     // Emit the current scroll state of ViewPager, contains the page tag.
     private var currentPageSelected: String? = null
 
-    // From SellerOnCampusFragment
     fun onNavigateToSellerDetail(sellerBasic: SellerBasic) {
-        _navigateToSellerDetail.value = SellerDetailProperty(
-            sellerId = sellerBasic.id
+        _navigateToSellerDetail.offer(
+            SellerDetailProperty(sellerId = sellerBasic.id)
         )
     }
 
     fun onNavigateToSellerAction() {
-        _navigateToSellerAction.value = Unit
+        _navigateToSellerAction.offer(Unit)
     }
 
-    fun onNavigateToSuggestItem(suggestBasic: SuggestBasic) {
-        // TODO: onNavigateToSuggestItem
-    }
-
-    fun onNavigateToSellerSection(sectionBasic: SellerSectionBasic) {
-        _navigateToSellerSection.value = SellerSectionProperty(
-            sectionId = sectionBasic.id,
-            sellerId = sectionBasic.sellerId
-        )
+    fun onNavigateToSellerSection(sectionId: String) {
+        _navigateToSellerSection.offer(sectionId)
     }
 
     fun onNavigateToPromotionDetail(url: String) {
-        _navigateToPromotionDetail.value = url
+        _navigateToPromotionDetail.offer(url)
     }
 
     fun onPageScrollToTop() = viewModelScope.launch {

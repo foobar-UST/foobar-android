@@ -12,12 +12,12 @@ import com.foobarust.data.cache.networkCacheResource
 import com.foobarust.data.common.Constants.USERS_COLLECTION
 import com.foobarust.data.common.Constants.USERS_PUBLIC_COLLECTION
 import com.foobarust.data.common.Constants.USER_PHOTOS_STORAGE_FOLDER
+import com.foobarust.data.common.PreferencesKeys.ONBOARDING_COMPLETED
 import com.foobarust.data.db.AppDatabase
 import com.foobarust.data.db.UserDetailDao
 import com.foobarust.data.mappers.UserMapper
 import com.foobarust.data.models.user.UpdateUserDetailRequest
 import com.foobarust.data.paging.UserNotificationsPagingSource
-import com.foobarust.data.preferences.PreferencesKeys.ONBOARDING_COMPLETED
 import com.foobarust.data.utils.getAwaitResult
 import com.foobarust.data.utils.putFileFlow
 import com.foobarust.data.utils.snapshotFlow
@@ -75,7 +75,7 @@ class UserRepositoryImpl @Inject constructor(
         remoteService.updateUserDetail(idToken, request)
     }
 
-    override suspend fun removeUserDetailCache() {
+    override fun removeUserDetailCache() {
         appDatabase.clearAllTables()
     }
 

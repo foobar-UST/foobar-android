@@ -8,13 +8,13 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 class TutorialPagerAdapter(
     fragmentManager: FragmentManager,
     lifecycle: Lifecycle,
-    private val tutorialProperties: List<TutorialProperty>
+    private val tutorialPages: List<TutorialPage>
 ) : FragmentStateAdapter(fragmentManager, lifecycle) {
 
-    override fun getItemCount(): Int = tutorialProperties.size
+    override fun getItemCount(): Int = tutorialPages.size
 
     override fun createFragment(position: Int): Fragment {
-        return TutorialPageFragment.newInstance(tutorialProperties[position])
+        return TutorialPageFragment.newInstance(tutorialPages[position])
     }
 }
 

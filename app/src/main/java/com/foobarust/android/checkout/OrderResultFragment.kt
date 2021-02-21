@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
 import com.foobarust.android.R
@@ -16,6 +17,8 @@ import com.foobarust.android.utils.findNavController
 import com.foobarust.android.utils.getColorCompat
 import com.foobarust.android.utils.themeColor
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -46,13 +49,16 @@ class OrderResultFragment : Fragment() {
         checkoutViewModel.onShowSubmitButton(isShow = false)
 
         // Observe dialog back press and navigate
-        checkoutViewModel.backPressed.observe(viewLifecycleOwner) {
-            if (navArgs.property.isOrderSuccess()) {
-                checkoutViewModel.onDismissCheckoutDialog()
-            } else {
-                orderFailureNavigateToCartFragment()
+        viewLifecycleOwner.lifecycleScope.launch {
+            checkoutViewModel.backPressed.collect {
+                if (navArgs.property.isOrderSuccess()) {
+                    checkoutViewModel.onDismissCheckoutDialog()
+                } else {
+                    placeOrderFailedNavigateToCartFragment()
+                }
             }
         }
+
 
         return binding.root
     }
@@ -106,12 +112,12 @@ class OrderResultFragment : Fragment() {
         with(navigateButton) {
             text = getString(R.string.order_result_button_return)
             setOnClickListener {
-                orderFailureNavigateToCartFragment()
+                placeOrderFailedNavigateToCartFragment()
             }
         }
     }
 
-    private fun orderFailureNavigateToCartFragment() {
+    private fun placeOrderFailedNavigateToCartFragment() {
         findNavController(R.id.orderResultFragment)?.navigate(
             OrderResultFragmentDirections.actionOrderResultFragmentToCartFragment()
         )

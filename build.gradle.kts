@@ -6,7 +6,7 @@ buildscript {
     }
 
     dependencies {
-        classpath(Dependencies.BUILD_TOOLS_PLUGIN)
+        classpath(Dependencies.GRADLE_PLUGIN)
         classpath(Dependencies.KOTLIN_PLUGIN)
         classpath(Dependencies.NAVIGATION_SAFE_ARGS_PLUGIN)
         classpath(Dependencies.HILT_PLUGIN)

@@ -1,31 +1,35 @@
 package com.foobarust.android.settings
 
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.fragment.findNavController
 import com.foobarust.android.R
-import com.foobarust.android.common.FullScreenDialogFragment
 import com.foobarust.android.databinding.FragmentProfileBinding
-import com.foobarust.android.settings.ProfileListModel.ProfileEditModel
+import com.foobarust.android.main.MainViewModel
+import com.foobarust.android.settings.ProfileListModel.ProfileEditItemModel
+import com.foobarust.android.shared.FullScreenDialogFragment
 import com.foobarust.android.utils.AutoClearedValue
+import com.foobarust.android.utils.bindProgressHideIf
 import com.foobarust.android.utils.findNavController
-import com.foobarust.android.utils.getFileExtension
 import com.foobarust.android.utils.showShortToast
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ProfileFragment : FullScreenDialogFragment(), ProfileAdapter.ProfileAdapterListener {
 
     private var binding: FragmentProfileBinding by AutoClearedValue(this)
+    private val mainViewModel: MainViewModel by activityViewModels()
     private val profileViewModel: ProfileViewModel by viewModels()
     private var textInputResultObserver: LifecycleEventObserver? = null
 
@@ -34,10 +38,7 @@ class ProfileFragment : FullScreenDialogFragment(), ProfileAdapter.ProfileAdapte
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentProfileBinding.inflate(inflater, container, false).apply {
-            viewModel = this@ProfileFragment.profileViewModel
-            lifecycleOwner = viewLifecycleOwner
-        }
+        binding = FragmentProfileBinding.inflate(inflater, container, false)
 
         // Setup recycler view
         val profileAdapter = ProfileAdapter(this)
@@ -52,29 +53,35 @@ class ProfileFragment : FullScreenDialogFragment(), ProfileAdapter.ProfileAdapte
             profileAdapter.submitList(it)
         }
 
-        // Navigate to text input bottom sheet
-        profileViewModel.navigateToTextInput.observe(viewLifecycleOwner) {
-            // Observe for edit result once the text input dialog is opened
-            subscribeTextInputResult(editItemId = it.id)
+        profileViewModel.profileUiState.observe(viewLifecycleOwner) {
+            binding.loadingProgressBar.bindProgressHideIf(it !is ProfileUiState.Loading)
 
-            findNavController(R.id.profileFragment)?.navigate(
-                ProfileFragmentDirections.actionProfileFragmentToTextInputDialog(it)
-            )
+            if (it is ProfileUiState.Error) {
+                showShortToast(it.message)
+            }
         }
 
-        // Show toast message
-        profileViewModel.toastMessage.observe(viewLifecycleOwner) {
-            showShortToast(it)
+        // Navigate to text input bottom sheet
+        viewLifecycleOwner.lifecycleScope.launch {
+            profileViewModel.navigateToTextInput.collect {
+                // Observe for edit result once the text input dialog is opened
+                subscribeTextInputResult(editItemId = it.id)
+                findNavController(R.id.profileFragment)?.navigate(
+                    ProfileFragmentDirections.actionProfileFragmentToTextInputDialog(it)
+                )
+            }
+        }
+
+        // Show snack bar message
+        viewLifecycleOwner.lifecycleScope.launch {
+            profileViewModel.snackBarMessage.collect {
+                showMessageSnackBar(it)
+            }
         }
 
         // Dismiss dialog
         binding.toolbar.setNavigationOnClickListener {
             findNavController().navigateUp()
-        }
-
-        // SnackBar
-        profileViewModel.snackBarMessage.observe(viewLifecycleOwner) {
-            showMessageSnackBar(message = it)
         }
 
         return binding.root
@@ -93,19 +100,11 @@ class ProfileFragment : FullScreenDialogFragment(), ProfileAdapter.ProfileAdapte
     }
 
     override fun onProfileAvatarClicked() {
-        requireActivity().registerForActivityResult(ActivityResultContracts.GetContent()) { returnUri: Uri? ->
-            returnUri?.let {
-                val fileExtension = it.getFileExtension(requireContext())
-                profileViewModel.onUploadUserPhoto(
-                    uri = it.toString(),
-                    extension = fileExtension ?: ""
-                )
-            }
-        }.launch("image/*")
+        mainViewModel.onPickUserPhoto()
     }
 
-    override fun onProfileEditItemClicked(editModel: ProfileEditModel) {
-        profileViewModel.onNavigateToTextInput(editModel)
+    override fun onProfileEditItemClicked(editItemModel: ProfileEditItemModel) {
+        profileViewModel.onNavigateToTextInput(editItemModel)
     }
 
     private fun subscribeTextInputResult(editItemId: String) {

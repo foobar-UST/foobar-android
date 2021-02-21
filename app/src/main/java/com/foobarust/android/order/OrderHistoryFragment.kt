@@ -1,15 +1,14 @@
 package com.foobarust.android.order
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.foobarust.android.common.PagingLoadStateAdapter
 import com.foobarust.android.databinding.FragmentOrderHistoryBinding
+import com.foobarust.android.shared.PagingLoadStateAdapter
 import com.foobarust.android.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -52,7 +51,6 @@ class OrderHistoryFragment : Fragment(), OrderHistoryAdapter.OrderHistoryAdapter
 
         // Control views corresponding to load states
         historyAdapter.addLoadStateListener { loadStates ->
-            Log.d("OrderHistory", "${loadStates.refresh}")
             with(loadStates) {
                 updateViews(
                     mainLayout = binding.orderItemsRecyclerView,

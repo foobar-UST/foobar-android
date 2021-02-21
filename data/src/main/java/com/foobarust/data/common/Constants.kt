@@ -71,15 +71,13 @@ object Constants {
     const val USER_NOTIFICATIONS_SUB_COLLECTION = "notifications"
 
     const val USER_NOTIFICATION_ID_FIELD = "id"
-    const val USER_NOTIFICATION_TITLE_FIELD = "title"
-    const val USER_NOTIFICATION_BODY_FIELD = "body"
+    const val USER_NOTIFICATION_TITLE_LOC_KEY_FIELD = "title_loc_key"
+    const val USER_NOTIFICATION_TITLE_LOC_ARGS_FIELD = "title_loc_args"
+    const val USER_NOTIFICATION_BODY_LOC_KEY_FIELD = "body_loc_key"
+    const val USER_NOTIFICATION_BODY_LOC_ARGS_FIELD = "body_loc_args"
     const val USER_NOTIFICATION_LINK_FIELD = "link"
     const val USER_NOTIFICATION_IMAGE_URL_FIELD = "image_url"
     const val USER_NOTIFICATION_CREATED_AT_FIELD = "created_at"
-
-    const val USER_NOTIFICATIONS_REMOTE_KEYS_NOTIFICATION_ID_FIELD = "notificationId"
-    const val USER_NOTIFICATIONS_REMOTE_KEYS_PREV_KEY_FIELD = "prevKey"
-    const val USER_NOTIFICATIONS_REMOTE_KEYS_NEXT_KEY_FIELD = "nextKey"
 
     // Sellers
     const val SELLERS_COLLECTION = "sellers"

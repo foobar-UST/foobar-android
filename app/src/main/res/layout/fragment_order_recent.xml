@@ -7,7 +7,7 @@
         <variable
             name="viewModel"
             type="com.foobarust.android.order.OrderRecentViewModel" />
-        <import type="com.foobarust.android.common.UiState" />
+        <import type="com.foobarust.android.order.OrderRecentUiState" />
     </data>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -26,14 +26,14 @@
                 android:layout_height="match_parent"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/order_recent_active_item"
-                tools:itemCount="1"/>
+                tools:itemCount="1" />
 
             <ProgressBar
                 android:id="@+id/loading_progress_bar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                app:goneIf="@{!(viewModel.uiState instanceof UiState.Loading)}"/>
+                app:goneIf="@{!(viewModel.orderRecentUiState instanceof OrderRecentUiState.Loading)}"/>
 
         </FrameLayout>
 

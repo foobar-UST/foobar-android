@@ -4,13 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-        <variable
-            name="viewModel"
-            type="com.foobarust.android.settings.ProfileViewModel" />
-        <import type="com.foobarust.android.common.UiState" />
-    </data>
-
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinator_layout"
         android:layout_width="match_parent"
@@ -31,7 +24,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?android:attr/colorBackground"
-                app:title="@string/fragment_label_profile"
+                app:title="@string/profile_toolbar_title"
                 app:layout_scrollFlags="noScroll"
                 app:navigationIcon="@drawable/ic_arrow_back"
                 app:navigationIconTint="?attr/colorOnSurface" />
@@ -42,8 +35,7 @@
                 android:layout_height="wrap_content"
                 android:indeterminate="true"
                 app:showAnimationBehavior="outward"
-                app:hideAnimationBehavior="outward"
-                app:progressHideIf="@{!(viewModel.uiState instanceof UiState.Loading)}"/>
+                app:hideAnimationBehavior="outward"/>
 
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -59,3 +51,4 @@
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </layout>
+

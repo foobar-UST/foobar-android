@@ -9,9 +9,11 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navGraphViewModels
 import com.foobarust.android.R
-import com.foobarust.android.common.UiState
 import com.foobarust.android.databinding.FragmentCartBinding
-import com.foobarust.android.utils.*
+import com.foobarust.android.utils.AutoClearedValue
+import com.foobarust.android.utils.findNavController
+import com.foobarust.android.utils.scrollToTopWhenFirstItemInserted
+import com.foobarust.android.utils.showShortToast
 import com.foobarust.domain.models.cart.UserCartItem
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -29,7 +31,6 @@ class CartFragment : Fragment(), CartAdapter.CartAdapterListener {
     private var binding: FragmentCartBinding by AutoClearedValue(this)
     private val checkoutViewModel: CheckoutViewModel by navGraphViewModels(R.id.navigation_checkout)
     private val cartViewModel: CartViewModel by viewModels()
-
     private var indefiniteSnackBar: Snackbar? = null
 
     override fun onCreateView(
@@ -37,13 +38,10 @@ class CartFragment : Fragment(), CartAdapter.CartAdapterListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentCartBinding.inflate(inflater, container, false).apply {
-            viewModel = this@CartFragment.cartViewModel
-            lifecycleOwner = viewLifecycleOwner
-        }
+        binding = FragmentCartBinding.inflate(inflater, container, false)
 
         // Set toolbar title
-        cartViewModel.cartToolbarTitle.observe(viewLifecycleOwner) {
+        cartViewModel.toolbarTitle.observe(viewLifecycleOwner) {
             checkoutViewModel.onUpdateToolbarTitle(title = it)
         }
 
@@ -64,6 +62,30 @@ class CartFragment : Fragment(), CartAdapter.CartAdapterListener {
             cartAdapter.submitList(it)
         }
 
+        // Ui state
+        cartViewModel.cartUiState.observe(viewLifecycleOwner) {
+            checkoutViewModel.showLoadingProgressBar(it is CartUiState.Loading)
+
+            if (it is CartUiState.Error) {
+                showShortToast(it.message)
+            }
+        }
+
+        // Update state
+        cartViewModel.cartUpdateState.observe(viewLifecycleOwner) {
+            checkoutViewModel.showLoadingProgressBar(it is CartUpdateState.Loading)
+            checkoutViewModel.onShowSubmitButton(it !is CartUpdateState.Disabled)
+
+            if (it is CartUpdateState.Error) {
+                showShortToast(it.message)
+            }
+        }
+
+        // Swipe to refresh layout
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            cartViewModel.onFetchCart(isSwipeRefresh = true)
+        }
+
         // Restore order notes when navigate back to CartFragment
         checkoutViewModel.savedOrderNotes?.let {
             cartViewModel.onRestoreOrderNotes(notes = it)
@@ -75,7 +97,7 @@ class CartFragment : Fragment(), CartAdapter.CartAdapterListener {
         }
 
         // Show action snack bar
-        cartViewModel.showSyncRequiredSnackBar.observe(viewLifecycleOwner) { isShow ->
+        cartViewModel.showSyncRequired.observe(viewLifecycleOwner) { isShow ->
             if (isShow) {
                 showSyncRequiredSnackBar()
             } else {
@@ -83,24 +105,14 @@ class CartFragment : Fragment(), CartAdapter.CartAdapterListener {
             }
         }
 
-        // Show toast
-        cartViewModel.toastMessage.observe(viewLifecycleOwner) {
-            showShortToast(it)
-        }
-
         // Show updating progress bar
-        cartViewModel.uiState.observe(viewLifecycleOwner) {
-            checkoutViewModel.setShowUpdatingProgress(isShow = it is UiState.Loading)
+        cartViewModel.cartUiState.observe(viewLifecycleOwner) {
+            checkoutViewModel.showLoadingProgressBar(isShow = it is CartUiState.Loading)
         }
 
         // Set cart items count in app bar
         cartViewModel.cartItemsCount.observe(viewLifecycleOwner) {
             checkoutViewModel.onUpdateCartItemsCount(cartItemsCount = it)
-        }
-
-        // Show submit button
-        cartViewModel.allowSubmitOrder.observe(viewLifecycleOwner) { allowSubmit ->
-            checkoutViewModel.onShowSubmitButton(isShow = allowSubmit)
         }
 
         // Navigate to payment when submit button is clicked
@@ -109,6 +121,13 @@ class CartFragment : Fragment(), CartAdapter.CartAdapterListener {
                 findNavController(R.id.cartFragment)?.navigate(
                     CartFragmentDirections.actionCartFragmentToPaymentFragment()
                 )
+            }
+        }
+
+        // Finish swipe to refresh
+        viewLifecycleOwner.lifecycleScope.launch {
+            cartViewModel.finishSwipeRefresh.collect {
+                binding.swipeRefreshLayout.isRefreshing = false
             }
         }
 
@@ -128,8 +147,8 @@ class CartFragment : Fragment(), CartAdapter.CartAdapterListener {
         checkoutViewModel.onNavigateToSellerMisc(sellerId)
     }
 
-    override fun onSectionOptionClicked(sellerId: String, sectionId: String?) {
-        checkoutViewModel.onNavigateToSellerSection(sellerId, sectionId)
+    override fun onSectionOptionClicked(sectionId: String) {
+        checkoutViewModel.onNavigateToSellerSection(sectionId)
     }
 
     override fun onCartItemClicked(userCartItem: UserCartItem) {

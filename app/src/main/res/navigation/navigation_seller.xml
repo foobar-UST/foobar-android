@@ -19,20 +19,11 @@
             android:id="@+id/action_sellerFragment_to_sellerDetailFragment"
             app:destination="@id/sellerDetailFragment" />
         <action
-            android:id="@+id/action_sellerFragment_to_sellerItemDetailFragment"
-            app:destination="@id/sellerItemDetailFragment" />
-        <action
             android:id="@+id/action_sellerFragment_to_sellerActionDialog"
             app:destination="@id/sellerActionDialog" />
         <action
             android:id="@+id/action_sellerFragment_to_sellerSectionFragment"
             app:destination="@+id/sellerSectionFragment" />
-        <action
-            android:id="@+id/action_sellerFragment_to_tutorialFragment"
-            app:destination="@+id/tutorialFragment" />
-        <action
-            android:id="@+id/action_sellerFragment_to_cartTimeoutDialog"
-            app:destination="@id/cartTimeoutDialog" />
     </fragment>
 
     <!-- SellerDetailFragment -->
@@ -54,11 +45,11 @@
     <!-- SellerItemDetailFragment -->
     <dialog
         android:id="@+id/sellerItemDetailFragment"
-        android:name="com.foobarust.android.sellerdetail.SellerItemDetailFragment"
+        android:name="com.foobarust.android.selleritem.SellerItemDetailFragment"
         tools:layout="@layout/fragment_seller_item_detail">
         <argument
             android:name="property"
-            app:argType="com.foobarust.android.sellerdetail.SellerItemDetailProperty" />
+            app:argType="com.foobarust.android.selleritem.SellerItemDetailProperty" />
         <action
             android:id="@+id/action_sellerItemDetailFragment_self"
             app:destination="@id/sellerItemDetailFragment" />
@@ -73,12 +64,6 @@
             android:name="sellerId"
             app:argType="string"/>
     </dialog>
-
-    <!-- TutorialFragment -->
-    <dialog
-        android:id="@+id/tutorialFragment"
-        android:name="com.foobarust.android.tutorial.TutorialFragment"
-        tools:layout="@layout/fragment_tutorial"/>
 
     <!-- CheckoutFragment -->
     <dialog
@@ -107,7 +92,7 @@
     <dialog
         android:id="@+id/sellerSearchFragment"
         android:name="com.foobarust.android.seller.SellerSearchFragment"
-        android:label="@string/fragment_label_seller_search"
+        android:label="@string/nav_title_seller"
         tools:layout="@layout/fragment_seller_search"/>
 
     <!-- SellerActionDialog -->
@@ -122,8 +107,8 @@
         android:name="com.foobarust.android.sellersection.SellerSectionFragment"
         tools:layout="@layout/fragment_seller_section">
         <argument
-            android:name="property"
-            app:argType="com.foobarust.android.sellersection.SellerSectionProperty"/>
+            android:name="sectionId"
+            app:argType="string"/>
         <action
             android:id="@+id/action_sellerSectionFragment_to_sellerDetailFragment"
             app:destination="@id/sellerDetailFragment" />
@@ -133,16 +118,6 @@
         <action
             android:id="@+id/action_sellerSectionFragment_self"
             app:destination="@id/sellerSectionFragment" />
-    </dialog>
-
-    <!-- CartTimeoutDialog -->
-    <dialog
-        android:id="@+id/cartTimeoutDialog"
-        android:name="com.foobarust.android.main.CartTimeoutDialog"
-        tools:layout="@layout/dialog_cart_time_out">
-        <argument
-            android:name="cartItemsCount"
-            app:argType="integer"/>
     </dialog>
 
 </navigation>

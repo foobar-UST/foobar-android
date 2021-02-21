@@ -58,8 +58,10 @@ class UserMapper @Inject constructor() {
     fun toUserNotification(dto: UserNotificationDto): UserNotification {
         return UserNotification(
             id = dto.id!!,
-            title = dto.title!!,
-            body = dto.body!!,
+            titleLocKey = dto.titleLocKey!!,
+            titleLocArgs = dto.titleLocArgs ?: emptyList(),
+            bodyLocKey = dto.bodyLocKey!!,
+            bodyLocArgs = dto.bodyLocArgs ?: emptyList(),
             link = dto.link!!,
             imageUrl = dto.imageUrl,
             createdAt = dto.createdAt!!.toDate()

@@ -2,11 +2,10 @@ package com.foobarust.android.order
 
 import android.content.Context
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.R
-import com.foobarust.android.common.BaseViewModel
-import com.foobarust.android.common.UiState
 import com.foobarust.android.order.OrderRecentListModel.*
 import com.foobarust.domain.models.order.*
 import com.foobarust.domain.states.Resource
@@ -31,10 +30,14 @@ class OrderRecentViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val getRecentOrdersUseCase: GetRecentOrdersUseCase,
     private val orderStateUtil: OrderStateUtil
-) : BaseViewModel() {
+) : ViewModel() {
 
     private val _orderRecentListModels = MutableStateFlow<List<OrderRecentListModel>>(emptyList())
-    val recentListModels: LiveData<List<OrderRecentListModel>> = _orderRecentListModels
+    val orderRecentListModels: LiveData<List<OrderRecentListModel>> = _orderRecentListModels
+        .asLiveData(viewModelScope.coroutineContext)
+
+    private val _orderRecentUiState = MutableStateFlow<OrderRecentUiState>(OrderRecentUiState.Loading)
+    val orderRecentUiState: LiveData<OrderRecentUiState> = _orderRecentUiState
         .asLiveData(viewModelScope.coroutineContext)
 
     private val _finishSwipeRefresh = ConflatedBroadcastChannel(Unit)
@@ -54,21 +57,23 @@ class OrderRecentViewModel @Inject constructor(
             getRecentOrdersUseCase(Unit).collect {
                 when (it) {
                     is Resource.Success -> {
-                        setUiState(UiState.Success)
-                        _finishSwipeRefresh.offer(Unit)
-                        _orderRecentListModels.value = buildOrderRecentListModels(
-                            orderItems = it.data
-                        )
+                        _orderRecentListModels.value = buildOrderRecentListModels(orderItems = it.data)
+                        _orderRecentUiState.value = OrderRecentUiState.Success
+
+                        if (isSwipeRefresh) {
+                            _finishSwipeRefresh.offer(Unit)
+                        }
                     }
                     is Resource.Error -> {
-                        setUiState(UiState.Error(it.message))
-                        _finishSwipeRefresh.offer(Unit)
-                        _orderRecentListModels.value = buildOrderRecentListModels()
+                        _orderRecentUiState.value = OrderRecentUiState.Error(it.message)
+
+                        if (isSwipeRefresh) {
+                            _finishSwipeRefresh.offer(Unit)
+                        }
                     }
                     is Resource.Loading -> {
                         if (!isSwipeRefresh) {
-                            setUiState(UiState.Loading)
-                            _orderRecentListModels.value = emptyList()
+                            _orderRecentUiState.value = OrderRecentUiState.Loading
                         } else {
                             _finishSwipeRefresh.offer(Unit)
                         }
@@ -78,9 +83,7 @@ class OrderRecentViewModel @Inject constructor(
         }
     }
 
-    private fun buildOrderRecentListModels(
-        orderItems: List<OrderBasic> = emptyList()
-    ): List<OrderRecentListModel> {
+    private fun buildOrderRecentListModels(orderItems: List<OrderBasic>): List<OrderRecentListModel> {
         // No item placeholder
         if (orderItems.isEmpty()) {
             return listOf(
@@ -136,4 +139,10 @@ class OrderRecentViewModel @Inject constructor(
 
         return result
     }
+}
+
+sealed class OrderRecentUiState {
+    object Success : OrderRecentUiState()
+    data class Error(val message: String?) : OrderRecentUiState()
+    object Loading : OrderRecentUiState()
 }

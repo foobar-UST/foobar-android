@@ -15,8 +15,6 @@ class SellerSearchFragment : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // Set full screen dialog theme
         setStyle(STYLE_NORMAL, R.style.ThemeOverlay_Foobar_Dialog_Fullscreen_DayNight_Search)
     }
 
@@ -24,10 +22,10 @@ class SellerSearchFragment : DialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentSellerSearchBinding.inflate(inflater, container, false)
 
-        // Click scrim to dismiss dialog
+        // Scrim
         binding.scrimView.setOnClickListener { dismiss() }
 
         // Clear text

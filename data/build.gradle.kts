@@ -15,8 +15,8 @@ android {
     defaultConfig {
         minSdkVersion(Application.MIN_SDK)
         targetSdkVersion(Application.TARGET_SDK)
-        versionCode = Application.VERSION_CODE
-        versionName = Application.VERSION_NAME
+        versionCode = Application.MAIN_VERSION_CODE
+        versionName = Application.MAIN_VERSION_NAME
         testInstrumentationRunner = Dependencies.HILT_TEST_RUNNER
 
         consumerProguardFiles("consumer-proguard-rules.pro")
@@ -36,7 +36,7 @@ android {
 
         // Debug build
         getByName("debug") {
-            buildConfigField("Boolean", "USE_FIREBASE_EMULATOR", "false")
+            buildConfigField("Boolean", "USE_FIREBASE_EMULATOR", "true")
             buildConfigField("String", "EMULATOR_HOST", "\"192.168.128.66\"")
             buildConfigField("String", "EMULATOR_FIRESTORE_PORT", "\"8080\"")
             buildConfigField("String", "EMULATOR_FUNCTIONS_PORT", "\"5001\"")
@@ -72,7 +72,7 @@ dependencies {
     implementation(Dependencies.COROUTINE_CORE)
     implementation(Dependencies.COROUTINE_ANDROID)
     implementation(Dependencies.COROUTINE_PLAY_SERVICES)
-    implementation(Dependencies.CORE)
+    implementation(Dependencies.CORE_KTX)
     implementation(Dependencies.APPCOMPAT)
     implementation(Dependencies.HILT)
     implementation(Dependencies.PAGING_RUNTIME)

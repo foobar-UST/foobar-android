@@ -6,8 +6,8 @@
 
     <data>
         <variable
-            name="editModel"
-            type="com.foobarust.android.settings.ProfileListModel.ProfileEditModel" />
+            name="editItemModel"
+            type="com.foobarust.android.settings.ProfileListModel.ProfileEditItemModel" />
         <variable
             name="listener"
             type="com.foobarust.android.settings.ProfileAdapter.ProfileAdapterListener" />
@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:focusable="true"
-        android:onClick="@{() -> listener.onProfileEditItemClicked(editModel)}"
+        android:onClick="@{() -> listener.onProfileEditItemClicked(editItemModel)}"
         app:cardElevation="@dimen/elevation_none"
         app:cardBackgroundColor="?attr/colorSurface"
         app:cardCornerRadius="0dp">
@@ -34,7 +34,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@{editModel.title}"
+                android:text="@{editItemModel.title}"
                 android:textAppearance="?attr/textAppearanceSubtitle2"
                 tools:text="Name"/>
 
@@ -42,9 +42,13 @@
                 android:id="@+id/value_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{editModel.displayValue}"
+                android:text="@{editItemModel.displayValue}"
                 android:textColor="@color/material_on_surface_emphasis_medium"
                 android:textAppearance="?attr/textAppearanceBody2"
+                android:drawablePadding="@dimen/spacing_xmedium"
+                app:drawableEndCompat="@drawable/ic_create"
+                app:drawableFitVertical="@{true}"
+                app:drawableTint="@color/material_on_surface_emphasis_medium"
                 tools:text="Lucille Rooney"/>
 
         </LinearLayout>

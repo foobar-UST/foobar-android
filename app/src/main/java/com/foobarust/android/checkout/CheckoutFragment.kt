@@ -4,16 +4,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.foobarust.android.R
-import com.foobarust.android.common.FullScreenDialogFragment
 import com.foobarust.android.databinding.FragmentCheckoutBinding
+import com.foobarust.android.shared.FullScreenDialogFragment
 import com.foobarust.android.utils.AutoClearedValue
 import com.foobarust.android.utils.findNavController
 import com.foobarust.android.utils.getHiltNavGraphViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 /**
  * Created by kevin on 1/9/21
@@ -37,25 +40,22 @@ class CheckoutFragment : FullScreenDialogFragment() {
         }
 
         val navHostFragment = childFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
-        navController = navHostFragment.navController
-        navController.setGraph(R.navigation.navigation_checkout)
+        navController = navHostFragment.navController.apply {
+            setGraph(R.navigation.navigation_checkout)
+        }
 
         // Scope CheckoutViewModel to navigation graph
-        viewModel = getHiltNavGraphViewModel(
+        getHiltNavGraphViewModel<CheckoutViewModel>(
             navGraphId = R.id.navigation_checkout,
             navController = navController
-        )
-
-        binding.viewModel = viewModel
+        ).also {
+            this.viewModel = it
+            binding.viewModel = it
+        }
 
         // Record current destination
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
             viewModel.onUpdateCurrentDestination(destination.id)
-        }
-
-        // Setup binding
-        binding.run {
-            viewModel = this@CheckoutFragment.viewModel
         }
 
         // Setup toolbar navigation button
@@ -68,48 +68,56 @@ class CheckoutFragment : FullScreenDialogFragment() {
             viewModel.onSubmitButtonClicked()
         }
 
-        // Navigate to SellerDetail
-        viewModel.navigateToSellerDetail.observe(viewLifecycleOwner) {
-            findNavController(R.id.checkoutFragment)?.navigate(
-                CheckoutFragmentDirections.actionCheckoutFragmentToSellerDetailFragment(property = it)
-            )
-        }
-
-        // Navigate to SellerMisc
-        viewModel.navigateToSellerMisc.observe(viewLifecycleOwner) {
-            findNavController(R.id.checkoutFragment)?.navigate(
-                CheckoutFragmentDirections.actionCheckoutFragmentToSellerMiscFragment(
-                    sellerId = it
-                )
-            )
-        }
-
-        // Navigate to SellerItemDetail
-        viewModel.navigateToSellerItemDetail.observe(viewLifecycleOwner) {
-            findNavController(R.id.checkoutFragment)?.navigate(
-                CheckoutFragmentDirections.actionCheckoutFragmentToSellerItemDetailFragment(
-                    property = it
-                )
-            )
-        }
-
-        // Navigate to SellerSection
-        viewModel.navigateToSellerSection.observe(viewLifecycleOwner) {
-            findNavController(R.id.checkoutFragment)?.navigate(
-                CheckoutFragmentDirections.actionCheckoutFragmentToSellerSectionFragment(
-                    property = it
-                )
-            )
-        }
-
         // Expand collapsing toolbar
         viewModel.expandCollapsingToolbar.observe(viewLifecycleOwner) {
             binding.appBarLayout.setExpanded(true, true)
         }
 
+        // Navigate to SellerDetail
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.navigateToSellerDetail.collect {
+                findNavController(R.id.checkoutFragment)?.navigate(
+                    CheckoutFragmentDirections.actionCheckoutFragmentToSellerDetailFragment(property = it)
+                )
+            }
+        }
+
+        // Navigate to SellerMisc
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.navigateToSellerMisc.collect {
+                findNavController(R.id.checkoutFragment)?.navigate(
+                    CheckoutFragmentDirections.actionCheckoutFragmentToSellerMiscFragment(
+                        sellerId = it
+                    )
+                )
+            }
+        }
+
+        // Navigate to SellerItemDetail
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.navigateToSellerItemDetail.collect {
+                findNavController(R.id.checkoutFragment)?.navigate(
+                    CheckoutFragmentDirections.actionCheckoutFragmentToSellerItemDetailFragment(
+                        property = it
+                    )
+                )
+            }
+        }
+
+        // Navigate to SellerSection
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.navigateToSellerSection.collect {
+                findNavController(R.id.checkoutFragment)?.navigate(
+                    CheckoutFragmentDirections.actionCheckoutFragmentToSellerSectionFragment(it)
+                )
+            }
+        }
+
         // Dismiss dialog (when the order is placed and return using back pressed)
-        viewModel.dismissCheckoutDialog.observe(viewLifecycleOwner) {
-            dismiss()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.dismissCheckoutDialog.collect {
+                dismiss()
+            }
         }
 
         return binding.root

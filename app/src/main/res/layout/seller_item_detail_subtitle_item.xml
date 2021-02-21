@@ -6,7 +6,7 @@
     <data>
         <variable
             name="subtitleItemModel"
-            type="com.foobarust.android.sellerdetail.SellerItemDetailListModel.SellerItemDetailSubtitleItemModel" />
+            type="com.foobarust.android.selleritem.SellerItemDetailListModel.SellerItemDetailSubtitleItemModel" />
     </data>
 
     <TextView

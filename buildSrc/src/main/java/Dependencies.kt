@@ -1,6 +1,6 @@
 object Dependencies {
     // Gradle Plugins
-    const val BUILD_TOOLS_PLUGIN = "com.android.tools.build:gradle:${Versions.GRADLE}"
+    const val GRADLE_PLUGIN = "com.android.tools.build:gradle:${Versions.GRADLE}"
     const val KOTLIN_PLUGIN = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.KOTLIN}"
     const val NAVIGATION_SAFE_ARGS_PLUGIN = "androidx.navigation:navigation-safe-args-gradle-plugin:${Versions.NAVIGATION}"
     const val HILT_PLUGIN = "com.google.dagger:hilt-android-gradle-plugin:${Versions.HILT}"
@@ -18,9 +18,9 @@ object Dependencies {
     const val APPCOMPAT = "androidx.appcompat:appcompat:${Versions.APPCOMPAT}"
     const val ACTIVITY = "androidx.activity:activity-ktx:${Versions.ACTIVITY}"
     const val BROWSER = "androidx.browser:browser:${Versions.BROWSER}"
-    const val CORE = "androidx.core:core-ktx:${Versions.CORE}"
+    const val CORE_KTX = "androidx.core:core-ktx:${Versions.CORE_KTX}"
     const val CONSTRAINT_LAYOUT = "androidx.constraintlayout:constraintlayout:${Versions.CONSTRAINT_LAYOUT}"
-    const val PREFERENCES_DATASTORE = "androidx.datastore:datastore-preferences:${Versions.DATASTORE}"
+    const val DATA_STORE_PREFERENCES = "androidx.datastore:datastore-preferences:${Versions.DATA_STORE}"
     const val FRAGMENT = "androidx.fragment:fragment-ktx:${Versions.FRAGMENT}"
     const val GLIDE = "com.github.bumptech.glide:glide:${Versions.GLIDE}"
     const val NAVIGATION_FRAGMENT = "androidx.navigation:navigation-fragment-ktx:${Versions.NAVIGATION}"
@@ -69,6 +69,7 @@ object Dependencies {
     const val RETROFIT = "com.squareup.retrofit2:retrofit:${Versions.RETROFIT}"
     const val RETROFIT_CONVERTER_GSON = "com.squareup.retrofit2:converter-gson:${Versions.RETROFIT}"
     const val OKHTTP_LOGGING_INTERCEPTOR = "com.squareup.okhttp3:logging-interceptor:${Versions.OKHTTP_LOGGING_INTERCEPTOR}"
+    const val SWIPE_DECORATOR = "it.xabaras.android:recyclerview-swipedecorator:${Versions.SWIPE_DECORATOR}"
 
     // Test
     const val ARCH_CORE_TESTING = "androidx.arch.core:core-testing:${Versions.ARCH}"

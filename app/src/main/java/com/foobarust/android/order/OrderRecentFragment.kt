@@ -45,8 +45,14 @@ class OrderRecentFragment : Fragment(), OrderRecentAdapter.OrderRecentAdapterLis
             setHasFixedSize(true)
         }
 
-        orderRecentViewModel.recentListModels.observe(viewLifecycleOwner) {
+        orderRecentViewModel.orderRecentListModels.observe(viewLifecycleOwner) {
             recentAdapter.submitList(it)
+        }
+
+        orderRecentViewModel.orderRecentUiState.observe(viewLifecycleOwner) {
+            if (it is OrderRecentUiState.Error) {
+                showShortToast(it.message)
+            }
         }
 
         // Setup swipe to refresh
@@ -63,12 +69,8 @@ class OrderRecentFragment : Fragment(), OrderRecentAdapter.OrderRecentAdapterLis
             }
         }
 
-        // Show toast
-        orderRecentViewModel.toastMessage.observe(viewLifecycleOwner) {
-            showShortToast(it)
-        }
-
-        orderRecentViewModel.finishSwipeRefresh.observe(viewLifecycleOwner) { isRefreshing ->
+        // Finish swipe to refresh
+        orderRecentViewModel.finishSwipeRefresh.observe(viewLifecycleOwner) {
             binding.swipeRefreshLayout.isRefreshing = false
         }
 
@@ -77,9 +79,5 @@ class OrderRecentFragment : Fragment(), OrderRecentAdapter.OrderRecentAdapterLis
 
     override fun onOrderClicked(orderId: String) {
         orderViewModel.onNavigateToOrderDetail(orderId)
-    }
-
-    override fun onOrderRated(orderId: String, rating: Double) {
-        showShortToast("Rating: $rating")
     }
 }

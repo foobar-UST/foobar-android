@@ -10,11 +10,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import com.foobarust.android.R
-import com.foobarust.android.common.UiState
 import com.foobarust.android.databinding.FragmentPaymentBinding
 import com.foobarust.android.utils.AutoClearedValue
 import com.foobarust.android.utils.findNavController
 import com.foobarust.android.utils.showShortToast
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -50,14 +50,33 @@ class PaymentFragment : Fragment(), PaymentAdapter.PaymentAdapterListener {
             setHasFixedSize(true)
         }
 
-        paymentViewModel.paymentMethodItemModels.observe(viewLifecycleOwner) {
+        paymentViewModel.paymentItemModels.observe(viewLifecycleOwner) {
             paymentAdapter.submitList(it)
         }
 
+        paymentViewModel.paymentUiState.observe(viewLifecycleOwner) {
+            checkoutViewModel.showLoadingProgressBar(it is PaymentUiState.Loading)
+            checkoutViewModel.onShowSubmitButton(it is PaymentUiState.Ready)
+
+            if (it is PaymentUiState.Error) {
+                showShortToast(it.message)
+            }
+        }
+
+        // Swipe refresh layout
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            paymentViewModel.onFetchPaymentMethods(isSwipeRefresh = true)
+        }
+
+        // Retry
+        binding.loadErrorLayout.retryButton.setOnClickListener {
+            paymentViewModel.onFetchPaymentMethods()
+        }
+
         // Restore selected payment method when navigate back to CartFragment
-        paymentViewModel.onRestoreSelectPaymentMethod(
-            identifier = checkoutViewModel.savedPaymentIdentifier
-        )
+        checkoutViewModel.savedPaymentIdentifier?.let {
+            paymentViewModel.onSelectPaymentMethod(identifier = it)
+        }
 
         // Set toolbar title
         checkoutViewModel.onUpdateToolbarTitle(
@@ -70,32 +89,31 @@ class PaymentFragment : Fragment(), PaymentAdapter.PaymentAdapterListener {
         )
 
         // Observe dialog back press and navigate up
-        checkoutViewModel.backPressed.observe(viewLifecycleOwner) {
-            findNavController().navigateUp()
+        viewLifecycleOwner.lifecycleScope.launch {
+            checkoutViewModel.backPressed.collect {
+                findNavController().navigateUp()
+            }
         }
 
         // Navigate to order success when submit button is clicked
         viewLifecycleOwner.lifecycleScope.launch {
             checkoutViewModel.onClickSubmitButton.collect {
-                findNavController(R.id.paymentFragment)?.navigate(
-                    PaymentFragmentDirections.actionPaymentFragmentToOrderPlacingFragment()
-                )
+                showConfirmDialog()
             }
         }
 
-        // Show updating progress bar
-        paymentViewModel.uiState.observe(viewLifecycleOwner) {
-            checkoutViewModel.setShowUpdatingProgress(isShow = it is UiState.Loading)
-        }
-
-        // Show submit button
-        paymentViewModel.allowProceedPayment.observe(viewLifecycleOwner) { allowPayment ->
-            checkoutViewModel.onShowSubmitButton(isShow = allowPayment)
-        }
-
         // Show toast
-        paymentViewModel.toastMessage.observe(viewLifecycleOwner) {
-            showShortToast(it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            paymentViewModel.toastMessage.collect {
+                showShortToast(it)
+            }
+        }
+
+        // Finish swipe refreshing
+        viewLifecycleOwner.lifecycleScope.launch {
+            paymentViewModel.finishSwipeRefresh.collect {
+                binding.swipeRefreshLayout.isRefreshing = false
+            }
         }
 
         return binding.root
@@ -103,6 +121,21 @@ class PaymentFragment : Fragment(), PaymentAdapter.PaymentAdapterListener {
 
     override fun onPaymentMethodClicked(identifier: String) {
         checkoutViewModel.savedPaymentIdentifier = identifier
-        paymentViewModel.onRestoreSelectPaymentMethod(identifier)
+        paymentViewModel.onSelectPaymentMethod(identifier)
+    }
+
+    private fun showConfirmDialog() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(resources.getString(R.string.checkout_confirm_dialog_title))
+            .setMessage(resources.getString(R.string.checkout_confirm_dialog_message))
+            .setPositiveButton(resources.getString(android.R.string.ok)) { _, _ ->
+                findNavController(R.id.paymentFragment)?.navigate(
+                    PaymentFragmentDirections.actionPaymentFragmentToOrderPlacingFragment()
+                )
+            }
+            .setNegativeButton(resources.getString(android.R.string.cancel)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 }

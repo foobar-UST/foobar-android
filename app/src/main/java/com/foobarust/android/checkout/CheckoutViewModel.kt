@@ -5,11 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.sellerdetail.SellerDetailProperty
-import com.foobarust.android.sellerdetail.SellerItemDetailProperty
-import com.foobarust.android.sellersection.SellerSectionProperty
-import com.foobarust.android.utils.SingleLiveEvent
+import com.foobarust.android.selleritem.SellerItemDetailProperty
 import com.foobarust.domain.models.cart.UserCartItem
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -33,41 +32,37 @@ class CheckoutViewModel @Inject constructor() : ViewModel() {
     val showSubmitButton: LiveData<Boolean> = _showSubmitButton
         .asLiveData(viewModelScope.coroutineContext)
 
-    private val _showUpdatingProgress = MutableStateFlow(false)
-    val showUpdatingProgress: LiveData<Boolean> = _showUpdatingProgress
+    private val _showLoadingProgressBar = MutableStateFlow(false)
+    val showLoadingProgressBar: LiveData<Boolean> = _showLoadingProgressBar
         .asLiveData(viewModelScope.coroutineContext)
-
-    private val _navigateToSellerDetail = SingleLiveEvent<SellerDetailProperty>()
-    val navigateToSellerDetail: LiveData<SellerDetailProperty>
-        get() = _navigateToSellerDetail
-
-    private val _navigateToSellerMisc = SingleLiveEvent<String>()
-    val navigateToSellerMisc: LiveData<String>
-        get() = _navigateToSellerMisc
-
-    private val _navigateToSellerItemDetail = SingleLiveEvent<SellerItemDetailProperty>()
-    val navigateToSellerItemDetail: LiveData<SellerItemDetailProperty>
-        get() = _navigateToSellerItemDetail
-
-    private val _navigateToSellerSection = SingleLiveEvent<SellerSectionProperty>()
-    val navigateToSellerSection: LiveData<SellerSectionProperty>
-        get() = _navigateToSellerSection
-
-    // Handle dialog back pressed event, will be observed by a single child fragment at a time
-    private val _backPressed = SingleLiveEvent<Unit>()
-    val backPressed: LiveData<Unit>
-        get() = _backPressed
-
-    private val _dismissCheckoutDialog = SingleLiveEvent<Unit>()
-    val dismissCheckoutDialog: LiveData<Unit>
-        get() = _dismissCheckoutDialog
 
     // Handle submit button click event, will be observed by multiple child fragments
     private val _onClickSubmitButton = MutableSharedFlow<Unit>()
     val onClickSubmitButton: SharedFlow<Unit> = _onClickSubmitButton.asSharedFlow()
 
     private val _currentDestination = MutableStateFlow(-1)
+
     private val _cartItemsCount = MutableStateFlow(0)
+
+    private val _navigateToSellerDetail = Channel<SellerDetailProperty>()
+    val navigateToSellerDetail: Flow<SellerDetailProperty> = _navigateToSellerDetail.receiveAsFlow()
+
+    private val _navigateToSellerMisc = Channel<String>()
+    val navigateToSellerMisc: Flow<String> = _navigateToSellerMisc.receiveAsFlow()
+
+    private val _navigateToSellerItemDetail = Channel<SellerItemDetailProperty>()
+    val navigateToSellerItemDetail: Flow<SellerItemDetailProperty> = _navigateToSellerItemDetail
+        .receiveAsFlow()
+
+    private val _navigateToSellerSection = Channel<String>()
+    val navigateToSellerSection: Flow<String> = _navigateToSellerSection.receiveAsFlow()
+
+    // Handle dialog back pressed event, will be observed by a single child fragment at a time
+    private val _backPressed = Channel<Unit>()
+    val backPressed: Flow<Unit> = _backPressed.receiveAsFlow()
+
+    private val _dismissCheckoutDialog = Channel<Unit>()
+    val dismissCheckoutDialog: Flow<Unit> = _dismissCheckoutDialog.receiveAsFlow()
 
     // Expand collapsing toolbar during navigation
     val expandCollapsingToolbar: LiveData<Unit> = _currentDestination
@@ -85,38 +80,39 @@ class CheckoutViewModel @Inject constructor() : ViewModel() {
         _showSubmitButton.value = isShow
     }
 
-    fun setShowUpdatingProgress(isShow: Boolean) {
-        _showUpdatingProgress.value = isShow
+    fun showLoadingProgressBar(isShow: Boolean) {
+        _showLoadingProgressBar.value = isShow
     }
 
     fun onBackPressed() {
-        _backPressed.value = Unit
+        _backPressed.offer(Unit)
     }
 
     fun onNavigateToSellerDetail(sellerId: String, sectionId: String?) {
-        _navigateToSellerDetail.value = SellerDetailProperty(
-            sellerId = sellerId,
-            sectionId = sectionId
+        _navigateToSellerDetail.offer(
+            SellerDetailProperty(
+                sellerId = sellerId,
+                sectionId = sectionId
+            )
         )
     }
 
     fun onNavigateToSellerMisc(sellerId: String) {
-        _navigateToSellerMisc.value = sellerId
+        _navigateToSellerMisc.offer(sellerId)
     }
 
-    fun onNavigateToSellerSection(sellerId: String, sectionId: String?) {
-        _navigateToSellerSection.value = SellerSectionProperty(
-            sellerId = sellerId,
-            sectionId = sectionId!!
-        )
+    fun onNavigateToSellerSection(sectionId: String) {
+        _navigateToSellerSection.offer(sectionId)
     }
 
     fun onNavigateToSellerItemDetail(userCartItem: UserCartItem) {
-        _navigateToSellerItemDetail.value = SellerItemDetailProperty(
-            sellerId = userCartItem.itemSellerId,
-            itemId = userCartItem.itemId,
-            cartItemId = userCartItem.id,
-            amounts = userCartItem.amounts
+        _navigateToSellerItemDetail.offer(
+            SellerItemDetailProperty(
+                sellerId = userCartItem.itemSellerId,
+                itemId = userCartItem.itemId,
+                cartItemId = userCartItem.id,
+                amounts = userCartItem.amounts
+            )
         )
     }
 
@@ -137,10 +133,10 @@ class CheckoutViewModel @Inject constructor() : ViewModel() {
     }
 
     fun onDismissCheckoutDialog() {
-        _dismissCheckoutDialog.value = Unit
+        _dismissCheckoutDialog.offer(Unit)
     }
 
-    fun onClearPreviousOrderData() {
+    fun onClearCheckoutData() {
         savedOrderNotes = null
         savedPaymentIdentifier = null
     }

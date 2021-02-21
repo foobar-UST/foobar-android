@@ -67,10 +67,12 @@ class OrderFragment : Fragment() {
         }
 
         // Navigate to OrderDetailFragment
-        viewModel.navigateToOrderDetail.observe(viewLifecycleOwner) {
-            findNavController(R.id.orderFragment)?.navigate(
-                OrderFragmentDirections.actionOrderFragmentToOrderDetailFragment(orderId = it)
-            )
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.navigateToOrderDetail.collect {
+                findNavController(R.id.orderFragment)?.navigate(
+                    OrderFragmentDirections.actionOrderFragmentToOrderDetailFragment(orderId = it)
+                )
+            }
         }
 
         return binding.root

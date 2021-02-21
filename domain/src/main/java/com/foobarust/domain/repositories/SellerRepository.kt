@@ -13,8 +13,6 @@ interface SellerRepository {
     /*
         Sellers
      */
-    suspend fun getSeller(sellerId: String): SellerBasic
-
     suspend fun getSellerDetail(sellerId: String): SellerDetail
 
     suspend fun getSellerCatalogs(sellerId: String): List<SellerCatalog>
@@ -24,7 +22,7 @@ interface SellerRepository {
     /*
         Seller items
      */
-    suspend fun getSellerItemDetail(sellerId: String, itemId: String): SellerItemDetail
+    suspend fun getSellerItemDetail(itemId: String): SellerItemDetail
 
     fun getSellerItemsPagingData(sellerId: String, catalogId: String): Flow<PagingData<SellerItemBasic>>
 
@@ -33,9 +31,7 @@ interface SellerRepository {
     /*
         Seller sections
      */
-    suspend fun getSellerSection(sellerId: String, sectionId: String): SellerSectionBasic
-
-    suspend fun getSellerSectionDetail(sellerId: String, sectionId: String): SellerSectionDetail
+    suspend fun getSellerSectionDetail(sectionId: String): SellerSectionDetail
 
     suspend fun getSellerSections(sellerId: String, numOfSections: Int): List<SellerSectionBasic>
 

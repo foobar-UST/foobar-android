@@ -6,7 +6,7 @@
 
     <data>
         <variable
-            name="sectionInfoItem"
+            name="sectionInfoItemModel"
             type="com.foobarust.android.sellersection.SellerSectionDetailListModel.SellerSectionDetailSectionInfoItemModel" />
     </data>
 
@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_xmedium"
             android:lineSpacingMultiplier="1.2"
-            android:text="@{sectionInfoItem.description}"
+            android:text="@{sectionInfoItemModel.description}"
             android:textColor="@color/material_on_surface_emphasis_medium"
             android:textAppearance="?attr/textAppearanceBody2"
             app:layout_constraintTop_toTopOf="parent"
@@ -45,7 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_mlarge"
-            android:text="@{sectionInfoItem.deliveryDate}"
+            android:text="@{sectionInfoItemModel.deliveryDate}"
             android:textColor="@color/material_on_surface_emphasis_medium"
             android:textAppearance="?attr/textAppearanceBody2"
             app:layout_constraintTop_toBottomOf="@id/description_text_view"
@@ -67,7 +67,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_large"
-            android:text="@{sectionInfoItem.cutoffTime}"
+            android:text="@{sectionInfoItemModel.cutoffTime}"
             android:textColor="@color/material_on_surface_emphasis_medium"
             android:textAppearance="?attr/textAppearanceBody2"
             app:layout_constraintTop_toBottomOf="@id/delivery_date_text_view"
@@ -89,7 +89,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_large"
-            android:text="@{sectionInfoItem.deliveryTime}"
+            android:text="@{sectionInfoItemModel.deliveryTime}"
             android:textColor="@color/material_on_surface_emphasis_medium"
             android:textAppearance="?attr/textAppearanceBody2"
             app:layout_constraintTop_toBottomOf="@id/cutoff_time_text_view"
@@ -111,7 +111,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_xmedium"
-            android:text="@{sectionInfoItem.deliveryLocation}"
+            android:text="@{sectionInfoItemModel.deliveryLocation}"
             android:textColor="@color/material_on_surface_emphasis_medium"
             android:textAppearance="?attr/textAppearanceBody2"
             app:layout_constraintTop_toBottomOf="@id/pick_up_location_title_text_view"

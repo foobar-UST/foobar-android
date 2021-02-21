@@ -21,7 +21,7 @@ class GetSellerDetailWithCatalogsUseCase @Inject constructor(
 
         val sellerDetailWithCatalogs = SellerDetailWithCatalogs(
             sellerDetail = sellerDetail,
-            catalogs = sellerCatalog
+            sellerCatalogs = sellerCatalog
         )
 
         emit(Resource.Success(sellerDetailWithCatalogs))

@@ -4,12 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-        <variable
-            name="viewModel"
-            type="com.foobarust.android.auth.AuthViewModel" />
-    </data>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -51,91 +45,104 @@
             app:layout_constraintBottom_toBottomOf="@id/header_view"
             app:layout_constraintEnd_toEndOf="parent"/>
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:id="@+id/username_text_input_layout"
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_large"
-            android:layout_marginHorizontal="@dimen/spacing_mxlarge"
-            android:paddingBottom="@dimen/spacing_medium"
-            android:hint="@string/auth_input_hint_username"
-            app:startIconTint="@color/material_on_surface_emphasis_medium"
+            android:layout_height="0dp"
+            android:fillViewport="true"
             app:layout_constraintTop_toBottomOf="@id/header_view"
-            app:layout_constraintBottom_toTopOf="@id/email_suffix_text_input_layout">
+            app:layout_constraintBottom_toBottomOf="parent">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/username_edit_text"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:maxLength="10"
-                android:textColor="@color/material_on_background_emphasis_medium"
-                tools:text="test"/>
+                android:layout_height="match_parent">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:id="@+id/username_text_input_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_large"
+                    android:layout_marginHorizontal="@dimen/spacing_mxlarge"
+                    android:paddingBottom="@dimen/spacing_medium"
+                    android:hint="@string/auth_input_hint_username"
+                    app:startIconTint="@color/material_on_surface_emphasis_medium"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/email_suffix_text_input_layout">
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-            android:id="@+id/email_suffix_text_input_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_xmedium"
-            android:layout_marginHorizontal="@dimen/spacing_mxlarge"
-            android:paddingBottom="@dimen/spacing_medium"
-            android:hint="@string/auth_input_email_hint_domain"
-            app:startIconTint="@color/material_on_surface_emphasis_medium"
-            app:layout_constraintTop_toBottomOf="@id/username_text_input_layout">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/username_edit_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:maxLength="10"
+                        android:textColor="@color/material_on_background_emphasis_medium"
+                        tools:text="test"/>
 
-            <AutoCompleteTextView
-                android:id="@+id/domains_auto_complete_text_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/auth_input_email_hint_domain"
-                android:textColor="@color/material_on_background_emphasis_medium"
-                android:inputType="none"/>
+                </com.google.android.material.textfield.TextInputLayout>
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:id="@+id/email_suffix_text_input_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xmedium"
+                    android:layout_marginHorizontal="@dimen/spacing_mxlarge"
+                    android:paddingBottom="@dimen/spacing_medium"
+                    android:hint="@string/auth_input_email_hint_domain"
+                    app:startIconTint="@color/material_on_surface_emphasis_medium"
+                    app:layout_constraintTop_toBottomOf="@id/username_text_input_layout">
 
-        <com.google.android.material.progressindicator.CircularProgressIndicator
-            android:id="@+id/loading_progress_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:indeterminate="true"
-            app:layout_constraintTop_toBottomOf="@id/email_suffix_text_input_layout"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:goneIf="@{!viewModel.requestingEmail}"/>
+                    <AutoCompleteTextView
+                        android:id="@+id/email_domains_text_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/auth_input_email_hint_domain"
+                        android:textColor="@color/material_on_background_emphasis_medium"
+                        android:inputType="none"/>
 
-        <androidx.constraintlayout.widget.Group
-            android:id="@+id/button_group"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:constraint_referenced_ids="confirm_button,skip_button"
-            app:goneIf="@{viewModel.requestingEmail}" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.button.MaterialButton
-            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-            android:id="@+id/confirm_button"
-            android:layout_width="160dp"
-            android:layout_height="wrap_content"
-            android:text="@string/auth_input_confirm"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/email_suffix_text_input_layout"
-            app:layout_constraintBottom_toTopOf="@id/skip_button"/>
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/loading_progress_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="true"
+                    app:layout_constraintTop_toBottomOf="@id/email_suffix_text_input_layout"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
 
-        <com.google.android.material.button.MaterialButton
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:id="@+id/skip_button"
-            android:layout_width="160dp"
-            android:layout_height="wrap_content"
-            android:text="@string/auth_input_skip"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/confirm_button"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+                <androidx.constraintlayout.widget.Group
+                    android:id="@+id/sign_in_buttons_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:constraint_referenced_ids="confirm_button,skip_button" />
+
+                <com.google.android.material.button.MaterialButton
+                    style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                    android:id="@+id/confirm_button"
+                    android:layout_width="160dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/auth_input_confirm"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/email_suffix_text_input_layout"
+                    app:layout_constraintBottom_toTopOf="@id/skip_button"/>
+
+                <com.google.android.material.button.MaterialButton
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:id="@+id/skip_button"
+                    android:layout_width="160dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/auth_input_skip"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/confirm_button"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

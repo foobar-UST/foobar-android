@@ -60,5 +60,5 @@ fun OrderDetail.getCreatedAtString(): String {
 }
 
 fun OrderDetail.getUpdatedAtString(): String {
-    return DateUtils.getDateString(date = createdAt, format = "yyyy-MM-dd HH:mm")
+    return DateUtils.getDateString(date = updatedAt, format = "yyyy-MM-dd HH:mm")
 }

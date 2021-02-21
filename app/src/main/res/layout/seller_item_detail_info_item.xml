@@ -6,7 +6,7 @@
     <data>
         <variable
             name="infoItemModel"
-            type="com.foobarust.android.sellerdetail.SellerItemDetailListModel.SellerItemDetailInfoItemModel" />
+            type="com.foobarust.android.selleritem.SellerItemDetailListModel.SellerItemDetailInfoItemModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

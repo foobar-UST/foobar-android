@@ -1,14 +1,13 @@
 package com.foobarust.android.order
 
 import android.content.Context
-import android.os.Parcelable
+import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.R
 import com.foobarust.android.checkout.PaymentMethodUtil
-import com.foobarust.android.common.BaseViewModel
-import com.foobarust.android.common.UiState
 import com.foobarust.android.order.OrderDetailListModel.*
 import com.foobarust.domain.models.order.*
 import com.foobarust.domain.states.Resource
@@ -17,12 +16,12 @@ import com.foobarust.domain.utils.cancelIfActive
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import kotlinx.parcelize.Parcelize
 import javax.inject.Inject
 
 /**
@@ -35,24 +34,27 @@ class OrderDetailViewModel @Inject constructor(
     private val getOrderDetailUseCase: GetOrderDetailUseCase,
     private val orderStateUtil: OrderStateUtil,
     private val paymentMethodUtil: PaymentMethodUtil
-) : BaseViewModel() {
+) : ViewModel() {
 
-    private val _orderStateListModels = MutableStateFlow<List<OrderDetailListModel>>(emptyList())
-    private val _orderInfoListModels = MutableStateFlow<List<OrderDetailListModel>>(emptyList())
+    private val _orderDetail = MutableStateFlow<OrderDetail?>(null)
 
-    private val _showMapFragment = MutableStateFlow<Boolean?>(null)
-    val showMapFragment: LiveData<Boolean?> = _showMapFragment
+    private val _orderDetailListModels = MutableStateFlow<List<OrderDetailListModel>>(emptyList())
+    val orderDetailListModels: LiveData<List<OrderDetailListModel>> = _orderDetailListModels
         .asLiveData(viewModelScope.coroutineContext)
 
-    val orderDetailListModels: LiveData<List<OrderDetailListModel>> = _orderStateListModels
-        .combine(_orderInfoListModels) { orderStateListModels, orderInfoListModels ->
-            orderStateListModels + orderInfoListModels
-        }
+    private val _orderDetailUiState = MutableStateFlow<OrderDetailUiState>(OrderDetailUiState.Loading)
+    val orderDetailUiState: LiveData<OrderDetailUiState> = _orderDetailUiState
         .asLiveData(viewModelScope.coroutineContext)
 
-    val lastStateItemIndex: LiveData<Int> = _orderStateListModels
-        .map { it.lastIndex }
+    private val _lastOrderStateItemPosition = MutableStateFlow(0)
+
+    private val _bottomSheetFullScreen = MutableStateFlow<Boolean?>(null)
+    val bottomSheetFullScreen: LiveData<Boolean?> = _bottomSheetFullScreen
         .asLiveData(viewModelScope.coroutineContext)
+
+    // Argument: seller id
+    private val _navigateToSellerMisc = Channel<String>()
+    val navigateToSellerMisc: Flow<String> = _navigateToSellerMisc.receiveAsFlow()
 
     private var fetchOrderDetailJob: Job? = null
 
@@ -62,113 +64,126 @@ class OrderDetailViewModel @Inject constructor(
             getOrderDetailUseCase(orderId).collect {
                 when (it) {
                     is Resource.Success -> {
-                        setUiState(UiState.Success)
-                        setShowMapFragment(orderDetail = it.data)
-                        buildOrderStateListModels(orderDetail = it.data)
-                        buildOrderInfoListModels(orderDetail = it.data)
+                        val orderDetail = it.data
+                        _orderDetail.value = orderDetail
+
+                        val orderStateListModels = buildOrderStateListModels(orderDetail)
+                        val orderInfoListModels = buildOrderInfoListModels(orderDetail)
+
+                        // Set show map
+                        _bottomSheetFullScreen.value = orderDetail.state in listOf(
+                            OrderState.DELIVERED,
+                            OrderState.ARCHIVED,
+                            OrderState.CANCELLED
+                        )
+
+                        Log.d("OrderDetailViewModel", "${orderDetail.state}")
+
+                        // Set last state item position
+                        _lastOrderStateItemPosition.value = orderStateListModels.lastIndex
+
+                        _orderDetailListModels.value =  orderStateListModels + orderInfoListModels
+                        _orderDetailUiState.value = OrderDetailUiState.Success
                     }
                     is Resource.Error -> {
-                        setUiState(UiState.Error(it.message))
-                        clearOrderStateListModels()
+                        _orderDetailUiState.value = OrderDetailUiState.Error(it.message)
                     }
                     is Resource.Loading -> {
-                        setUiState(UiState.Loading)
-                        clearOrderStateListModels()
+                        _orderDetailUiState.value = OrderDetailUiState.Loading
                     }
                 }
             }
         }
     }
 
-    fun getLastOrderStateItemPosition(): Int = _orderStateListModels.value.lastIndex
+    fun getLastOrderStateItemPosition(): Int = _lastOrderStateItemPosition.value
 
-    private fun setShowMapFragment(orderDetail: OrderDetail) {
-        _showMapFragment.value = orderDetail.state !in listOf(
-            OrderState.DELIVERED,
-            OrderState.ARCHIVED,
-            OrderState.CANCELLED
-        )
-    }
-
-    private fun buildOrderStateListModels(orderDetail: OrderDetail) {
-        val currentOrderState = orderDetail.state
-        _orderStateListModels.value = if (currentOrderState == OrderState.ARCHIVED) {
-            emptyList()
-        } else {
-            buildList {
-                add(
-                    OrderDetailHeaderItemModel(
-                        deliveryAddress = orderDetail.getNormalizedDeliveryAddress(),
-                        deliveryAddressTitle = if (orderDetail.type == OrderType.ON_CAMPUS) {
-                            context.getString(
-                                R.string.order_detail_header_item_delivery_address_title_on_campus
-                            )
-                        } else {
-                            context.getString(
-                                R.string.order_detail_header_item_delivery_address_title_off_campus
-                            )
-                        }
-                    )
-                )
-                addAll(getElapsedOrderStateListModels(currentOrderState))
-                add(
-                    OrderDetailStateItemModel(
-                        currentOrderState = currentOrderState,
-                        listOrderState = currentOrderState,
-                        listStateTitle = orderStateUtil.getOrderStateTitle(currentOrderState),
-                        listStateDescription = orderStateUtil.getOrderStateDescription(currentOrderState)
-                    )
-                )
-            }
-
+    fun onNavigateToSellerMisc() {
+        _orderDetail.value?.let {
+            _navigateToSellerMisc.offer(it.sellerId)
         }
     }
 
-    private fun buildOrderInfoListModels(orderDetail: OrderDetail) {
-        _orderInfoListModels.value = buildList {
-            add(
-                OrderDetailInfoItemModel(
-                    orderIdentifierTitle = context.getString(
-                        R.string.order_detail_info_item_identifier_title,
-                        orderDetail.identifier
-                    ),
-                    orderTitle = orderDetail.getNormalizedTitle(),
-                    orderCreatedDate = context.getString(
-                        R.string.order_detail_info_item_created_at,
-                        orderDetail.getCreatedAtString()
-                    ),
-                    orderTotalCost = context.getString(
-                        R.string.order_detail_info_item_total_cost,
-                        orderDetail.totalCost
-                    ),
-                    orderMessage = orderDetail.message,
-                    orderItemImageUrl = orderDetail.imageUrl
+    private fun buildOrderStateListModels(
+        orderDetail: OrderDetail
+    ): List<OrderDetailListModel> {
+        val currentOrderState = orderDetail.state
+
+        if (currentOrderState == OrderState.ARCHIVED) {
+            return emptyList()
+        } else {
+            return buildList {
+                add(OrderDetailHeaderItemModel(
+                    deliveryAddress = orderDetail.getNormalizedDeliveryAddress(),
+                    deliveryAddressTitle = if (orderDetail.type == OrderType.ON_CAMPUS) {
+                        context.getString(
+                            R.string.order_detail_header_item_delivery_address_title_on_campus
+                        )
+                    } else {
+                        context.getString(
+                            R.string.order_detail_header_item_delivery_address_title_off_campus
+                        )
+                    }
+                ))
+
+                addAll(getElapsedOrderStateListModels(currentOrderState))
+
+                add(OrderDetailStateItemModel(
+                    currentOrderState = currentOrderState,
+                    listOrderState = currentOrderState,
+                    listStateTitle = orderStateUtil.getOrderStateTitle(currentOrderState),
+                    listStateDescription = orderStateUtil.getOrderStateDescription(currentOrderState)
+                ))
+            }
+        }
+    }
+
+    private fun buildOrderInfoListModels(orderDetail: OrderDetail): List<OrderDetailListModel> {
+        return buildList {
+            add(OrderDetailInfoItemModel(
+                orderIdentifierTitle = context.getString(
+                    R.string.order_detail_info_item_identifier_title,
+                    orderDetail.identifier
+                ),
+                orderTitle = orderDetail.getNormalizedTitle(),
+                orderCreatedDate = context.getString(
+                    R.string.order_detail_info_item_created_at,
+                    orderDetail.getCreatedAtString()
+                ),
+                orderUpdatedDate = context.getString(
+                    R.string.order_detail_info_item_updated_at,
+                    orderDetail.getUpdatedAtString()
+                ),
+                orderTotalCost = context.getString(
+                    R.string.order_detail_info_item_total_cost,
+                    orderDetail.totalCost
+                ),
+                orderMessage = orderDetail.message,
+                orderItemImageUrl = orderDetail.imageUrl
+            ))
+
+            addAll(orderDetail.orderItems.map {
+                OrderDetailPurchaseItemModel(
+                    orderItemId = it.itemId,
+                    orderItemTitle = it.getNormalizedTitle(),
+                    orderItemAmounts = it.amounts,
+                    orderItemTotalPrice = it.totalPrice,
+                    orderItemImageUrl = it.itemImageUrl
                 )
-            )
-            addAll(
-                orderDetail.orderItems.map {
-                    OrderDetailPurchaseItemModel(
-                        orderItemId = it.itemId,
-                        orderItemTitle = it.getNormalizedTitle(),
-                        orderItemAmounts = it.amounts,
-                        orderItemTotalPrice = it.totalPrice,
-                        orderItemImageUrl = it.itemImageUrl
-                    )
-                }
-            )
-            add(
-                OrderDetailCostItemModel(
-                    orderSubtotal = orderDetail.subtotalCost,
-                    orderDeliveryCost = orderDetail.deliveryCost
+            })
+
+            add(OrderDetailCostItemModel(
+                orderSubtotal = orderDetail.subtotalCost,
+                orderDeliveryCost = orderDetail.deliveryCost
+            ))
+
+            add(OrderDetailPaymentItemModel(
+                paymentMethodItem = paymentMethodUtil.getPaymentMethodItem(
+                    orderDetail.paymentMethod
                 )
-            )
-            add(
-                OrderDetailPaymentItemModel(
-                    paymentMethodItem = paymentMethodUtil.getPaymentMethodItem(
-                        orderDetail.paymentMethod
-                    )
-                )
-            )
+            ))
+
+            add(OrderDetailActionsItemModel)
         }
     }
 
@@ -186,14 +201,10 @@ class OrderDetailViewModel @Inject constructor(
                 )
             }
     }
-
-    private fun clearOrderStateListModels() {
-        _orderStateListModels.value = emptyList()
-        _orderInfoListModels.value = emptyList()
-    }
 }
 
-@Parcelize
-data class OrderDetailProperty(
-    val orderId: String
-) : Parcelable
+sealed class OrderDetailUiState {
+    object Success : OrderDetailUiState()
+    data class Error(val message: String?) : OrderDetailUiState()
+    object Loading : OrderDetailUiState()
+}

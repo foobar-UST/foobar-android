@@ -2,11 +2,13 @@ package com.foobarust.android.utils
 
 import android.content.Context
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Created by kevin on 2/4/21
  */
 
+@Singleton
 class ResourceIdentifier @Inject constructor(private val context: Context) {
 
     /**

@@ -5,17 +5,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isGone
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.foobarust.android.R
-import com.foobarust.android.common.FullScreenDialogFragment
-import com.foobarust.android.common.UiState
 import com.foobarust.android.databinding.FragmentSellerMiscBinding
+import com.foobarust.android.shared.FullScreenDialogFragment
 import com.foobarust.android.utils.*
+import com.foobarust.domain.models.seller.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.maps.android.ktx.addMarker
@@ -28,16 +30,23 @@ import kotlinx.coroutines.launch
  * Created by kevin on 10/11/20
  */
 
+private const val MAP_ZOOM_LEVEL = 15f
+private const val MAP_ROUTE_WIDTH = 10f
+
 @AndroidEntryPoint
 class SellerMiscFragment : FullScreenDialogFragment() {
 
     private var binding: FragmentSellerMiscBinding by AutoClearedValue(this)
     private val viewModel: SellerMiscViewModel by viewModels()
-    private val args: SellerMiscFragmentArgs by navArgs()
+    private val navArgs: SellerMiscFragmentArgs by navArgs()
+    private var bottomSheetBehavior: BottomSheetBehavior<*> by AutoClearedValue(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.onFetchSellerDetail(sellerId = args.sellerId)
+
+        if (savedInstanceState == null) {
+            viewModel.onFetchSellerDetail(sellerId = navArgs.sellerId)
+        }
     }
 
     override fun onCreateView(
@@ -45,50 +54,99 @@ class SellerMiscFragment : FullScreenDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentSellerMiscBinding.inflate(inflater, container, false).apply {
-            viewModel = this@SellerMiscFragment.viewModel
-            lifecycleOwner = viewLifecycleOwner
-        }
-
-        setupBottomSheet()
-
-        setupMapFragment()
+        binding = FragmentSellerMiscBinding.inflate(inflater, container, false)
 
         // Setup toolbar
         binding.toolbar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
 
+        // Setup bottom sheet
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
 
-        // Show toast
-        viewModel.toastMessage.observe(viewLifecycleOwner) {
-            showShortToast(it)
+        with(binding.bottomSheet) {
+            background = MaterialShapeDrawable(context, null,
+                R.attr.bottomSheetStyle, 0
+            ).apply {
+                fillColor = ColorStateList.valueOf(
+                    context.themeColor(R.attr.colorSurface)
+                )
+                elevation = resources.getDimension(R.dimen.elevation_xmedium)
+                initializeElevationOverlay(context)
+            }
+        }
+
+        // Set bottom sheet peek height
+        viewLifecycleOwner.lifecycleScope.launch {
+            bottomSheetPeekTo(
+                bottomSheet = binding.bottomSheet,
+                toView = binding.headerGroup
+            )
+        }
+
+        // Ui state
+        viewModel.sellerMiscUiState.observe(viewLifecycleOwner) {
+            bottomSheetBehavior.hideIf(it !is SellerMiscUiState.Success)
+
+            with(binding) {
+                loadingProgressBar.bindProgressHideIf(it !is SellerMiscUiState.Loading)
+                retryButton.bindHideIf(it !is SellerMiscUiState.Error)
+            }
+
+            when (it) {
+                is SellerMiscUiState.Success -> setupSellerMiscLayout(it.sellerDetail)
+                is SellerMiscUiState.Error -> showShortToast(it.message)
+                SellerMiscUiState.Loading -> Unit
+            }
+        }
+
+        // Retry button
+        binding.retryButton.setOnClickListener {
+            viewModel.onFetchSellerDetail(navArgs.sellerId)
         }
 
         return binding.root
     }
 
-    private fun setupMapFragment() {
-        val mapFragment = childFragmentManager.findFragmentById(R.id.map_container) as SupportMapFragment
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        // Add coordinate
-        viewModel.latLng.observe(viewLifecycleOwner) { latLng ->
-            viewLifecycleOwner.lifecycleScope.launch {
-                mapFragment.awaitMap().run {
-                    addMarker { position(latLng) }
-                    moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
+        // Attach map fragment
+        childFragmentManager.beginTransaction()
+            .replace(R.id.map_container, SupportMapFragment.newInstance())
+            .commitNow()
+
+        // Set map night mode
+        viewLifecycleOwner.lifecycleScope.launch {
+            if (requireContext().isNightModeOn()) {
+                getSupportMapFragment()?.awaitMap()?.run {
+                    val nightStyle = MapStyleOptions.loadRawResourceStyle(
+                        requireContext(),
+                        R.raw.night_map_style
+                    )
+                    setMapStyle(nightStyle)
                 }
             }
         }
 
-        // Add route
-        viewModel.polyline.observe(viewLifecycleOwner) { polyline ->
+        // Add seller coordinate
+        viewModel.sellerLocation.observe(viewLifecycleOwner) { latLng ->
+            viewLifecycleOwner.lifecycleScope.launch {
+                getSupportMapFragment()?.awaitMap()?.run {
+                    addMarker { position(latLng) }
+                    moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, MAP_ZOOM_LEVEL))
+                }
+            }
+        }
+
+        // Add seller route
+        viewModel.offCampusDeliveryRoute.observe(viewLifecycleOwner) { polyline ->
             polyline?.let {
                 viewLifecycleOwner.lifecycleScope.launch {
-                    mapFragment.awaitMap().run {
+                    getSupportMapFragment()?.awaitMap()?.run {
                         addPolyline {
                             color(requireContext().themeColor(R.attr.colorSecondary))
-                            width(10f)
+                            width(MAP_ROUTE_WIDTH)
                             addAll(it)
                         }
                     }
@@ -97,34 +155,26 @@ class SellerMiscFragment : FullScreenDialogFragment() {
         }
     }
 
-    private fun setupBottomSheet() {
-        val behavior = BottomSheetBehavior.from(binding.bottomSheet)
+    private fun setupSellerMiscLayout(sellerDetail: SellerDetail) = binding.run {
+        titleTextView.text = sellerDetail.getNormalizedName()
 
-        with(binding.bottomSheet) {
-            background = MaterialShapeDrawable(
-                context,
-                null,
-                R.attr.bottomSheetStyle,
-                0
-            ).apply {
-                fillColor = ColorStateList.valueOf(
-                    context.themeColor(R.attr.colorSurface)
-                )
-                elevation = resources.getDimension(R.dimen.elevation_xmedium)
+        ratingBar.rating = sellerDetail.rating.toFloat()
+        ratingTextView.text = sellerDetail.getNormalizedRatingString()
 
-                initializeElevationOverlay(context)
-            }
-        }
+        phoneNumTextView.text = sellerDetail.phoneNum
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            bottomSheetPeekTo(
-                bottomSheet = binding.bottomSheet,
-                toView = binding.headerGroup
-            )
-        }
+        websiteTextView.text = sellerDetail.website
+        websiteTextView.isGone = sellerDetail.website.isNullOrBlank()
 
-        viewModel.uiState.observe(viewLifecycleOwner) {
-            behavior.hideIf(it !is UiState.Success)
-        }
+        addressTextView.text = sellerDetail.getNormalizedAddress()
+        openingHoursTextView.text = sellerDetail.openingHours
+
+        descriptionSubtitleTextView.isGone = sellerDetail.description.isNullOrBlank()
+        descriptionTextView.text = sellerDetail.getNormalizedDescription()
+        descriptionTextView.isGone = sellerDetail.description.isNullOrBlank()
+    }
+
+    private fun getSupportMapFragment(): SupportMapFragment? {
+        return childFragmentManager.findFragmentById(R.id.map_container) as? SupportMapFragment
     }
 }

@@ -1,10 +1,9 @@
 package com.foobarust.android.checkout
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.foobarust.android.common.BaseViewModel
-import com.foobarust.android.common.UiState
 import com.foobarust.domain.models.checkout.PlaceOrderResult
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.checkout.PlaceOrderParameters
@@ -12,6 +11,7 @@ import com.foobarust.domain.usecases.checkout.PlaceOrderUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,60 +23,49 @@ import javax.inject.Inject
 @HiltViewModel
 class OrderPlacingViewModel @Inject constructor(
     private val placeOrderUseCase: PlaceOrderUseCase
-) : BaseViewModel() {
+) : ViewModel() {
 
-    private val _placeOrderState = MutableStateFlow<PlaceOrderState>(PlaceOrderState.Idle)
-    val placeOrderState: LiveData<PlaceOrderState> = _placeOrderState
+    private val _placeOrderUiState = MutableStateFlow<PlaceOrderUiState>(PlaceOrderUiState.Idle)
+    val placeOrderUiState: LiveData<PlaceOrderUiState> = _placeOrderUiState
         .asLiveData(viewModelScope.coroutineContext)
 
-    val navigateToOrderResult: LiveData<OrderResultProperty?> = _placeOrderState
+    val navigateToOrderResult: LiveData<OrderResultProperty> = _placeOrderUiState
         .map {
             when (it) {
-                is PlaceOrderState.Idle -> null
-                is PlaceOrderState.Success -> OrderResultProperty(
+                is PlaceOrderUiState.Success -> OrderResultProperty(
                     orderId = it.result.orderId,
                     orderIdentifier = it.result.orderIdentifier
                 )
-                is PlaceOrderState.Failure -> OrderResultProperty(
+                is PlaceOrderUiState.Failure -> OrderResultProperty(
                     errorMessage = it.message
                 )
+                else -> null
             }
         }
+        .filterNotNull()
         .asLiveData(viewModelScope.coroutineContext)
-
-    // Prevent user using back button during transaction
-    private var blockReturn: Boolean = false
 
     fun onStartPlacingOrder(orderMessage: String?, paymentMethodIdentifier: String) = viewModelScope.launch {
         val params = PlaceOrderParameters(
             orderMessage = orderMessage,
             paymentMethodIdentifier = paymentMethodIdentifier
         )
+
         placeOrderUseCase(params).collect {
-            when (it) {
-                is Resource.Success -> {
-                    setUiState(UiState.Success)
-                    _placeOrderState.value = PlaceOrderState.Success(it.data)
-                    blockReturn = false
-                }
-                is Resource.Error -> {
-                    setUiState(UiState.Error(it.message))
-                    _placeOrderState.value = PlaceOrderState.Failure(it.message)
-                    blockReturn = false
-                }
-                is Resource.Loading -> {
-                    setUiState(UiState.Loading)
-                    blockReturn = true
-                }
+            _placeOrderUiState.value = when (it) {
+                is Resource.Success -> PlaceOrderUiState.Success(it.data)
+                is Resource.Error -> PlaceOrderUiState.Failure(it.message)
+                is Resource.Loading -> PlaceOrderUiState.Loading
             }
         }
     }
+
+    fun isPlacingOrder(): Boolean = _placeOrderUiState.value == PlaceOrderUiState.Loading
 }
 
-sealed class PlaceOrderState {
-    object Idle : PlaceOrderState()
-
-    data class Success(val result: PlaceOrderResult) : PlaceOrderState()
-
-    data class Failure(val message: String?) : PlaceOrderState()
+sealed class PlaceOrderUiState {
+    object Idle : PlaceOrderUiState()
+    data class Success(val result: PlaceOrderResult) : PlaceOrderUiState()
+    data class Failure(val message: String?) : PlaceOrderUiState()
+    object Loading : PlaceOrderUiState()
 }

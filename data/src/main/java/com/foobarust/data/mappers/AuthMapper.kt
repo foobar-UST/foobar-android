@@ -1,6 +1,6 @@
 package com.foobarust.data.mappers
 
-import com.foobarust.domain.models.user.AuthProfile
+import com.foobarust.domain.models.auth.AuthProfile
 import com.google.firebase.auth.FirebaseUser
 import javax.inject.Inject
 

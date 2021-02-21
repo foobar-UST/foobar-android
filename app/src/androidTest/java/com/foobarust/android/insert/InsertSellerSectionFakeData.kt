@@ -108,8 +108,8 @@ private data class SellerSectionSerialized(
     val description_zh: String? = null,
     val cutoff_time: String,
     val max_users: Int,
-    val joined_users_count: Int,
-    val joined_users_ids: List<String> = emptyList(),
+    val joined_users_count: Int? = null,
+    val joined_users_ids: List<String>? = null,
     val image_url: String? = null,
     val state: String,
     val available: Boolean

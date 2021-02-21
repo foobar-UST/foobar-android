@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="sectionId"
+            type="String" />
+        <variable
+            name="listener"
+            type="com.foobarust.android.sellersection.ParticipantsAdapter.ParticipantsAdapterListener" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/spacing_xmedium">
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:id="@+id/show_more_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/more_sections_show_more"
+            android:onClick="@{() -> listener.onParticipantsExpandClicked(sectionId)}" />
+
+    </FrameLayout>
+
+</layout>

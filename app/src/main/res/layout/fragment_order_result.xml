@@ -4,75 +4,82 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-        <TextView
-            android:id="@+id/result_title_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?attr/textAppearanceHeadline6"
-            android:maxLines="1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/result_image_view"
-            tools:text="@string/order_result_title_order_code"/>
-
-        <TextView
-            android:id="@+id/result_message_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_large"
-            android:maxWidth="300dp"
-            android:textAppearance="?attr/textAppearanceHeadline6"
-            android:maxLines="2"
-            android:ellipsize="end"
-            android:lineSpacingMultiplier="1.2"
-            android:gravity="center_horizontal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/result_title_text_view"
-            tools:text="# ABC123"/>
-
-        <ImageView
-            android:id="@+id/result_image_view"
-            android:layout_width="250dp"
-            android:layout_height="250dp"
-            android:layout_marginBottom="56dp"
-            android:layout_gravity="center"
-            android:importantForAccessibility="no"
-            tools:src="@drawable/undraw_successful_purchase"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-        <TextView
-            android:id="@+id/result_info_text_view"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/spacing_large"
-            android:text="@string/order_result_message_order_code"
-            android:textAppearance="?attr/textAppearanceCaption"
-            android:lineSpacingMultiplier="1.2"
-            android:drawablePadding="@dimen/spacing_large"
-            app:drawableStartCompat="@drawable/ic_error_outline"
-            app:drawableTint="@color/material_on_surface_emphasis_medium"
-            app:layout_constraintTop_toBottomOf="@id/result_image_view"
-            app:layout_constraintBottom_toTopOf="@id/navigate_button"/>
+            android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/navigate_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/result_image_view"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            tools:text="Complete"/>
+            <TextView
+                android:id="@+id/result_title_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceHeadline6"
+                android:maxLines="1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/result_image_view"
+                tools:text="@string/order_result_title_order_code"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/result_message_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:maxWidth="300dp"
+                android:textAppearance="?attr/textAppearanceHeadline6"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:lineSpacingMultiplier="1.2"
+                android:gravity="center_horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/result_title_text_view"
+                tools:text="# ABC123"/>
+
+            <ImageView
+                android:id="@+id/result_image_view"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                android:layout_marginBottom="56dp"
+                android:layout_gravity="center"
+                android:importantForAccessibility="no"
+                tools:src="@drawable/undraw_successful_purchase"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <TextView
+                android:id="@+id/result_info_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/spacing_large"
+                android:text="@string/order_result_message_order_code"
+                android:textAppearance="?attr/textAppearanceCaption"
+                android:lineSpacingMultiplier="1.2"
+                android:drawablePadding="@dimen/spacing_large"
+                app:drawableStartCompat="@drawable/ic_error_outline"
+                app:drawableTint="@color/material_on_surface_emphasis_medium"
+                app:layout_constraintTop_toBottomOf="@id/result_image_view"
+                app:layout_constraintBottom_toTopOf="@id/navigate_button"/>
+
+            <Button
+                android:id="@+id/navigate_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/result_image_view"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:text="Complete"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
 
 </layout>

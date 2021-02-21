@@ -6,7 +6,7 @@ import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import androidx.core.content.ContextCompat
 import androidx.work.WorkManager
-import com.foobarust.android.splash.DynamicLinksUtils
+import com.foobarust.android.utils.DynamicLinksUtils
 import com.foobarust.android.utils.ResourceIdentifier
 import com.foobarust.domain.di.DispatcherModule
 import com.google.firebase.crashlytics.FirebaseCrashlytics

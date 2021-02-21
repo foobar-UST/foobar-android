@@ -53,7 +53,7 @@
                     android:layout_gravity="bottom"
                     app:showAnimationBehavior="outward"
                     app:hideAnimationBehavior="outward"
-                    app:progressHideIf="@{!viewModel.showUpdatingProgress}"/>
+                    app:progressHideIf="@{!viewModel.showLoadingProgressBar}"/>
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>
 

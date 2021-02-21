@@ -14,11 +14,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.foobarust.android.R
-import com.foobarust.android.common.FullScreenDialogFragment
 import com.foobarust.android.databinding.FragmentOrderDetailBinding
+import com.foobarust.android.shared.FullScreenDialogFragment
 import com.foobarust.android.utils.*
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.maps.android.ktx.awaitMap
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -28,15 +30,20 @@ import kotlinx.coroutines.launch
  */
 
 @AndroidEntryPoint
-class OrderDetailFragment : FullScreenDialogFragment() {
+class OrderDetailFragment : FullScreenDialogFragment(),
+    OrderDetailAdapter.OrderDetailAdapterListener {
 
     private var binding: FragmentOrderDetailBinding by AutoClearedValue(this)
     private val viewModel: OrderDetailViewModel by viewModels()
     private val navArgs: OrderDetailFragmentArgs by navArgs()
+    private var bottomSheetBehavior: BottomSheetBehavior<*> by AutoClearedValue(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.onFetchOrderDetail(orderId = navArgs.orderId)
+
+        if (savedInstanceState == null) {
+            viewModel.onFetchOrderDetail(navArgs.orderId)
+        }
     }
 
     override fun onCreateView(
@@ -44,12 +51,16 @@ class OrderDetailFragment : FullScreenDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentOrderDetailBinding.inflate(inflater, container, false)
+        binding = FragmentOrderDetailBinding.inflate(inflater, container, false).apply {
+            viewModel = this@OrderDetailFragment.viewModel
+            lifecycleOwner = viewLifecycleOwner
+        }
 
+        // Hide bottom sheet at start
         binding.bottomSheet.isGone = true
 
         // Setup order detail list
-        val detailAdapter = OrderDetailAdapter()
+        val detailAdapter = OrderDetailAdapter(this)
 
         binding.orderDetailRecyclerView.run {
             adapter = detailAdapter
@@ -60,9 +71,26 @@ class OrderDetailFragment : FullScreenDialogFragment() {
             detailAdapter.submitList(it)
         }
 
+        viewModel.orderDetailUiState.observe(viewLifecycleOwner) {
+            if (it is OrderDetailUiState.Error) {
+                showShortToast(it.message)
+            }
+        }
+
         // Show map fragment for selected order states
-        viewModel.showMapFragment.observe(viewLifecycleOwner) { isShow ->
-            isShow?.let { setShowMapFragment(it) }
+        viewModel.bottomSheetFullScreen.observe(viewLifecycleOwner) { fullScreen ->
+            with(binding) {
+                mapContainer.isVisible = fullScreen == false
+                binding.bottomSheet.isVisible = true
+            }
+
+            if (fullScreen == true) {
+                setupBottomSheetFullScreen()
+                updateToolbarColor(requireContext().themeColor(R.attr.colorSurface))
+            } else if (fullScreen == false) {
+                setupMapFragment()
+                setupBottomSheetCollapsed()
+            }
         }
 
         // Setup toolbar
@@ -70,38 +98,54 @@ class OrderDetailFragment : FullScreenDialogFragment() {
             findNavController().navigateUp()
         }
 
-        // Show toast
-        viewModel.toastMessage.observe(viewLifecycleOwner) {
-            showShortToast(it)
+        // Retry
+        binding.loadErrorLayout.retryButton.setOnClickListener {
+            viewModel.onFetchOrderDetail(navArgs.orderId)
+        }
+
+        // Navigate to seller misc
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.navigateToSellerMisc.collect {
+                findNavController(R.id.orderDetailFragment)?.navigate(
+                    OrderDetailFragmentDirections.actionOrderDetailFragmentToSellerMiscFragment(it)
+                )
+            }
         }
 
         return binding.root
     }
 
-    private fun setShowMapFragment(isShow: Boolean) {
-        if (isShow) {
-            // Attach map fragment
-            childFragmentManager.beginTransaction()
-                .replace(R.id.map_container, SupportMapFragment.newInstance())
-                .commit()
+    override fun onNavigateToSellerContact() {
+        viewModel.onNavigateToSellerMisc()
+    }
 
-            setupBottomSheet()
-        } else {
-            // Remove map container and fully expand bottom sheet
-            binding.mapContainer.isGone = true
-            binding.bottomSheet.isVisible = true
-            updateToolbarColor(requireContext().themeColor(R.attr.colorSurface))
+    private fun setupMapFragment() {
+        childFragmentManager.beginTransaction()
+            .replace(R.id.map_container, SupportMapFragment.newInstance())
+            .commitNow()
+
+        // Set map night mode
+        viewLifecycleOwner.lifecycleScope.launch {
+            if (requireContext().isNightModeOn()) {
+                getSupportMapFragment()?.awaitMap()?.run {
+                    val nightStyle = MapStyleOptions.loadRawResourceStyle(
+                        requireContext(),
+                        R.raw.night_map_style
+                    )
+                    setMapStyle(nightStyle)
+                }
+            }
         }
     }
 
-    private fun setupBottomSheet() {
-        // Attach bottom sheet
-        val bottomSheetBehavior = BottomSheetBehavior<FrameLayout>()
-        binding.bottomSheet.run {
-            (layoutParams as CoordinatorLayout.LayoutParams).behavior = bottomSheetBehavior
-            requestLayout()
-            isVisible = true
-        }
+    private fun setupBottomSheetFullScreen() {
+        attachBottomSheetBehavior()
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        bottomSheetBehavior.isDraggable = false
+    }
+
+    private fun setupBottomSheetCollapsed() {
+        attachBottomSheetBehavior()
 
         // Update toolbar based on bottom sheet state
         bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
@@ -131,7 +175,21 @@ class OrderDetailFragment : FullScreenDialogFragment() {
         }
     }
 
+    private fun attachBottomSheetBehavior() {
+        bottomSheetBehavior = BottomSheetBehavior<FrameLayout>()
+
+        // Set bottom sheet behavior
+        binding.bottomSheet.run {
+            (layoutParams as CoordinatorLayout.LayoutParams).behavior = bottomSheetBehavior
+            requestLayout()
+        }
+    }
+
     private fun updateToolbarColor(@ColorInt color: Int) {
         binding.toolbar.setBackgroundColor(color)
+    }
+
+    private fun getSupportMapFragment(): SupportMapFragment? {
+        return childFragmentManager.findFragmentById(R.id.map_container) as? SupportMapFragment
     }
 }

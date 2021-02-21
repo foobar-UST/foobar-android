@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="notificationsItemModel"
+            type="com.foobarust.android.explore.NotificationsListModel.NotificationsItemModel" />
+        <variable
+            name="listener"
+            type="com.foobarust.android.explore.NotificationsAdapter.NotificationsAdapterListener" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -8,7 +18,8 @@
         android:paddingHorizontal="@dimen/spacing_large"
         android:paddingVertical="@dimen/spacing_mlarge"
         android:foreground="?attr/selectableItemBackground"
-        android:background="?attr/colorSurface">
+        android:background="?attr/colorSurface"
+        android:onClick="@{() -> listener.onNotificationClicked(notificationsItemModel.link)}">
 
         <ImageView
             android:id="@+id/leading_image_view"
@@ -26,13 +37,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_large"
-            android:text="Order Update #928DD"
+            android:text="@{notificationsItemModel.title}"
             android:textAppearance="?attr/textAppearanceSubtitle2"
             android:maxLines="1"
             android:ellipsize="end"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@id/leading_image_view"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="Order Update #928DD"/>
 
         <TextView
             android:id="@+id/body_text_view"
@@ -40,12 +52,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_xmedium"
             android:layout_marginStart="@dimen/spacing_large"
-            android:text="Your order has been received."
+            android:text="@{notificationsItemModel.body}"
             android:textAppearance="?attr/textAppearanceBody2"
             android:textColor="@color/material_on_surface_emphasis_medium"
             app:layout_constraintTop_toBottomOf="@id/title_text_view"
             app:layout_constraintStart_toEndOf="@id/leading_image_view"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="Your order has been received." />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

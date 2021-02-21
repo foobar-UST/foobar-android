@@ -11,13 +11,13 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ConcatAdapter
 import com.foobarust.android.R
-import com.foobarust.android.common.PagingLoadStateAdapter
 import com.foobarust.android.databinding.FragmentSellerOffCampusBinding
 import com.foobarust.android.main.MainViewModel
 import com.foobarust.android.promotion.PromotionAdapter
 import com.foobarust.android.promotion.PromotionAdvertiseAdapter
 import com.foobarust.android.promotion.PromotionSuggestAdapter
 import com.foobarust.android.sellersection.SellerSectionsAdapter
+import com.foobarust.android.shared.PagingLoadStateAdapter
 import com.foobarust.android.utils.*
 import com.foobarust.domain.models.promotion.AdvertiseBasic
 import com.foobarust.domain.models.promotion.SuggestBasic
@@ -139,7 +139,7 @@ class SellerOffCampusFragment : Fragment(),
     }
 
     override fun onSellerSectionItemClicked(sectionBasic: SellerSectionBasic) {
-        sellerViewModel.onNavigateToSellerSection(sectionBasic)
+        sellerViewModel.onNavigateToSellerSection(sectionBasic.id)
     }
 
     override fun onSellerSectionItemLongClicked(view: View, sectionBasic: SellerSectionBasic): Boolean {
@@ -151,7 +151,7 @@ class SellerOffCampusFragment : Fragment(),
     }
 
     override fun onPromotionSuggestItemClicked(suggestBasic: SuggestBasic) {
-        sellerViewModel.onNavigateToSuggestItem(suggestBasic)
+        // TODO: remove suggest item
     }
 
     private fun normalizeListPosition(promotionAdapter: PromotionAdapter) {

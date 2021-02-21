@@ -8,8 +8,10 @@ import java.util.*
 
 data class UserNotification(
     val id: String,
-    val title: String,
-    val body: String,
+    val titleLocKey: String,
+    val titleLocArgs: List<String>,
+    val bodyLocKey: String,
+    val bodyLocArgs: List<String>,
     val link: String,
     val imageUrl: String?,
     val createdAt: Date

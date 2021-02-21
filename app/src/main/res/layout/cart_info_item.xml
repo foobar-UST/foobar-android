@@ -23,7 +23,8 @@
             layout="@layout/notice_banner"
             android:id="@+id/seller_offline_notice_banner"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            app:goneIf="@{cartInfoItemModel.sellerOnline}"/>
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/seller_image_view"

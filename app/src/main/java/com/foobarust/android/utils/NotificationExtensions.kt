@@ -1,5 +1,6 @@
 package com.foobarust.android.utils
 
+import android.annotation.TargetApi
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -14,7 +15,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.foobarust.android.R
-import com.foobarust.android.splash.SplashActivity
+import com.foobarust.android.main.MainActivity
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -28,11 +29,13 @@ const val MIN_PROGRESS = 0
 /**
  * Create notification channel for > Oreo.
  */
+
+@TargetApi(Build.VERSION_CODES.O)
 fun NotificationManager.createNotificationChannel(
     channelId: String,
     channelName: String,
-    channelDescription: String?,
-    importance: Int
+    channelDescription: String? = null,
+    importance: Int = NotificationManager.IMPORTANCE_DEFAULT
 ) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         val notificationChannel = NotificationChannel(
@@ -147,7 +150,7 @@ private fun createDefaultNotificationBuilder(
 
     // Set deep link
     link?.let {
-        val contentIntent = Intent(context, SplashActivity::class.java).apply {
+        val contentIntent = Intent(context, MainActivity::class.java).apply {
             action = Intent.ACTION_VIEW
             data = Uri.parse(link)
         }

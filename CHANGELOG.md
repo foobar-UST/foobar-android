@@ -1,4 +1,11 @@
 # Changelog
+## 2020-02-22
+- Bug fixes and refactor.
+- Fixed rotation problem.
+- Added notifications.
+- Added dark mode for map.
+- Added swipe refresh to more layouts.
+
 ## 2020-02-01
 - Prepare for explore page.
 - Added dynamic links for launching from notifications.

@@ -4,9 +4,12 @@
     <attr name="motionInterpolatorIncoming" format="float"/>
     <attr name="motionInterpolatorOutgoing" format="float"/>
 
-    <attr name="actionChipStyle" format="reference"/>
     <attr name="dividerAlphaRatio" format="float"/>
+
+    <attr name="actionChipStyle" format="reference"/>
 
     <attr name="listScrimBottomStartColor" format="color"/>
     <attr name="listScrimBottomEndColor" format="color"/>
+    <attr name="searchScrimBackgroundColor" format="color"/>
+
 </resources>

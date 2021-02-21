@@ -10,7 +10,7 @@
     <fragment
         android:id="@+id/exploreFragment"
         android:name="com.foobarust.android.explore.ExploreFragment"
-        android:label="@string/fragment_label_explore"
+        android:label="@string/nav_title_explore"
         tools:layout="@layout/fragment_explore"/>
 
 </navigation>

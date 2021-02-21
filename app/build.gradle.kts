@@ -17,11 +17,11 @@ android {
     compileSdkVersion(Application.COMPILE_SDK)
 
     defaultConfig {
-        applicationId = Application.APPLICATION_ID
+        applicationId = Application.MAIN_APPLICATION_ID
         minSdkVersion(Application.MIN_SDK)
         targetSdkVersion(Application.TARGET_SDK)
-        versionCode = Application.VERSION_CODE
-        versionName = Application.VERSION_NAME
+        versionCode = Application.MAIN_VERSION_CODE
+        versionName = Application.MAIN_VERSION_NAME
         testInstrumentationRunner = Dependencies.HILT_TEST_RUNNER
     }
 
@@ -92,7 +92,7 @@ dependencies {
     implementation(Dependencies.COROUTINE_CORE)
     implementation(Dependencies.COROUTINE_ANDROID)
     implementation(Dependencies.COROUTINE_PLAY_SERVICES)
-    implementation(Dependencies.CORE)
+    implementation(Dependencies.CORE_KTX)
     implementation(Dependencies.APPCOMPAT)
     implementation(Dependencies.CONSTRAINT_LAYOUT)
     implementation(Dependencies.ACTIVITY)
@@ -119,13 +119,11 @@ dependencies {
     implementation(Dependencies.MATERIAL)
     implementation(Dependencies.GLIDE)
     implementation(Dependencies.SPINKIT)
+    implementation(Dependencies.SWIPE_DECORATOR)
     implementation(Dependencies.MAP)
     implementation(Dependencies.WORK)
-    //implementation(Dependencies.ROOM_RUNTIME)
-    //implementation(Dependencies.ROOM_KTX)
 
     // Annotation Processors
-    //kapt(Annotation.ROOM_COMPILER)
     kapt(Annotation.HILT_ANDROID_COMPILER)
     kapt(Annotation.HILT_ANDROIDX_EXT_COMPILER)
 

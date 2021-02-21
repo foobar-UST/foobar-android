@@ -1,6 +1,6 @@
 package com.foobarust.domain.usecases.cart
 
-import com.foobarust.domain.common.UseCaseExceptions
+import com.foobarust.domain.common.UseCaseExceptions.ERROR_USER_NOT_SIGNED_IN
 import com.foobarust.domain.di.IoDispatcher
 import com.foobarust.domain.repositories.AuthRepository
 import com.foobarust.domain.repositories.CartRepository
@@ -22,11 +22,11 @@ class SyncUserCartUseCase @Inject constructor(
 ) : FlowUseCase<Unit, Unit>(coroutineDispatcher) {
 
     override fun execute(parameters: Unit): Flow<Resource<Unit>> = flow {
-        if (!authRepository.isUserSignedIn()) {
-            throw Exception(UseCaseExceptions.ERROR_USER_NOT_SIGNED_IN)
+        val idToken = if (!authRepository.isUserSignedIn()) {
+            throw Exception(ERROR_USER_NOT_SIGNED_IN)
+        } else {
+            authRepository.getUserIdToken()
         }
-
-        val idToken = authRepository.getUserIdToken()
 
         cartRepository.syncUserCart(idToken)
 

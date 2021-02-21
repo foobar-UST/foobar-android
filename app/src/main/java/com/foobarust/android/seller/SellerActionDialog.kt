@@ -46,8 +46,6 @@ class SellerActionDialog : BottomSheetDialogFragment(), NavigationView.OnNavigat
             }
         }
 
-        findNavController().navigateUp()
-
-        return true
+        return findNavController().navigateUp()
     }
 }

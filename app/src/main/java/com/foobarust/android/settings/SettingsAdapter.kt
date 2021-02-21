@@ -8,11 +8,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.foobarust.android.R
-import com.foobarust.android.databinding.SettingsProfileItemBinding
+import com.foobarust.android.databinding.SettingsAccountItemBinding
 import com.foobarust.android.databinding.SettingsSectionItemBinding
-import com.foobarust.android.settings.SettingsListModel.SettingsProfileModel
-import com.foobarust.android.settings.SettingsListModel.SettingsSectionModel
-import com.foobarust.android.settings.SettingsViewHolder.SettingsProfileViewHolder
+import com.foobarust.android.settings.SettingsListModel.SettingsAccountItemModel
+import com.foobarust.android.settings.SettingsListModel.SettingsSectionItemModel
+import com.foobarust.android.settings.SettingsViewHolder.SettingsAccountViewHolder
 import com.foobarust.android.settings.SettingsViewHolder.SettingsSectionViewHolder
 import com.foobarust.android.utils.*
 
@@ -23,8 +23,8 @@ class SettingsAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SettingsViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
-            R.layout.settings_profile_item -> SettingsProfileViewHolder(
-                SettingsProfileItemBinding.inflate(inflater, parent, false)
+            R.layout.settings_account_item -> SettingsAccountViewHolder(
+                SettingsAccountItemBinding.inflate(inflater, parent, false)
             )
 
             R.layout.settings_section_item -> SettingsSectionViewHolder(
@@ -37,50 +37,75 @@ class SettingsAdapter(
 
     override fun onBindViewHolder(holder: SettingsViewHolder, position: Int) {
         when (holder) {
-            is SettingsProfileViewHolder -> holder.binding.run {
-                val currentItem = getItem(position) as SettingsProfileModel
-                profileModel = currentItem
-                listener = this@SettingsAdapter.listener
+            is SettingsAccountViewHolder -> bindAccountItem(
+                binding = holder.binding,
+                accountItemModel = getItem(position) as SettingsAccountItemModel
+            )
 
-                if (currentItem.signedIn && currentItem.photoUrl != null) {
-                    avatarImageView.bindGlideUrl(
-                        imageUrl = currentItem.photoUrl,
-                        centerCrop = true
-                    )
-                } else {
-                    avatarImageView.bindGlideSrc(
-                        drawableRes = R.drawable.ic_user,
-                        centerCrop = true
-                    )
-                }
-
-                executePendingBindings()
-            }
-
-            is SettingsSectionViewHolder ->  holder.binding.run {
-                section = getItem(position) as SettingsSectionModel
+            is SettingsSectionViewHolder -> holder.binding.run {
+                section = getItem(position) as SettingsSectionItemModel
                 listener = this@SettingsAdapter.listener
                 executePendingBindings()
             }
         }
+    }
+
+    private fun bindAccountItem(
+        binding: SettingsAccountItemBinding,
+        accountItemModel: SettingsAccountItemModel
+    ) = binding.run {
+        val context = root.context
+
+        // Profile image
+        if (accountItemModel.signedIn && accountItemModel.photoUrl != null) {
+            avatarImageView.bindGlideUrl(
+                imageUrl = accountItemModel.photoUrl,
+                centerCrop = true
+            )
+        } else {
+            avatarImageView.bindGlideSrc(
+                drawableRes = R.drawable.ic_user,
+                centerCrop = true
+            )
+        }
+
+        // Username
+        usernameTextView.text = if (accountItemModel.signedIn) {
+            accountItemModel.username
+        } else {
+            context.getString(R.string.settings_account_guest)
+        }
+
+        // Description
+        descriptionTextView.text = if (accountItemModel.signedIn) {
+            context.getString(R.string.settings_account_edit_profile)
+        } else {
+            context.getString(R.string.settings_account_sign_in)
+        }
+
+        accountItemLayout.setOnClickListener {
+            listener.onProfileClicked(accountItemModel.signedIn)
+        }
+
+        executePendingBindings()
     }
 
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
-            is SettingsProfileModel -> R.layout.settings_profile_item
-            is SettingsSectionModel -> R.layout.settings_section_item
+            is SettingsAccountItemModel -> R.layout.settings_account_item
+            is SettingsSectionItemModel -> R.layout.settings_section_item
         }
     }
 
     interface SettingsAdapterListener {
-        fun onUserProfileClicked(isSignedIn: Boolean)
+        fun onProfileClicked(isSignedIn: Boolean)
         fun onSectionItemClicked(sectionId: String)
     }
 }
 
 sealed class SettingsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    class SettingsProfileViewHolder(
-        val binding: SettingsProfileItemBinding
+    class SettingsAccountViewHolder(
+        val binding: SettingsAccountItemBinding
     ) : SettingsViewHolder(binding.root)
 
     class SettingsSectionViewHolder(
@@ -89,15 +114,15 @@ sealed class SettingsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVi
 }
 
 sealed class SettingsListModel {
-    data class SettingsProfileModel(
+    data class SettingsAccountItemModel(
         val signedIn: Boolean,
         val username: String? = null,
         val photoUrl: String? = null
     ) : SettingsListModel()
 
-    data class SettingsSectionModel(
+    data class SettingsSectionItemModel(
         val id: String,
-        @DrawableRes val icon: Int,
+        @DrawableRes val drawableRes: Int,
         val title: String
     ) : SettingsListModel()
 }
@@ -105,16 +130,16 @@ sealed class SettingsListModel {
 object SettingsListModelDiff : DiffUtil.ItemCallback<SettingsListModel>() {
     override fun areItemsTheSame(oldItem: SettingsListModel, newItem: SettingsListModel): Boolean {
         return when {
-            oldItem is SettingsProfileModel && newItem is SettingsProfileModel -> true
-            oldItem is SettingsSectionModel && newItem is SettingsSectionModel -> true
+            oldItem is SettingsAccountItemModel && newItem is SettingsAccountItemModel -> true
+            oldItem is SettingsSectionItemModel && newItem is SettingsSectionItemModel -> true
             else -> false
         }
     }
 
     override fun areContentsTheSame(oldItem: SettingsListModel, newItem: SettingsListModel): Boolean {
         return when {
-            oldItem is SettingsProfileModel && newItem is SettingsProfileModel -> oldItem == newItem
-            oldItem is SettingsSectionModel && newItem is SettingsSectionModel -> oldItem.id == newItem.id
+            oldItem is SettingsAccountItemModel && newItem is SettingsAccountItemModel -> oldItem == newItem
+            oldItem is SettingsSectionItemModel && newItem is SettingsSectionItemModel -> oldItem.id == newItem.id
             else -> false
         }
     }

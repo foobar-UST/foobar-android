@@ -6,9 +6,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentSettingsBinding
@@ -18,6 +20,8 @@ import com.foobarust.android.utils.findNavController
 import com.foobarust.android.utils.showShortToast
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SettingsFragment : Fragment(), SettingsAdapter.SettingsAdapterListener {
@@ -33,49 +37,62 @@ class SettingsFragment : Fragment(), SettingsAdapter.SettingsAdapterListener {
     ): View {
         binding = FragmentSettingsBinding.inflate(inflater, container, false)
 
-        // Setup recyclerView
+        // Setup recycler view
         val settingsAdapter = SettingsAdapter(this)
 
-        binding.itemRecyclerView.run {
+        binding.settingsRecyclerView.run {
             adapter = settingsAdapter
             setHasFixedSize(true)
         }
 
-        settingsViewModel.settingsListModels.observe(viewLifecycleOwner) { models ->
-            settingsAdapter.submitList(models)
+        settingsViewModel.settingsListModels.observe(viewLifecycleOwner) {
+            settingsAdapter.submitList(it)
+        }
+
+        // Ui state
+        settingsViewModel.settingsUiState.observe(viewLifecycleOwner) {
+            binding.loadingProgressBar.isVisible = it == SettingsUiState.LOADING
         }
 
         // Navigate to SignInActivity
-        settingsViewModel.navigateToSignIn.observe(viewLifecycleOwner) {
-            findNavController().navigate(
-                SettingsFragmentDirections.actionSettingsFragmentToAuthActivity()
-            )
+        viewLifecycleOwner.lifecycleScope.launch {
+            settingsViewModel.navigateToSignIn.collect {
+                findNavController().navigate(
+                    SettingsFragmentDirections.actionSettingsFragmentToAuthActivity()
+                )
+            }
         }
 
         // Navigate to ProfileFragment
-        settingsViewModel.navigateToProfile.observe(viewLifecycleOwner) {
-            findNavController().navigate(
-                SettingsFragmentDirections.actionSettingsFragmentToProfileFragment()
-            )
-        }
-
-        // Show toast message
-        settingsViewModel.toastMessage.observe(viewLifecycleOwner) {
-            showShortToast(it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            settingsViewModel.navigateToProfile.collect {
+                findNavController().navigate(
+                    SettingsFragmentDirections.actionSettingsFragmentToProfileFragment()
+                )
+            }
         }
 
         // Show signed out message snack bar
-        settingsViewModel.userSignedOut.observe(viewLifecycleOwner) {
-            mainViewModel.onShowSnackBarMessage(
-                message = getString(R.string.auth_signed_out_message)
-            )
+        viewLifecycleOwner.lifecycleScope.launch {
+            settingsViewModel.isUserSignedOut.collect {
+                mainViewModel.onShowSnackBarMessage(
+                    message = getString(R.string.auth_signed_out_message)
+                )
+            }
+        }
+
+        // Show toast message
+        viewLifecycleOwner.lifecycleScope.launch {
+            settingsViewModel.toastMessage.collect {
+                showShortToast(it)
+            }
         }
 
         return binding.root
     }
 
-    override fun onUserProfileClicked(isSignedIn: Boolean) {
-        settingsViewModel.onUserAccountClicked(isSignedIn)
+    override fun onProfileClicked(isSignedIn: Boolean) {
+        settingsViewModel.onNavigateToProfileOrSignIn(isSignedIn)
     }
 
     override fun onSectionItemClicked(sectionId: String) {

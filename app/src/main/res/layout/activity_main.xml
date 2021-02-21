@@ -42,6 +42,21 @@
 
             </com.google.android.material.appbar.AppBarLayout>
 
+            <!--
+            <TextView
+                android:id="@+id/offline_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="@dimen/spacing_xmedium"
+                android:text="No Connection"
+                android:textAppearance="?attr/textAppearanceOverline"
+                android:textColor="?attr/colorOnSecondary"
+                android:background="?attr/colorSecondary"
+                app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+                tools:visibility="visible"/>
+            -->
+
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/nav_host_container"
                 android:layout_width="match_parent"

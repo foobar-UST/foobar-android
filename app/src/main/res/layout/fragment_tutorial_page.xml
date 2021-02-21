@@ -6,8 +6,8 @@
 
     <data>
         <variable
-            name="onboardingProperty"
-            type="com.foobarust.android.tutorial.TutorialProperty" />
+            name="tutorialPage"
+            type="com.foobarust.android.tutorial.TutorialPage" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,8 +19,8 @@
             android:id="@+id/icon_image_view"
             android:layout_width="300dp"
             android:layout_height="300dp"
-            android:contentDescription="@{onboardingProperty.title}"
-            app:src="@{onboardingProperty.drawableRes}"
+            android:contentDescription="@{tutorialPage.title}"
+            app:src="@{tutorialPage.drawableRes}"
             app:layout_constraintBottom_toTopOf="@+id/title_text_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:lineSpacingMultiplier="1.25"
-            android:text="@{onboardingProperty.title}"
+            android:text="@{tutorialPage.title}"
             android:textAppearance="?attr/textAppearanceHeadline6"
             android:textColor="?attr/colorPrimary"
             app:layout_constraintBottom_toTopOf="@id/description_text_view"
@@ -50,7 +50,7 @@
             android:lineSpacingMultiplier="1.25"
             android:maxLines="3"
             android:ellipsize="end"
-            android:text="@{onboardingProperty.description}"
+            android:text="@{tutorialPage.description}"
             android:textAppearance="?attr/textAppearanceBody2"
             android:textColor="@color/material_on_background_emphasis_medium"
             app:layout_constraintBottom_toTopOf="@id/complete_button"
@@ -64,7 +64,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/onboarding_get_started"
-            app:hideIf="@{!onboardingProperty.showDismiss}"
+            app:hideIf="@{!tutorialPage.showDismiss}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/description_text_view"

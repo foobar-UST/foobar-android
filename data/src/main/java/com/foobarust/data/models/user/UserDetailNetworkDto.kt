@@ -55,6 +55,4 @@ data class UserDetailNetworkDto(
     @JvmField
     @PropertyName(USER_CREATED_REST_FIELD)
     val createdRest: Boolean? = null,
-
-    // TODO: deviceIds: List<String>
 )

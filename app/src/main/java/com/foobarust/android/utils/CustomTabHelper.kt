@@ -20,12 +20,14 @@ private const val ACTION_CUSTOM_TABS_CONNECTION = "android.support.customtabs.ac
 
 object CustomTabHelper {
 
-    fun launchCustomTab(context: Context, url: String, @ColorInt colorInt: Int): Boolean {
+    fun launchCustomTab(context: Context, url: String, @ColorInt tabColorInt: Int): Boolean {
         val customTabPackageName = getAvailableCustomTabPackage(context)
+
         if (customTabPackageName != null) {
-            val intent = buildCustomTabIntent(colorInt)
-            intent.intent.setPackage(customTabPackageName)
-            intent.launchUrl(context, Uri.parse(url))
+            buildCustomTabIntent(tabColorInt).run {
+                intent.setPackage(customTabPackageName)
+                launchUrl(context, Uri.parse(url))
+            }
             return true
         } else {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))

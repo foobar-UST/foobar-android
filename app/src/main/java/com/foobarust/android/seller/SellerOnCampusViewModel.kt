@@ -55,11 +55,6 @@ class SellerOnCampusViewModel @Inject constructor(
         }
         .cachedIn(viewModelScope)
 
-    private val _finishSwipeRefresh = ConflatedBroadcastChannel(Unit)
-    val finishSwipeRefresh: LiveData<Unit> = _finishSwipeRefresh
-        .asFlow()
-        .asLiveData(viewModelScope.coroutineContext)
-
     fun onReloadPromotion() {
         _fetchPromotion.offer(Unit)
     }

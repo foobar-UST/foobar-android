@@ -7,14 +7,14 @@
     <data>
         <variable
             name="section"
-            type="com.foobarust.android.settings.SettingsListModel.SettingsSectionModel" />
+            type="com.foobarust.android.settings.SettingsListModel.SettingsSectionItemModel" />
         <variable
             name="listener"
             type="com.foobarust.android.settings.SettingsAdapter.SettingsAdapterListener" />
     </data>
 
     <TextView
-        android:id="@+id/title_text_view"
+        android:id="@+id/section_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingStart="@dimen/spacing_mlarge"
@@ -27,7 +27,7 @@
         android:textAppearance="?attr/textAppearanceBody2"
         android:drawablePadding="@dimen/spacing_xlarge"
         android:onClick="@{() -> listener.onSectionItemClicked(section.id)}"
-        app:drawableLeft="@{section.icon}"
+        app:drawableLeft="@{section.drawableRes}"
         app:drawableTint="@color/material_on_background_emphasis_medium"
         tools:text="Notifications"
         tools:drawableStart="@drawable/ic_notification_important"/>

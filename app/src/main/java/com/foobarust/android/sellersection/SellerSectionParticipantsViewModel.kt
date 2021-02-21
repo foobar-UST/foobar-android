@@ -1,6 +1,6 @@
 package com.foobarust.android.sellersection
 
-import com.foobarust.android.common.BaseViewModel
+import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -11,6 +11,6 @@ import javax.inject.Inject
 @HiltViewModel
 class SellerSectionParticipantsViewModel @Inject constructor(
 
-) : BaseViewModel() {
+) : ViewModel() {
 
 }

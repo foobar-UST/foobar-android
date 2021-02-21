@@ -31,7 +31,7 @@ object DispatcherModule {
     @Provides
     fun providesMainDispatcher(): CoroutineDispatcher = Dispatchers.Main
 
-    // External scope that outlives the application lifecycle, even if view model is destroyed
+    // Scope lives the application lifecycle
     @ApplicationScope
     @Singleton
     @Provides

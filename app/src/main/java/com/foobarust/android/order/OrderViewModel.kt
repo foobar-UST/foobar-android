@@ -1,16 +1,13 @@
 package com.foobarust.android.order
 
 import android.content.Context
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.R
-import com.foobarust.android.utils.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -34,9 +31,8 @@ class OrderViewModel @Inject constructor(
         )
     )
 
-    private val _navigateToOrderDetail = SingleLiveEvent<String>()
-    val navigateToOrderDetail: LiveData<String>
-        get() = _navigateToOrderDetail
+    private val _navigateToOrderDetail = Channel<String>()
+    val navigateToOrderDetail: Flow<String> = _navigateToOrderDetail.receiveAsFlow()
 
     private val _scrollToTop = MutableSharedFlow<Int>()
     val scrollToTop: SharedFlow<Int> = _scrollToTop.asSharedFlow()
@@ -48,6 +44,6 @@ class OrderViewModel @Inject constructor(
     }
 
     fun onNavigateToOrderDetail(orderId: String) {
-        _navigateToOrderDetail.value = orderId
+        _navigateToOrderDetail.offer(orderId)
     }
 }

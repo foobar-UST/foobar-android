@@ -4,16 +4,17 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
-import com.foobarust.data.common.Constants.SELLERS_BASIC_COLLECTION
 import com.foobarust.data.common.Constants.SELLERS_CATALOGS_SUB_COLLECTION
 import com.foobarust.data.common.Constants.SELLERS_COLLECTION
 import com.foobarust.data.common.Constants.SELLER_CATALOG_AVAILABLE_FIELD
 import com.foobarust.data.common.Constants.SELLER_ITEMS_SUB_COLLECTION
+import com.foobarust.data.common.Constants.SELLER_ITEM_ID_FIELD
 import com.foobarust.data.common.Constants.SELLER_ITEM_UPDATED_AT_FIELD
 import com.foobarust.data.common.Constants.SELLER_SECTIONS_BASIC_SUB_COLLECTION
 import com.foobarust.data.common.Constants.SELLER_SECTIONS_SUB_COLLECTION
 import com.foobarust.data.common.Constants.SELLER_SECTION_AVAILABLE_FIELD
 import com.foobarust.data.common.Constants.SELLER_SECTION_CUTOFF_TIME_FIELD
+import com.foobarust.data.common.Constants.SELLER_SECTION_ID_FIELD
 import com.foobarust.data.common.Constants.SELLER_SECTION_SELLER_NAME_FIELD
 import com.foobarust.data.mappers.SellerMapper
 import com.foobarust.data.paging.SellerBasicsPagingSource
@@ -42,11 +43,6 @@ class SellerRepositoryImpl @Inject constructor(
     private val sellerMapper: SellerMapper
 ) : SellerRepository {
 
-    override suspend fun getSeller(sellerId: String): SellerBasic {
-        return firestore.document("$SELLERS_BASIC_COLLECTION/$sellerId")
-            .getAwaitResult(sellerMapper::toSellerBasic)
-    }
-
     override suspend fun getSellerDetail(sellerId: String): SellerDetail {
         return firestore.document("$SELLERS_COLLECTION/$sellerId")
             .getAwaitResult(sellerMapper::toSellerDetail)
@@ -73,11 +69,11 @@ class SellerRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getSellerItemDetail(sellerId: String, itemId: String): SellerItemDetail {
-        return firestore.document(
-            "$SELLERS_COLLECTION/$sellerId/$SELLER_ITEMS_SUB_COLLECTION/$itemId"
-        )
+    override suspend fun getSellerItemDetail(itemId: String): SellerItemDetail {
+        return firestore.collectionGroup(SELLER_ITEMS_SUB_COLLECTION)
+            .whereEqualTo(SELLER_ITEM_ID_FIELD, itemId)
             .getAwaitResult(sellerMapper::toSellerItemDetail)
+            .first()
     }
 
     override fun getSellerItemsPagingData(sellerId: String, catalogId: String): Flow<PagingData<SellerItemBasic>> {
@@ -106,18 +102,11 @@ class SellerRepositoryImpl @Inject constructor(
             .getAwaitResult(sellerMapper::toSellerItemBasic)
     }
 
-    override suspend fun getSellerSection(sellerId: String, sectionId: String): SellerSectionBasic {
-        return firestore.document(
-            "$SELLERS_COLLECTION/$sellerId/$SELLER_SECTIONS_BASIC_SUB_COLLECTION/$sectionId"
-        )
-            .getAwaitResult(sellerMapper::toSellerSectionBasic)
-    }
-
-    override suspend fun getSellerSectionDetail(sellerId: String, sectionId: String): SellerSectionDetail {
-        return firestore.document(
-            "$SELLERS_COLLECTION/$sellerId/$SELLER_SECTIONS_SUB_COLLECTION/$sectionId"
-        )
+    override suspend fun getSellerSectionDetail(sectionId: String): SellerSectionDetail {
+        return firestore.collectionGroup(SELLER_SECTIONS_SUB_COLLECTION)
+            .whereEqualTo(SELLER_SECTION_ID_FIELD, sectionId)
             .getAwaitResult(sellerMapper::toSellerSectionDetail)
+            .first()
     }
 
     override suspend fun getSellerSections(

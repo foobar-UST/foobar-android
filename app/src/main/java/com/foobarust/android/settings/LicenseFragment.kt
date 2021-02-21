@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
-import com.foobarust.android.common.FullScreenDialogFragment
 import com.foobarust.android.databinding.FragmentLicenseBinding
+import com.foobarust.android.shared.FullScreenDialogFragment
 import com.foobarust.android.utils.AutoClearedValue
 
 class LicenseFragment : FullScreenDialogFragment() {

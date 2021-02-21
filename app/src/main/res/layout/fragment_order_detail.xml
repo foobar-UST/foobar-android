@@ -1,47 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/coordinator_layout"
+    <data>
+        <variable
+            name="viewModel"
+            type="com.foobarust.android.order.OrderDetailViewModel" />
+        <import type="com.foobarust.android.order.OrderDetailUiState" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
         app:layoutFullscreen="@{true}">
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/map_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            app:goneIf="@{viewModel.orderDetailUiState instanceof OrderDetailUiState.Error}"/>
+
+        <include
+            layout="@layout/load_error_layout"
+            android:id="@+id/load_error_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:goneIf="@{!(viewModel.orderDetailUiState instanceof OrderDetailUiState.Error)}"/>
 
         <com.google.android.material.appbar.MaterialToolbar
-            style="@style/Widget.MaterialComponents.Toolbar.Surface"
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             app:navigationIcon="@drawable/ic_arrow_back"
             app:navigationIconTint="@color/material_on_surface_emphasis_medium"
-            app:paddingTopSystemWindowInsets="@{true}"/>
+            app:paddingTopSystemWindowInsets="@{true}"
+            app:layout_constraintTop_toTopOf="parent"/>
 
-        <FrameLayout
-            android:id="@+id/bottom_sheet"
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/loading_progress_bar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="?attr/actionBarSize"
-            android:background="?attr/colorSurface"
-            app:marginTopSystemWindowInsets="@{true}">
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            app:hideAnimationBehavior="outward"
+            app:goneAfterHide="@{true}"
+            app:progressHideIf="@{!(viewModel.orderDetailUiState instanceof OrderDetailUiState.Loading)}"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"/>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/order_detail_recycler_view"
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/coordinator_layout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/loading_progress_bar"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <FrameLayout
+                android:id="@+id/bottom_sheet"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/order_detail_header_item"
-                tools:itemCount="1"/>
+                android:background="?attr/colorSurface">
 
-        </FrameLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/order_detail_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/order_detail_header_item"
+                    tools:itemCount="1"/>
 
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+            </FrameLayout>
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

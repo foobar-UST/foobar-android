@@ -8,7 +8,6 @@
         <variable
             name="userCart"
             type="com.foobarust.domain.models.cart.UserCart" />
-        <import type="com.foobarust.android.utils.BindingConverters" />
     </data>
 
     <com.google.android.material.card.MaterialCardView

@@ -1,6 +1,6 @@
 package com.foobarust.domain.repositories
 
-import com.foobarust.domain.models.user.AuthProfile
+import com.foobarust.domain.models.auth.AuthProfile
 import com.foobarust.domain.usecases.AuthState
 import kotlinx.coroutines.flow.Flow
 
@@ -9,9 +9,9 @@ interface AuthRepository {
     /*
         User
      */
-    suspend fun isUserSignedIn(): Boolean
+    fun isUserSignedIn(): Boolean
 
-    suspend fun getUserId(): String
+    fun getUserId(): String
 
     suspend fun getUserIdToken(): String
 
@@ -34,5 +34,5 @@ interface AuthRepository {
 
     suspend fun signInWithEmailLink(email: String, emailLink: String)
 
-    suspend fun signOut()
+    fun signOut()
 }

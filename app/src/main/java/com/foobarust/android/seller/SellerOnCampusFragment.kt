@@ -11,12 +11,12 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ConcatAdapter
 import com.foobarust.android.R
-import com.foobarust.android.common.PagingLoadStateAdapter
 import com.foobarust.android.databinding.FragmentSellerOnCampusBinding
 import com.foobarust.android.main.MainViewModel
 import com.foobarust.android.promotion.PromotionAdapter
 import com.foobarust.android.promotion.PromotionAdvertiseAdapter
 import com.foobarust.android.promotion.PromotionSuggestAdapter
+import com.foobarust.android.shared.PagingLoadStateAdapter
 import com.foobarust.android.utils.*
 import com.foobarust.domain.models.promotion.AdvertiseBasic
 import com.foobarust.domain.models.promotion.SuggestBasic
@@ -48,7 +48,7 @@ class SellerOnCampusFragment : Fragment(),
     ): View {
         binding = FragmentSellerOnCampusBinding.inflate(inflater, container, false)
 
-        // Setup on-campus list
+        // Setup recycler view
         val promotionAdapter = PromotionAdapter(
             lifecycle = viewLifecycleOwner.lifecycle,
             advertiseAdapterListener = this,
@@ -82,19 +82,19 @@ class SellerOnCampusFragment : Fragment(),
             }
         }
 
-        // Retry button
+        // Retry
         binding.loadErrorLayout.retryButton.setOnClickListener {
             sellerOnCampusAdapter.refresh()
             sellerOnCampusViewModel.onReloadPromotion()
         }
 
-        // Control views corresponding to load states
+        // Control views with respect to load states
         sellerOnCampusAdapter.addLoadStateListener { loadStates ->
             with(loadStates) {
                 updateViews(
                     mainLayout = binding.recyclerView,
                     errorLayout = binding.loadErrorLayout.loadErrorLayout,
-                    progressBar = binding.progressBar,
+                    progressBar = binding.loadingProgressBar,
                     swipeRefreshLayout = binding.swipeRefreshLayout
                 )
                 anyError()?.let {
@@ -103,7 +103,7 @@ class SellerOnCampusFragment : Fragment(),
             }
         }
 
-        // Start swipe refresh
+        // Swipe refresh layout
         binding.swipeRefreshLayout.setOnRefreshListener {
             sellerOnCampusViewModel.onReloadPromotion()
             sellerOnCampusAdapter.refresh()
@@ -123,15 +123,9 @@ class SellerOnCampusFragment : Fragment(),
         mainViewModel.showCartBottomBar.observe(viewLifecycleOwner) { show ->
             val bottomPadding = if (show) {
                 requireContext().resources.getDimension(R.dimen.cart_bottom_bar_height)
-            } else {
-                0.0
-            }
-            binding.recyclerView.updatePadding(bottom = bottomPadding.toInt())
-        }
+            } else 0.0
 
-        // Finish swipe refreshing
-        sellerOnCampusViewModel.finishSwipeRefresh.observe(viewLifecycleOwner) {
-            binding.swipeRefreshLayout.isRefreshing = false
+            binding.recyclerView.updatePadding(bottom = bottomPadding.toInt())
         }
 
         return binding.root
@@ -151,7 +145,7 @@ class SellerOnCampusFragment : Fragment(),
     }
 
     override fun onPromotionSuggestItemClicked(suggestBasic: SuggestBasic) {
-        sellerViewModel.onNavigateToSuggestItem(suggestBasic)
+        // TODO: Remove suggest item
     }
 
     private fun normalizeListPosition(promotionAdapter: PromotionAdapter) {

@@ -45,6 +45,11 @@ fun View.bindStartAnimation(@AnimRes animRes: Int?) {
     startAnimation(animation)
 }
 
+@BindingAdapter("goneAfterHide")
+fun LinearProgressIndicator.bindGoneAfterHide(gone: Boolean) {
+    if (gone) setVisibilityAfterHide(GONE)
+}
+
 /**
  * Hide progress indicator in a given condition.
  * @param hide the hide condition.

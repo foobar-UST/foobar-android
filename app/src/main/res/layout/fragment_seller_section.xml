@@ -8,7 +8,6 @@
         <variable
             name="viewModel"
             type="com.foobarust.android.sellersection.SellerSectionViewModel" />
-        <import type="com.foobarust.android.common.UiState"/>
         <import type="com.foobarust.domain.models.seller.SellerSectionDetailKt"/>
     </data>
 
@@ -40,33 +39,13 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <FrameLayout
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fragment_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:animateLayoutChanges="true"
-            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
-
-            <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/fragment_container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:name="androidx.navigation.fragment.NavHostFragment"
-                app:defaultNavHost="true"
-                app:goneIf="@{!(viewModel.uiState instanceof UiState.Success)}" />
-
-            <ProgressBar
-                android:id="@+id/progress_bar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                app:goneIf="@{!(viewModel.uiState instanceof UiState.Loading)}"/>
-
-            <include
-                layout="@layout/load_error_layout"
-                android:id="@+id/load_error_layout"
-                app:goneIf="@{!(viewModel.uiState instanceof UiState.Error)}"/>
-
-        </FrameLayout>
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            app:defaultNavHost="true"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

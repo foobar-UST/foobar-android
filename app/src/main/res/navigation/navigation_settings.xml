@@ -16,7 +16,7 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.foobarust.android.settings.SettingsFragment"
-        android:label="@string/fragment_label_settings"
+        android:label="@string/nav_title_settings"
         tools:layout="@layout/fragment_settings">
         <action
             android:id="@+id/action_settingsFragment_to_licenseFragment"
@@ -76,11 +76,11 @@
     <!-- TextInputDialog -->
     <dialog
         android:id="@+id/textInputDialog"
-        android:name="com.foobarust.android.common.TextInputDialog"
+        android:name="com.foobarust.android.settings.TextInputDialog"
         tools:layout="@layout/dialog_text_input_entry">
         <argument
             android:name="property"
-            app:argType="com.foobarust.android.common.TextInputProperty"
+            app:argType="com.foobarust.android.settings.TextInputProperty"
             app:nullable="false"/>
     </dialog>
 

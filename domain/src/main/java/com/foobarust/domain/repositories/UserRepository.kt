@@ -20,7 +20,7 @@ interface UserRepository {
 
     suspend fun updateUserDetail(idToken: String, name: String?, phoneNum: String?)
 
-    suspend fun removeUserDetailCache()
+    fun removeUserDetailCache()
 
     fun uploadUserPhoto(userId: String, uri: String, extension: String): Flow<Resource<Unit>>
 

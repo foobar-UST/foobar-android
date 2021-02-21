@@ -5,10 +5,10 @@
     <data>
         <variable
             name="itemModel"
-            type="com.foobarust.android.sellerdetail.SellerItemsListModel" />
+            type="com.foobarust.android.selleritem.SellerItemsListModel" />
         <variable
             name="listener"
-            type="com.foobarust.android.sellerdetail.SellerItemsAdapter.SellerItemsAdapterListener" />
+            type="com.foobarust.android.selleritem.SellerItemsAdapter.SellerItemsAdapterListener" />
         <import type="com.foobarust.domain.models.seller.SellerItemBasicKt" />
     </data>
 

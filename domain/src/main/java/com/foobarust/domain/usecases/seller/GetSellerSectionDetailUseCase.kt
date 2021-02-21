@@ -17,21 +17,13 @@ import javax.inject.Inject
 class GetSellerSectionDetailUseCase @Inject constructor(
     private val sellerRepository: SellerRepository,
     @IoDispatcher coroutineDispatcher: CoroutineDispatcher
-) : FlowUseCase<GetSellerSectionDetailParameters, SellerSectionDetail>(coroutineDispatcher) {
+) : FlowUseCase<String, SellerSectionDetail>(coroutineDispatcher) {
 
-    override fun execute(
-        parameters: GetSellerSectionDetailParameters
-    ): Flow<Resource<SellerSectionDetail>> = flow {
+    override fun execute(parameters: String): Flow<Resource<SellerSectionDetail>> = flow {
         val sectionDetail = sellerRepository.getSellerSectionDetail(
-            sellerId = parameters.sellerId,
-            sectionId = parameters.sectionId
+            sectionId = parameters
         )
 
         emit(Resource.Success(sectionDetail))
     }
 }
-
-data class GetSellerSectionDetailParameters(
-    val sellerId: String,
-    val sectionId: String
-)

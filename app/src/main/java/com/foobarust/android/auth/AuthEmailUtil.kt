@@ -1,11 +1,13 @@
 package com.foobarust.android.auth
 
+import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
 
 /**
  * Created by kevin on 9/23/20
  */
 
+@ViewModelScoped
 class AuthEmailUtil @Inject constructor() {
 
     val emailDomains: List<AuthEmailDomain> = listOf(

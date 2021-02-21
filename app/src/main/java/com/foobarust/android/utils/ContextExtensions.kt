@@ -3,6 +3,7 @@ package com.foobarust.android.utils
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.util.TypedValue
@@ -12,6 +13,18 @@ import androidx.annotation.*
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.use
+import com.foobarust.android.R
+
+fun Context.isNightModeOn(): Boolean {
+    return resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK ==
+        Configuration.UI_MODE_NIGHT_YES
+}
+
+fun Context.getActionBarSize(): Int {
+    val tv = TypedValue()
+    theme.resolveAttribute(R.attr.actionBarSize, tv, true)
+    return TypedValue.complexToDimensionPixelSize(tv.data, resources.displayMetrics)
+}
 
 /**
  * Retrieve a float from the current [android.content.res.Resources.Theme].

@@ -4,15 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-        <variable
-            name="viewModel"
-            type="com.foobarust.android.sellermisc.SellerMiscViewModel" />
-        <import type="com.foobarust.android.common.UiState" />
-        <import type="com.foobarust.domain.models.seller.SellerDetailKt" />
-        <import type="com.foobarust.android.utils.BindingConverters" />
-    </data>
-
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -22,18 +13,45 @@
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/map_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:name="com.google.android.gms.maps.SupportMapFragment" />
+            android:layout_height="match_parent" />
 
-        <com.google.android.material.appbar.MaterialToolbar
-            style="@style/Widget.MaterialComponents.Toolbar.Surface"
-            android:id="@+id/toolbar"
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/retry_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/fab_margin"
+            android:layout_gravity="center_horizontal|bottom"
+            android:paddingVertical="@dimen/spacing_xmedium"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:textSize="12sp"
+            android:text="@string/load_error_retry"
+            app:iconSize="14dp"
+            app:icon="@drawable/ic_refresh"
+            app:iconGravity="textStart" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            app:navigationIcon="@drawable/ic_arrow_back"
-            app:navigationIconTint="@color/material_on_surface_emphasis_medium"
-            app:paddingTopSystemWindowInsets="@{true}"/>
+            android:orientation="vertical"
+            app:paddingTopSystemWindowInsets="@{true}">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                style="@style/Widget.MaterialComponents.Toolbar.Surface"
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                app:navigationIcon="@drawable/ic_arrow_back"
+                app:navigationIconTint="@color/material_on_surface_emphasis_medium" />
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/loading_progress_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"/>
+
+        </LinearLayout>
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/bottom_sheet"
@@ -45,6 +63,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:paddingBottomSystemWindowInsets="@{true}"
                 tools:background="?attr/colorSurface">
 
                 <androidx.constraintlayout.widget.Group
@@ -63,7 +82,6 @@
                     android:layout_marginStart="@dimen/spacing_large"
                     android:layout_marginEnd="@dimen/spacing_large"
                     android:layout_marginTop="@dimen/spacing_large"
-                    android:text="@{viewModel.sellerDetail != null ? SellerDetailKt.getNormalizedName(viewModel.sellerDetail) : ``}"
                     android:textColor="?attr/colorOnPrimarySurface"
                     android:textAppearance="?attr/textAppearanceHeadline6"
                     app:layout_constraintTop_toTopOf="parent"
@@ -81,7 +99,6 @@
                     android:isIndicator="true"
                     android:numStars="5"
                     android:stepSize="0.01"
-                    android:rating="@{BindingConverters.doubleToFloat(viewModel.sellerDetail.rating)}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/title_text_view"
                     tools:rating="3.5"/>
@@ -91,7 +108,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/spacing_xmedium"
-                    android:text="@{viewModel.sellerDetail != null ? SellerDetailKt.getNormalizedRatingString(viewModel.sellerDetail) : ``}"
                     android:textColor="?attr/colorOnPrimarySurface"
                     android:textAppearance="?attr/textAppearanceCaption"
                     app:layout_constraintTop_toTopOf="@id/rating_bar"
@@ -106,7 +122,6 @@
                     android:layout_marginStart="@dimen/spacing_large"
                     android:layout_marginTop="@dimen/spacing_large"
                     android:paddingBottom="@dimen/spacing_large"
-                    android:text="@{viewModel.sellerDetail.phoneNum}"
                     android:textAppearance="?attr/textAppearanceBody2"
                     android:textColor="?attr/colorOnPrimarySurface"
                     android:gravity="center_vertical"
@@ -124,7 +139,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/spacing_large"
                     android:paddingBottom="@dimen/spacing_large"
-                    android:text="@{viewModel.sellerDetail.website}"
                     android:textAppearance="?attr/textAppearanceBody2"
                     android:textColor="?attr/colorOnPrimarySurface"
                     android:gravity="center_vertical"
@@ -135,7 +149,6 @@
                     app:drawableFitVertical="@{true}"
                     app:layout_constraintTop_toBottomOf="@id/phone_num_text_view"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:goneIf="@{viewModel.sellerDetail.website == null}"
                     tools:visibility="visible"
                     tools:text="starbucks.com"/>
 
@@ -146,7 +159,6 @@
                     android:layout_marginTop="@dimen/spacing_large"
                     android:layout_marginStart="@dimen/spacing_large"
                     android:layout_marginEnd="@dimen/spacing_large"
-                    android:text="@{viewModel.sellerDetail != null ? SellerDetailKt.getNormalizedAddress(viewModel.sellerDetail) : ``}"
                     android:textAppearance="?attr/textAppearanceBody2"
                     android:textColor="@color/material_on_surface_emphasis_medium"
                     android:lineSpacingMultiplier="1.2"
@@ -164,7 +176,6 @@
                     android:layout_marginTop="@dimen/spacing_mxlarge"
                     android:layout_marginStart="@dimen/spacing_large"
                     android:layout_marginEnd="@dimen/spacing_large"
-                    android:text="@{viewModel.sellerDetail.openingHours}"
                     android:textAppearance="?attr/textAppearanceBody2"
                     android:textColor="@color/material_on_surface_emphasis_medium"
                     android:lineSpacingMultiplier="1.2"
@@ -182,7 +193,6 @@
                     android:layout_marginTop="@dimen/spacing_xlarge"
                     android:text="@string/seller_misc_title_description"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
-                    app:goneIf="@{viewModel.sellerDetail.description == null || viewModel.sellerDetail.description.empty}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/opening_hours_text_view"/>
@@ -194,26 +204,11 @@
                     android:layout_marginTop="@dimen/spacing_large"
                     android:layout_marginStart="@dimen/spacing_large"
                     android:layout_marginEnd="@dimen/spacing_large"
-                    android:text="@{viewModel.sellerDetail != null ? SellerDetailKt.getNormalizedDescription(viewModel.sellerDetail) : ``}"
                     android:textAppearance="?attr/textAppearanceBody2"
                     android:textColor="@color/material_on_surface_emphasis_medium"
                     android:lineSpacingMultiplier="1.2"
                     app:layout_constraintTop_toBottomOf="@id/description_subtitle_text_view"
-                    app:goneIf="@{viewModel.sellerDetail.description == null || viewModel.sellerDetail.description.empty}"
                     tools:text="Starbucks offers a range of exceptional products that customers enjoy in our stores, at home, and on the go. Coffee: More than 30 blends and single-origin premium coffees. Handcrafted Beverages: Fresh-brewed coffee, hot and iced espresso beverages, Frappuccino® coffee and non-coffee blended beverages, Starbucks Refreshers® beverages, smoothies and teas. Merchandise: Coffee- and tea-brewing equipment, Verismo® System by Starbucks, mugs and accessories, packaged goods, books and gifts. Fresh Food: Baked pastries, sandwiches, salads, salad and grain bowls, oatmeal, yogurt parfaits and fruit cups.\n\n星巴克提供了一系列出色的產品，客戶可以在我們的商店，家中和旅途中享用。咖啡：30多種混合咖啡和單源優質咖啡。手工飲料：現煮咖啡，冷熱特濃咖啡，星冰樂®咖啡和非咖啡混合飲料，星巴克Refreshers®飲料，冰沙和茶。商品：咖啡和茶釀造設備，星巴克的Verismo®System，杯子和配件，包裝的商品，書籍和禮品。新鮮食品：烘焙糕點，三明治，色拉，色拉和穀物碗，燕麥片，酸奶凍糕和水果杯。"/>
-
-                <com.google.android.material.button.MaterialButton
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:id="@+id/feedback_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/spacing_large"
-                    android:text="Send Feedback"
-                    app:icon="@drawable/ic_email"
-                    app:iconPadding="@dimen/spacing_large"
-                    app:layout_constraintTop_toBottomOf="@id/description_text_view"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

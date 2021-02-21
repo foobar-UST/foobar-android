@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.foobarust.android.R
 import com.foobarust.android.databinding.ProfileEditItemBinding
 import com.foobarust.android.databinding.ProfileInfoItemBinding
-import com.foobarust.android.databinding.ProfileWarningItemBinding
+import com.foobarust.android.databinding.ProfileNoticeItemBinding
 import com.foobarust.android.settings.ProfileListModel.*
 import com.foobarust.android.settings.ProfileViewHolder.*
 import com.foobarust.domain.models.user.UserDetail
@@ -29,8 +29,8 @@ class ProfileAdapter(
                 ProfileEditItemBinding.inflate(inflater, parent, false)
             )
 
-            R.layout.profile_warning_item -> ProfileWarningViewHolder(
-                ProfileWarningItemBinding.inflate(inflater, parent, false)
+            R.layout.profile_notice_item -> ProfileNoticeViewHolder(
+                ProfileNoticeItemBinding.inflate(inflater, parent, false)
             )
 
             else -> throw IllegalStateException("Unknown view type $viewType")
@@ -40,19 +40,19 @@ class ProfileAdapter(
     override fun onBindViewHolder(holder: ProfileViewHolder, position: Int) {
         when (holder) {
             is ProfileInfoViewHolder -> holder.binding.run {
-                infoModel = getItem(position) as ProfileInfoModel
+                infoItemModel = getItem(position) as ProfileInfoItemModel
                 listener = this@ProfileAdapter.listener
                 executePendingBindings()
             }
 
             is ProfileEditViewHolder -> holder.binding.run {
-                editModel = getItem(position) as ProfileEditModel
+                editItemModel = getItem(position) as ProfileEditItemModel
                 listener = this@ProfileAdapter.listener
                 executePendingBindings()
             }
 
-            is ProfileWarningViewHolder -> holder.binding.run {
-                warningModel = getItem(position) as ProfileWarningModel
+            is ProfileNoticeViewHolder -> holder.binding.run {
+                noticeItemModel = getItem(position) as ProfileNoticeItemModel
                 executePendingBindings()
             }
         }
@@ -60,15 +60,15 @@ class ProfileAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
-            is ProfileInfoModel -> R.layout.profile_info_item
-            is ProfileEditModel -> R.layout.profile_edit_item
-            is ProfileWarningModel -> R.layout.profile_warning_item
+            is ProfileInfoItemModel -> R.layout.profile_info_item
+            is ProfileEditItemModel -> R.layout.profile_edit_item
+            is ProfileNoticeItemModel -> R.layout.profile_notice_item
         }
     }
 
     interface ProfileAdapterListener {
         fun onProfileAvatarClicked()
-        fun onProfileEditItemClicked(editModel: ProfileEditModel)
+        fun onProfileEditItemClicked(editItemModel: ProfileEditItemModel)
     }
 }
 
@@ -81,24 +81,24 @@ sealed class ProfileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVie
         val binding: ProfileEditItemBinding
     ) : ProfileViewHolder(binding.root)
 
-    class ProfileWarningViewHolder(
-        val binding: ProfileWarningItemBinding
+    class ProfileNoticeViewHolder(
+        val binding: ProfileNoticeItemBinding
     ) : ProfileViewHolder(binding.root)
 }
 
 sealed class ProfileListModel {
-    data class ProfileInfoModel(
+    data class ProfileInfoItemModel(
         val userDetail: UserDetail
     ) : ProfileListModel()
 
-    data class ProfileEditModel(
+    data class ProfileEditItemModel(
         val id: String,
         val title: String,
         val value: String?,
         val displayValue: String?
     ) : ProfileListModel()
 
-    data class ProfileWarningModel(
+    data class ProfileNoticeItemModel(
         val message: String
     ) : ProfileListModel()
 }
@@ -106,21 +106,21 @@ sealed class ProfileListModel {
 object ProfileListModelDiff : DiffUtil.ItemCallback<ProfileListModel>() {
     override fun areItemsTheSame(oldItem: ProfileListModel, newItem: ProfileListModel): Boolean {
         return when {
-            oldItem is ProfileInfoModel && newItem is ProfileInfoModel -> true
-            oldItem is ProfileEditModel && newItem is ProfileEditModel -> true
-            oldItem is ProfileWarningModel && newItem is ProfileWarningModel -> oldItem.message == newItem.message
+            oldItem is ProfileInfoItemModel && newItem is ProfileInfoItemModel -> true
+            oldItem is ProfileEditItemModel && newItem is ProfileEditItemModel -> true
+            oldItem is ProfileNoticeItemModel && newItem is ProfileNoticeItemModel -> oldItem.message == newItem.message
             else -> false
         }
     }
 
     override fun areContentsTheSame(oldItem: ProfileListModel, newItem: ProfileListModel): Boolean {
         return when {
-            oldItem is ProfileInfoModel && newItem is ProfileInfoModel ->
+            oldItem is ProfileInfoItemModel && newItem is ProfileInfoItemModel ->
                 oldItem.userDetail.username == newItem.userDetail.username &&
                 oldItem.userDetail.email == newItem.userDetail.email &&
                 oldItem.userDetail.photoUrl == newItem.userDetail.photoUrl
-            oldItem is ProfileEditModel && newItem is ProfileEditModel -> oldItem == newItem
-            oldItem is ProfileWarningModel && newItem is ProfileWarningModel -> oldItem.message == newItem.message
+            oldItem is ProfileEditItemModel && newItem is ProfileEditItemModel -> oldItem == newItem
+            oldItem is ProfileNoticeItemModel && newItem is ProfileNoticeItemModel -> oldItem.message == newItem.message
             else -> false
         }
     }

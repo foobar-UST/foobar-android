@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceFragmentCompat
 import com.foobarust.android.R
-import com.foobarust.android.common.FullScreenDialogFragment
 import com.foobarust.android.databinding.FragmentNotificationBinding
+import com.foobarust.android.shared.FullScreenDialogFragment
 import com.foobarust.android.utils.AutoClearedValue
 
 class NotificationFragment : FullScreenDialogFragment() {

@@ -22,5 +22,4 @@ class SignOutUseCase @Inject constructor(
         authRepository.signOut()
         emit(Resource.Success(Unit))
     }
-
 }

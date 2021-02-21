@@ -14,7 +14,6 @@ import com.foobarust.android.checkout.CartAdapter.*
 import com.foobarust.android.checkout.CartListModel.*
 import com.foobarust.android.checkout.CartViewHolder.*
 import com.foobarust.android.databinding.*
-import com.foobarust.android.utils.bindGoneIf
 import com.foobarust.android.utils.getColorCompat
 import com.foobarust.domain.models.cart.UserCartItem
 
@@ -27,7 +26,6 @@ class CartAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-
         return when (viewType) {
             R.layout.cart_info_item -> CartInfoItemViewHolder(
                 CartInfoItemBinding.inflate(inflater, parent, false)
@@ -63,42 +61,10 @@ class CartAdapter(
 
     override fun onBindViewHolder(holder: CartViewHolder, position: Int) {
         when (holder) {
-            is CartInfoItemViewHolder -> holder.binding.run {
-                val currentItem = getItem(position) as CartInfoItemModel
-                cartInfoItemModel = currentItem
-
-                // Navigate to SellerSection
-                if (currentItem.sectionId != null) {
-                    sectionNav.navLayout.setOnClickListener {
-                        listener.onSectionOptionClicked(
-                            sellerId = currentItem.sellerId,
-                            sectionId = currentItem.sectionId
-                        )
-                    }
-                }
-
-                // Navigate to SellerMisc
-                miscNav.navLayout.setOnClickListener {
-                    listener.onSellerMiscOptionClicked(
-                        sellerId = currentItem.sellerId
-                    )
-                }
-
-                // Setup offline banner
-                with(sellerOfflineNoticeBanner.noticeTextView) {
-                    bindGoneIf(currentItem.sellerOnline)
-                    if (!currentItem.sellerOnline) {
-                        background = ColorDrawable(
-                            context.getColorCompat(R.color.grey_disabled)
-                        )
-                        text = context.getString(
-                            R.string.seller_detail_offline_message
-                        )
-                    }
-                }
-
-                executePendingBindings()
-            }
+            is CartInfoItemViewHolder -> bindCartInfoItem(
+                binding = holder.binding,
+                cartInfoItemModel = getItem(position) as CartInfoItemModel
+            )
 
             is CartPurchaseItemViewHolder -> holder.binding.run {
                 purchaseItemModel = getItem(position) as CartPurchaseItemModel
@@ -111,23 +77,10 @@ class CartAdapter(
                 executePendingBindings()
             }
 
-            is CartOrderNotesItemViewHolder -> holder.binding.run {
+            is CartOrderNotesItemViewHolder -> bindOrderNotesItem(
+                binding = holder.binding,
                 orderNotesItemModel = getItem(position) as CartOrderNotesItemModel
-
-                notesEditText.doOnTextChanged { text, _, _, _ ->
-                    listener.onUpdateOrderNotes(notes = text.toString())
-                }
-
-                // Clear focus after exit keyboard
-                notesEditText.setOnEditorActionListener { view, actionId, event ->
-                    if (actionId == EditorInfo.IME_ACTION_DONE) {
-                        notesEditText.clearFocus()
-                    }
-                    return@setOnEditorActionListener false
-                }
-
-                executePendingBindings()
-            }
+            )
 
             is CartPurchaseSubtitleItemViewHolder -> holder.binding.run {
                 subtitle = (getItem(position) as CartPurchaseSubtitleItemModel).subtitle
@@ -158,10 +111,67 @@ class CartAdapter(
         }
     }
 
+    private fun bindCartInfoItem(
+        binding: CartInfoItemBinding,
+        cartInfoItemModel: CartInfoItemModel
+    ) = binding.run {
+        this.cartInfoItemModel = cartInfoItemModel
+
+        // Navigate to SellerSection
+        if (cartInfoItemModel.sectionId != null) {
+            sectionNav.navLayout.setOnClickListener {
+                listener.onSectionOptionClicked(sectionId = cartInfoItemModel.sectionId)
+            }
+        }
+
+        // Navigate to SellerMisc
+        miscNav.navLayout.setOnClickListener {
+            listener.onSellerMiscOptionClicked(
+                sellerId = cartInfoItemModel.sellerId
+            )
+        }
+
+        // Setup offline banner
+        with(sellerOfflineNoticeBanner.noticeTextView) {
+            val context = root.context
+            if (!cartInfoItemModel.sellerOnline) {
+                text = context.getString(
+                    R.string.seller_detail_offline_message
+                )
+                background = ColorDrawable(
+                    context.getColorCompat(R.color.grey_disabled)
+                )
+            }
+        }
+
+        executePendingBindings()
+    }
+
+    private fun bindOrderNotesItem(
+        binding: CartOrderNotesItemBinding,
+        orderNotesItemModel: CartOrderNotesItemModel
+    ) = binding.run {
+        this.orderNotesItemModel = orderNotesItemModel
+
+        notesEditText.doOnTextChanged { text, _, _, _ ->
+            listener.onUpdateOrderNotes(notes = text.toString())
+        }
+
+        // Clear focus after exit keyboard
+        notesEditText.setOnEditorActionListener { view, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                notesEditText.clearFocus()
+            }
+            return@setOnEditorActionListener false
+        }
+
+        executePendingBindings()
+    }
+
     interface CartAdapterListener {
         fun onAddMoreItemClicked(sellerId: String, sectionId: String?)
         fun onSellerMiscOptionClicked(sellerId: String)
-        fun onSectionOptionClicked(sellerId: String, sectionId: String?)
+        fun onSectionOptionClicked(sectionId: String)
         fun onCartItemClicked(userCartItem: UserCartItem)
         fun onRemoveCartItem(userCartItem: UserCartItem)
         fun onClearCart()
