@@ -2,13 +2,13 @@ package com.foobarust.android.settings
 
 import android.content.Context
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkManager
 import com.foobarust.android.R
 import com.foobarust.android.settings.SettingsListModel.SettingsAccountItemModel
 import com.foobarust.android.settings.SettingsListModel.SettingsSectionItemModel
+import com.foobarust.android.shared.BaseViewModel
 import com.foobarust.android.works.UploadUserPhotoWork
 import com.foobarust.domain.models.user.UserDetail
 import com.foobarust.domain.states.Resource
@@ -40,7 +40,7 @@ class SettingsViewModel @Inject constructor(
     private val signOutUseCase: SignOutUseCase,
     private val doOnSignOutUseCase: DoOnSignOutUseCase,
     getUserAuthStateUseCase: GetUserAuthStateUseCase,
-) : ViewModel() {
+) : BaseViewModel() {
 
     private val _settingsListModels = MutableStateFlow<List<SettingsListModel>>(emptyList())
     val settingsListModels: LiveData<List<SettingsListModel>> = _settingsListModels
@@ -58,9 +58,6 @@ class SettingsViewModel @Inject constructor(
 
     private val _isUserSignedOut = Channel<Unit>()
     val isUserSignedOut: Flow<Unit> = _isUserSignedOut.receiveAsFlow()
-
-    private val _toastMessage = Channel<String>()
-    val toastMessage: Flow<String> = _toastMessage.receiveAsFlow()
 
     init {
         // Build settings list
@@ -100,9 +97,7 @@ class SettingsViewModel @Inject constructor(
                     _isUserSignedOut.offer(Unit)
                 }
                 is Resource.Error -> {
-                    it.message?.let {
-                        _toastMessage.offer(it)
-                    }
+                    showToastMessage(it.message)
                 }
                 is Resource.Loading -> Unit
             }

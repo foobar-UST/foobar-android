@@ -3,11 +3,11 @@ package com.foobarust.android.main
 import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.work.*
 import com.foobarust.android.R
+import com.foobarust.android.shared.BaseViewModel
 import com.foobarust.android.utils.DynamicLinksUtils
 import com.foobarust.android.works.UploadUserPhotoWork
 import com.foobarust.domain.models.cart.UserCart
@@ -40,7 +40,7 @@ class MainViewModel @Inject constructor(
     private val clearUserCartUseCase: ClearUserCartUseCase,
     private val checkCartTimeOutUseCase: CheckCartTimeOutUseCase,
     private val getUserCompleteTutorialUseCase: GetUserCompleteTutorialUseCase
-) : ViewModel() {
+) : BaseViewModel() {
 
     private val _currentNavGraphId = MutableStateFlow<Int?>(null)
 
@@ -80,9 +80,6 @@ class MainViewModel @Inject constructor(
     private val _getUserPhoto = Channel<Unit>()
     val getUserPhoto: Flow<Unit> = _getUserPhoto.receiveAsFlow()
 
-    private val _toastMessage = Channel<String>()
-    val toastMessage: Flow<String> = _toastMessage.receiveAsFlow()
-
     private var checkedCartTimeout: Boolean = false
     private var currentDestinationId: Int = 0
 
@@ -111,9 +108,7 @@ class MainViewModel @Inject constructor(
                     )
                 }
                 is Resource.Error -> {
-                    it.message?.let { message ->
-                        _toastMessage.offer(message)
-                    }
+                    showToastMessage(it.message)
                 }
                 is Resource.Loading -> Unit
             }
