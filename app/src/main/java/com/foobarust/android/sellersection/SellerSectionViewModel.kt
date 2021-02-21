@@ -5,9 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.sellerdetail.SellerDetailProperty
-import com.foobarust.android.utils.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,23 +20,19 @@ import javax.inject.Inject
 @HiltViewModel
 class SellerSectionViewModel @Inject constructor(): ViewModel() {
 
-    private val _backPressed = SingleLiveEvent<Unit>()
-    val backPressed: LiveData<Unit>
-        get() = _backPressed
+    private val _backPressed = Channel<Unit>()
+    val backPressed: Flow<Unit> = _backPressed.receiveAsFlow()
 
-    private val _navigateToSellerDetail = SingleLiveEvent<SellerDetailProperty>()
-    val navigateToSellerDetail: LiveData<SellerDetailProperty>
-        get() = _navigateToSellerDetail
+    private val _navigateToSellerDetail = Channel<SellerDetailProperty>()
+    val navigateToSellerDetail: Flow<SellerDetailProperty> = _navigateToSellerDetail.receiveAsFlow()
 
     // Argument: section id
-    private val _navigateToSellerSection = SingleLiveEvent<String>()
-    val navigateToSellerSection: LiveData<String>
-        get() = _navigateToSellerSection
+    private val _navigateToSellerSection = Channel<String>()
+    val navigateToSellerSection: Flow<String> = _navigateToSellerSection.receiveAsFlow()
 
     // Argument: seller id
-    private val _navigateToSellerMisc = SingleLiveEvent<String>()
-    val navigateToSellerMisc: LiveData<String>
-        get() = _navigateToSellerMisc
+    private val _navigateToSellerMisc = Channel<String>()
+    val navigateToSellerMisc: Flow<String> = _navigateToSellerMisc.receiveAsFlow()
 
     private val _toolbarTitle = MutableStateFlow<String?>(null)
     val toolbarTitle: LiveData<String?> = _toolbarTitle
@@ -43,19 +41,19 @@ class SellerSectionViewModel @Inject constructor(): ViewModel() {
     private val _currentDestination = MutableStateFlow(-1)
 
     fun onBackPressed() {
-        _backPressed.value = Unit
+        _backPressed.offer(Unit)
     }
 
     fun onNavigateToSellerDetail(sellerDetailProperty: SellerDetailProperty) = viewModelScope.launch {
-        _navigateToSellerDetail.value = sellerDetailProperty
+        _navigateToSellerDetail.offer(sellerDetailProperty)
     }
 
     fun onNavigateToSellerMisc(sellerId: String) = viewModelScope.launch {
-        _navigateToSellerMisc.value = sellerId
+        _navigateToSellerMisc.offer(sellerId)
     }
 
     fun onNavigateToSellerSection(sectionId: String) = viewModelScope.launch {
-        _navigateToSellerSection.value = sectionId
+        _navigateToSellerSection.offer(sectionId)
     }
 
     fun onUpdateCurrentDestination(destinationId: Int) {

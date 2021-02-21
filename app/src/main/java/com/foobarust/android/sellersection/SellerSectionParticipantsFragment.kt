@@ -6,12 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentSellerSectionParticipantsBinding
 import com.foobarust.android.utils.AutoClearedValue
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 /**
  * Created by kevin on 12/22/20
@@ -32,8 +35,10 @@ class SellerSectionParticipantsFragment : Fragment() {
         binding = FragmentSellerSectionParticipantsBinding.inflate(inflater, container, false)
 
         // Observe dialog back press and navigate up
-        sectionViewModel.backPressed.observe(viewLifecycleOwner) {
-            findNavController().navigateUp()
+        viewLifecycleOwner.lifecycleScope.launch {
+            sectionViewModel.backPressed.collect {
+                findNavController().navigateUp()
+            }
         }
 
         return binding.root

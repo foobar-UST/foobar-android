@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -15,6 +16,8 @@ import com.foobarust.android.utils.AutoClearedValue
 import com.foobarust.android.utils.findNavController
 import com.foobarust.android.utils.getHiltNavGraphViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 /**
  * Created by kevin on 12/22/20
@@ -68,28 +71,35 @@ class SellerSectionFragment : FullScreenDialogFragment() {
         }
 
         // Navigate to seller detail
-        viewModel.navigateToSellerDetail.observe(viewLifecycleOwner) {
-            findNavController(R.id.sellerSectionFragment)?.navigate(
-                SellerSectionFragmentDirections.actionSellerSectionFragmentToSellerDetailFragment(
-                    property = it
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.navigateToSellerDetail.collect {
+                findNavController(R.id.sellerSectionFragment)?.navigate(
+                    SellerSectionFragmentDirections.actionSellerSectionFragmentToSellerDetailFragment(
+                        property = it
+                    )
                 )
-            )
+            }
         }
 
+
         // Navigate to seller misc
-        viewModel.navigateToSellerMisc.observe(viewLifecycleOwner) {
-            findNavController(R.id.sellerSectionFragment)?.navigate(
-                SellerSectionFragmentDirections.actionSellerSectionFragmentToSellerMiscFragment(
-                    sellerId = it
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.navigateToSellerMisc.collect {
+                findNavController(R.id.sellerSectionFragment)?.navigate(
+                    SellerSectionFragmentDirections.actionSellerSectionFragmentToSellerMiscFragment(
+                        sellerId = it
+                    )
                 )
-            )
+            }
         }
 
         // Navigate to another section
-        viewModel.navigateToSellerSection.observe(viewLifecycleOwner) {
-            findNavController(R.id.sellerSectionFragment)?.navigate(
-                SellerSectionFragmentDirections.actionSellerSectionFragmentSelf(sectionId = it)
-            )
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.navigateToSellerSection.collect {
+                findNavController(R.id.sellerSectionFragment)?.navigate(
+                    SellerSectionFragmentDirections.actionSellerSectionFragmentSelf(sectionId = it)
+                )
+            }
         }
 
         return binding.root

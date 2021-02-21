@@ -5,6 +5,7 @@
 - Added notifications.
 - Added dark mode for map.
 - Added swipe refresh to more layouts.
+- Migrated SingleLiveEvent to Channel.
 
 ## 2020-02-01
 - Prepare for explore page.

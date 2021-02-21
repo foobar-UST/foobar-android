@@ -38,8 +38,10 @@ class AuthActivity : AppCompatActivity() {
         }
 
         // Finish activity if the user is already signed in.
-        viewModel.isUserSignedIn.observe(this) {
-            finish()
+        lifecycleScope.launchWhenStarted {
+            viewModel.isUserSignedIn.collect {
+                finish()
+            }
         }
 
         // Look for sign-in link when the activity starts

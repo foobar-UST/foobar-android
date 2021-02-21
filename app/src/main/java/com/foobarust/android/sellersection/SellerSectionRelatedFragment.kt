@@ -20,6 +20,7 @@ import com.foobarust.android.utils.showShortToast
 import com.foobarust.android.utils.updateViews
 import com.foobarust.domain.models.seller.SellerSectionBasic
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -95,8 +96,10 @@ class SellerSectionRelatedFragment : Fragment(),
         }
 
         // Observe dialog back press and navigate up
-        sectionViewModel.backPressed.observe(viewLifecycleOwner) {
-            findNavController().navigateUp()
+        viewLifecycleOwner.lifecycleScope.launch {
+            sectionViewModel.backPressed.collect {
+                findNavController().navigateUp()
+            }
         }
 
         return binding.root

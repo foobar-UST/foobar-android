@@ -7,7 +7,6 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.R
 import com.foobarust.android.shared.BaseViewModel
-import com.foobarust.android.utils.SingleLiveEvent
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.states.getSuccessDataOr
 import com.foobarust.domain.usecases.auth.*
@@ -15,6 +14,7 @@ import com.foobarust.domain.usecases.user.DoOnSignInUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -48,9 +48,8 @@ class AuthViewModel @Inject constructor(
     private val _authUiState = MutableStateFlow(AuthUiState.INPUT)
     val authUiState: LiveData<AuthUiState> = _authUiState.asLiveData(viewModelScope.coroutineContext)
 
-    private val _isUserSignedIn = SingleLiveEvent<Unit>()
-    val isUserSignedIn: LiveData<Unit>
-        get() = _isUserSignedIn
+    private val _isUserSignedIn = Channel<Unit>()
+    val isUserSignedIn: Flow<Unit> = _isUserSignedIn.receiveAsFlow()
 
     val emailDomains: List<AuthEmailDomain> = authEmailUtil.emailDomains
 
@@ -98,7 +97,7 @@ class AuthViewModel @Inject constructor(
         // Check if the user is already signed in.
         if (getIsUserSignedInUseCase(Unit).getSuccessDataOr(false)) {
             showToastMessage(context.getString(R.string.auth_signed_in_message))
-            _isUserSignedIn.value = Unit
+            _isUserSignedIn.offer(Unit)
             return@launch
         }
 
