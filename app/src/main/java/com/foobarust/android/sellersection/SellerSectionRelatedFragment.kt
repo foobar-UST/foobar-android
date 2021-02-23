@@ -30,7 +30,7 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SellerSectionRelatedFragment : Fragment(),
-    SellerSectionsAdapter.SellerOffCampusAdapterListener {
+    SellerSectionsAdapter.SellerSectionsAdapterListener {
 
     private var binding: FragmentSellerSectionRelatedBinding by AutoClearedValue(this)
     private val sectionViewModel: SellerSectionViewModel by hiltNavGraphViewModels(R.id.navigation_seller_section)

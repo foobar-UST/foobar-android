@@ -1,4 +1,7 @@
 # Changelog
+## 2020-02-24
+- Added SellerSearchFragment.
+
 ## 2020-02-22
 - Bug fixes and refactor.
 - Fixed rotation problem.

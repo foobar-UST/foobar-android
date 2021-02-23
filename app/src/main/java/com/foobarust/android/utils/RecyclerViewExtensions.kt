@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
 import android.util.TypedValue
+import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,6 +20,29 @@ import kotlin.coroutines.resume
 /**
  * Created by kevin on 1/27/21
  */
+
+fun RecyclerView.touchOutsideItems(): Flow<Unit> = callbackFlow {
+    val listener = object : RecyclerView.OnItemTouchListener {
+        override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
+            if (e.action != MotionEvent.ACTION_UP) return false
+
+            val child = rv.findChildViewUnder(e.x, e.y)
+
+            return if (child != null) {
+                false
+            } else {
+                channel.offer(Unit)
+                true
+            }
+        }
+        override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) = Unit
+        override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) = Unit
+    }
+
+    addOnItemTouchListener(listener)
+
+    awaitClose { removeOnItemTouchListener(listener) }
+}
 
 fun RecyclerView.scrollToTop() = scrollToPosition(0)
 

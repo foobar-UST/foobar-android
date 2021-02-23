@@ -11,13 +11,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.foobarust.android.R
 import com.foobarust.android.databinding.SellerOnCampusItemBinding
 import com.foobarust.android.databinding.SubtitleLargeItemBinding
-import com.foobarust.android.seller.SellerOnCampusListModel.SellerOnCampusItemModel
-import com.foobarust.android.seller.SellerOnCampusListModel.SellerOnCampusSubtitleModel
-import com.foobarust.android.seller.SellerOnCampusViewHolder.SellerOnCampusItemViewHolder
-import com.foobarust.android.seller.SellerOnCampusViewHolder.SellerOnCampusSubtitleViewHolder
+import com.foobarust.android.seller.SellerOnCampusListModel.*
+import com.foobarust.android.seller.SellerOnCampusViewHolder.*
 import com.foobarust.android.utils.getColorCompat
 import com.foobarust.android.utils.themeColor
 import com.foobarust.domain.models.seller.SellerBasic
+import com.foobarust.domain.models.seller.getNormalizedTags
 
 /**
  * Created by kevin on 9/28/20
@@ -44,51 +43,66 @@ class SellerOnCampusAdapter(
 
     override fun onBindViewHolder(holder: SellerOnCampusViewHolder, position: Int) {
         when (holder) {
-            is SellerOnCampusItemViewHolder -> holder.binding.run {
-                val currentItem = (getItem(position) as? SellerOnCampusItemModel)?.sellerBasic
-                // Setup binding
-                sellerBasic = currentItem
-                listener = this@SellerOnCampusAdapter.listener
-
-                // Setup photo layout round corner
-                photoImageViewLayout.run {
-                    outlineProvider = object : ViewOutlineProvider() {
-                        override fun getOutline(view: View, outline: Outline) {
-                            outline.setRoundRect(0, 0, view.width, view.height,
-                                photoImageViewLayout.context.resources.getDimension(R.dimen.small_component_corner_radius)
-                            )
-                        }
-                    }
-                    clipToOutline = true
-                }
-
-                // Set info
-                currentItem?.let {
-                    val context = infoTextView.context
-                    infoTextView.text = context.getString(
-                        R.string.seller_item_info,
-                        it.tags.joinToString(separator = " · ")
-                    )
-                }
-
-                // Set status text color
-                val context = statusTextView.context
-                val statusColor = if (currentItem?.online == true) {
-                    context.themeColor(R.attr.colorSecondary)
-                } else {
-                    context.getColorCompat(R.color.material_on_surface_disabled)
-                }
-
-                statusTextView.setTextColor(statusColor)
-
-                executePendingBindings()
-            }
+            is SellerOnCampusItemViewHolder -> bindOnCampusItem(
+                binding = holder.binding,
+                onCampusItemModel = getItem(position) as? SellerOnCampusItemModel
+            )
 
             is SellerOnCampusSubtitleViewHolder -> holder.binding.run {
                 subtitle = (getItem(position) as? SellerOnCampusSubtitleModel)?.subtitle
                 executePendingBindings()
             }
         }
+    }
+
+    private fun bindOnCampusItem(
+        binding: SellerOnCampusItemBinding,
+        onCampusItemModel: SellerOnCampusItemModel?
+    ) = binding.run {
+        val context = root.context
+
+        this.onCampusItemModel = onCampusItemModel
+        listener = this@SellerOnCampusAdapter.listener
+
+        val sellerBasic = onCampusItemModel?.sellerBasic
+
+        // Setup photo layout round corner
+        with(photoImageViewLayout) {
+            outlineProvider = object : ViewOutlineProvider() {
+                override fun getOutline(view: View, outline: Outline) {
+                    outline.setRoundRect(0, 0, view.width, view.height,
+                        photoImageViewLayout.context.resources.getDimension(
+                            R.dimen.small_component_corner_radius
+                        )
+                    )
+                }
+            }
+            clipToOutline = true
+        }
+
+        sellerBasic?.let {
+            // Set tags
+            infoTextView.text = context.getString(R.string.seller_item_info, it.getNormalizedTags())
+
+            // Set online status
+            with(statusTextView) {
+                val statusColor = if (it.online) {
+                    context.themeColor(R.attr.colorSecondary)
+                } else {
+                    context.getColorCompat(R.color.material_on_surface_disabled)
+                }
+
+                setTextColor(statusColor)
+
+                text = if (it.online) {
+                    context.getString(R.string.seller_status_online)
+                } else {
+                    context.getString(R.string.seller_status_offline)
+                }
+            }
+        }
+
+        executePendingBindings()
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -100,8 +114,8 @@ class SellerOnCampusAdapter(
     }
 
     interface SellerOnCampusAdapterListener {
-        fun onSellerListItemClicked(sellerBasic: SellerBasic)
-        fun onSellerListItemLongClicked(view: View, sellerBasic: SellerBasic): Boolean
+        fun onSellerItemClicked(sellerBasic: SellerBasic)
+        fun onSellerItemLongClicked(view: View, sellerBasic: SellerBasic): Boolean
     }
 }
 

@@ -1,4 +1,4 @@
-package com.foobarust.data.common
+package com.foobarust.data.constants
 
 /**
  * Created by kevin on 9/25/20
@@ -147,19 +147,15 @@ object Constants {
     const val SELLER_SECTION_STATE_DELIVERED = "delivered"
 
     // Advertise
-    const val ADVERTISES_COLLECTION = "advertises"
+    const val SELLER_ADVERTISES_SUB_COLLECTION = "advertises"
     const val ADVERTISES_BASIC_COLLECTION = "advertises_basic"
 
     const val ADVERTISE_ID_FIELD = "id"
     const val ADVERTISE_URL_FIELD = "url"
     const val ADVERTISE_IMAGE_URL_FIELD = "image_url"
-
-    const val SUGGESTS_BASIC_COLLECTION = "suggests_basic"
-    const val SUGGESTS_BASIC_ID_FIELD = "id"
-    const val SUGGESTS_BASIC_ITEM_ID_FIELD = "item_id"
-    const val SUGGESTS_BASIC_ITEM_TITLE_FIELD = "item_title"
-    const val SUGGESTS_BASIC_SELLER_NAME_FIELD = "seller_name"
-    const val SUGGESTS_BASIC_IMAGE_URL_FIELD = "image_url"
+    const val ADVERTISE_CREATED_AT_FIELD = "created_at"
+    const val ADVERTISE_SELLER_TYPE_FIELD = "seller_type"
+    const val ADVERTISE_RANDOM_FIELD = "random"
 
     // Seller Items
     const val SELLER_ITEMS_SUB_COLLECTION = "items"
@@ -280,4 +276,6 @@ object Constants {
     const val INSERT_DEVICE_TOKEN_REQUEST_TOKEN = "token"
     const val LINK_DEVICE_TOKEN_REQUEST_TOKEN = "token"
     const val UNLINK_DEVICE_TOKEN_REQUEST_TOKEN = "token"
+
+    const val SEARCH_SELLERS_REQUEST_SEARCH_QUERY = "query"
 }

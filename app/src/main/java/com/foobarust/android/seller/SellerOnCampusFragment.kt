@@ -13,13 +13,11 @@ import androidx.recyclerview.widget.ConcatAdapter
 import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentSellerOnCampusBinding
 import com.foobarust.android.main.MainViewModel
+import com.foobarust.android.promotion.AdvertiseAdapter
 import com.foobarust.android.promotion.PromotionAdapter
-import com.foobarust.android.promotion.PromotionAdvertiseAdapter
-import com.foobarust.android.promotion.PromotionSuggestAdapter
 import com.foobarust.android.shared.PagingLoadStateAdapter
 import com.foobarust.android.utils.*
 import com.foobarust.domain.models.promotion.AdvertiseBasic
-import com.foobarust.domain.models.promotion.SuggestBasic
 import com.foobarust.domain.models.seller.SellerBasic
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -32,8 +30,7 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SellerOnCampusFragment : Fragment(),
-    PromotionAdvertiseAdapter.PromotionAdvertiseAdapterListener,
-    PromotionSuggestAdapter.PromotionSuggestAdapterListener,
+    AdvertiseAdapter.AdvertiseAdapterListener,
     SellerOnCampusAdapter.SellerOnCampusAdapterListener {
 
     private var binding: FragmentSellerOnCampusBinding by AutoClearedValue(this)
@@ -49,11 +46,7 @@ class SellerOnCampusFragment : Fragment(),
         binding = FragmentSellerOnCampusBinding.inflate(inflater, container, false)
 
         // Setup recycler view
-        val promotionAdapter = PromotionAdapter(
-            lifecycle = viewLifecycleOwner.lifecycle,
-            advertiseAdapterListener = this,
-            suggestAdapterListener = this
-        )
+        val promotionAdapter = PromotionAdapter(this)
         val sellerOnCampusAdapter = SellerOnCampusAdapter(this)
 
         val concatAdapter = ConcatAdapter(
@@ -63,7 +56,7 @@ class SellerOnCampusFragment : Fragment(),
             )
         )
 
-        binding.recyclerView.run {
+        binding.sellersRecyclerView.run {
             adapter = concatAdapter
             setHasFixedSize(true)
         }
@@ -92,7 +85,7 @@ class SellerOnCampusFragment : Fragment(),
         sellerOnCampusAdapter.addLoadStateListener { loadStates ->
             with(loadStates) {
                 updateViews(
-                    mainLayout = binding.recyclerView,
+                    mainLayout = binding.sellersRecyclerView,
                     errorLayout = binding.loadErrorLayout.loadErrorLayout,
                     progressBar = binding.loadingProgressBar,
                     swipeRefreshLayout = binding.swipeRefreshLayout
@@ -114,7 +107,7 @@ class SellerOnCampusFragment : Fragment(),
         viewLifecycleOwner.lifecycleScope.launch {
             sellerViewModel.pageScrollToTop.collect { page ->
                 if (page == TAG) {
-                    binding.recyclerView.smoothScrollToTop()
+                    binding.sellersRecyclerView.smoothScrollToTop()
                 }
             }
         }
@@ -125,34 +118,30 @@ class SellerOnCampusFragment : Fragment(),
                 requireContext().resources.getDimension(R.dimen.cart_bottom_bar_height)
             } else 0.0
 
-            binding.recyclerView.updatePadding(bottom = bottomPadding.toInt())
+            binding.sellersRecyclerView.updatePadding(bottom = bottomPadding.toInt())
         }
 
         return binding.root
     }
 
-    override fun onPromotionAdvertiseItemClicked(advertiseBasic: AdvertiseBasic) {
+    override fun onAdvertiseItemClicked(advertiseBasic: AdvertiseBasic) {
         sellerViewModel.onNavigateToPromotionDetail(advertiseBasic.url)
     }
 
-    override fun onSellerListItemClicked(sellerBasic: SellerBasic) {
+    override fun onSellerItemClicked(sellerBasic: SellerBasic) {
         sellerViewModel.onNavigateToSellerDetail(sellerBasic)
     }
 
-    override fun onSellerListItemLongClicked(view: View, sellerBasic: SellerBasic): Boolean {
+    override fun onSellerItemLongClicked(view: View, sellerBasic: SellerBasic): Boolean {
         sellerViewModel.onNavigateToSellerAction()
         return true
-    }
-
-    override fun onPromotionSuggestItemClicked(suggestBasic: SuggestBasic) {
-        // TODO: Remove suggest item
     }
 
     private fun normalizeListPosition(promotionAdapter: PromotionAdapter) {
         // Fixed the issue when the promotion banner is inserted after the suggestion list,
         // and got hidden at the top of the recycler view
         viewLifecycleOwner.lifecycleScope.launch {
-            promotionAdapter.scrollToTopWhenFirstItemInserted(binding.recyclerView)
+            promotionAdapter.scrollToTopWhenFirstItemInserted(binding.sellersRecyclerView)
         }
     }
 

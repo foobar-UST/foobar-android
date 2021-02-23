@@ -2,9 +2,9 @@ package com.foobarust.data.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.foobarust.data.common.Constants.USERS_COLLECTION
-import com.foobarust.data.common.Constants.USER_NOTIFICATIONS_SUB_COLLECTION
-import com.foobarust.data.common.Constants.USER_NOTIFICATION_CREATED_AT_FIELD
+import com.foobarust.data.constants.Constants.USERS_COLLECTION
+import com.foobarust.data.constants.Constants.USER_NOTIFICATIONS_SUB_COLLECTION
+import com.foobarust.data.constants.Constants.USER_NOTIFICATION_CREATED_AT_FIELD
 import com.foobarust.data.models.user.UserNotificationDto
 import com.foobarust.data.utils.isNetworkData
 import com.google.firebase.firestore.FirebaseFirestore

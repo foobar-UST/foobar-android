@@ -3,12 +3,10 @@ package com.foobarust.android.insert
 import androidx.test.ext.junit.rules.activityScenarioRule
 import androidx.test.platform.app.InstrumentationRegistry
 import com.foobarust.android.InsertFakeDataActivity
-import com.foobarust.data.common.Constants.ADVERTISES_BASIC_COLLECTION
-import com.foobarust.data.common.Constants.SUGGESTS_BASIC_COLLECTION
-import com.foobarust.data.common.Constants.USERS_COLLECTION
-import com.foobarust.data.models.promotion.AdvertiseBasicDto
-import com.foobarust.data.models.promotion.SuggestBasicDto
+import com.foobarust.data.constants.Constants.SELLERS_COLLECTION
+import com.foobarust.data.constants.Constants.SELLER_ADVERTISES_SUB_COLLECTION
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -48,40 +46,31 @@ class InsertPromotionFakeData {
     }
 
     @Test
-    fun insert_advertises_basic_test_data() = runBlocking(Dispatchers.IO) {
+    fun insert_advertises_test_data() = runBlocking(Dispatchers.IO) {
         val jsonInputStream = InstrumentationRegistry.getInstrumentation()
             .context.assets
-            .open("advertises_basic_fake_data.json")
+            .open("advertises_fake_data.json")
         val jsonString = jsonInputStream.bufferedReader().use { it.readText() }
 
-        val advertiseBasicSerializedList: List<AdvertiseBasicSerialized> = Json.decodeFromString(jsonString)
+        val serializedList: List<AdvertiseDetailSerialized> = Json.decodeFromString(jsonString)
 
-        advertiseBasicSerializedList.map { it.toAdvertiseBasicEntity() }
-            .forEach {
-                firestore.collection(ADVERTISES_BASIC_COLLECTION).document(it.id!!)
-                    .set(it)
-                    .await()
-            }
-
-        assertTrue(true)
-    }
-
-    @Test
-    fun insert_suggests_basic_test_data() = runBlocking(Dispatchers.IO) {
-        val jsonInputStream = InstrumentationRegistry.getInstrumentation()
-            .context.assets
-            .open("suggests_basic_fake_data.json")
-        val jsonString = jsonInputStream.bufferedReader().use { it.readText() }
-
-        val suggestBasicSerializedList: List<SuggestBasicSerialized> = Json.decodeFromString(jsonString)
-
-        suggestBasicSerializedList.map { it.toSuggestBasicEntity() }
-            .forEach {
-                firestore.collection(USERS_COLLECTION).document(firebaseAuth.currentUser!!.uid)
-                    .collection(SUGGESTS_BASIC_COLLECTION).document(it.id!!)
-                    .set(it)
-                    .await()
-            }
+        serializedList.forEach {
+            firestore.document(
+                "$SELLERS_COLLECTION/${it.seller_id}/$SELLER_ADVERTISES_SUB_COLLECTION/0"
+            )
+                .set(mapOf(
+                    "seller_id" to it.seller_id,
+                    "title" to it.title,
+                    "title_zh" to it.title_zh,
+                    "content" to it.content,
+                    "content_zh" to it.content_zh,
+                    "image_url" to it.image_url,
+                    "url" to it.url,
+                    "seller_type" to it.seller_type,
+                    "created_at" to FieldValue.serverTimestamp()
+                ))
+                .await()
+        }
 
         assertTrue(true)
     }
@@ -89,35 +78,13 @@ class InsertPromotionFakeData {
 
 
 @Serializable
-private data class AdvertiseBasicSerialized(
-    val id: String,
-    val url: String,
-    val image_url: String
-) {
-    fun toAdvertiseBasicEntity(): AdvertiseBasicDto {
-        return AdvertiseBasicDto(
-            id = id,
-            url = url,
-            imageUrl = image_url
-        )
-    }
-}
-
-@Serializable
-private data class SuggestBasicSerialized(
-    val id: String,
-    val item_id: String,
-    val item_title: String,
-    val seller_name: String,
-    val image_url: String
-) {
-    fun toSuggestBasicEntity(): SuggestBasicDto {
-        return SuggestBasicDto(
-            id = id,
-            itemId = item_id,
-            itemTitle = item_title,
-            sellerName = seller_name,
-            imageUrl = image_url
-        )
-    }
-}
+private data class AdvertiseDetailSerialized(
+    val seller_id: String,
+    val title: String,
+    val title_zh: String? = null,
+    val content: String,
+    val content_zh: String? = null,
+    val image_url: String? = null,
+    val seller_type: Int,
+    val url: String
+)

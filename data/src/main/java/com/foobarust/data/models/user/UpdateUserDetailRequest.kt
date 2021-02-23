@@ -1,7 +1,7 @@
 package com.foobarust.data.models.user
 
-import com.foobarust.data.common.Constants.UPDATE_USER_DETAIL_REQUEST_NAME
-import com.foobarust.data.common.Constants.UPDATE_USER_DETAIL_REQUEST_PHONE_NUM
+import com.foobarust.data.constants.Constants.UPDATE_USER_DETAIL_REQUEST_NAME
+import com.foobarust.data.constants.Constants.UPDATE_USER_DETAIL_REQUEST_PHONE_NUM
 import com.google.gson.annotations.SerializedName
 
 /**

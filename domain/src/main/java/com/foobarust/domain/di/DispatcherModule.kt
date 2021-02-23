@@ -31,7 +31,6 @@ object DispatcherModule {
     @Provides
     fun providesMainDispatcher(): CoroutineDispatcher = Dispatchers.Main
 
-    // Scope lives the application lifecycle
     @ApplicationScope
     @Singleton
     @Provides

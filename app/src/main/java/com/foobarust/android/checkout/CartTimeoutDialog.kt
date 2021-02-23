@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
 import com.foobarust.android.databinding.DialogCartTimeOutBinding
 import com.foobarust.android.main.MainViewModel
 import com.foobarust.android.utils.AutoClearedValue
@@ -35,13 +34,13 @@ class CartTimeoutDialog : BottomSheetDialogFragment() {
 
         // Dismiss the dialog
         binding.continueButton.setOnClickListener {
-            findNavController().navigateUp()
+            dismiss()
         }
 
         // Clear user cart
         binding.clearCartButton.setOnClickListener {
-            mainViewModel.onClearUsersCart()
-            findNavController().navigateUp()
+            mainViewModel.onClearUserCart()
+            dismiss()
         }
 
         return binding.root

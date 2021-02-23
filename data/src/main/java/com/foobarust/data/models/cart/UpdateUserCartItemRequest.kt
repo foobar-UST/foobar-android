@@ -1,7 +1,7 @@
 package com.foobarust.data.models.cart
 
-import com.foobarust.data.common.Constants.UPDATE_USER_CART_ITEM_REQUEST_AMOUNTS
-import com.foobarust.data.common.Constants.UPDATE_USER_CART_ITEM_REQUEST_CART_ITEM_ID
+import com.foobarust.data.constants.Constants.UPDATE_USER_CART_ITEM_REQUEST_AMOUNTS
+import com.foobarust.data.constants.Constants.UPDATE_USER_CART_ITEM_REQUEST_CART_ITEM_ID
 import com.google.gson.annotations.SerializedName
 
 /**

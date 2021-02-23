@@ -1,8 +1,8 @@
 package com.foobarust.data.models.seller
 
-import com.foobarust.data.common.Constants.SELLER_LOCATION_ADDRESS_FIELD
-import com.foobarust.data.common.Constants.SELLER_LOCATION_ADDRESS_ZH_FIELD
-import com.foobarust.data.common.Constants.SELLER_LOCATION_GEOPOINT_FIELD
+import com.foobarust.data.constants.Constants.SELLER_LOCATION_ADDRESS_FIELD
+import com.foobarust.data.constants.Constants.SELLER_LOCATION_ADDRESS_ZH_FIELD
+import com.foobarust.data.constants.Constants.SELLER_LOCATION_GEOPOINT_FIELD
 import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.PropertyName
 

@@ -1,15 +1,15 @@
 package com.foobarust.data.models.user
 
-import com.foobarust.data.common.Constants.USER_CREATED_REST_FIELD
-import com.foobarust.data.common.Constants.USER_DEVICE_IDS_FIELD
-import com.foobarust.data.common.Constants.USER_EMAIL_FIELD
-import com.foobarust.data.common.Constants.USER_ID_FIELD
-import com.foobarust.data.common.Constants.USER_NAME_FIELD
-import com.foobarust.data.common.Constants.USER_PHONE_NUM_FIELD
-import com.foobarust.data.common.Constants.USER_PHOTO_URL_FIELD
-import com.foobarust.data.common.Constants.USER_ROLES_FIELD
-import com.foobarust.data.common.Constants.USER_UPDATED_AT_FIELD
-import com.foobarust.data.common.Constants.USER_USERNAME_FIELD
+import com.foobarust.data.constants.Constants.USER_CREATED_REST_FIELD
+import com.foobarust.data.constants.Constants.USER_DEVICE_IDS_FIELD
+import com.foobarust.data.constants.Constants.USER_EMAIL_FIELD
+import com.foobarust.data.constants.Constants.USER_ID_FIELD
+import com.foobarust.data.constants.Constants.USER_NAME_FIELD
+import com.foobarust.data.constants.Constants.USER_PHONE_NUM_FIELD
+import com.foobarust.data.constants.Constants.USER_PHOTO_URL_FIELD
+import com.foobarust.data.constants.Constants.USER_ROLES_FIELD
+import com.foobarust.data.constants.Constants.USER_UPDATED_AT_FIELD
+import com.foobarust.data.constants.Constants.USER_USERNAME_FIELD
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.PropertyName
 import com.google.firebase.firestore.ServerTimestamp

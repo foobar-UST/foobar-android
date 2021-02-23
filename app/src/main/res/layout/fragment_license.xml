@@ -22,15 +22,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?android:attr/colorBackground"
-                app:title="My Orders"
+                app:title="@string/settings_section_license_title"
                 app:layout_scrollFlags="noScroll"
                 app:navigationIcon="@drawable/ic_arrow_back"
                 app:navigationIconTint="?attr/colorOnSurface" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <TextView
-            android:id="@+id/license_text_view"
+        <WebView
+            android:id="@+id/license_web_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>

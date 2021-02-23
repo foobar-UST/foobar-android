@@ -9,10 +9,11 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import com.foobarust.data.api.RemoteService
 import com.foobarust.data.cache.networkCacheResource
-import com.foobarust.data.common.Constants.USERS_COLLECTION
-import com.foobarust.data.common.Constants.USERS_PUBLIC_COLLECTION
-import com.foobarust.data.common.Constants.USER_PHOTOS_STORAGE_FOLDER
-import com.foobarust.data.common.PreferencesKeys.ONBOARDING_COMPLETED
+import com.foobarust.data.constants.Constants.USERS_COLLECTION
+import com.foobarust.data.constants.Constants.USERS_PUBLIC_COLLECTION
+import com.foobarust.data.constants.Constants.USER_NOTIFICATIONS_SUB_COLLECTION
+import com.foobarust.data.constants.Constants.USER_PHOTOS_STORAGE_FOLDER
+import com.foobarust.data.constants.PreferencesKeys.ONBOARDING_COMPLETED
 import com.foobarust.data.db.AppDatabase
 import com.foobarust.data.db.UserDetailDao
 import com.foobarust.data.mappers.UserMapper
@@ -30,6 +31,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 /**
@@ -98,6 +100,14 @@ class UserRepositoryImpl @Inject constructor(
         ).flow.map { pagingData ->
             pagingData.map { userMapper.toUserNotification(it) }
         }
+    }
+
+    override suspend fun removeUserNotification(userId: String, notificationId: String) {
+        firestore.document(
+            "$USERS_COLLECTION/$userId/${USER_NOTIFICATIONS_SUB_COLLECTION}/${notificationId}"
+        )
+            .delete()
+            .await()
     }
 
     /*

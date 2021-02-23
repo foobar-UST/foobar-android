@@ -3,8 +3,8 @@ package com.foobarust.android.insert
 import androidx.test.ext.junit.rules.activityScenarioRule
 import androidx.test.platform.app.InstrumentationRegistry
 import com.foobarust.android.InsertFakeDataActivity
-import com.foobarust.data.common.Constants.SELLERS_COLLECTION
-import com.foobarust.data.common.Constants.SELLER_ITEMS_SUB_COLLECTION
+import com.foobarust.data.constants.Constants.SELLERS_COLLECTION
+import com.foobarust.data.constants.Constants.SELLER_ITEMS_SUB_COLLECTION
 import com.foobarust.data.models.seller.SellerItemBasicDto
 import com.foobarust.data.models.seller.SellerItemDetailDto
 import com.google.firebase.firestore.FirebaseFirestore

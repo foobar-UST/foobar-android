@@ -163,7 +163,7 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
             navReselected = { viewModel.onScrollToTop() }
         )
 
-        val listener = NavController.OnDestinationChangedListener { controller, destination, arguments ->
+        val listener = NavController.OnDestinationChangedListener { controller, destination, _ ->
             viewModel.onCurrentDestinationChanged(
                 graphId = controller.graph.id,
                 destinationId = destination.id

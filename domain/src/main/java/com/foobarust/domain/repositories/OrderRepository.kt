@@ -14,7 +14,7 @@ interface OrderRepository {
 
     fun getActiveOrderItemsObservable(userId: String): Flow<Resource<List<OrderBasic>>>
 
-    fun getArchivedOrderItems(userId: String): Flow<PagingData<OrderBasic>>
+    fun getHistoryOrderItemsPagingData(userId: String): Flow<PagingData<OrderBasic>>
 
     fun getOrderDetailObservable(orderId: String): Flow<Resource<OrderDetail>>
 }

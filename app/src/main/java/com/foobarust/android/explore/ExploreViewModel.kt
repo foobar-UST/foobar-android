@@ -1,17 +1,21 @@
 package com.foobarust.android.explore
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.insertSeparators
 import androidx.paging.map
 import com.foobarust.android.explore.NotificationsListModel.*
+import com.foobarust.android.shared.BaseViewModel
 import com.foobarust.android.utils.ResourceIdentifier
+import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.user.GetUserNotificationsUseCase
+import com.foobarust.domain.usecases.user.RemoveUserNotificationUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -21,8 +25,9 @@ import javax.inject.Inject
 @HiltViewModel
 class ExploreViewModel @Inject constructor(
     private val resourceIdentifier: ResourceIdentifier,
+    private val removeUserNotificationUseCase: RemoveUserNotificationUseCase,
     getUserNotificationsUseCase: GetUserNotificationsUseCase
-) : ViewModel() {
+) : BaseViewModel() {
 
     val notificationListModels: Flow<PagingData<NotificationsListModel>> = getUserNotificationsUseCase(Unit)
         .map { pagingData ->
@@ -47,4 +52,14 @@ class ExploreViewModel @Inject constructor(
             }
         }
         .cachedIn(viewModelScope)
+
+    fun onRemoveNotification(notificationId: String) = viewModelScope.launch {
+        removeUserNotificationUseCase(notificationId).collect {
+           when (it) {
+               is Resource.Success -> Unit
+               is Resource.Error -> showToastMessage(it.message)
+               is Resource.Loading -> Unit
+           }
+        }
+    }
 }

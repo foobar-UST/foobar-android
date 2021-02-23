@@ -35,11 +35,11 @@ private const val TAG = "MainViewModel"
 class MainViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val workManager: WorkManager,
-    getUserCartUseCase: GetUserCartUseCase,
     private val dynamicLinksUtils: DynamicLinksUtils,
     private val clearUserCartUseCase: ClearUserCartUseCase,
     private val checkCartTimeOutUseCase: CheckCartTimeOutUseCase,
-    private val getUserCompleteTutorialUseCase: GetUserCompleteTutorialUseCase
+    private val getUserCompleteTutorialUseCase: GetUserCompleteTutorialUseCase,
+    getUserCartUseCase: GetUserCartUseCase,
 ) : BaseViewModel() {
 
     private val _currentNavGraphId = MutableStateFlow<Int?>(null)
@@ -99,7 +99,7 @@ class MainViewModel @Inject constructor(
         _scrollToTop.emit(currentDestinationId)
     }
 
-    fun onClearUsersCart() = viewModelScope.launch {
+    fun onClearUserCart() = viewModelScope.launch {
         clearUserCartUseCase(Unit).collect {
             when (it) {
                 is Resource.Success -> {

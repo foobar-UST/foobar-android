@@ -10,7 +10,7 @@
             type="com.foobarust.domain.models.seller.SellerSectionBasic" />
         <variable
             name="listener"
-            type="com.foobarust.android.sellersection.SellerSectionsAdapter.SellerOffCampusAdapterListener" />
+            type="com.foobarust.android.sellersection.SellerSectionsAdapter.SellerSectionsAdapterListener" />
         <import type="com.foobarust.android.R" />
         <import type="com.foobarust.domain.models.seller.SellerSectionBasicKt" />
     </data>

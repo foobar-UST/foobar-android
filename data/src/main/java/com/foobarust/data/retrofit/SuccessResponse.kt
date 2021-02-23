@@ -1,6 +1,6 @@
 package com.foobarust.data.retrofit
 
-import com.foobarust.data.common.Constants.REMOTE_SUCCESS_RESPONSE_DATA_OBJECT
+import com.foobarust.data.constants.Constants.REMOTE_SUCCESS_RESPONSE_DATA_OBJECT
 import com.google.gson.annotations.SerializedName
 
 /**

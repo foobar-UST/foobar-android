@@ -6,16 +6,13 @@ import androidx.work.WorkManager
 import com.foobarust.android.utils.ResourceIdentifier
 import com.foobarust.android.utils.sendImageNotification
 import com.foobarust.android.utils.sendNotification
-import com.foobarust.domain.di.ApplicationScope
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.messaging.InsertDeviceTokenUseCase
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.cancel
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val TAG = "MessagingService"
@@ -23,9 +20,6 @@ private const val TAG = "MessagingService"
 @AndroidEntryPoint
 class MessagingService: FirebaseMessagingService() {
 
-    @ApplicationScope
-    @Inject
-    lateinit var coroutineScope: CoroutineScope
     @Inject
     lateinit var notificationManager: NotificationManager
     @Inject
@@ -34,6 +28,8 @@ class MessagingService: FirebaseMessagingService() {
     lateinit var resourceIdentifier: ResourceIdentifier
     @Inject
     lateinit var insertDeviceTokenUseCase: InsertDeviceTokenUseCase
+
+    private val coroutineScope: CoroutineScope = CoroutineScope(SupervisorJob())
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         remoteMessage.notification?.let { notification ->
@@ -77,7 +73,7 @@ class MessagingService: FirebaseMessagingService() {
      * the token.
      */
     override fun onNewToken(token: String) {
-        coroutineScope.launch {
+        GlobalScope.launch {
             insertDeviceTokenUseCase(Unit).collect {
                 when (it) {
                     is Resource.Success -> Log.d(TAG, "Uploaded device token.")

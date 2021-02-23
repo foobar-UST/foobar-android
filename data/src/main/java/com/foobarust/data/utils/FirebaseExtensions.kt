@@ -21,6 +21,8 @@ import kotlinx.coroutines.tasks.await
  * Created by kevin on 8/25/20
  */
 
+private const val TAG = "FirebaseExtensions"
+
 const val ERROR_DOCUMENT_NOT_EXIST = "Document does not exist."
 
 /**
@@ -89,7 +91,6 @@ internal inline fun <reified T, R> DocumentReference.snapshotFlow(
 
     val subscription = this@snapshotFlow.addSnapshotListener { snapshot, error ->
         if (error != null) {
-            // Close the channel if there is error
             channel.offer(Resource.Error(error.message))
             channel.close(CancellationException(error.message))
         } else {
@@ -120,7 +121,6 @@ internal inline fun <reified T, R> Query.snapshotFlow(
 
     val subscription = this@snapshotFlow.addSnapshotListener { snapshot, error ->
         if (error != null) {
-            // Close the channel if there is error
             channel.offer(Resource.Error(error.message))
             channel.close(CancellationException(error.message))
         } else {

@@ -1,14 +1,14 @@
 package com.foobarust.data.models.order
 
-import com.foobarust.data.common.Constants.ORDER_ITEM_AMOUNTS_FIELD
-import com.foobarust.data.common.Constants.ORDER_ITEM_ID_FIELD
-import com.foobarust.data.common.Constants.ORDER_ITEM_ITEM_ID_FIELD
-import com.foobarust.data.common.Constants.ORDER_ITEM_ITEM_IMAGE_URL_FIELD
-import com.foobarust.data.common.Constants.ORDER_ITEM_ITEM_PRICE_FIELD
-import com.foobarust.data.common.Constants.ORDER_ITEM_ITEM_SELLER_ID_FIELD
-import com.foobarust.data.common.Constants.ORDER_ITEM_ITEM_TITLE_FIELD
-import com.foobarust.data.common.Constants.ORDER_ITEM_ITEM_TITLE_ZH_FIELD
-import com.foobarust.data.common.Constants.ORDER_ITEM_TOTAL_PRICE_FIELD
+import com.foobarust.data.constants.Constants.ORDER_ITEM_AMOUNTS_FIELD
+import com.foobarust.data.constants.Constants.ORDER_ITEM_ID_FIELD
+import com.foobarust.data.constants.Constants.ORDER_ITEM_ITEM_ID_FIELD
+import com.foobarust.data.constants.Constants.ORDER_ITEM_ITEM_IMAGE_URL_FIELD
+import com.foobarust.data.constants.Constants.ORDER_ITEM_ITEM_PRICE_FIELD
+import com.foobarust.data.constants.Constants.ORDER_ITEM_ITEM_SELLER_ID_FIELD
+import com.foobarust.data.constants.Constants.ORDER_ITEM_ITEM_TITLE_FIELD
+import com.foobarust.data.constants.Constants.ORDER_ITEM_ITEM_TITLE_ZH_FIELD
+import com.foobarust.data.constants.Constants.ORDER_ITEM_TOTAL_PRICE_FIELD
 import com.google.firebase.firestore.PropertyName
 
 /**

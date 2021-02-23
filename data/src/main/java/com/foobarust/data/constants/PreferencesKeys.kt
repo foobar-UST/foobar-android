@@ -1,4 +1,4 @@
-package com.foobarust.data.common
+package com.foobarust.data.constants
 
 /**
  * Created by kevin on 11/1/20

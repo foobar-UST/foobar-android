@@ -1,8 +1,8 @@
 package com.foobarust.data.repositories
 
 import com.foobarust.data.api.RemoteService
-import com.foobarust.data.common.Constants.PAYMENT_METHODS_COLLECTION
-import com.foobarust.data.common.Constants.PAYMENT_METHOD_ENABLED_FIELD
+import com.foobarust.data.constants.Constants.PAYMENT_METHODS_COLLECTION
+import com.foobarust.data.constants.Constants.PAYMENT_METHOD_ENABLED_FIELD
 import com.foobarust.data.mappers.CheckoutMapper
 import com.foobarust.data.models.checkout.PlaceOrderRequest
 import com.foobarust.data.utils.getAwaitResult

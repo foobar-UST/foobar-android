@@ -5,6 +5,7 @@ import android.os.Parcelable
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.lifecycle.*
+import androidx.viewpager2.widget.ViewPager2
 import com.foobarust.android.R
 import com.foobarust.android.selleritem.SellerItemDetailProperty
 import com.foobarust.android.utils.AppBarLayoutState
@@ -57,7 +58,9 @@ class SellerDetailViewModel @Inject constructor(
 
     private val _sellerDetailProperty = MutableStateFlow<SellerDetailProperty?>(null)
 
-    private val _toolbarScrollState = MutableStateFlow(AppBarLayoutState.IDLE)
+    private val _appBarLayoutState = MutableStateFlow(AppBarLayoutState.IDLE)
+
+    private val _viewPagerState = MutableStateFlow(ViewPager2.SCROLL_STATE_IDLE)
 
     private var fetchSellerDetailJob: Job? = null
 
@@ -84,7 +87,7 @@ class SellerDetailViewModel @Inject constructor(
         .asLiveData(viewModelScope.coroutineContext)
 
     val toolbarTitle: LiveData<String?> = combine(
-        _toolbarScrollState.map { it == AppBarLayoutState.COLLAPSED },
+        _appBarLayoutState.map { it == AppBarLayoutState.COLLAPSED },
         _sellerDetail.filterNotNull().map { it.getNormalizedName() }
     ) { isCollapsed, sellerName ->
         if (isCollapsed) sellerName else null
@@ -118,6 +121,13 @@ class SellerDetailViewModel @Inject constructor(
         }
         .asLiveData(viewModelScope.coroutineContext)
 
+    val enableSwipeRefresh: Flow<Boolean> = _appBarLayoutState.combine(
+        _viewPagerState
+    ) { appBarLayoutState, viewPagerState ->
+        appBarLayoutState == AppBarLayoutState.EXPANDED &&
+            viewPagerState == ViewPager2.SCROLL_STATE_IDLE
+    }
+
     fun onFetchSellerDetail(property: SellerDetailProperty, isSwipeRefresh: Boolean = false) {
         _sellerDetailProperty.value = property
 
@@ -130,8 +140,12 @@ class SellerDetailViewModel @Inject constructor(
         }
     }
 
-    fun onToolbarScrollStateChanged(scrollState: AppBarLayoutState) {
-        _toolbarScrollState.value = scrollState
+    fun onAppBarLayoutStateChanged(state: AppBarLayoutState) {
+        _appBarLayoutState.value = state
+    }
+
+    fun onViewPagerStateChanged(state: Int) {
+        _viewPagerState.value = state
     }
 
     fun onNavigateToSellerMisc() {

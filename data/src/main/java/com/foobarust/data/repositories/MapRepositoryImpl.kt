@@ -2,14 +2,14 @@ package com.foobarust.data.repositories
 
 import com.foobarust.data.BuildConfig.GOOGLE_MAPS_API_KEY
 import com.foobarust.data.api.MapService
-import com.foobarust.data.common.Constants.MAPS_API_URL
-import com.foobarust.data.common.Constants.MAPS_STATIC_MAP_END_POINT
-import com.foobarust.data.common.Constants.MAPS_STATIC_MAP_PARAM_AUTO_SCALE
-import com.foobarust.data.common.Constants.MAPS_STATIC_MAP_PARAM_FORMAT
-import com.foobarust.data.common.Constants.MAPS_STATIC_MAP_PARAM_KEY
-import com.foobarust.data.common.Constants.MAPS_STATIC_MAP_PARAM_MARKERS
-import com.foobarust.data.common.Constants.MAPS_STATIC_MAP_PARAM_SIZE
-import com.foobarust.data.common.Constants.MAPS_STATIC_MAP_PARAM_VISUAL_REFRESH
+import com.foobarust.data.constants.Constants.MAPS_API_URL
+import com.foobarust.data.constants.Constants.MAPS_STATIC_MAP_END_POINT
+import com.foobarust.data.constants.Constants.MAPS_STATIC_MAP_PARAM_AUTO_SCALE
+import com.foobarust.data.constants.Constants.MAPS_STATIC_MAP_PARAM_FORMAT
+import com.foobarust.data.constants.Constants.MAPS_STATIC_MAP_PARAM_KEY
+import com.foobarust.data.constants.Constants.MAPS_STATIC_MAP_PARAM_MARKERS
+import com.foobarust.data.constants.Constants.MAPS_STATIC_MAP_PARAM_SIZE
+import com.foobarust.data.constants.Constants.MAPS_STATIC_MAP_PARAM_VISUAL_REFRESH
 import com.foobarust.data.utils.asGeolocationPoint
 import com.foobarust.domain.models.common.GeolocationPoint
 import com.foobarust.domain.repositories.MapRepository

@@ -1,6 +1,7 @@
 package com.foobarust.domain.repositories
 
 import com.foobarust.domain.models.promotion.AdvertiseBasic
+import com.foobarust.domain.models.seller.SellerType
 
 /**
  * Created by kevin on 10/3/20
@@ -8,7 +9,5 @@ import com.foobarust.domain.models.promotion.AdvertiseBasic
 
 interface PromotionRepository {
 
-    suspend fun getAdvertiseBasics(): List<AdvertiseBasic>
-
-    //fun getSuggestsObservable(userId: String): Flow<Resource<List<SuggestBasic>>>
+    suspend fun getAdvertiseBasics(sellerType: SellerType, numOfAdvertises: Int): List<AdvertiseBasic>
 }

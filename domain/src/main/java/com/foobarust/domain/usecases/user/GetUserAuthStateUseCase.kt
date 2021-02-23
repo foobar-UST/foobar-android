@@ -37,7 +37,7 @@ class GetUserAuthStateUseCase @Inject constructor(
     private var observeUserDetailJob: Job? = null
 
     private val authFlow: SharedFlow<AuthState<UserDetail>> = channelFlow<AuthState<UserDetail>> {
-        authRepository.getAuthProfileObservable().collect {
+        authRepository.authProfileObservable.collect {
             stopObserveUserDetail()
             when (it) {
                 is AuthState.Authenticated -> {

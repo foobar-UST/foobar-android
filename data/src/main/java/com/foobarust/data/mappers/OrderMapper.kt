@@ -1,12 +1,12 @@
 package com.foobarust.data.mappers
 
-import com.foobarust.data.common.Constants.ORDER_STATE_ARCHIVED
-import com.foobarust.data.common.Constants.ORDER_STATE_CANCELLED
-import com.foobarust.data.common.Constants.ORDER_STATE_DELIVERED
-import com.foobarust.data.common.Constants.ORDER_STATE_IN_TRANSIT
-import com.foobarust.data.common.Constants.ORDER_STATE_PREPARING
-import com.foobarust.data.common.Constants.ORDER_STATE_PROCESSING
-import com.foobarust.data.common.Constants.ORDER_STATE_READY_FOR_PICK_UP
+import com.foobarust.data.constants.Constants.ORDER_STATE_ARCHIVED
+import com.foobarust.data.constants.Constants.ORDER_STATE_CANCELLED
+import com.foobarust.data.constants.Constants.ORDER_STATE_DELIVERED
+import com.foobarust.data.constants.Constants.ORDER_STATE_IN_TRANSIT
+import com.foobarust.data.constants.Constants.ORDER_STATE_PREPARING
+import com.foobarust.data.constants.Constants.ORDER_STATE_PROCESSING
+import com.foobarust.data.constants.Constants.ORDER_STATE_READY_FOR_PICK_UP
 import com.foobarust.data.models.order.OrderBasicDto
 import com.foobarust.data.models.order.OrderDetailDto
 import com.foobarust.data.models.order.OrderItemDto

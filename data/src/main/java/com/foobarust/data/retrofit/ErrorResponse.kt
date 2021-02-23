@@ -1,8 +1,8 @@
 package com.foobarust.data.retrofit
 
-import com.foobarust.data.common.Constants.REMOTE_ERROR_RESPONSE_CODE_FIELD
-import com.foobarust.data.common.Constants.REMOTE_ERROR_RESPONSE_ERROR_OBJECT
-import com.foobarust.data.common.Constants.REMOTE_ERROR_RESPONSE_MESSAGE_FIELD
+import com.foobarust.data.constants.Constants.REMOTE_ERROR_RESPONSE_CODE_FIELD
+import com.foobarust.data.constants.Constants.REMOTE_ERROR_RESPONSE_ERROR_OBJECT
+import com.foobarust.data.constants.Constants.REMOTE_ERROR_RESPONSE_MESSAGE_FIELD
 import com.google.gson.annotations.SerializedName
 
 /**

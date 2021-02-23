@@ -16,6 +16,8 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.foobarust.android.R
 import com.foobarust.android.main.MainActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -75,7 +77,7 @@ suspend fun NotificationManager.sendImageNotification(
     imageUrl: String,
     bigPictureStyle: Boolean = false,
     link: String? = null,
-) {
+) = withContext(Dispatchers.IO) {
     val notificationId = generateNotificationId()
     val builder = createDefaultNotificationBuilder(
         context, notificationId, title, messageBody, channelId, link

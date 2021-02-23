@@ -32,7 +32,8 @@
             android:layout_marginTop="@dimen/spacing_xmedium"
             android:text="@{headerItemModel.deliveryAddress}"
             android:textAppearance="?attr/textAppearanceHeadline6"
-            android:maxLines="1"
+            android:maxLines="2"
+            android:lineSpacingMultiplier="1.2"
             android:ellipsize="end"
             tools:text="Atrium, HKUST"/>
 

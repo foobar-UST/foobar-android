@@ -22,9 +22,9 @@ class GetSellerSectionsUseCase @Inject constructor(
 
     override fun execute(parameters: GetSellerSectionsParameters): Flow<PagingData<SellerSectionBasic>> {
         return if (parameters.isGetAllSections()) {
-            sellerRepository.getAllSellerSectionsPagingData()
+            sellerRepository.getAllSellerSectionBasicsPagingData()
         } else {
-            sellerRepository.getSellerSectionsPagingData(sellerId = parameters.sellerId!!)
+            sellerRepository.getSellerSectionBasicsPagingData(sellerId = parameters.sellerId!!)
                 .map { pagingData ->
                     // Filter out current section
                     pagingData.filter { it.id != parameters.ignoreSectionId }

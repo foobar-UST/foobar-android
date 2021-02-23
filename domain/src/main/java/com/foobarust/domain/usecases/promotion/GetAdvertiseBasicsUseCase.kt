@@ -2,6 +2,7 @@ package com.foobarust.domain.usecases.promotion
 
 import com.foobarust.domain.di.IoDispatcher
 import com.foobarust.domain.models.promotion.AdvertiseBasic
+import com.foobarust.domain.models.seller.SellerType
 import com.foobarust.domain.repositories.PromotionRepository
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.FlowUseCase
@@ -17,9 +18,18 @@ import javax.inject.Inject
 class GetAdvertiseBasicsUseCase @Inject constructor(
     private val promotionRepository: PromotionRepository,
     @IoDispatcher coroutineDispatcher: CoroutineDispatcher
-) : FlowUseCase<Unit, List<AdvertiseBasic>>(coroutineDispatcher) {
+) : FlowUseCase<GetAdvertiseBasicsParameters, List<AdvertiseBasic>>(coroutineDispatcher) {
 
-    override fun execute(parameters: Unit): Flow<Resource<List<AdvertiseBasic>>> = flow {
-        emit(Resource.Success(promotionRepository.getAdvertiseBasics()))
+    override fun execute(parameters: GetAdvertiseBasicsParameters): Flow<Resource<List<AdvertiseBasic>>> = flow {
+        val advertiseBasics = promotionRepository.getAdvertiseBasics(
+            sellerType = parameters.sellerType,
+            numOfAdvertises = parameters.numOfAdvertises
+        )
+        emit(Resource.Success(advertiseBasics))
     }
 }
+
+data class GetAdvertiseBasicsParameters(
+    val sellerType: SellerType,
+    val numOfAdvertises: Int
+)

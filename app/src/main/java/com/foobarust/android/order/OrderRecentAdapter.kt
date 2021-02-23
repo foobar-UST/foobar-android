@@ -26,14 +26,8 @@ class OrderRecentAdapter(
             R.layout.order_recent_active_item -> OrderRecentActiveItemViewHolder(
                 OrderRecentActiveItemBinding.inflate(inflater, parent, false)
             )
-            R.layout.order_recent_delivered_item -> OrderRecentDeliveredItemViewHolder(
-                OrderRecentDeliveredItemBinding.inflate(inflater, parent, false)
-            )
             R.layout.order_empty_item -> OrderRecentEmptyItemViewHolder(
                 OrderEmptyItemBinding.inflate(inflater, parent, false)
-            )
-            R.layout.subtitle_large_item -> OrderRecentSubtitleItemViewHolder(
-                SubtitleLargeItemBinding.inflate(inflater, parent, false)
             )
             else -> throw IllegalStateException("Unknown view type $viewType")
         }
@@ -46,18 +40,8 @@ class OrderRecentAdapter(
                 activeItemModel = getItem(position) as OrderRecentActiveItemModel
             )
 
-            is OrderRecentDeliveredItemViewHolder -> bindOrderRecentDeliveredItem(
-                binding = holder.binding,
-                deliveredItemModel = getItem(position) as OrderRecentDeliveredItemModel
-            )
-
             is OrderRecentEmptyItemViewHolder -> holder.binding.run {
                 emptyTitle = (getItem(position) as OrderRecentEmptyItemModel).emptyTitle
-                executePendingBindings()
-            }
-
-            is OrderRecentSubtitleItemViewHolder -> holder.binding.run {
-                subtitle = (getItem(position) as OrderRecentSubtitleItemModel).subtitle
                 executePendingBindings()
             }
         }
@@ -66,9 +50,7 @@ class OrderRecentAdapter(
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
             is OrderRecentActiveItemModel -> R.layout.order_recent_active_item
-            is OrderRecentDeliveredItemModel -> R.layout.order_recent_delivered_item
             is OrderRecentEmptyItemModel -> R.layout.order_empty_item
-            is OrderRecentSubtitleItemModel -> R.layout.subtitle_large_item
         }
     }
 
@@ -81,32 +63,9 @@ class OrderRecentAdapter(
         listener = this@OrderRecentAdapter.listener
 
         stateProgressBar.setProgressCompat(
-            (activeItemModel.orderState.precedence + 1) * 25,
+            activeItemModel.orderState.precedence * 25,
             true
         )
-
-        executePendingBindings()
-    }
-
-    private fun bindOrderRecentDeliveredItem(
-        binding: OrderRecentDeliveredItemBinding,
-        deliveredItemModel: OrderRecentDeliveredItemModel
-    ) = binding.run {
-        // Delivered state: DELIVERED
-        this.deliveredItemModel = deliveredItemModel
-        listener = this@OrderRecentAdapter.listener
-
-        /*
-        ratingBar.setOnRatingBarChangeListener { ratingBar, rating, fromUser ->
-            if (fromUser) {
-                this@OrderRecentAdapter.listener.onOrderRated(
-                    orderId = deliveredItemModel.orderId,
-                    rating = rating.toDouble()
-                )
-            }
-        }
-
-         */
 
         executePendingBindings()
     }
@@ -121,16 +80,8 @@ sealed class OrderRecentViewHolder(itemView: View) : RecyclerView.ViewHolder(ite
         val binding: OrderRecentActiveItemBinding
     ) : OrderRecentViewHolder(binding.root)
 
-    data class OrderRecentDeliveredItemViewHolder(
-        val binding: OrderRecentDeliveredItemBinding
-    ) : OrderRecentViewHolder(binding.root)
-
     data class OrderRecentEmptyItemViewHolder(
         val binding: OrderEmptyItemBinding
-    ) : OrderRecentViewHolder(binding.root)
-
-    data class OrderRecentSubtitleItemViewHolder(
-        val binding: SubtitleLargeItemBinding
     ) : OrderRecentViewHolder(binding.root)
 }
 
@@ -145,19 +96,8 @@ sealed class OrderRecentListModel {
         val orderUpdatedAt: String
     ) : OrderRecentListModel()
 
-    data class OrderRecentDeliveredItemModel(
-        val orderId: String,
-        val orderIdentifierTitle: String,
-        val orderTitle: String,
-        val orderImageUrl: String?
-    ) : OrderRecentListModel()
-
     data class OrderRecentEmptyItemModel(
         val emptyTitle: String
-    ) : OrderRecentListModel()
-
-    data class OrderRecentSubtitleItemModel(
-        val subtitle: String
     ) : OrderRecentListModel()
 }
 
@@ -169,12 +109,8 @@ object OrderRecentListModelDiff : DiffUtil.ItemCallback<OrderRecentListModel>() 
         return when {
             oldItem is OrderRecentActiveItemModel && newItem is OrderRecentActiveItemModel ->
                 oldItem.orderId == newItem.orderId
-            oldItem is OrderRecentDeliveredItemModel && newItem is OrderRecentDeliveredItemModel ->
-                oldItem.orderId == newItem.orderId
             oldItem is OrderRecentEmptyItemModel && newItem is OrderRecentEmptyItemModel ->
                 true
-            oldItem is OrderRecentSubtitleItemModel && newItem is OrderRecentSubtitleItemModel ->
-                oldItem.subtitle == newItem.subtitle
             else -> false
         }
     }
@@ -186,12 +122,8 @@ object OrderRecentListModelDiff : DiffUtil.ItemCallback<OrderRecentListModel>() 
         return when {
             oldItem is OrderRecentActiveItemModel && newItem is OrderRecentActiveItemModel ->
                 oldItem == newItem
-            oldItem is OrderRecentDeliveredItemModel && newItem is OrderRecentDeliveredItemModel ->
-                oldItem == newItem
             oldItem is OrderRecentEmptyItemModel && newItem is OrderRecentEmptyItemModel ->
                 true
-            oldItem is OrderRecentSubtitleItemModel && newItem is OrderRecentSubtitleItemModel ->
-                oldItem == newItem
             else -> false
         }
     }

@@ -2,8 +2,8 @@ package com.foobarust.data.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.foobarust.data.common.Constants.SELLERS_BASIC_COLLECTION
-import com.foobarust.data.common.Constants.SELLER_TYPE_FIELD
+import com.foobarust.data.constants.Constants.SELLERS_BASIC_COLLECTION
+import com.foobarust.data.constants.Constants.SELLER_TYPE_FIELD
 import com.foobarust.data.models.seller.SellerBasicDto
 import com.foobarust.data.utils.isNetworkData
 import com.foobarust.domain.models.seller.SellerType

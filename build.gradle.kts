@@ -12,6 +12,7 @@ buildscript {
         classpath(Dependencies.HILT_PLUGIN)
         classpath(Dependencies.GOOGLE_SERVICES)
         classpath(Dependencies.FIREBASE_CRASHLYTICS_PLUGIN)
+        classpath("com.jaredsburrows:gradle-license-plugin:0.8.90")
     }
 }
 

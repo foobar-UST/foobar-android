@@ -1,23 +1,23 @@
 package com.foobarust.data.models.seller
 
-import com.foobarust.data.common.Constants.SELLER_BY_USER_ID
-import com.foobarust.data.common.Constants.SELLER_DESCRIPTION_FIELD
-import com.foobarust.data.common.Constants.SELLER_DESCRIPTION_ZH_FIELD
-import com.foobarust.data.common.Constants.SELLER_ID_FIELD
-import com.foobarust.data.common.Constants.SELLER_IMAGE_URL_FIELD
-import com.foobarust.data.common.Constants.SELLER_LOCATION_FIELD
-import com.foobarust.data.common.Constants.SELLER_MIN_SPEND_FIELD
-import com.foobarust.data.common.Constants.SELLER_NAME_FIELD
-import com.foobarust.data.common.Constants.SELLER_NAME_ZH_FIELD
-import com.foobarust.data.common.Constants.SELLER_NOTICE_FIELD
-import com.foobarust.data.common.Constants.SELLER_ONLINE_FIELD
-import com.foobarust.data.common.Constants.SELLER_OPENING_HOURS_FIELD
-import com.foobarust.data.common.Constants.SELLER_PHONE_NUM_FIELD
-import com.foobarust.data.common.Constants.SELLER_RATING_COUNT_FIELD
-import com.foobarust.data.common.Constants.SELLER_RATING_FIELD
-import com.foobarust.data.common.Constants.SELLER_TAGS_FIELD
-import com.foobarust.data.common.Constants.SELLER_TYPE_FIELD
-import com.foobarust.data.common.Constants.SELLER_WEBSITE_FIELD
+import com.foobarust.data.constants.Constants.SELLER_BY_USER_ID
+import com.foobarust.data.constants.Constants.SELLER_DESCRIPTION_FIELD
+import com.foobarust.data.constants.Constants.SELLER_DESCRIPTION_ZH_FIELD
+import com.foobarust.data.constants.Constants.SELLER_ID_FIELD
+import com.foobarust.data.constants.Constants.SELLER_IMAGE_URL_FIELD
+import com.foobarust.data.constants.Constants.SELLER_LOCATION_FIELD
+import com.foobarust.data.constants.Constants.SELLER_MIN_SPEND_FIELD
+import com.foobarust.data.constants.Constants.SELLER_NAME_FIELD
+import com.foobarust.data.constants.Constants.SELLER_NAME_ZH_FIELD
+import com.foobarust.data.constants.Constants.SELLER_NOTICE_FIELD
+import com.foobarust.data.constants.Constants.SELLER_ONLINE_FIELD
+import com.foobarust.data.constants.Constants.SELLER_OPENING_HOURS_FIELD
+import com.foobarust.data.constants.Constants.SELLER_PHONE_NUM_FIELD
+import com.foobarust.data.constants.Constants.SELLER_RATING_COUNT_FIELD
+import com.foobarust.data.constants.Constants.SELLER_RATING_FIELD
+import com.foobarust.data.constants.Constants.SELLER_TAGS_FIELD
+import com.foobarust.data.constants.Constants.SELLER_TYPE_FIELD
+import com.foobarust.data.constants.Constants.SELLER_WEBSITE_FIELD
 import com.google.firebase.firestore.PropertyName
 
 /**

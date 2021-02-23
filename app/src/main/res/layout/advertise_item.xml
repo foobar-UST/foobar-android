@@ -7,10 +7,10 @@
     <data>
         <variable
             name="advertiseItemModel"
-            type="com.foobarust.android.promotion.PromotionAdvertiseItemModel" />
+            type="com.foobarust.android.promotion.AdvertiseItemModel" />
         <variable
             name="listener"
-            type="com.foobarust.android.promotion.PromotionAdvertiseAdapter.PromotionAdvertiseAdapterListener" />
+            type="com.foobarust.android.promotion.AdvertiseAdapter.AdvertiseAdapterListener" />
         <import type="com.foobarust.android.R" />
     </data>
 
@@ -24,7 +24,7 @@
             android:layout_height="match_parent"
             android:focusable="true"
             android:clickable="true"
-            android:onClick="@{() -> listener.onPromotionAdvertiseItemClicked(advertiseItemModel.advertiseBasic)}"
+            android:onClick="@{() -> listener.onAdvertiseItemClicked(advertiseItemModel.advertiseBasic)}"
             app:cardElevation="@dimen/elevation_small">
 
             <ImageView

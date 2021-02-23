@@ -24,3 +24,7 @@ fun SellerBasic.getNormalizedName(): String {
 fun SellerBasic.getNormalizedRatingString(): String {
     return if (rating == 0.0) "n.a." else String.format("%.1f", rating)
 }
+
+fun SellerBasic.getNormalizedTags(): String {
+    return tags.joinToString(separator = " · ")
+}

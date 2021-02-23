@@ -1,6 +1,5 @@
 package com.foobarust.android.explore
 
-import android.graphics.Canvas
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,15 +9,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.RecyclerView
-import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentExploreBinding
 import com.foobarust.android.main.MainViewModel
 import com.foobarust.android.shared.PagingLoadStateAdapter
 import com.foobarust.android.utils.*
 import dagger.hilt.android.AndroidEntryPoint
-import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -45,7 +40,6 @@ class ExploreFragment : Fragment(), NotificationsAdapter.NotificationsAdapterLis
                 footer = PagingLoadStateAdapter { notificationsAdapter.retry() }
             )
             setHasFixedSize(true)
-            buildItemTouchHelper().attachToRecyclerView(this)
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -86,49 +80,17 @@ class ExploreFragment : Fragment(), NotificationsAdapter.NotificationsAdapterLis
             }
         }
 
+        // Show toast
+        viewLifecycleOwner.lifecycleScope.launch {
+            exploreViewModel.toastMessage.collect {
+                showShortToast(it)
+            }
+        }
+
         return binding.root
     }
 
     override fun onNotificationClicked(link: String) {
-        // handle deep link
-        mainViewModel.onDispatchDynamicLink(dynamicLink = Uri.parse(link))
-    }
-
-    private fun buildItemTouchHelper(): ItemTouchHelper {
-        val callback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ): Boolean = false
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                if (direction == ItemTouchHelper.RIGHT) {
-                    // Remove notification
-
-                }
-            }
-
-            override fun onChildDraw(
-                c: Canvas,
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                dX: Float,
-                dY: Float,
-                actionState: Int,
-                isCurrentlyActive: Boolean
-            ) {
-                RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-                    .addSwipeRightActionIcon(R.drawable.ic_delete)
-                    .addSwipeRightBackgroundColor(requireContext().themeColor(R.attr.colorSecondary))
-                    .setSwipeRightActionIconTint(requireContext().themeColor(R.attr.colorOnSecondary))
-                    .create()
-                    .decorate()
-
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-            }
-        }
-
-        return ItemTouchHelper(callback)
+        mainViewModel.onDispatchDynamicLink(Uri.parse(link))
     }
 }

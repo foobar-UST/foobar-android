@@ -1,3 +1,4 @@
+import com.jaredsburrows.license.LicenseReportTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.util.*
 
@@ -11,6 +12,7 @@ plugins {
     id(Plugins.CHECK_DEPENDENCY_UPDATES) version Versions.CHECK_DEPENDENCY_UPDATES
     id(Plugins.FIREBASE_CRASHLYTICS)
     kotlin(Plugins.KOTLIN_SERIALIZATION) version Versions.SERIALIZATION
+    id("com.jaredsburrows.license")
 }
 
 android {
@@ -77,6 +79,12 @@ android {
         }
     }
 
+    tasks.withType(LicenseReportTask::class).configureEach {
+        generateCsvReport = false
+        generateHtmlReport = true
+        generateJsonReport = false
+    }
+
     buildFeatures {
         dataBinding = true
     }
@@ -119,7 +127,6 @@ dependencies {
     implementation(Dependencies.MATERIAL)
     implementation(Dependencies.GLIDE)
     implementation(Dependencies.SPINKIT)
-    implementation(Dependencies.SWIPE_DECORATOR)
     implementation(Dependencies.MAP)
     implementation(Dependencies.WORK)
 

@@ -69,7 +69,6 @@ object Dependencies {
     const val RETROFIT = "com.squareup.retrofit2:retrofit:${Versions.RETROFIT}"
     const val RETROFIT_CONVERTER_GSON = "com.squareup.retrofit2:converter-gson:${Versions.RETROFIT}"
     const val OKHTTP_LOGGING_INTERCEPTOR = "com.squareup.okhttp3:logging-interceptor:${Versions.OKHTTP_LOGGING_INTERCEPTOR}"
-    const val SWIPE_DECORATOR = "it.xabaras.android:recyclerview-swipedecorator:${Versions.SWIPE_DECORATOR}"
 
     // Test
     const val ARCH_CORE_TESTING = "androidx.arch.core:core-testing:${Versions.ARCH}"

@@ -6,8 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.R
-import com.foobarust.android.order.OrderRecentListModel.*
-import com.foobarust.domain.models.order.*
+import com.foobarust.android.order.OrderRecentListModel.OrderRecentActiveItemModel
+import com.foobarust.android.order.OrderRecentListModel.OrderRecentEmptyItemModel
+import com.foobarust.domain.models.order.OrderBasic
+import com.foobarust.domain.models.order.getNormalizedDeliveryAddress
+import com.foobarust.domain.models.order.getNormalizedTitle
+import com.foobarust.domain.models.order.getUpdatedAtString
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.order.GetRecentOrdersUseCase
 import com.foobarust.domain.utils.cancelIfActive
@@ -84,7 +88,6 @@ class OrderRecentViewModel @Inject constructor(
     }
 
     private fun buildOrderRecentListModels(orderItems: List<OrderBasic>): List<OrderRecentListModel> {
-        // No item placeholder
         if (orderItems.isEmpty()) {
             return listOf(
                 OrderRecentEmptyItemModel(
@@ -93,51 +96,24 @@ class OrderRecentViewModel @Inject constructor(
             )
         }
 
-        val result = mutableListOf<OrderRecentListModel>()
-        orderItems.forEach { orderItem ->
-            val orderIdentifierTitle = context.getString(
-                R.string.order_recent_item_identifier_title,
-                orderItem.identifier,
-                orderStateUtil.getOrderStateTitle(orderItem.state)
+        return orderItems.map {
+            OrderRecentActiveItemModel(
+                orderId = it.id,
+                orderIdentifierTitle = context.getString(
+                    R.string.order_recent_item_identifier_title,
+                    it.identifier,
+                    orderStateUtil.getOrderStateTitle(it.state)
+                ),
+                orderTitle = it.getNormalizedTitle(),
+                orderDeliveryAddress = it.getNormalizedDeliveryAddress(),
+                orderImageUrl = it.imageUrl,
+                orderState = it.state,
+                orderUpdatedAt = context.getString(
+                    R.string.order_recent_active_item_last_updated,
+                    it.getUpdatedAtString()
+                )
             )
-            val orderTitle = orderItem.getNormalizedTitle()
-
-            if (orderItem.state == OrderState.DELIVERED) {
-                if (result.isEmpty() || result.last() is OrderRecentActiveItemModel) {
-                    result.add(
-                        OrderRecentSubtitleItemModel(
-                            subtitle = context.getString(R.string.order_recent_item_subtitle_delivered)
-                        )
-                    )
-                }
-
-                result.add(
-                    OrderRecentDeliveredItemModel(
-                        orderId = orderItem.id,
-                        orderIdentifierTitle = orderIdentifierTitle,
-                        orderTitle = orderTitle,
-                        orderImageUrl = orderItem.imageUrl
-                    )
-                )
-            } else {
-                result.add(
-                    OrderRecentActiveItemModel(
-                        orderId = orderItem.id,
-                        orderIdentifierTitle = orderIdentifierTitle,
-                        orderTitle = orderTitle,
-                        orderDeliveryAddress = orderItem.getNormalizedDeliveryAddress(),
-                        orderImageUrl = orderItem.imageUrl,
-                        orderState = orderItem.state,
-                        orderUpdatedAt = context.getString(
-                            R.string.order_recent_active_item_last_updated,
-                            orderItem.getUpdatedAtString()
-                        )
-                    )
-                )
-            }
         }
-
-        return result
     }
 }
 

@@ -1,13 +1,13 @@
 package com.foobarust.data.models.user
 
-import com.foobarust.data.common.Constants.USER_NOTIFICATION_BODY_LOC_ARGS_FIELD
-import com.foobarust.data.common.Constants.USER_NOTIFICATION_BODY_LOC_KEY_FIELD
-import com.foobarust.data.common.Constants.USER_NOTIFICATION_CREATED_AT_FIELD
-import com.foobarust.data.common.Constants.USER_NOTIFICATION_ID_FIELD
-import com.foobarust.data.common.Constants.USER_NOTIFICATION_IMAGE_URL_FIELD
-import com.foobarust.data.common.Constants.USER_NOTIFICATION_LINK_FIELD
-import com.foobarust.data.common.Constants.USER_NOTIFICATION_TITLE_LOC_ARGS_FIELD
-import com.foobarust.data.common.Constants.USER_NOTIFICATION_TITLE_LOC_KEY_FIELD
+import com.foobarust.data.constants.Constants.USER_NOTIFICATION_BODY_LOC_ARGS_FIELD
+import com.foobarust.data.constants.Constants.USER_NOTIFICATION_BODY_LOC_KEY_FIELD
+import com.foobarust.data.constants.Constants.USER_NOTIFICATION_CREATED_AT_FIELD
+import com.foobarust.data.constants.Constants.USER_NOTIFICATION_ID_FIELD
+import com.foobarust.data.constants.Constants.USER_NOTIFICATION_IMAGE_URL_FIELD
+import com.foobarust.data.constants.Constants.USER_NOTIFICATION_LINK_FIELD
+import com.foobarust.data.constants.Constants.USER_NOTIFICATION_TITLE_LOC_ARGS_FIELD
+import com.foobarust.data.constants.Constants.USER_NOTIFICATION_TITLE_LOC_KEY_FIELD
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.PropertyName
 

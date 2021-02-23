@@ -1,8 +1,8 @@
 package com.foobarust.data.models.checkout
 
-import com.foobarust.data.common.Constants.PAYMENT_METHOD_ENABLED_FIELD
-import com.foobarust.data.common.Constants.PAYMENT_METHOD_IDENTIFIER_FIELD
-import com.foobarust.data.common.Constants.PAYMENT_METHOD_ID_FIELD
+import com.foobarust.data.constants.Constants.PAYMENT_METHOD_ENABLED_FIELD
+import com.foobarust.data.constants.Constants.PAYMENT_METHOD_IDENTIFIER_FIELD
+import com.foobarust.data.constants.Constants.PAYMENT_METHOD_ID_FIELD
 import com.google.firebase.firestore.PropertyName
 
 /**

@@ -7,6 +7,8 @@ import androidx.paging.*
 import com.foobarust.android.R
 import com.foobarust.android.order.OrderHistoryListModel.*
 import com.foobarust.android.order.OrderRecentListModel.*
+import com.foobarust.domain.models.order.OrderBasic
+import com.foobarust.domain.models.order.OrderState
 import com.foobarust.domain.models.order.getCreatedAtString
 import com.foobarust.domain.models.order.getNormalizedTitle
 import com.foobarust.domain.usecases.order.GetArchivedOrdersUseCase
@@ -22,42 +24,68 @@ import javax.inject.Inject
 @HiltViewModel
 class OrderHistoryViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    getArchivedOrdersUseCase: GetArchivedOrdersUseCase
+    getArchivedOrdersUseCase: GetArchivedOrdersUseCase,
+    private val orderStateUtil: OrderStateUtil
 ) : ViewModel() {
 
     val recentListModels: Flow<PagingData<OrderHistoryListModel>> = getArchivedOrdersUseCase(Unit)
         .map { pagingData ->
-            pagingData.map {
-                OrderHistoryItemModel(
-                    orderId = it.id,
-                    orderIdentifierTitle = context.getString(
-                        R.string.order_history_item_identifier_title,
-                        it.identifier,
-                        it.getNormalizedTitle()
-                    ),
-                    orderDeliveryDate = context.getString(
-                        R.string.order_history_ordered_date,
-                        it.getCreatedAtString()
-                    ),
-                    orderTotalCost = context.getString(
-                        R.string.order_history_total_cost,
-                        it.totalCost
-                    ),
-                    orderImageUrl = it.imageUrl
-                )
-            }
+            pagingData.map { getOrderHistoryListModel(it) }
         }
         .map { pagingData ->
-            // Insert empty view
             pagingData.insertSeparators { before, after ->
-                return@insertSeparators if (before == null && after == null) {
-                   OrderHistoryEmptyItemModel(
-                       emptyTitle = context.getString(R.string.order_history_empty_item_title)
-                   )
-                } else {
-                    null
-                }
+                return@insertSeparators insertSeparators(before, after)
             }
         }
         .cachedIn(viewModelScope)
+
+    private fun getOrderHistoryListModel(orderBasic: OrderBasic): OrderHistoryListModel {
+        return  if (orderBasic.state == OrderState.DELIVERED) {
+            OrderHistoryDeliveredItemModel(
+                orderId = orderBasic.id,
+                orderIdentifierTitle = context.getString(
+                    R.string.order_recent_item_identifier_title,
+                    orderBasic.identifier,
+                    orderStateUtil.getOrderStateTitle(orderBasic.state)
+                ),
+                orderTitle = orderBasic.getNormalizedTitle(),
+                orderImageUrl = orderBasic.imageUrl
+            )
+        } else {
+            OrderHistoryArchivedItemModel(
+                orderId = orderBasic.id,
+                orderIdentifierTitle = context.getString(
+                    R.string.order_history_item_identifier_title,
+                    orderBasic.identifier,
+                    orderBasic.getNormalizedTitle()
+                ),
+                orderDeliveryDate = context.getString(
+                    R.string.order_history_ordered_date,
+                    orderBasic.getCreatedAtString()
+                ),
+                orderTotalCost = context.getString(
+                    R.string.order_history_total_cost,
+                    orderBasic.totalCost
+                ),
+                orderImageUrl = orderBasic.imageUrl
+            )
+        }
+    }
+
+    private fun insertSeparators(
+        before: OrderHistoryListModel?,
+        after: OrderHistoryListModel?
+    ): OrderHistoryListModel? {
+        return if (before == null && after == null) {
+            OrderHistoryEmptyItemModel(
+                emptyTitle = context.getString(R.string.order_history_empty_item_title)
+            )
+        } else if (before is OrderHistoryDeliveredItemModel && after is OrderHistoryArchivedItemModel) {
+            OrderHistorySubtitleItemModel(
+                subtitle = context.getString(R.string.order_recent_item_subtitle_archived)
+            )
+        } else {
+            null
+        }
+    }
 }

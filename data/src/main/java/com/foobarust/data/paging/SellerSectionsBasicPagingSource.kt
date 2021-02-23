@@ -2,11 +2,11 @@ package com.foobarust.data.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.foobarust.data.common.Constants.SELLER_SECTIONS_BASIC_SUB_COLLECTION
-import com.foobarust.data.common.Constants.SELLER_SECTION_AVAILABLE_FIELD
-import com.foobarust.data.common.Constants.SELLER_SECTION_CUTOFF_TIME_FIELD
-import com.foobarust.data.common.Constants.SELLER_SECTION_SELLER_ID_FIELD
-import com.foobarust.data.common.Constants.SELLER_SECTION_SELLER_NAME_FIELD
+import com.foobarust.data.constants.Constants.SELLER_SECTIONS_BASIC_SUB_COLLECTION
+import com.foobarust.data.constants.Constants.SELLER_SECTION_AVAILABLE_FIELD
+import com.foobarust.data.constants.Constants.SELLER_SECTION_CUTOFF_TIME_FIELD
+import com.foobarust.data.constants.Constants.SELLER_SECTION_SELLER_ID_FIELD
+import com.foobarust.data.constants.Constants.SELLER_SECTION_SELLER_NAME_FIELD
 import com.foobarust.data.models.seller.SellerSectionBasicDto
 import com.foobarust.data.utils.isNetworkData
 import com.google.firebase.firestore.FirebaseFirestore

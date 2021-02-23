@@ -1,8 +1,8 @@
 package com.foobarust.data.models.cart
 
-import com.foobarust.data.common.Constants.ADD_USER_CART_ITEM_REQUEST_AMOUNTS
-import com.foobarust.data.common.Constants.ADD_USER_CART_ITEM_REQUEST_ITEM_ID
-import com.foobarust.data.common.Constants.ADD_USER_CART_ITEM_REQUEST_SECTION_ID
+import com.foobarust.data.constants.Constants.ADD_USER_CART_ITEM_REQUEST_AMOUNTS
+import com.foobarust.data.constants.Constants.ADD_USER_CART_ITEM_REQUEST_ITEM_ID
+import com.foobarust.data.constants.Constants.ADD_USER_CART_ITEM_REQUEST_SECTION_ID
 import com.google.gson.annotations.SerializedName
 
 /**

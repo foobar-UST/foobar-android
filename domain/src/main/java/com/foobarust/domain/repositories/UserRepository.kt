@@ -29,7 +29,7 @@ interface UserRepository {
      */
     fun getUserNotificationsPagingData(userId: String): Flow<PagingData<UserNotification>>
 
-    //suspend fun removeUserNotifications()
+    suspend fun removeUserNotification(userId: String, notificationId: String)
 
     /*
         Tutorial

@@ -2,34 +2,27 @@ package com.foobarust.domain.repositories
 
 import com.foobarust.domain.models.auth.AuthProfile
 import com.foobarust.domain.usecases.AuthState
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharedFlow
 
 interface AuthRepository {
 
-    /*
-        User
-     */
+    val authProfileObservable: SharedFlow<AuthState<AuthProfile>>
+
+    /* User */
     fun isUserSignedIn(): Boolean
 
     fun getUserId(): String
 
     suspend fun getUserIdToken(): String
 
-    // Return a observable of auth profile, null if the user is not signed in.
-    fun getAuthProfileObservable(): Flow<AuthState<AuthProfile>>
-
-    /*
-        Saved auth email
-     */
+    /* Saved auth email */
     suspend fun getSavedAuthEmail(): String
 
     suspend fun updateSavedAuthEmail(email: String)
 
     suspend fun removeSavedAuthEmail()
 
-    /*
-        Sign in
-     */
+    /* Sign in */
     suspend fun requestAuthEmail(email: String)
 
     suspend fun signInWithEmailLink(email: String, emailLink: String)

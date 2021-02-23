@@ -8,9 +8,12 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.*
 import com.foobarust.android.R
 import com.foobarust.android.promotion.PromotionListModel
+import com.foobarust.android.promotion.PromotionListModel.*
 import com.foobarust.android.sellersection.SellerSectionsListModel
+import com.foobarust.domain.models.seller.SellerType
 import com.foobarust.domain.models.seller.isRecentSection
 import com.foobarust.domain.states.Resource
+import com.foobarust.domain.usecases.promotion.GetAdvertiseBasicsParameters
 import com.foobarust.domain.usecases.promotion.GetAdvertiseBasicsUseCase
 import com.foobarust.domain.usecases.seller.GetSellerSectionsParameters
 import com.foobarust.domain.usecases.seller.GetSellerSectionsUseCase
@@ -24,6 +27,8 @@ import javax.inject.Inject
  * Created by kevin on 12/21/20
  */
 
+private const val NUM_OF_ADVERTISES = 5
+
 @HiltViewModel
 class SellerOffCampusViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
@@ -35,10 +40,16 @@ class SellerOffCampusViewModel @Inject constructor(
 
     val promotionListModels: LiveData<List<PromotionListModel>> = _fetchPromotion
         .asFlow()
-        .flatMapLatest { getAdvertiseBasicsUseCase(Unit) }
+        .flatMapLatest {
+            val params = GetAdvertiseBasicsParameters(
+                sellerType = SellerType.OFF_CAMPUS,
+                numOfAdvertises = NUM_OF_ADVERTISES
+            )
+            getAdvertiseBasicsUseCase(params)
+        }
         .map { result ->
             if (result is Resource.Success && result.data.isNotEmpty()) {
-                listOf(PromotionListModel.PromotionAdvertiseModel(result.data))
+                listOf(PromotionAdvertiseModel(result.data))
             } else {
                 emptyList()
             }
@@ -46,8 +57,7 @@ class SellerOffCampusViewModel @Inject constructor(
         .filter { it.isNotEmpty() }
         .asLiveData(viewModelScope.coroutineContext)
 
-    val sectionsListModels: Flow<PagingData<SellerSectionsListModel>> =
-        getSellerSectionsUseCase(
+    val sectionsListModels: Flow<PagingData<SellerSectionsListModel>> = getSellerSectionsUseCase(
             GetSellerSectionsParameters()
         ).map { pagingData ->
             pagingData.map { SellerSectionsListModel.SellerSectionsItemModel(it) }

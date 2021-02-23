@@ -18,7 +18,7 @@ import com.foobarust.domain.models.seller.isRecentSection
  */
 
 class SellerSectionsAdapter(
-    private val listener: SellerOffCampusAdapterListener
+    private val listener: SellerSectionsAdapterListener
 ) : PagingDataAdapter<SellerSectionsListModel, SellerSectionsViewHolder>(SellerSectionsListModelDiff) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SellerSectionsViewHolder {
@@ -76,7 +76,7 @@ class SellerSectionsAdapter(
         }
     }
 
-    interface SellerOffCampusAdapterListener {
+    interface SellerSectionsAdapterListener {
         fun onSellerSectionItemClicked(sectionBasic: SellerSectionBasic)
         fun onSellerSectionItemLongClicked(view: View, sectionBasic: SellerSectionBasic): Boolean
     }
@@ -88,7 +88,7 @@ sealed class SellerSectionsViewHolder(itemView: View) : RecyclerView.ViewHolder(
     ) : SellerSectionsViewHolder(binding.root)
 
     class SellerSectionsItemUpcomingViewHolder(
-        val binding:  SellerSectionsItemUpcomingBinding
+        val binding: SellerSectionsItemUpcomingBinding
     ) : SellerSectionsViewHolder(binding.root)
 
     class SellerSectionsSubtitleViewHolder(

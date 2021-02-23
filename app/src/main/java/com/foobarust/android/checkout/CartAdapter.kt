@@ -158,7 +158,7 @@ class CartAdapter(
         }
 
         // Clear focus after exit keyboard
-        notesEditText.setOnEditorActionListener { view, actionId, event ->
+        notesEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 notesEditText.clearFocus()
             }

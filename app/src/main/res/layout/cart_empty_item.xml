@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
-        android:id="@+id/no_item_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -12,21 +10,23 @@
         tools:ignore="UseCompoundDrawables">
 
         <ImageView
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:src="@drawable/ic_shopping_bag"
-            android:contentDescription="@string/cart_no_item_error"
-            app:tint="@color/material_on_surface_emphasis_medium" />
+            android:layout_width="@dimen/empty_icon_size"
+            android:layout_height="@dimen/empty_icon_size"
+            android:src="@drawable/undraw_empty_cart"
+            android:contentDescription="@string/cart_empty_message"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_large"
-            android:text="@string/cart_no_item_error"
-            android:textAppearance="?attr/textAppearanceBody1"
+            android:layout_marginTop="@dimen/spacing_xlarge"
+            android:gravity="center_horizontal"
+            android:lineSpacingMultiplier="1.2"
+            android:text="@string/cart_empty_message"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
             android:textColor="@color/material_on_surface_emphasis_medium"/>
 
     </LinearLayout>
+
 
 
 </layout>

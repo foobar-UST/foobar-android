@@ -1,16 +1,16 @@
 
 package com.foobarust.data.models.seller
 
-import com.foobarust.data.common.Constants
-import com.foobarust.data.common.Constants.SELLER_ID_FIELD
-import com.foobarust.data.common.Constants.SELLER_IMAGE_URL_FIELD
-import com.foobarust.data.common.Constants.SELLER_MIN_SPEND_FIELD
-import com.foobarust.data.common.Constants.SELLER_NAME_FIELD
-import com.foobarust.data.common.Constants.SELLER_NAME_ZH_FIELD
-import com.foobarust.data.common.Constants.SELLER_ONLINE_FIELD
-import com.foobarust.data.common.Constants.SELLER_RATING_FIELD
-import com.foobarust.data.common.Constants.SELLER_TAGS_FIELD
-import com.foobarust.data.common.Constants.SELLER_TYPE_FIELD
+import com.foobarust.data.constants.Constants
+import com.foobarust.data.constants.Constants.SELLER_ID_FIELD
+import com.foobarust.data.constants.Constants.SELLER_IMAGE_URL_FIELD
+import com.foobarust.data.constants.Constants.SELLER_MIN_SPEND_FIELD
+import com.foobarust.data.constants.Constants.SELLER_NAME_FIELD
+import com.foobarust.data.constants.Constants.SELLER_NAME_ZH_FIELD
+import com.foobarust.data.constants.Constants.SELLER_ONLINE_FIELD
+import com.foobarust.data.constants.Constants.SELLER_RATING_FIELD
+import com.foobarust.data.constants.Constants.SELLER_TAGS_FIELD
+import com.foobarust.data.constants.Constants.SELLER_TYPE_FIELD
 import com.google.firebase.firestore.PropertyName
 
 /**

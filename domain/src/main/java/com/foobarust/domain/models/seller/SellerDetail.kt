@@ -46,3 +46,7 @@ fun SellerDetail.getNormalizedAddress(): String {
 fun SellerDetail.getNormalizedRatingString(): String {
     return if (rating == 0.0) "n.a." else String.format("%.1f", rating)
 }
+
+fun SellerDetail.getNormalizedTags(): String {
+    return tags.joinToString(separator = " · ")
+}

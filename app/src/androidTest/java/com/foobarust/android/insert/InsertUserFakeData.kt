@@ -3,7 +3,7 @@ package com.foobarust.android.insert
 import androidx.test.ext.junit.rules.activityScenarioRule
 import androidx.test.platform.app.InstrumentationRegistry
 import com.foobarust.android.InsertFakeDataActivity
-import com.foobarust.data.common.Constants.USERS_COLLECTION
+import com.foobarust.data.constants.Constants.USERS_COLLECTION
 import com.foobarust.data.models.user.UserDetailNetworkDto
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore

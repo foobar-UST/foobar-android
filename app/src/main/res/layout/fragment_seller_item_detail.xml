@@ -83,7 +83,8 @@
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="140dp"
+            android:paddingBottom="160dp"
+            android:clipToPadding="false"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
             tools:listitem="@layout/seller_item_detail_info_item"
@@ -106,9 +107,10 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="140dp"
+            android:layout_height="160dp"
+            android:paddingTop="20dp"
             android:layout_gravity="bottom"
-            android:background="?android:attr/colorBackground">
+            android:background="@drawable/scrim_fade_bottom">
 
             <androidx.constraintlayout.widget.Group
                 android:id="@+id/modify_buttons_group"

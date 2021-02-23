@@ -54,7 +54,7 @@ class CheckoutFragment : FullScreenDialogFragment() {
         }
 
         // Record current destination
-        navController.addOnDestinationChangedListener { controller, destination, arguments ->
+        navController.addOnDestinationChangedListener { _, destination, _ ->
             viewModel.onUpdateCurrentDestination(destination.id)
         }
 

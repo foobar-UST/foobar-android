@@ -2,7 +2,7 @@
 <resources>
     <dimen name="min_icon_touch_padding">8dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
-    <dimen name="signin_header_height">450dp</dimen>
     <dimen name="pager_indicator_size">4dp</dimen>
     <dimen name="cart_bottom_bar_height">56dp</dimen>
+    <dimen name="empty_icon_size">250dp</dimen>
 </resources>

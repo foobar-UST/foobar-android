@@ -64,3 +64,8 @@ git clone https://github.com/foobar-UST/foobar-android.git
 ```console
 ./gradlew checkDependencyUpdates
 ```
+
+## Generate License Report
+```console
+./gradlew licenseReleaseReport
+```

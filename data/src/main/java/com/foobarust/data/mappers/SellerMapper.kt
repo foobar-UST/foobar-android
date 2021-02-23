@@ -1,10 +1,10 @@
 package com.foobarust.data.mappers
 
-import com.foobarust.data.common.Constants.SELLER_SECTION_STATE_AVAILABLE
-import com.foobarust.data.common.Constants.SELLER_SECTION_STATE_DELIVERED
-import com.foobarust.data.common.Constants.SELLER_SECTION_STATE_PREPARING
-import com.foobarust.data.common.Constants.SELLER_SECTION_STATE_PROCESSING
-import com.foobarust.data.common.Constants.SELLER_SECTION_STATE_SHIPPED
+import com.foobarust.data.constants.Constants.SELLER_SECTION_STATE_AVAILABLE
+import com.foobarust.data.constants.Constants.SELLER_SECTION_STATE_DELIVERED
+import com.foobarust.data.constants.Constants.SELLER_SECTION_STATE_PREPARING
+import com.foobarust.data.constants.Constants.SELLER_SECTION_STATE_PROCESSING
+import com.foobarust.data.constants.Constants.SELLER_SECTION_STATE_SHIPPED
 import com.foobarust.data.models.seller.*
 import com.foobarust.domain.models.seller.*
 import javax.inject.Inject
@@ -26,6 +26,20 @@ class SellerMapper @Inject constructor() {
             online = dto.online ?: false,
             minSpend = dto.minSpend ?: 0.toDouble(),
             tags = dto.tags ?: emptyList()
+        )
+    }
+
+    fun toSellerBasic(response: SearchSellerResponse): SellerBasic {
+        return SellerBasic(
+            id = response.id,
+            name = response.name,
+            nameZh = response.nameZh,
+            imageUrl = response.imageUrl,
+            rating = response.rating,
+            type = SellerType.values()[response.type],
+            online = response.online,
+            minSpend = response.minSpend,
+            tags = response.tags
         )
     }
 

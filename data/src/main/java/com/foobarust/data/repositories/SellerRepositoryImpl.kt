@@ -4,18 +4,19 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
-import com.foobarust.data.common.Constants.SELLERS_CATALOGS_SUB_COLLECTION
-import com.foobarust.data.common.Constants.SELLERS_COLLECTION
-import com.foobarust.data.common.Constants.SELLER_CATALOG_AVAILABLE_FIELD
-import com.foobarust.data.common.Constants.SELLER_ITEMS_SUB_COLLECTION
-import com.foobarust.data.common.Constants.SELLER_ITEM_ID_FIELD
-import com.foobarust.data.common.Constants.SELLER_ITEM_UPDATED_AT_FIELD
-import com.foobarust.data.common.Constants.SELLER_SECTIONS_BASIC_SUB_COLLECTION
-import com.foobarust.data.common.Constants.SELLER_SECTIONS_SUB_COLLECTION
-import com.foobarust.data.common.Constants.SELLER_SECTION_AVAILABLE_FIELD
-import com.foobarust.data.common.Constants.SELLER_SECTION_CUTOFF_TIME_FIELD
-import com.foobarust.data.common.Constants.SELLER_SECTION_ID_FIELD
-import com.foobarust.data.common.Constants.SELLER_SECTION_SELLER_NAME_FIELD
+import com.foobarust.data.api.RemoteService
+import com.foobarust.data.constants.Constants.SELLERS_CATALOGS_SUB_COLLECTION
+import com.foobarust.data.constants.Constants.SELLERS_COLLECTION
+import com.foobarust.data.constants.Constants.SELLER_CATALOG_AVAILABLE_FIELD
+import com.foobarust.data.constants.Constants.SELLER_ITEMS_SUB_COLLECTION
+import com.foobarust.data.constants.Constants.SELLER_ITEM_ID_FIELD
+import com.foobarust.data.constants.Constants.SELLER_ITEM_UPDATED_AT_FIELD
+import com.foobarust.data.constants.Constants.SELLER_SECTIONS_BASIC_SUB_COLLECTION
+import com.foobarust.data.constants.Constants.SELLER_SECTIONS_SUB_COLLECTION
+import com.foobarust.data.constants.Constants.SELLER_SECTION_AVAILABLE_FIELD
+import com.foobarust.data.constants.Constants.SELLER_SECTION_CUTOFF_TIME_FIELD
+import com.foobarust.data.constants.Constants.SELLER_SECTION_ID_FIELD
+import com.foobarust.data.constants.Constants.SELLER_SECTION_SELLER_NAME_FIELD
 import com.foobarust.data.mappers.SellerMapper
 import com.foobarust.data.paging.SellerBasicsPagingSource
 import com.foobarust.data.paging.SellerItemBasicsPagingSource
@@ -40,6 +41,7 @@ private const val SELLER_SECTIONS_PAGE_SIZE = 8
 
 class SellerRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
+    private val remoteService: RemoteService,
     private val sellerMapper: SellerMapper
 ) : SellerRepository {
 
@@ -56,7 +58,7 @@ class SellerRepositoryImpl @Inject constructor(
             .getAwaitResult(sellerMapper::toSellerCatalog)
     }
 
-    override fun getSellersPagingData(sellerType: SellerType): Flow<PagingData<SellerBasic>> {
+    override fun getSellerBasicsPagingData(sellerType: SellerType): Flow<PagingData<SellerBasic>> {
         return Pager(
             config = PagingConfig(
                 initialLoadSize = SELLER_BASICS_PAGE_SIZE * 2,
@@ -67,6 +69,11 @@ class SellerRepositoryImpl @Inject constructor(
         ).flow.map { pagingData ->
             pagingData.map { sellerMapper.toSellerBasic(it) }
         }
+    }
+
+    override suspend fun searchSellers(searchQuery: String, numOfSellers: Int): List<SellerBasic> {
+        return remoteService.searchSellers(searchQuery)
+            .map { sellerMapper.toSellerBasic(it) }
     }
 
     override suspend fun getSellerItemDetail(itemId: String): SellerItemDetail {
@@ -109,7 +116,7 @@ class SellerRepositoryImpl @Inject constructor(
             .first()
     }
 
-    override suspend fun getSellerSections(
+    override suspend fun getSellerSectionBasics(
         sellerId: String,
         numOfSections: Int
     ): List<SellerSectionBasic> {
@@ -124,7 +131,7 @@ class SellerRepositoryImpl @Inject constructor(
             .getAwaitResult(sellerMapper::toSellerSectionBasic)
     }
 
-    override fun getSellerSectionsPagingData(sellerId: String): Flow<PagingData<SellerSectionBasic>> {
+    override fun getSellerSectionBasicsPagingData(sellerId: String): Flow<PagingData<SellerSectionBasic>> {
         return Pager(
             config = PagingConfig(
                 initialLoadSize = SELLER_SECTIONS_PAGE_SIZE * 2,
@@ -139,7 +146,7 @@ class SellerRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getAllSellerSectionsPagingData(): Flow<PagingData<SellerSectionBasic>> {
+    override fun getAllSellerSectionBasicsPagingData(): Flow<PagingData<SellerSectionBasic>> {
         return Pager(
             config = PagingConfig(
                 initialLoadSize = SELLER_SECTIONS_PAGE_SIZE * 2,

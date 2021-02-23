@@ -25,9 +25,12 @@ fun CombinedLoadStates.updateViews(
     errorLayout: ViewGroup? = null,
     swipeRefreshLayout: SwipeRefreshLayout ? = null
 ) {
-    // Show progress bar when the loading is triggered by swipe refresh layout
     if (swipeRefreshLayout != null) {
-        progressBar.isVisible = source.refresh is LoadState.Loading && !swipeRefreshLayout.isRefreshing
+        // Show progress bar on start
+        progressBar.isVisible = source.refresh is LoadState.Loading &&
+            !swipeRefreshLayout.isRefreshing
+
+        swipeRefreshLayout.isEnabled = progressBar.isGone
     } else {
         progressBar.isVisible = source.refresh is LoadState.Loading
     }

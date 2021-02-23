@@ -24,7 +24,7 @@ private const val TAG = "GetUserCartUseCase"
 class GetUserCartUseCase @Inject constructor(
     private val authRepository: AuthRepository,
     private val cartRepository: CartRepository,
-    @ApplicationScope private val externalScope: CoroutineScope,
+    @ApplicationScope private val coroutineScope: CoroutineScope,
     @IoDispatcher private val coroutineDispatcher: CoroutineDispatcher
 ) : FlowUseCase<Unit, UserCart>(coroutineDispatcher) {
 
@@ -32,7 +32,7 @@ class GetUserCartUseCase @Inject constructor(
 
     // Share result to multiple consumers
     private val sharedResult: SharedFlow<Resource<UserCart>> = channelFlow<Resource<UserCart>> {
-        authRepository.getAuthProfileObservable().collect {
+        authRepository.authProfileObservable.collect {
             stopObserveUserCart()
             when (it) {
                 is AuthState.Authenticated -> {
@@ -50,7 +50,7 @@ class GetUserCartUseCase @Inject constructor(
             }
         }
     }.shareIn(
-        scope = externalScope,
+        scope = coroutineScope,
         started = SharingStarted.WhileSubscribed(),
         replay = 1
     )
@@ -58,7 +58,7 @@ class GetUserCartUseCase @Inject constructor(
     override fun execute(parameters: Unit): Flow<Resource<UserCart>> = sharedResult
 
     private fun ProducerScope<Resource<UserCart>>.startObserveUserCart(userId: String) {
-        observeUserCartJob = externalScope.launch(coroutineDispatcher) {
+        observeUserCartJob = coroutineScope.launch(coroutineDispatcher) {
             cartRepository.getUserCartObservable(userId).collect {
                 when (it) {
                     is Resource.Success -> {

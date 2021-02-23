@@ -4,14 +4,15 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
-import com.foobarust.data.common.Constants.ORDERS_BASIC_COLLECTION
-import com.foobarust.data.common.Constants.ORDERS_COLLECTION
-import com.foobarust.data.common.Constants.ORDER_STATE_ARCHIVED
-import com.foobarust.data.common.Constants.ORDER_STATE_CANCELLED
-import com.foobarust.data.common.Constants.ORDER_STATE_FIELD
-import com.foobarust.data.common.Constants.ORDER_USER_ID_FIELD
+import com.foobarust.data.constants.Constants.ORDERS_BASIC_COLLECTION
+import com.foobarust.data.constants.Constants.ORDERS_COLLECTION
+import com.foobarust.data.constants.Constants.ORDER_STATE_ARCHIVED
+import com.foobarust.data.constants.Constants.ORDER_STATE_CANCELLED
+import com.foobarust.data.constants.Constants.ORDER_STATE_DELIVERED
+import com.foobarust.data.constants.Constants.ORDER_STATE_FIELD
+import com.foobarust.data.constants.Constants.ORDER_USER_ID_FIELD
 import com.foobarust.data.mappers.OrderMapper
-import com.foobarust.data.paging.ArchivedOrderBasicsPagingSource
+import com.foobarust.data.paging.HistoryOrderBasicsPagingSource
 import com.foobarust.data.utils.snapshotFlow
 import com.foobarust.domain.models.order.OrderBasic
 import com.foobarust.domain.models.order.OrderDetail
@@ -38,19 +39,19 @@ class OrderRepositoryImpl @Inject constructor(
             .whereEqualTo(ORDER_USER_ID_FIELD, userId)
             .whereNotIn(
                 ORDER_STATE_FIELD,
-                listOf(ORDER_STATE_ARCHIVED, ORDER_STATE_CANCELLED)
+                listOf(ORDER_STATE_ARCHIVED, ORDER_STATE_CANCELLED, ORDER_STATE_DELIVERED)
             )
             .snapshotFlow(orderMapper::toOrderBasic, keepAlive = true)
     }
 
-    override fun getArchivedOrderItems(userId: String): Flow<PagingData<OrderBasic>> {
+    override fun getHistoryOrderItemsPagingData(userId: String): Flow<PagingData<OrderBasic>> {
         return Pager(
             config = PagingConfig(
                 initialLoadSize = ARCHIVED_ORDERS_PAGE_SIZE * 2,
                 pageSize = ARCHIVED_ORDERS_PAGE_SIZE,
                 enablePlaceholders = false
             ),
-            pagingSourceFactory = { ArchivedOrderBasicsPagingSource(firestore) }
+            pagingSourceFactory = { HistoryOrderBasicsPagingSource(firestore) }
         ).flow.map { pagingData ->
             pagingData.map { orderMapper.toOrderBasic(it) }
         }

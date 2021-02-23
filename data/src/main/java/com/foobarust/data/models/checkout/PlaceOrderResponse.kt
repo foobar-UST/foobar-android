@@ -1,7 +1,7 @@
 package com.foobarust.data.models.checkout
 
-import com.foobarust.data.common.Constants.PLACE_ORDER_RESPONSE_ID
-import com.foobarust.data.common.Constants.PLACE_ORDER_RESPONSE_IDENTIFIER
+import com.foobarust.data.constants.Constants.PLACE_ORDER_RESPONSE_ID
+import com.foobarust.data.constants.Constants.PLACE_ORDER_RESPONSE_IDENTIFIER
 import com.google.gson.annotations.SerializedName
 
 /**

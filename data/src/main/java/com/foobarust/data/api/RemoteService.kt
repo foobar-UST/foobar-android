@@ -1,10 +1,12 @@
 package com.foobarust.data.api
 
-import com.foobarust.data.common.Constants.REMOTE_AUTH_HEADER
+import com.foobarust.data.constants.Constants.REMOTE_AUTH_HEADER
+import com.foobarust.data.constants.Constants.SEARCH_SELLERS_REQUEST_SEARCH_QUERY
 import com.foobarust.data.models.cart.AddUserCartItemRequest
 import com.foobarust.data.models.cart.UpdateUserCartItemRequest
 import com.foobarust.data.models.checkout.PlaceOrderRequest
 import com.foobarust.data.models.checkout.PlaceOrderResponse
+import com.foobarust.data.models.seller.SearchSellerResponse
 import com.foobarust.data.models.user.InsertDeviceTokenRequest
 import com.foobarust.data.models.user.LinkDeviceTokenRequest
 import com.foobarust.data.models.user.UnlinkDeviceTokenRequest
@@ -66,4 +68,9 @@ interface RemoteService {
         @Header(REMOTE_AUTH_HEADER) idToken: String,
         @Body placeOrderRequest: PlaceOrderRequest
     ): PlaceOrderResponse
+
+    @GET("seller/search")
+    suspend fun searchSellers(
+        @Query(SEARCH_SELLERS_REQUEST_SEARCH_QUERY) searchQuery: String
+    ): List<SearchSellerResponse>
 }

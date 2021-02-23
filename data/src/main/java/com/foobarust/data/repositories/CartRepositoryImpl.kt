@@ -1,9 +1,9 @@
 package com.foobarust.data.repositories
 
 import com.foobarust.data.api.RemoteService
-import com.foobarust.data.common.Constants.USERS_COLLECTION
-import com.foobarust.data.common.Constants.USER_CARTS_COLLECTION
-import com.foobarust.data.common.Constants.USER_CART_ITEMS_SUB_COLLECTION
+import com.foobarust.data.constants.Constants.USERS_COLLECTION
+import com.foobarust.data.constants.Constants.USER_CARTS_COLLECTION
+import com.foobarust.data.constants.Constants.USER_CART_ITEMS_SUB_COLLECTION
 import com.foobarust.data.mappers.CartMapper
 import com.foobarust.data.utils.snapshotFlow
 import com.foobarust.domain.models.cart.AddUserCartItem

@@ -143,7 +143,7 @@
     <string name="seller_section_available">Available</string>
     <string name="seller_section_upcoming"># Upcoming</string>
     <string name="seller_section_user_counts">%d/%d Joined</string>
-    <string name="seller_section_subtitle_recent">Available</string>
+    <string name="seller_section_subtitle_recent">Recent</string>
     <string name="seller_section_subtitle_upcoming">Upcoming</string>
 
     <!-- Seller Section Detail -->
@@ -196,7 +196,7 @@
     <string name="cart_total_price_title_delivery_fee">Delivery</string>
     <string name="cart_notes_subtitle">Leave Message</string>
     <string name="cart_notes_hint">e.g. No cutlery</string>
-    <string name="cart_no_item_error">No Item in Cart</string>
+    <string name="cart_empty_message">No Item in Cart</string>
     <string name="cart_actions_button_clear_cart">Clear Cart</string>
     <string name="cart_purchase_subtitle">My Items</string>
     <string name="cart_purchase_actions_add_item">Add Item</string>
@@ -226,7 +226,7 @@
     <!-- Order Recent -->
     <string name="order_recent_item_identifier_title">[#%s] %s</string>
     <string name="order_recent_item_view_order">View Order</string>
-    <string name="order_recent_item_subtitle_delivered">Delivered</string>
+    <string name="order_recent_item_subtitle_archived">Archived</string>
     <string name="order_recent_active_item_order_title">[%s] %s</string>
     <string name="order_recent_active_item_last_updated">Last Update %s</string>
     <string name="order_recent_delivered_item_rate_order">Rate Order</string>

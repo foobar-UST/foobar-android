@@ -16,14 +16,14 @@
             android:animateLayoutChanges="true">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_view"
+                android:id="@+id/sections_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/seller_sections_item_upcoming" />
 
             <ProgressBar
-                android:id="@+id/progress_bar"
+                android:id="@+id/loadin_progress_bar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center" />

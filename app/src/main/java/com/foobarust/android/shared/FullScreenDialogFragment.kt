@@ -7,14 +7,14 @@ import com.foobarust.android.R
 
 open class FullScreenDialogFragment : DialogFragment() {
 
-    /**
-     * Expose the dialog's onBackPressed() method.
-     */
     open var onBackPressed: (() -> Unit)? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(STYLE_NORMAL, R.style.ThemeOverlay_Foobar_Dialog_Fullscreen_DayNight)
+
+        if (savedInstanceState == null) {
+            setStyle(STYLE_NORMAL, R.style.ThemeOverlay_Foobar_Dialog_Fullscreen_DayNight)
+        }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

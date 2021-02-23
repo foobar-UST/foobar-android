@@ -91,9 +91,16 @@
     <!-- SellerSearchFragment -->
     <dialog
         android:id="@+id/sellerSearchFragment"
-        android:name="com.foobarust.android.seller.SellerSearchFragment"
+        android:name="com.foobarust.android.sellersearch.SellerSearchFragment"
         android:label="@string/nav_title_seller"
-        tools:layout="@layout/fragment_seller_search"/>
+        tools:layout="@layout/fragment_seller_search">
+        <action
+            android:id="@+id/action_sellerSearchFragment_to_sellerSectionListFragment"
+            app:destination="@id/sellerSectionListFragment" />
+        <action
+            android:id="@+id/action_sellerSearchFragment_to_sellerDetailFragment"
+            app:destination="@id/sellerDetailFragment" />
+    </dialog>
 
     <!-- SellerActionDialog -->
     <dialog
@@ -117,6 +124,19 @@
             app:destination="@+id/sellerMiscFragment" />
         <action
             android:id="@+id/action_sellerSectionFragment_self"
+            app:destination="@id/sellerSectionFragment" />
+    </dialog>
+
+    <!-- SellerSectionListFragment-->
+    <dialog
+        android:id="@+id/sellerSectionListFragment"
+        android:name="com.foobarust.android.sellersection.SellerSectionListFragment"
+        tools:layout="@layout/fragment_seller_section_list">
+        <argument
+            android:name="sellerId"
+            app:argType="string"/>
+        <action
+            android:id="@+id/action_sellerSectionListFragment_to_sellerSectionFragment"
             app:destination="@id/sellerSectionFragment" />
     </dialog>
 

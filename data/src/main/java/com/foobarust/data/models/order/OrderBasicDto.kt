@@ -1,20 +1,20 @@
 package com.foobarust.data.models.order
 
-import com.foobarust.data.common.Constants.ORDER_BASIC_DELIVERY_ADDRESS_FIELD
-import com.foobarust.data.common.Constants.ORDER_BASIC_DELIVERY_ADDRESS_ZH_FIELD
-import com.foobarust.data.common.Constants.ORDER_CRATED_AT_FIELD
-import com.foobarust.data.common.Constants.ORDER_IDENTIFIER_FIELD
-import com.foobarust.data.common.Constants.ORDER_ID_FIELD
-import com.foobarust.data.common.Constants.ORDER_IMAGE_URL_FIELD
-import com.foobarust.data.common.Constants.ORDER_SECTION_ID_FIELD
-import com.foobarust.data.common.Constants.ORDER_SELLER_ID_FIELD
-import com.foobarust.data.common.Constants.ORDER_STATE_FIELD
-import com.foobarust.data.common.Constants.ORDER_TITLE_FIELD
-import com.foobarust.data.common.Constants.ORDER_TITLE_ZH_FIELD
-import com.foobarust.data.common.Constants.ORDER_TOTAL_COST_FIELD
-import com.foobarust.data.common.Constants.ORDER_TYPE_FIELD
-import com.foobarust.data.common.Constants.ORDER_UPDATED_AT_FIELD
-import com.foobarust.data.common.Constants.ORDER_USER_ID_FIELD
+import com.foobarust.data.constants.Constants.ORDER_BASIC_DELIVERY_ADDRESS_FIELD
+import com.foobarust.data.constants.Constants.ORDER_BASIC_DELIVERY_ADDRESS_ZH_FIELD
+import com.foobarust.data.constants.Constants.ORDER_CRATED_AT_FIELD
+import com.foobarust.data.constants.Constants.ORDER_IDENTIFIER_FIELD
+import com.foobarust.data.constants.Constants.ORDER_ID_FIELD
+import com.foobarust.data.constants.Constants.ORDER_IMAGE_URL_FIELD
+import com.foobarust.data.constants.Constants.ORDER_SECTION_ID_FIELD
+import com.foobarust.data.constants.Constants.ORDER_SELLER_ID_FIELD
+import com.foobarust.data.constants.Constants.ORDER_STATE_FIELD
+import com.foobarust.data.constants.Constants.ORDER_TITLE_FIELD
+import com.foobarust.data.constants.Constants.ORDER_TITLE_ZH_FIELD
+import com.foobarust.data.constants.Constants.ORDER_TOTAL_COST_FIELD
+import com.foobarust.data.constants.Constants.ORDER_TYPE_FIELD
+import com.foobarust.data.constants.Constants.ORDER_UPDATED_AT_FIELD
+import com.foobarust.data.constants.Constants.ORDER_USER_ID_FIELD
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.PropertyName
 

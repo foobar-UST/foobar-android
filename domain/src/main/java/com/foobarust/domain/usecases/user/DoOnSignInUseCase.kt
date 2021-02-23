@@ -19,13 +19,13 @@ private const val TAG = "DoOnSignInUseCase"
 class DoOnSignInUseCase @Inject constructor(
     private val authRepository: AuthRepository,
     private val messagingRepository: MessagingRepository,
-    @ApplicationScope private val coroutineScope: CoroutineScope,
+    @ApplicationScope private val externalScope: CoroutineScope,
     @IoDispatcher coroutineDispatcher: CoroutineDispatcher
 ) : CoroutineUseCase<Unit, Unit>(coroutineDispatcher) {
 
     override suspend fun execute(parameters: Unit) {
         // Upload device token
-        coroutineScope.launch {
+        externalScope.launch {
             messagingRepository.linkDeviceTokenToUser(
                 idToken = authRepository.getUserIdToken(),
                 deviceToken = messagingRepository.getDeviceToken()
@@ -34,7 +34,7 @@ class DoOnSignInUseCase @Inject constructor(
         }
 
         // Remove saved email
-        coroutineScope.launch {
+        externalScope.launch {
             authRepository.removeSavedAuthEmail()
         }
     }

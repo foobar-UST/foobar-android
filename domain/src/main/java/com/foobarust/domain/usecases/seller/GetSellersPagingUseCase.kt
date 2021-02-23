@@ -14,12 +14,12 @@ import javax.inject.Inject
  * Created by kevin on 9/28/20
  */
 
-class GetSellersUseCase @Inject constructor(
+class GetSellersPagingUseCase @Inject constructor(
     private val sellerRepository: SellerRepository,
     @IoDispatcher coroutineDispatcher: CoroutineDispatcher
 ) : PagingUseCase<SellerType, SellerBasic>(coroutineDispatcher) {
 
     override fun execute(parameters: SellerType): Flow<PagingData<SellerBasic>> {
-        return sellerRepository.getSellersPagingData(sellerType = parameters)
+        return sellerRepository.getSellerBasicsPagingData(sellerType = parameters)
     }
 }

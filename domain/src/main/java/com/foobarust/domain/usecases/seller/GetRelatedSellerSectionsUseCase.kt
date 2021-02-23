@@ -22,7 +22,7 @@ class GetRelatedSellerSectionsUseCase @Inject constructor(
     override fun execute(
         parameters: GetRelatedSellerSectionsParameters
     ): Flow<Resource<List<SellerSectionBasic>>> = flow {
-        val sections = sellerRepository.getSellerSections(
+        val sections = sellerRepository.getSellerSectionBasics(
             sellerId = parameters.sellerId,
             numOfSections = parameters.numOfSections
         )

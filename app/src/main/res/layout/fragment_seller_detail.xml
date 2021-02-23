@@ -22,8 +22,7 @@
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:id="@+id/coordinator_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="?android:attr/colorBackground">
+            android:layout_height="match_parent">
 
             <com.google.android.material.appbar.AppBarLayout
                 android:id="@+id/app_bar_layout"
@@ -49,22 +48,13 @@
                         app:layout_collapseParallaxMultiplier="0.7"
                         app:goneIf="@{!(viewModel.sellerDetailUiState instanceof SellerDetailUiState.Success)}">
 
-                        <!-- Top image shadow -->
-                        <View
-                            android:id="@+id/scrim_view"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:background="@drawable/scrim_fade_top"
-                            android:elevation="@dimen/elevation_small"
-                            app:layout_constraintTop_toTopOf="@id/seller_image_view"
-                            app:layout_constraintBottom_toBottomOf="@id/seller_image_view"/>
-
                         <ImageView
                             android:id="@+id/seller_image_view"
                             android:layout_width="match_parent"
                             android:layout_height="210dp"
                             android:scaleType="centerCrop"
                             android:contentDescription="@{viewModel.sellerName}"
+                            android:foreground="@drawable/scrim_fade_top"
                             app:glideUrl="@{viewModel.sellerDetail.imageUrl}"
                             app:glideCenterCrop="@{true}"
                             app:glidePlaceholder="@{R.drawable.placeholder_card}"

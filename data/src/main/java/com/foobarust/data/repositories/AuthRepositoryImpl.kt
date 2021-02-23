@@ -3,17 +3,21 @@ package com.foobarust.data.repositories
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
-import com.foobarust.data.common.PreferencesKeys.EMAIL_TO_VERIFY
+import com.foobarust.data.constants.PreferencesKeys.EMAIL_TO_VERIFY
 import com.foobarust.data.mappers.AuthMapper
+import com.foobarust.domain.di.ApplicationScope
 import com.foobarust.domain.models.auth.AuthProfile
 import com.foobarust.domain.repositories.AuthRepository
 import com.foobarust.domain.usecases.AuthState
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.actionCodeSettings
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -23,10 +27,33 @@ import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context,
+    @ApplicationScope private val externalScope: CoroutineScope,
     private val firebaseAuth: FirebaseAuth,
     private val preferences: SharedPreferences,
     private val authMapper: AuthMapper
 ) : AuthRepository {
+
+    override val authProfileObservable: SharedFlow<AuthState<AuthProfile>> =
+        callbackFlow<AuthState<AuthProfile>> {
+            channel.offer(AuthState.Loading)
+
+            val listener = FirebaseAuth.AuthStateListener { auth ->
+                auth.currentUser?.let {
+                    channel.offer(
+                        AuthState.Authenticated(authMapper.toAuthProfile(it))
+                    )
+                } ?: channel.offer(AuthState.Unauthenticated)
+            }
+
+            firebaseAuth.addAuthStateListener(listener)
+
+            awaitClose { firebaseAuth.removeAuthStateListener(listener) }
+        }
+            .shareIn(
+                scope = externalScope,
+                started = SharingStarted.WhileSubscribed(),
+                replay = 1
+            )
 
     override fun isUserSignedIn(): Boolean {
         return firebaseAuth.currentUser != null &&
@@ -42,22 +69,6 @@ class AuthRepositoryImpl @Inject constructor(
         val currentUser = firebaseAuth.currentUser!!
         val tokenResult = currentUser.getIdToken(true).await()
         return tokenResult.token ?: throw Exception("Error getting id token.")
-    }
-
-    override fun getAuthProfileObservable(): Flow<AuthState<AuthProfile>> = callbackFlow {
-        channel.offer(AuthState.Loading)
-
-        val listener = FirebaseAuth.AuthStateListener { auth ->
-            auth.currentUser?.let {
-                channel.offer(
-                    AuthState.Authenticated(authMapper.toAuthProfile(it))
-                )
-            } ?: channel.offer(AuthState.Unauthenticated)
-        }
-
-        firebaseAuth.addAuthStateListener(listener)
-
-        awaitClose { firebaseAuth.removeAuthStateListener(listener) }
     }
 
     override suspend fun getSavedAuthEmail(): String {

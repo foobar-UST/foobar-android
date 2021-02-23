@@ -2,9 +2,9 @@ package com.foobarust.data.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.foobarust.data.common.Constants.SELLERS_COLLECTION
-import com.foobarust.data.common.Constants.SELLER_ITEMS_BASIC_SUB_COLLECTION
-import com.foobarust.data.common.Constants.SELLER_ITEM_CATALOG_ID_FIELD
+import com.foobarust.data.constants.Constants.SELLERS_COLLECTION
+import com.foobarust.data.constants.Constants.SELLER_ITEMS_BASIC_SUB_COLLECTION
+import com.foobarust.data.constants.Constants.SELLER_ITEM_CATALOG_ID_FIELD
 import com.foobarust.data.models.seller.SellerItemBasicDto
 import com.foobarust.data.utils.isNetworkData
 import com.google.firebase.firestore.FirebaseFirestore

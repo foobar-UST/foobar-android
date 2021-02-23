@@ -104,7 +104,7 @@ class FakeSellerRepositoryImpl: SellerRepository {
             .map { it.sellerCatalog }
     }
 
-    override fun getSellersPagingData(sellerType: SellerType): Flow<PagingData<SellerBasic>> {
+    override fun getSellerBasicsPagingData(sellerType: SellerType): Flow<PagingData<SellerBasic>> {
         if (shouldReturnNetworkError) throw Exception("Network error.")
         val result = sellers.filter { it.type == sellerType }
         return flowOf(PagingData.from(result))
@@ -156,7 +156,7 @@ class FakeSellerRepositoryImpl: SellerRepository {
             ?: throw Exception("Not found.")
     }
 
-    override suspend fun getSellerSections(
+    override suspend fun getSellerSectionBasics(
         sellerId: String,
         numOfSections: Int
     ): List<SellerSectionBasic> {
@@ -168,14 +168,14 @@ class FakeSellerRepositoryImpl: SellerRepository {
             .map { it.sellerSectionBasic }
     }
 
-    override fun getAllSellerSectionsPagingData(): Flow<PagingData<SellerSectionBasic>> {
+    override fun getAllSellerSectionBasicsPagingData(): Flow<PagingData<SellerSectionBasic>> {
         if (shouldReturnNetworkError) throw Exception("Network error.")
         return flowOf(
             PagingData.from(sellerSections.map { it.sellerSectionBasic })
         )
     }
 
-    override fun getSellerSectionsPagingData(sellerId: String): Flow<PagingData<SellerSectionBasic>> {
+    override fun getSellerSectionBasicsPagingData(sellerId: String): Flow<PagingData<SellerSectionBasic>> {
         if (shouldReturnNetworkError) throw Exception("Network error.")
         val result = sellerSections.filter { it.sellerId == sellerId }
             .map { it.sellerSectionBasic }

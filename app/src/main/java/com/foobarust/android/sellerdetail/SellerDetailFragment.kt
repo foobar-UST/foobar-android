@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.viewpager2.widget.ViewPager2
 import com.foobarust.android.NavigationSellerDirections
 import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentSellerDetailBinding
@@ -57,9 +58,6 @@ class SellerDetailFragment : FullScreenDialogFragment() {
         // Issue: https://github.com/material-components/material-components-android/issues/1310
         ViewCompat.setOnApplyWindowInsetsListener(binding.collapsingToolbarLayout, null)
 
-        // Load at most two consecutive pages for view pager at once
-        binding.itemsViewPager.offscreenPageLimit = 2
-
         // Navigation back arrow button
         binding.toolbar.setNavigationOnClickListener {
             findNavController().navigateUp()
@@ -92,7 +90,7 @@ class SellerDetailFragment : FullScreenDialogFragment() {
 
         // Set up tab layout and view pager when seller detail is successfully fetched
         viewModel.sellerCatalogs.observe(viewLifecycleOwner) {
-            setupCatalogsViewPager(it)
+            setupViewPagerAndTabLayout(it)
         }
 
         viewModel.sellerDetailUiState.observe(viewLifecycleOwner) {
@@ -101,15 +99,20 @@ class SellerDetailFragment : FullScreenDialogFragment() {
             }
         }
 
+        // Enable swipe refresh layout
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.enableSwipeRefresh.collect {
+                binding.swipeRefreshLayout.run {
+                    isRefreshing = false
+                    isEnabled = it
+                }
+            }
+        }
+
         // Show toolbar title when collapsed
         viewLifecycleOwner.lifecycleScope.launch {
             binding.appBarLayout.state().collect {
-                viewModel.onToolbarScrollStateChanged(scrollState = it)
-
-                with(binding.swipeRefreshLayout) {
-                    isRefreshing = false
-                    isEnabled = it == AppBarLayoutState.EXPANDED
-                }
+                viewModel.onAppBarLayoutStateChanged(state = it)
             }
         }
 
@@ -192,16 +195,26 @@ class SellerDetailFragment : FullScreenDialogFragment() {
         return binding.root
     }
 
-    private fun setupCatalogsViewPager(catalogs: List<SellerCatalog>) {
-        SellerCatalogsPagerAdapter(
-            fragmentManager = childFragmentManager,
-            lifecycle = viewLifecycleOwner.lifecycle,
-            sellerId = navArgs.property.sellerId,
-            sellerCatalogs = catalogs
-        ).also {
-            binding.itemsViewPager.adapter = it
+    private fun setupViewPagerAndTabLayout(catalogs: List<SellerCatalog>) {
+        // Setup view pager
+        with(binding.itemsViewPager) {
+            // Load at most two consecutive pages for view pager at once
+            offscreenPageLimit = 2
+            adapter = SellerCatalogsPagerAdapter(
+                fragmentManager = childFragmentManager,
+                lifecycle = viewLifecycleOwner.lifecycle,
+                sellerId = navArgs.property.sellerId,
+                sellerCatalogs = catalogs
+            )
+            // Disable swipe refresh when view pager is being scrolled
+            registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageScrollStateChanged(state: Int) {
+                    viewModel.onViewPagerStateChanged(state)
+                }
+            })
         }
 
+        // Setup tab layout
         TabLayoutMediator(binding.categoryTabLayout, binding.itemsViewPager) { tab, position ->
             tab.text = catalogs[position].getNormalizedTitle()
         }.attach()

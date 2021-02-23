@@ -1,7 +1,7 @@
 package com.foobarust.data.models.checkout
 
-import com.foobarust.data.common.Constants.PLACE_ORDER_REQUEST_MESSAGE
-import com.foobarust.data.common.Constants.PLACE_ORDER_REQUEST_PAYMENT_METHOD
+import com.foobarust.data.constants.Constants.PLACE_ORDER_REQUEST_MESSAGE
+import com.foobarust.data.constants.Constants.PLACE_ORDER_REQUEST_PAYMENT_METHOD
 import com.google.gson.annotations.SerializedName
 
 /**

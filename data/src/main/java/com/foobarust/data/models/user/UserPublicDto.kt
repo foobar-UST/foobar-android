@@ -1,8 +1,8 @@
 package com.foobarust.data.models.user
 
-import com.foobarust.data.common.Constants.USER_ID_FIELD
-import com.foobarust.data.common.Constants.USER_PHOTO_URL_FIELD
-import com.foobarust.data.common.Constants.USER_USERNAME_FIELD
+import com.foobarust.data.constants.Constants.USER_ID_FIELD
+import com.foobarust.data.constants.Constants.USER_PHOTO_URL_FIELD
+import com.foobarust.data.constants.Constants.USER_USERNAME_FIELD
 import com.google.firebase.firestore.PropertyName
 
 /**

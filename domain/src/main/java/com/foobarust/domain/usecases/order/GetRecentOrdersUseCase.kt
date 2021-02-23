@@ -1,24 +1,20 @@
 package com.foobarust.domain.usecases.order
 
 import com.foobarust.domain.common.UseCaseExceptions.ERROR_USER_NOT_SIGNED_IN
-import com.foobarust.domain.di.ApplicationScope
 import com.foobarust.domain.di.IoDispatcher
 import com.foobarust.domain.models.order.OrderBasic
-import com.foobarust.domain.models.order.OrderState
 import com.foobarust.domain.repositories.AuthRepository
 import com.foobarust.domain.repositories.OrderRepository
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.AuthState
 import com.foobarust.domain.usecases.FlowUseCase
 import com.foobarust.domain.utils.cancelIfActive
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.ProducerScope
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Created by kevin on 1/29/21
@@ -26,26 +22,28 @@ import javax.inject.Singleton
 
 private const val TAG = "GetRecentOrdersUseCase"
 
-@Singleton
 class GetRecentOrdersUseCase @Inject constructor(
     private val authRepository: AuthRepository,
     private val orderRepository: OrderRepository,
-    @ApplicationScope private val externalScope: CoroutineScope,
     @IoDispatcher private val coroutineDispatcher: CoroutineDispatcher
 ) : FlowUseCase<Unit, List<OrderBasic>>(coroutineDispatcher) {
 
     private var observeRecentOrdersJob: Job? = null
 
-    private val sharedResult: Flow<Resource<List<OrderBasic>>> = channelFlow<Resource<List<OrderBasic>>> {
-        authRepository.getAuthProfileObservable().collect {
+    private val sharedResult: Flow<Resource<List<OrderBasic>>> = channelFlow {
+        val coroutineScope = CoroutineScope(currentCoroutineContext())
+
+        authRepository.authProfileObservable.collect {
             stopObserveRecentOrders()
+
             when (it) {
                 is AuthState.Authenticated -> {
                     println("[$TAG]: User is signed in. Start observe recent order items.")
-                    startObserveRecentOrders(userId = it.data.id)
+                    startObserveRecentOrders(coroutineScope, it.data.id)
                 }
                 AuthState.Unauthenticated -> {
                     println("[$TAG]: User is signed out.")
+                    channel.offer(Resource.Success(emptyList()))
                     channel.offer(Resource.Error(ERROR_USER_NOT_SIGNED_IN))
                 }
                 AuthState.Loading -> {
@@ -54,24 +52,19 @@ class GetRecentOrdersUseCase @Inject constructor(
                 }
             }
         }
-    }.shareIn(
-        scope = externalScope,
-        started = SharingStarted.WhileSubscribed(),
-        replay = 1
-    )
+    }
 
     override fun execute(parameters: Unit): Flow<Resource<List<OrderBasic>>> = sharedResult
 
     private fun sortByOrderState(orderBasics: List<OrderBasic>): List<OrderBasic> {
-        // Put delivered orders at the end
-        return orderBasics.sortedWith(
-            compareByDescending<OrderBasic> { it.state != OrderState.DELIVERED }
-                .thenByDescending { it.state.precedence }
-        )
+        return orderBasics.sortedByDescending { it.state.precedence }
     }
 
-    private fun ProducerScope<Resource<List<OrderBasic>>>.startObserveRecentOrders(userId: String) {
-        observeRecentOrdersJob = externalScope.launch(coroutineDispatcher) {
+    private fun ProducerScope<Resource<List<OrderBasic>>>.startObserveRecentOrders(
+        coroutineScope: CoroutineScope,
+        userId: String
+    ) {
+        observeRecentOrdersJob = coroutineScope.launch(coroutineDispatcher) {
             orderRepository.getActiveOrderItemsObservable(userId).collect {
                 when (it) {
                     is Resource.Success -> {
