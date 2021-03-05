@@ -10,5 +10,8 @@ object BindingConverters {
     fun doubleToFloat(value: Double): Float = value.toFloat()
 
     @JvmStatic
+    fun doubleToString(value: Double): String = value.toString()
+
+    @JvmStatic
     fun intToString(value: Int): String = value.toString()
 }

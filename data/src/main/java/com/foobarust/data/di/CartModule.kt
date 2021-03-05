@@ -10,7 +10,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-@Module(includes = [PersistentModule::class])
+@Module
 @InstallIn(SingletonComponent::class)
 abstract class CartModule {
 

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="onCampusItemModel"
+            type="com.foobarust.android.seller.SellersListModel.SellersItemModel" />
+        <variable
+            name="listener"
+            type="com.foobarust.android.seller.SellersAdapter.SellersAdapterListener" />
+        <import type="com.foobarust.android.R" />
+        <import type="com.foobarust.android.utils.BindingConverters" />
+        <import type="com.foobarust.domain.models.seller.SellerBasicKt" />
+    </data>
+
+    <!--suppress AndroidUnknownAttribute -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/spacing_medium"
+        android:focusable="true"
+        android:clickable="true"
+        android:onClick="@{() -> listener.onSellerClicked(onCampusItemModel.sellerId)}"
+        app:cardBackgroundColor="?attr/colorSurface"
+        app:cardElevation="@dimen/elevation_none"
+        app:cardCornerRadius="0dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/spacing_large">
+
+            <FrameLayout
+                android:id="@+id/seller_image_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/seller_image_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="@{onCampusItemModel.sellerName}"
+                    app:glideUrl="@{onCampusItemModel.sellerImageUrl}"
+                    app:glideCenterCrop="@{true}"
+                    app:glidePlaceholder="@{R.drawable.placeholder_card}"
+                    tools:src="@sample/sample_image_2"/>
+
+                <TextView
+                    android:id="@+id/seller_offline_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/scrim_fade"
+                    android:gravity="center"
+                    android:text="@string/seller_status_offline"
+                    android:textColor="@color/white"
+                    android:textAppearance="@style/TextAppearance.Foobar.Body2"
+                    app:goneIf="@{onCampusItemModel.sellerOnline}"/>
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/name_text_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:layout_marginStart="@dimen/spacing_medium"
+                android:layout_marginEnd="@dimen/spacing_large"
+                android:text="@{onCampusItemModel.sellerName}"
+                android:textAppearance="?attr/textAppearanceHeadline6"
+                android:maxLines="2"
+                android:ellipsize="end"
+                app:layout_constraintTop_toBottomOf="@id/seller_image_layout"
+                app:layout_constraintEnd_toStartOf="@id/status_text_view"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="Happy Restaurant"/>
+
+            <TextView
+                android:id="@+id/status_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/spacing_medium"
+                android:textAppearance="?attr/textAppearanceOverline"
+                app:layout_constraintTop_toBottomOf="@id/seller_image_layout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/name_text_view"
+                app:layout_constraintBottom_toBottomOf="@id/name_text_view"
+                tools:text="@string/seller_status_online"
+                tools:textColor="?attr/colorSecondary"/>
+
+            <TextView
+                android:id="@+id/tags_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_xmedium"
+                android:layout_marginStart="@dimen/spacing_medium"
+                android:layout_marginEnd="@dimen/spacing_large"
+                android:text="@{onCampusItemModel.sellerTags}"
+                android:textAppearance="?attr/textAppearanceCaption"
+                android:textColor="@color/material_on_surface_emphasis_medium"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:lineSpacingMultiplier="1.2"
+                app:layout_constraintTop_toBottomOf="@id/name_text_view"
+                tools:text="Western &#183; Chinese &#183; Japanese"/>
+
+            <TextView
+                android:id="@+id/rating_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_medium"
+                android:layout_marginTop="@dimen/spacing_xmedium"
+                android:text="@{onCampusItemModel.sellerRating}"
+                android:textAppearance="?attr/textAppearanceCaption"
+                android:textColor="@color/material_on_surface_emphasis_medium"
+                android:gravity="center_vertical"
+                android:drawablePadding="@dimen/spacing_medium"
+                app:layout_constraintTop_toBottomOf="@id/tags_text_view"
+                app:layout_constraintStart_toStartOf="parent"
+                app:drawableStartCompat="@drawable/ic_star"
+                app:drawableFitVertical="@{true}"
+                app:drawableTint="@color/yellow"
+                tools:text="5.0"/>
+
+            <TextView
+                android:id="@+id/min_spend_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_xmedium"
+                android:layout_marginStart="@dimen/spacing_large"
+                android:text="@{onCampusItemModel.sellerMinSpend}"
+                android:textColor="@color/material_on_surface_emphasis_medium"
+                android:textAppearance="?attr/textAppearanceCaption"
+                app:layout_constraintTop_toBottomOf="@id/tags_text_view"
+                app:layout_constraintStart_toEndOf="@id/rating_text_view"
+                tools:text="$ 25.6 Min"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</layout>

@@ -22,21 +22,21 @@ internal inline fun <T> networkCacheResource(
     noinline updateCache: suspend (T) -> Unit
 ): Flow<Resource<T>> = channelFlow {
     var observeCacheJob: Job? = null
-    networkSource().collect {
-        when (it) {
+    networkSource().collect { resource ->
+        when (resource) {
             is Resource.Success -> {
                 // Cancel cache flow when the network is restored.
                 observeCacheJob?.cancelIfActive()
-                channel.offer(it)
+                channel.offer(resource)
                 Log.d(TAG, "Offer network resource.")
-                startUpdateCache(updateCache, it.data)
+                startUpdateCache(updateCache, resource.data)
             }
             is Resource.Error -> {
                 // Emit result from cache flow when the network is down.
                 observeCacheJob = startFetchCacheSource(cacheSource)
             }
             is Resource.Loading -> {
-                channel.offer(it)
+                channel.offer(resource)
             }
         }
     }

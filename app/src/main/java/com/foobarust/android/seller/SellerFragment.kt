@@ -71,16 +71,7 @@ class SellerFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             sellerViewModel.navigateToSellerDetail.collect {
                 findNavController(R.id.sellerFragment)?.navigate(
-                    SellerFragmentDirections.actionSellerFragmentToSellerDetailFragment(property = it)
-                )
-            }
-        }
-
-        // Navigate to seller action
-        viewLifecycleOwner.lifecycleScope.launch {
-            sellerViewModel.navigateToSellerAction.collect {
-                findNavController(R.id.sellerFragment)?.navigate(
-                    SellerFragmentDirections.actionSellerFragmentToSellerActionDialog()
+                    SellerFragmentDirections.actionSellerFragmentToSellerDetailFragment(it)
                 )
             }
         }

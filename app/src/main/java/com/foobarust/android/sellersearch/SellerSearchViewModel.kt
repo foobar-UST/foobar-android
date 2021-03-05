@@ -16,6 +16,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,7 +25,7 @@ import javax.inject.Inject
  */
 
 private const val NUM_OF_RESULTS = 5
-private const val REQUEST_DELAY = 450L
+private const val SEARCH_RATE_LIMIT = 250L
 
 @HiltViewModel
 class SellerSearchViewModel @Inject constructor(
@@ -45,16 +46,18 @@ class SellerSearchViewModel @Inject constructor(
         viewModelScope.launch {
             _searchQuery
                 .flatMapLatest {
-                    // Insert delay for each non-blank input to reduce the number of requests
                     if (it.isNotBlank()) {
-                        delay(REQUEST_DELAY)
+                        // Apply search rate limit to reduce the number of search requests
+                        delay(SEARCH_RATE_LIMIT)
+                        val params = SearchSellersParameters(
+                            searchQuery = it,
+                            numOfSellers = NUM_OF_RESULTS,
+                        )
+                        searchSellersUseCase(params)
+                    } else {
+                        // Clear list if the input is blank
+                        flowOf(Resource.Success(emptyList()))
                     }
-
-                    val params = SearchSellersParameters(
-                        searchQuery = it,
-                        numOfSellers = NUM_OF_RESULTS,
-                    )
-                    searchSellersUseCase(params)
                 }
                 .collectLatest {
                     when (it) {

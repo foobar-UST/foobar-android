@@ -5,10 +5,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.foobarust.android.InsertFakeDataActivity
 import com.foobarust.data.constants.Constants.SELLERS_CATALOGS_SUB_COLLECTION
 import com.foobarust.data.constants.Constants.SELLERS_COLLECTION
-import com.foobarust.data.models.seller.GeolocationDto
-import com.foobarust.data.models.seller.SellerBasicDto
-import com.foobarust.data.models.seller.SellerCatalogDto
-import com.foobarust.data.models.seller.SellerDetailDto
+import com.foobarust.data.models.seller.*
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -117,8 +114,9 @@ private data class SellerSerialized(
     val location: GeolocationSerialized,
     val image_url: String? = null,
     val min_spend: Double,
-    val rating: Double,
-    val rating_count: Int,
+    val order_rating: Double,
+    val delivery_rating: Double? = null,
+    val rating_count: SellerRatingCountSerialized,
     val type: Int,
     val online: Boolean,
     val notice: String? = null,
@@ -144,8 +142,15 @@ private data class SellerSerialized(
             location = location,
             image_url = image_url,
             min_spend = min_spend,
-            rating = rating,
-            ratingCount = rating_count,
+            orderRating = order_rating,
+            deliveryRating = delivery_rating,
+            ratingCount = SellerRatingCountDto(
+                excellent = rating_count.excellent,
+                veryGood = rating_count.very_good,
+                good = rating_count.good,
+                fair = rating_count.fair,
+                poor = rating_count.poor
+            ),
             type = type,
             online = online,
             notice = notice,
@@ -161,14 +166,22 @@ private data class SellerSerialized(
             nameZh = name_zh,
             imageUrl = image_url,
             minSpend = min_spend,
-            rating = rating,
-            ratingCount = rating_count,
+            orderRating = order_rating,
             type = type,
             online = online,
             tags = tags
         )
     }
 }
+
+@Serializable
+data class SellerRatingCountSerialized(
+    val excellent: Int,
+    val very_good: Int,
+    val good: Int,
+    val fair: Int,
+    val poor: Int
+)
 
 @Serializable
 data class GeolocationSerialized(

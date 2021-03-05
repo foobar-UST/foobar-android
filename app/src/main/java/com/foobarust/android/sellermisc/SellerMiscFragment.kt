@@ -158,8 +158,8 @@ class SellerMiscFragment : FullScreenDialogFragment() {
     private fun setupSellerMiscLayout(sellerDetail: SellerDetail) = binding.run {
         titleTextView.text = sellerDetail.getNormalizedName()
 
-        ratingBar.rating = sellerDetail.rating.toFloat()
-        ratingTextView.text = sellerDetail.getNormalizedRatingString()
+        ratingBar.rating = sellerDetail.orderRating.toFloat()
+        ratingTextView.text = sellerDetail.getNormalizedOrderRating()
 
         phoneNumTextView.text = sellerDetail.phoneNum
 

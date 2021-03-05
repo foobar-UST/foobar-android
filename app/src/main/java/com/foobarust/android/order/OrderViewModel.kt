@@ -37,7 +37,18 @@ class OrderViewModel @Inject constructor(
     private val _scrollToTop = MutableSharedFlow<Int>()
     val scrollToTop: SharedFlow<Int> = _scrollToTop.asSharedFlow()
 
+    // Argument: order id
+    private val _navigateToRating = Channel<String>()
+    val navigateToRating: Flow<String> = _navigateToRating.receiveAsFlow()
+
+    private val _refreshHistoryList = Channel<Unit>()
+    val refreshHistoryList: Flow<Unit> = _refreshHistoryList.receiveAsFlow()
+
     var currentTabPage: Int = 0
+
+    fun onRefreshHistoryList() {
+        _refreshHistoryList.offer(Unit)
+    }
 
     fun onScrollToTop() = viewModelScope.launch {
         _scrollToTop.emit(currentTabPage)
@@ -45,5 +56,9 @@ class OrderViewModel @Inject constructor(
 
     fun onNavigateToOrderDetail(orderId: String) {
         _navigateToOrderDetail.offer(orderId)
+    }
+
+    fun onNavigateToRating(orderId: String) {
+        _navigateToRating.offer(orderId)
     }
 }

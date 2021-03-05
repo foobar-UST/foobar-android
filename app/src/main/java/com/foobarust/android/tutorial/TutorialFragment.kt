@@ -7,10 +7,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView.OVER_SCROLL_NEVER
+import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentTutorialBinding
 import com.foobarust.android.shared.FullScreenDialogFragment
 import com.foobarust.android.utils.AutoClearedValue
-import com.google.android.material.tabs.TabLayoutMediator
+import com.foobarust.android.utils.getColorCompat
+import com.foobarust.android.utils.themeColor
+import com.zhpan.indicator.enums.IndicatorSlideMode
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -39,13 +42,20 @@ class TutorialFragment : FullScreenDialogFragment() {
             tutorialPages = tutorialViewModel.tutorialPageProperties
         )
 
-        binding.viewPager.run {
+        binding.tutorialViewPager.run {
             adapter = pagerAdapter
             getChildAt(0).overScrollMode = OVER_SCROLL_NEVER
         }
 
         // Setup TabLayout
-        TabLayoutMediator(binding.indicatorTabLayout, binding.viewPager) { _, _ -> }.attach()
+        binding.scrollIndicator.run {
+            setSliderColor(
+                normalColor = requireContext().getColorCompat(R.color.material_on_surface_stroke),
+                selectedColor = requireContext().themeColor(R.attr.colorSecondary)
+            )
+            setSlideMode(IndicatorSlideMode.WORM)
+            setupWithViewPager(binding.tutorialViewPager)
+        }
 
         // Dismiss tutorial
         viewLifecycleOwner.lifecycleScope.launch {

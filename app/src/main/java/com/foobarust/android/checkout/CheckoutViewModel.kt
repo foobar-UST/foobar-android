@@ -1,8 +1,6 @@
 package com.foobarust.android.checkout
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.sellerdetail.SellerDetailProperty
 import com.foobarust.android.selleritem.SellerItemDetailProperty
@@ -21,20 +19,16 @@ import javax.inject.Inject
 class CheckoutViewModel @Inject constructor() : ViewModel() {
 
     private val _toolbarTitle = MutableStateFlow<String?>(null)
-    val toolbarTitle: LiveData<String?> = _toolbarTitle
-        .asLiveData(viewModelScope.coroutineContext)
+    val toolbarTitle: StateFlow<String?> = _toolbarTitle.asStateFlow()
 
     private val _submitButtonTitle = MutableStateFlow<String?>(null)
-    val submitButtonTitle: LiveData<String?> = _submitButtonTitle
-        .asLiveData(viewModelScope.coroutineContext)
+    val submitButtonTitle: StateFlow<String?> = _submitButtonTitle.asStateFlow()
 
     private val _showSubmitButton = MutableStateFlow(false)
-    val showSubmitButton: LiveData<Boolean> = _showSubmitButton
-        .asLiveData(viewModelScope.coroutineContext)
+    val showSubmitButton: StateFlow<Boolean> = _showSubmitButton.asStateFlow()
 
     private val _showLoadingProgressBar = MutableStateFlow(false)
-    val showLoadingProgressBar: LiveData<Boolean> = _showLoadingProgressBar
-        .asLiveData(viewModelScope.coroutineContext)
+    val showLoadingProgressBar: StateFlow<Boolean> = _showLoadingProgressBar.asStateFlow()
 
     // Handle submit button click event, will be observed by multiple child fragments
     private val _onClickSubmitButton = MutableSharedFlow<Unit>()
@@ -65,9 +59,7 @@ class CheckoutViewModel @Inject constructor() : ViewModel() {
     val dismissCheckoutDialog: Flow<Unit> = _dismissCheckoutDialog.receiveAsFlow()
 
     // Expand collapsing toolbar during navigation
-    val expandCollapsingToolbar: LiveData<Unit> = _currentDestination
-        .map { Unit }
-        .asLiveData(viewModelScope.coroutineContext)
+    val expandCollapsingToolbar: Flow<Unit> = _currentDestination.map { Unit }
 
     var savedOrderNotes: String? = null
     var savedPaymentIdentifier: String? = null

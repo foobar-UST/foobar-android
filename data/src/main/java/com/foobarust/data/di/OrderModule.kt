@@ -1,5 +1,8 @@
 package com.foobarust.data.di
 
+import com.foobarust.data.db.AppDatabase
+import com.foobarust.data.db.OrdersBasicDao
+import com.foobarust.data.db.OrdersDetailDao
 import com.foobarust.data.mappers.OrderMapper
 import com.foobarust.data.repositories.OrderRepositoryImpl
 import com.foobarust.domain.repositories.OrderRepository
@@ -14,7 +17,7 @@ import javax.inject.Singleton
  * Created by kevin on 1/29/21
  */
 
-@Module(includes = [PersistentModule::class])
+@Module
 @InstallIn(SingletonComponent::class)
 abstract class OrderModule {
 
@@ -25,6 +28,18 @@ abstract class OrderModule {
     ): OrderRepository
 
     companion object {
+        @Singleton
+        @Provides
+        fun provideOrdersBasicDao(appDatabase: AppDatabase): OrdersBasicDao {
+            return appDatabase.ordersBasicDao()
+        }
+
+        @Singleton
+        @Provides
+        fun provideOrdersDetailDao(appDatabase: AppDatabase): OrdersDetailDao {
+            return appDatabase.ordersDetailDao()
+        }
+
         @Singleton
         @Provides
         fun provideOrderMapper(): OrderMapper {

@@ -18,7 +18,6 @@ import com.foobarust.android.promotion.PromotionAdapter
 import com.foobarust.android.shared.PagingLoadStateAdapter
 import com.foobarust.android.utils.*
 import com.foobarust.domain.models.promotion.AdvertiseBasic
-import com.foobarust.domain.models.seller.SellerBasic
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
@@ -31,7 +30,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class SellerOnCampusFragment : Fragment(),
     AdvertiseAdapter.AdvertiseAdapterListener,
-    SellerOnCampusAdapter.SellerOnCampusAdapterListener {
+    SellersAdapter.SellersAdapterListener {
 
     private var binding: FragmentSellerOnCampusBinding by AutoClearedValue(this)
     private val mainViewModel: MainViewModel by activityViewModels()
@@ -47,12 +46,12 @@ class SellerOnCampusFragment : Fragment(),
 
         // Setup recycler view
         val promotionAdapter = PromotionAdapter(this)
-        val sellerOnCampusAdapter = SellerOnCampusAdapter(this)
+        val sellersAdapter = SellersAdapter(this)
 
         val concatAdapter = ConcatAdapter(
             promotionAdapter,
-            sellerOnCampusAdapter.withLoadStateFooter(
-                footer = PagingLoadStateAdapter { sellerOnCampusAdapter.retry() }
+            sellersAdapter.withLoadStateFooter(
+                footer = PagingLoadStateAdapter { sellersAdapter.retry() }
             )
         )
 
@@ -70,19 +69,19 @@ class SellerOnCampusFragment : Fragment(),
 
         // Submit seller items
         viewLifecycleOwner.lifecycleScope.launch {
-            sellerOnCampusViewModel.onCampusListModels.collectLatest {
-                sellerOnCampusAdapter.submitData(it)
+            sellerOnCampusViewModel.sellersListModels.collectLatest {
+                sellersAdapter.submitData(it)
             }
         }
 
         // Retry
         binding.loadErrorLayout.retryButton.setOnClickListener {
-            sellerOnCampusAdapter.refresh()
+            sellersAdapter.refresh()
             sellerOnCampusViewModel.onReloadPromotion()
         }
 
         // Control views with respect to load states
-        sellerOnCampusAdapter.addLoadStateListener { loadStates ->
+        sellersAdapter.addLoadStateListener { loadStates ->
             with(loadStates) {
                 updateViews(
                     mainLayout = binding.sellersRecyclerView,
@@ -99,7 +98,7 @@ class SellerOnCampusFragment : Fragment(),
         // Swipe refresh layout
         binding.swipeRefreshLayout.setOnRefreshListener {
             sellerOnCampusViewModel.onReloadPromotion()
-            sellerOnCampusAdapter.refresh()
+            sellersAdapter.refresh()
             normalizeListPosition(promotionAdapter)
         }
 
@@ -113,12 +112,15 @@ class SellerOnCampusFragment : Fragment(),
         }
 
         // Setup recyclerview bottom padding correspond to cart bottom bar
-        mainViewModel.showCartBottomBar.observe(viewLifecycleOwner) { show ->
-            val bottomPadding = if (show) {
-                requireContext().resources.getDimension(R.dimen.cart_bottom_bar_height)
-            } else 0.0
-
-            binding.sellersRecyclerView.updatePadding(bottom = bottomPadding.toInt())
+        viewLifecycleOwner.lifecycleScope.launch {
+            mainViewModel.showCartBottomBar.collect { show ->
+                val bottomPadding = if (show) {
+                    requireContext().resources.getDimension(R.dimen.cart_bottom_bar_height)
+                } else {
+                    0.0
+                }
+                binding.sellersRecyclerView.updatePadding(bottom = bottomPadding.toInt())
+            }
         }
 
         return binding.root
@@ -128,13 +130,8 @@ class SellerOnCampusFragment : Fragment(),
         sellerViewModel.onNavigateToPromotionDetail(advertiseBasic.url)
     }
 
-    override fun onSellerItemClicked(sellerBasic: SellerBasic) {
-        sellerViewModel.onNavigateToSellerDetail(sellerBasic)
-    }
-
-    override fun onSellerItemLongClicked(view: View, sellerBasic: SellerBasic): Boolean {
-        sellerViewModel.onNavigateToSellerAction()
-        return true
+    override fun onSellerClicked(sellerId: String) {
+        sellerViewModel.onNavigateToSellerDetail(sellerId)
     }
 
     private fun normalizeListPosition(promotionAdapter: PromotionAdapter) {

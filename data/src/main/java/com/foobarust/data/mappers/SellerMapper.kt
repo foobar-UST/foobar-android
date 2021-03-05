@@ -5,7 +5,9 @@ import com.foobarust.data.constants.Constants.SELLER_SECTION_STATE_DELIVERED
 import com.foobarust.data.constants.Constants.SELLER_SECTION_STATE_PREPARING
 import com.foobarust.data.constants.Constants.SELLER_SECTION_STATE_PROCESSING
 import com.foobarust.data.constants.Constants.SELLER_SECTION_STATE_SHIPPED
+import com.foobarust.data.models.explore.ItemCategoryDto
 import com.foobarust.data.models.seller.*
+import com.foobarust.domain.models.explore.SellerItemCategory
 import com.foobarust.domain.models.seller.*
 import javax.inject.Inject
 
@@ -21,7 +23,7 @@ class SellerMapper @Inject constructor() {
             name = dto.name ?: "",
             nameZh = dto.nameZh,
             imageUrl = dto.imageUrl,
-            rating = dto.rating!!,
+            orderRating = dto.orderRating!!,
             type = SellerType.values()[dto.type!!],
             online = dto.online ?: false,
             minSpend = dto.minSpend ?: 0.toDouble(),
@@ -35,7 +37,7 @@ class SellerMapper @Inject constructor() {
             name = response.name,
             nameZh = response.nameZh,
             imageUrl = response.imageUrl,
-            rating = response.rating,
+            orderRating = response.rating,
             type = SellerType.values()[response.type],
             online = response.online,
             minSpend = response.minSpend,
@@ -55,8 +57,9 @@ class SellerMapper @Inject constructor() {
             location = dto.location!!.toGeolocation(),
             imageUrl = dto.image_url,
             minSpend = dto.min_spend!!,
-            rating = dto.rating ?: 0.0,
-            ratingCount = dto.ratingCount ?: 0,
+            orderRating = dto.orderRating ?: 0.0,
+            deliveryRating = dto.deliveryRating,
+            ratingCount = mapSellerRatingCount(dto.ratingCount!!),
             type = SellerType.values()[dto.type!!],
             online = dto.online ?: false,
             openingHours = dto.openingHours!!,
@@ -121,7 +124,7 @@ class SellerMapper @Inject constructor() {
             joinedUsersCount = dto.joinedUsersCount ?: 0,
             joinedUsersIds = dto.joinedUsersIds ?: emptyList(),
             imageUrl = dto.imageUrl,
-            state = parseSectionState(dto.state!!),
+            state = mapSectionState(dto.state!!),
             available = dto.available ?: false
         )
     }
@@ -139,12 +142,33 @@ class SellerMapper @Inject constructor() {
             maxUsers = dto.maxUsers!!,
             joinedUsersCount = dto.joinedUsersCount ?: 0,
             imageUrl = dto.imageUrl,
-            state = parseSectionState(dto.state!!),
+            state = mapSectionState(dto.state!!),
             available = dto.available ?: false
         )
     }
 
-    private fun parseSectionState(sectionState: String): SellerSectionState {
+    fun toSellerItemCategory(dto: ItemCategoryDto): SellerItemCategory {
+        return SellerItemCategory(
+            id = dto.id!!,
+            tag = dto.tag!!,
+            title = dto.title!!,
+            titleZh = dto.titleZh,
+            imageUrl = dto.imageUrl
+        )
+    }
+
+    fun toSellerRatingBasic(dto: SellerRatingBasicDto): SellerRatingBasic {
+        return SellerRatingBasic(
+            id = dto.id!!,
+            username = dto.username!!,
+            userPhotoUrl = dto.userPhotoUrl,
+            orderRating = dto.orderRating!!,
+            deliveryRating = dto.deliveryRating,
+            createdAt = dto.createdAt!!.toDate()
+        )
+    }
+
+    private fun mapSectionState(sectionState: String): SellerSectionState {
         return when (sectionState) {
             SELLER_SECTION_STATE_AVAILABLE -> SellerSectionState.AVAILABLE
             SELLER_SECTION_STATE_PROCESSING -> SellerSectionState.PROCESSING
@@ -153,5 +177,15 @@ class SellerMapper @Inject constructor() {
             SELLER_SECTION_STATE_DELIVERED -> SellerSectionState.DELIVERED
             else -> throw IllegalArgumentException("Invalid SellerSectionState.")
         }
+    }
+
+    private fun mapSellerRatingCount(dto: SellerRatingCountDto): SellerRatingCount {
+        return SellerRatingCount(
+            excellent = dto.excellent ?: 0,
+            veryGood = dto.veryGood ?: 0,
+            good = dto.good ?: 0,
+            fair = dto.fair ?: 0,
+            poor = dto.poor ?: 0
+        )
     }
 }

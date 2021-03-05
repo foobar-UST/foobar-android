@@ -14,6 +14,9 @@
         <action
             android:id="@+id/action_orderFragment_to_orderDetailFragment"
             app:destination="@id/orderDetailFragment" />
+        <action
+            android:id="@+id/action_orderFragment_to_ratingFragment"
+            app:destination="@id/ratingFragment" />
     </fragment>
 
     <!-- OrderDetailFragment -->
@@ -41,6 +44,19 @@
         <argument
             android:name="sellerId"
             app:argType="string"/>
+    </dialog>
+
+    <!-- RatingFragment -->
+    <dialog
+        android:id="@+id/ratingFragment"
+        android:name="com.foobarust.android.rating.RatingFragment"
+        tools:layout="@layout/fragment_rating">
+        <argument
+            android:name="orderId"
+            app:argType="string"/>
+        <action
+            android:id="@+id/action_ratingFragment_to_orderDetailFragment"
+            app:destination="@id/orderDetailFragment" />
     </dialog>
 
 </navigation>

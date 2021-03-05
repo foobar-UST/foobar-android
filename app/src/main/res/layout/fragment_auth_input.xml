@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -75,8 +73,8 @@
                         android:layout_height="wrap_content"
                         android:singleLine="true"
                         android:maxLength="10"
-                        android:textColor="@color/material_on_background_emphasis_medium"
-                        tools:text="test"/>
+                        android:inputType="textVisiblePassword|textNoSuggestions"
+                        android:textColor="@color/material_on_background_emphasis_medium" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 

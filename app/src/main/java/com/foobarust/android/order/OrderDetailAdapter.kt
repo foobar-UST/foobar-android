@@ -12,7 +12,7 @@ import com.foobarust.android.checkout.PaymentMethodItem
 import com.foobarust.android.databinding.*
 import com.foobarust.android.order.OrderDetailListModel.*
 import com.foobarust.android.order.OrderDetailViewHolder.*
-import com.foobarust.android.utils.getColorStateListFrom
+import com.foobarust.android.utils.buildColorStateListWith
 import com.foobarust.domain.models.order.OrderState
 
 /**
@@ -99,15 +99,15 @@ class OrderDetailAdapter(
         // Set grey state icon for cancelled state, green otherwise.
         with(binding.stateImageView) {
             imageTintList = if (stateItemModel.currentOrderState == OrderState.CANCELLED) {
-                context.getColorStateListFrom(R.color.material_on_surface_disabled)
+                context.buildColorStateListWith(R.color.material_on_surface_disabled)
             } else {
-                context.getColorStateListFrom(R.color.mint_500)
+                context.buildColorStateListWith(R.color.mint_500)
             }
 
             backgroundTintList = if (stateItemModel.currentOrderState == OrderState.CANCELLED) {
-                context.getColorStateListFrom(R.color.grey_disabled)
+                context.buildColorStateListWith(R.color.grey_disabled)
             } else {
-                context.getColorStateListFrom(R.color.mint_100)
+                context.buildColorStateListWith(R.color.mint_100)
             }
 
             isVisible = !showProgressBar

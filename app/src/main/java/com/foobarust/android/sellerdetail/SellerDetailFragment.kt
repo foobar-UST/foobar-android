@@ -6,17 +6,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
+import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.widget.ViewPager2
-import com.foobarust.android.NavigationSellerDirections
 import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentSellerDetailBinding
+import com.foobarust.android.main.MainViewModel
+import com.foobarust.android.seller.SellerListProperty
+import com.foobarust.android.sellerdetail.SellerDetailChipAction.*
 import com.foobarust.android.shared.FullScreenDialogFragment
 import com.foobarust.android.utils.*
+import com.foobarust.domain.models.cart.hasItems
 import com.foobarust.domain.models.seller.*
 import com.google.android.material.chip.Chip
 import com.google.android.material.snackbar.Snackbar
@@ -24,6 +28,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import java.util.*
 
 /**
  * Created by kevin on 9/24/20
@@ -33,14 +38,15 @@ import kotlinx.coroutines.launch
 class SellerDetailFragment : FullScreenDialogFragment() {
 
     private var binding: FragmentSellerDetailBinding by AutoClearedValue(this)
-    private val viewModel: SellerDetailViewModel by viewModels()
+    private val mainViewModel: MainViewModel by activityViewModels()
+    private val sellerDetailViewModel: SellerDetailViewModel by viewModels()
     private val navArgs: SellerDetailFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         if (savedInstanceState == null) {
-            viewModel.onFetchSellerDetail(navArgs.property)
+            sellerDetailViewModel.onFetchSellerDetail(navArgs.property)
         }
     }
 
@@ -49,10 +55,7 @@ class SellerDetailFragment : FullScreenDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentSellerDetailBinding.inflate(inflater, container, false).apply {
-            viewModel = this@SellerDetailFragment.viewModel
-            lifecycleOwner = viewLifecycleOwner
-        }
+        binding = FragmentSellerDetailBinding.inflate(inflater, container, false)
 
         // Remove listener on CollapsingToolbarLayout, so that toolbar top padding can work properly
         // Issue: https://github.com/material-components/material-components-android/issues/1310
@@ -60,24 +63,28 @@ class SellerDetailFragment : FullScreenDialogFragment() {
 
         // Navigation back arrow button
         binding.toolbar.setNavigationOnClickListener {
-            findNavController().navigateUp()
+            findNavController(R.id.sellerDetailFragment)?.navigateUp()
         }
 
         // Navigate to seller misc
         binding.showMiscButton.setOnClickListener {
-            viewModel.onNavigateToSellerMisc()
+            findNavController(R.id.sellerDetailFragment)?.navigate(
+                SellerDetailFragmentDirections.actionSellerDetailFragmentToSellerMiscFragment(
+                    sellerId = navArgs.property.sellerId
+                )
+            )
         }
 
-        // Cart bottom bar
+        // Navigate to checkout
         binding.cartBottomBar.cartBottomBarCardView.setOnClickListener {
             findNavController(R.id.sellerDetailFragment)?.navigate(
-                NavigationSellerDirections.actionGlobalCheckoutFragment()
+                SellerDetailFragmentDirections.actionSellerDetailFragmentToCheckoutFragment()
             )
         }
 
         // Swipe refresh layout
         binding.swipeRefreshLayout.setOnRefreshListener {
-            viewModel.onFetchSellerDetail(
+            sellerDetailViewModel.onFetchSellerDetail(
                 property = navArgs.property,
                 isSwipeRefresh = true
             )
@@ -85,23 +92,62 @@ class SellerDetailFragment : FullScreenDialogFragment() {
 
         // Retry
         binding.loadErrorLayout.retryButton.setOnClickListener {
-            viewModel.onFetchSellerDetail(navArgs.property)
+            sellerDetailViewModel.onFetchSellerDetail(navArgs.property)
+        }
+        
+        // Setup seller detail
+        viewLifecycleOwner.lifecycleScope.launch { 
+            sellerDetailViewModel.sellerDetail.collect { sellerDetail ->
+                if (sellerDetail == null) return@collect
+                
+                with(binding) {
+                    nameTextView.text = sellerDetail.getNormalizedName()
+                    sectionInfoTextView.isVisible = sellerDetail.type == SellerType.OFF_CAMPUS
+                    
+                    sellerImageView.bindGlideUrl(
+                        imageUrl = sellerDetail.imageUrl,
+                        centerCrop = true,
+                        placeholder = R.drawable.placeholder_card
+                    )
+                    sellerImageView.contentDescription = sellerDetail.getNormalizedName()
+                }
+
+                setupNoticeBanner(sellerDetail)
+            }
+        }
+        
+        // Setup section detail
+        viewLifecycleOwner.lifecycleScope.launch {
+            sellerDetailViewModel.sectionDetail.collect { sectionDetail ->
+                if (sectionDetail == null) return@collect
+                
+                with(binding) {
+                    sectionInfoTextView.text = getString(
+                        R.string.seller_detail_format_section_info,
+                        sectionDetail.getDeliveryTimeString(),
+                        sectionDetail.getDeliveryDateString()
+                    )
+                }
+            }
+        }
+        
+        // Setup seller info
+        viewLifecycleOwner.lifecycleScope.launch { 
+            sellerDetailViewModel.sellerInfo.collect { 
+                binding.sellerInfoTextView.text = it
+            }
         }
 
-        // Set up tab layout and view pager when seller detail is successfully fetched
-        viewModel.sellerCatalogs.observe(viewLifecycleOwner) {
-            setupViewPagerAndTabLayout(it)
-        }
-
-        viewModel.sellerDetailUiState.observe(viewLifecycleOwner) {
-            if (it is SellerDetailUiState.Error) {
-                showShortToast(it.message)
+        // Set up seller catalogs
+        viewLifecycleOwner.lifecycleScope.launch {
+            sellerDetailViewModel.sellerCatalogs.collect {
+                setupCatalogsViewPager(it)
             }
         }
 
         // Enable swipe refresh layout
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.enableSwipeRefresh.collect {
+            sellerDetailViewModel.enableSwipeRefresh.collect {
                 binding.swipeRefreshLayout.run {
                     isRefreshing = false
                     isEnabled = it
@@ -109,93 +155,99 @@ class SellerDetailFragment : FullScreenDialogFragment() {
             }
         }
 
-        // Show toolbar title when collapsed
+        // Get toolbar scroll state
         viewLifecycleOwner.lifecycleScope.launch {
             binding.appBarLayout.state().collect {
-                viewModel.onAppBarLayoutStateChanged(state = it)
+                sellerDetailViewModel.onAppBarLayoutStateChanged(state = it)
             }
         }
 
-        // Navigate to SellerMisc
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.navigateToSellerMisc.collect {
-                findNavController(R.id.sellerDetailFragment)?.navigate(
-                    SellerDetailFragmentDirections.actionSellerDetailFragmentToSellerMiscFragment(
-                        sellerId = navArgs.property.sellerId
-                    )
-                )
+        // Show toolbar title when the toolbar is collapsed
+        viewLifecycleOwner.lifecycleScope.launch { 
+            sellerDetailViewModel.toolbarTitle.collect { 
+                binding.toolbar.title = it
             }
         }
-
-        // Navigate to ItemDetailDialog
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.navigateToItemDetail.collect {
-                findNavController(R.id.sellerDetailFragment)?.navigate(
-                    SellerDetailFragmentDirections.actionSellerDetailFragmentToSellerItemDetailFragment(it)
-                )
-            }
-        }
-
+        
         // Show snack bar
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.snackBarMessage.collect {
+            sellerDetailViewModel.snackBarMessage.collect {
                 showMessageSnackBar(message = it)
             }
         }
 
         // Finish swipe to refresh
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.finishSwipeRefresh.collect {
+            sellerDetailViewModel.finishSwipeRefresh.collect {
                 binding.swipeRefreshLayout.isRefreshing = false
             }
         }
 
         // Setup action chips
-        viewModel.chipActions.observe(viewLifecycleOwner) { detailActions ->
-            val chips = detailActions.map { action ->
-                Chip(requireContext(), null, R.attr.actionChipStyle).apply {
-                    visibility = View.GONE
-                    text = action.title
-                    chipIconTint = requireContext().getColorStateListFrom(action.colorRes)
-
-                    action.drawableRes?.let {
-                        chipIcon = requireContext().getDrawableOrNull(it)
-                    }
-
-                    setOnClickListener {
-                        performChipAction(action.id)
-                    }
-
-                    // Fix chip flicker when changing typeface
-                    // See: https://github.com/material-components/material-components-android/issues/675
-                    post { this.isVisible = true }
-                }
+        viewLifecycleOwner.lifecycleScope.launch {
+            sellerDetailViewModel.chipActions.collect {
+                setupChipActions(it)
             }
-
-            chips.forEach { binding.actionChipGroup.addView(it) }
         }
 
-        // Set notice banner
-        viewModel.sellerDetail.observe(viewLifecycleOwner) {
-            with(binding.sellerNoticeBanner.noticeTextView) {
-                text = if (it.online) {
-                    it.notice
-                } else {
-                    getString(R.string.seller_detail_offline_message)
+        // Setup cart bottom bar
+        viewLifecycleOwner.lifecycleScope.launch {
+            mainViewModel.userCart.collect { userCart ->
+                binding.cartBottomBar.root.isVisible = userCart != null && userCart.hasItems()
+
+                if (userCart != null) {
+                     with(binding.cartBottomBar) {
+                        cartItemsCountTextView.text = getString(
+                            R.string.cart_bottom_bar_format_items_count,
+                            userCart.itemsCount
+                        )
+                        cartTotalPriceTextView.text = getString(
+                            R.string.cart_bottom_bar_format_total_price,
+                            userCart.totalCost
+                        )
+                    }
                 }
-                background = if (it.online) {
-                    ColorDrawable(context.themeColor(R.attr.colorSecondaryVariant))
-                } else {
-                    ColorDrawable(context.getColorCompat(R.color.grey_disabled))
+            }
+        }
+
+        // Ui state
+        viewLifecycleOwner.lifecycleScope.launch {
+            sellerDetailViewModel.sellerDetailUiState.collect {
+                with(binding) {
+                    loadErrorLayout.root.isVisible = it is SellerDetailUiState.Error
+                    loadingProgressBar.isVisible = it is SellerDetailUiState.Loading
+                    sellerDetailLayout.isVisible = it is SellerDetailUiState.Success
+                    sellerItemsGroup.isVisible = it is SellerDetailUiState.Success
                 }
-                isVisible = !it.online || !it.notice.isNullOrBlank()
+
+                if (it is SellerDetailUiState.Error) {
+                    showShortToast(it.message)
+                }
+            }
+        }
+
+        // Navigate to SellerItemDetailFragment
+        viewLifecycleOwner.lifecycleScope.launch {
+            sellerDetailViewModel.navigateToItemDetail.collect {
+                findNavController(R.id.sellerDetailFragment)?.navigate(
+                    SellerDetailFragmentDirections.actionSellerDetailFragmentToSellerItemDetailFragment(it)
+                )
+            }
+        }
+
+        // Navigate to SellerRatingDetailFragment
+        viewLifecycleOwner.lifecycleScope.launch {
+            sellerDetailViewModel.navigateToRatingDetail.collect {
+                findNavController(R.id.sellerDetailFragment)?.navigate(
+                    SellerDetailFragmentDirections.actionSellerDetailFragmentToSellerRatingDetailFragment(it)
+                )
             }
         }
 
         return binding.root
     }
 
-    private fun setupViewPagerAndTabLayout(catalogs: List<SellerCatalog>) {
+    private fun setupCatalogsViewPager(catalogs: List<SellerCatalog>) {
         // Setup view pager
         with(binding.itemsViewPager) {
             // Load at most two consecutive pages for view pager at once
@@ -209,7 +261,7 @@ class SellerDetailFragment : FullScreenDialogFragment() {
             // Disable swipe refresh when view pager is being scrolled
             registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageScrollStateChanged(state: Int) {
-                    viewModel.onViewPagerStateChanged(state)
+                    sellerDetailViewModel.onViewPagerStateChanged(state)
                 }
             })
         }
@@ -220,11 +272,63 @@ class SellerDetailFragment : FullScreenDialogFragment() {
         }.attach()
     }
 
-    private fun performChipAction(actionId: String) {
-        when {
-            actionId == SELLER_DETAIL_ACTION_RATING -> showShortToast("Rating clicked.")
-            actionId.contains(SELLER_DETAIL_ACTION_RATING) -> showShortToast("tag clicked.")
-            else -> throw IllegalStateException("Invalid chip action id $actionId")
+    private fun setupChipActions(chipActions: List<SellerDetailChipAction>) {
+        chipActions.forEach { action ->
+            Chip(requireContext(), null, R.attr.actionChipStyle).apply {
+                // Hide the chip on start
+                isGone = true
+
+                when (action) {
+                    is SellerDetailChipRating -> {
+                        text = action.ratingTitle
+                        chipIconTint = requireContext().buildColorStateListWith(R.color.yellow)
+                        chipIcon = requireContext().getDrawableOrNull(R.drawable.ic_star)
+                    }
+
+                    is SellerDetailChipCategory -> {
+                        text = action.categoryTag.capitalize(Locale.US)
+                    }
+                }
+
+                setOnClickListener { performChipAction(action) }
+
+                // Fix chip flicker when changing typeface
+                // See: https://github.com/material-components/material-components-android/issues/675
+                post { isVisible = true }
+            }.also {
+                binding.actionChipGroup.addView(it)
+            }
+        }
+    }
+
+    private fun setupNoticeBanner(sellerDetail: SellerDetail) {
+        with(binding.sellerNoticeBanner) {
+            root.isVisible = !sellerDetail.online || !sellerDetail.notice.isNullOrBlank()
+
+            if (sellerDetail.online) {
+                noticeTextView.text = sellerDetail.notice
+                noticeTextView.background = ColorDrawable(
+                    requireContext().themeColor(R.attr.colorSecondaryVariant)
+                )
+            } else {
+                noticeTextView.text = getString(R.string.seller_detail_offline_message)
+                noticeTextView.background = ColorDrawable(
+                    requireContext().getColorCompat(R.color.grey_disabled)
+                )
+            }
+        }
+    }
+
+    private fun performChipAction(sellerDetailChipAction: SellerDetailChipAction) {
+        when (sellerDetailChipAction) {
+            is SellerDetailChipRating -> {
+                sellerDetailViewModel.onNavigateToSellerRatingDetail()
+            }
+            is SellerDetailChipCategory -> findNavController(R.id.sellerDetailFragment)?.navigate(
+                SellerDetailFragmentDirections.actionSellerDetailFragmentToSellerListFragment(
+                    SellerListProperty(categoryTag = sellerDetailChipAction.categoryTag)
+                )
+            )
         }
     }
 

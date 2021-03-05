@@ -3,7 +3,7 @@ package com.foobarust.domain.usecases.seller
 import androidx.paging.PagingData
 import com.foobarust.domain.di.IoDispatcher
 import com.foobarust.domain.models.seller.SellerBasic
-import com.foobarust.domain.models.seller.SellerType
+import com.foobarust.domain.models.seller.SellerBasicsFilter
 import com.foobarust.domain.repositories.SellerRepository
 import com.foobarust.domain.usecases.PagingUseCase
 import kotlinx.coroutines.CoroutineDispatcher
@@ -17,9 +17,9 @@ import javax.inject.Inject
 class GetSellersPagingUseCase @Inject constructor(
     private val sellerRepository: SellerRepository,
     @IoDispatcher coroutineDispatcher: CoroutineDispatcher
-) : PagingUseCase<SellerType, SellerBasic>(coroutineDispatcher) {
+) : PagingUseCase<SellerBasicsFilter, SellerBasic>(coroutineDispatcher) {
 
-    override fun execute(parameters: SellerType): Flow<PagingData<SellerBasic>> {
-        return sellerRepository.getSellerBasicsPagingData(sellerType = parameters)
+    override fun execute(parameters: SellerBasicsFilter): Flow<PagingData<SellerBasic>> {
+        return sellerRepository.getSellerBasicsPagingData(parameters)
     }
 }

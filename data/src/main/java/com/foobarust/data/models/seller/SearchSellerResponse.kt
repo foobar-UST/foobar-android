@@ -6,8 +6,8 @@ import com.foobarust.data.constants.Constants.SELLER_MIN_SPEND_FIELD
 import com.foobarust.data.constants.Constants.SELLER_NAME_FIELD
 import com.foobarust.data.constants.Constants.SELLER_NAME_ZH_FIELD
 import com.foobarust.data.constants.Constants.SELLER_ONLINE_FIELD
+import com.foobarust.data.constants.Constants.SELLER_ORDER_RATING_FIELD
 import com.foobarust.data.constants.Constants.SELLER_RATING_COUNT_FIELD
-import com.foobarust.data.constants.Constants.SELLER_RATING_FIELD
 import com.foobarust.data.constants.Constants.SELLER_TAGS_FIELD
 import com.foobarust.data.constants.Constants.SELLER_TYPE_FIELD
 import com.google.gson.annotations.SerializedName
@@ -32,7 +32,7 @@ data class SearchSellerResponse(
     @SerializedName(SELLER_MIN_SPEND_FIELD)
     val minSpend: Double,
 
-    @SerializedName(SELLER_RATING_FIELD)
+    @SerializedName(SELLER_ORDER_RATING_FIELD)
     val rating: Double,
 
     @SerializedName(SELLER_RATING_COUNT_FIELD)

@@ -1,6 +1,7 @@
 package com.foobarust.android.utils
 
 import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -9,8 +10,9 @@ import javax.inject.Singleton
  */
 
 @Singleton
-class ResourceIdentifier @Inject constructor(private val context: Context) {
-
+class ResourceIdentifier @Inject constructor(
+    @ApplicationContext private val context: Context
+) {
     /**
      * Get string resource by id name (R.id.[name])
      */

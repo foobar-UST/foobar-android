@@ -81,6 +81,6 @@ fun Context.getColorCompat(@ColorRes color: Int): Int {
     return ContextCompat.getColor(this, color)
 }
 
-fun Context.getColorStateListFrom(@ColorRes color: Int): ColorStateList? {
+fun Context.buildColorStateListWith(@ColorRes color: Int): ColorStateList? {
     return ContextCompat.getColorStateList(this, color)
 }

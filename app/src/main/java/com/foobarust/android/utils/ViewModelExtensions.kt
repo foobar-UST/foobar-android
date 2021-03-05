@@ -15,3 +15,4 @@ inline fun <reified VM : ViewModel> Fragment.parentViewModels(
     noinline factoryProducer: (() -> ViewModelProvider.Factory)? = null
 ) = createViewModelLazy(VM::class, { requireParentFragment().viewModelStore },
     factoryProducer ?: { requireParentFragment().defaultViewModelProviderFactory })
+

@@ -1,14 +1,13 @@
 
 package com.foobarust.data.models.seller
 
-import com.foobarust.data.constants.Constants
 import com.foobarust.data.constants.Constants.SELLER_ID_FIELD
 import com.foobarust.data.constants.Constants.SELLER_IMAGE_URL_FIELD
 import com.foobarust.data.constants.Constants.SELLER_MIN_SPEND_FIELD
 import com.foobarust.data.constants.Constants.SELLER_NAME_FIELD
 import com.foobarust.data.constants.Constants.SELLER_NAME_ZH_FIELD
 import com.foobarust.data.constants.Constants.SELLER_ONLINE_FIELD
-import com.foobarust.data.constants.Constants.SELLER_RATING_FIELD
+import com.foobarust.data.constants.Constants.SELLER_ORDER_RATING_FIELD
 import com.foobarust.data.constants.Constants.SELLER_TAGS_FIELD
 import com.foobarust.data.constants.Constants.SELLER_TYPE_FIELD
 import com.google.firebase.firestore.PropertyName
@@ -41,12 +40,8 @@ data class SellerBasicDto(
     val minSpend: Double? = null,
 
     @JvmField
-    @PropertyName(SELLER_RATING_FIELD)
-    val rating: Double? = null,
-
-    @JvmField
-    @PropertyName(Constants.SELLER_RATING_COUNT_FIELD)
-    val ratingCount: Int? = null,
+    @PropertyName(SELLER_ORDER_RATING_FIELD)
+    val orderRating: Double? = null,
 
     @JvmField
     @PropertyName(SELLER_TYPE_FIELD)

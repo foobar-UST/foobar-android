@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.R
 import com.foobarust.android.sellerdetail.SellerDetailProperty
-import com.foobarust.domain.models.seller.SellerBasic
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
@@ -34,9 +33,6 @@ class SellerViewModel @Inject constructor(
     private val _navigateToSellerDetail = Channel<SellerDetailProperty>()
     val navigateToSellerDetail: Flow<SellerDetailProperty> = _navigateToSellerDetail.receiveAsFlow()
 
-    private val _navigateToSellerAction = Channel<Unit>()
-    val navigateToSellerAction: Flow<Unit> = _navigateToSellerAction.receiveAsFlow()
-
     // Argument: section id
     private val _navigateToSellerSection = Channel<String>()
     val navigateToSellerSection: Flow<String> = _navigateToSellerSection.receiveAsFlow()
@@ -53,14 +49,8 @@ class SellerViewModel @Inject constructor(
     // Emit the current scroll state of ViewPager, contains the page tag.
     private var currentPageSelected: String? = null
 
-    fun onNavigateToSellerDetail(sellerBasic: SellerBasic) {
-        _navigateToSellerDetail.offer(
-            SellerDetailProperty(sellerId = sellerBasic.id)
-        )
-    }
-
-    fun onNavigateToSellerAction() {
-        _navigateToSellerAction.offer(Unit)
+    fun onNavigateToSellerDetail(sellerId: String) {
+        _navigateToSellerDetail.offer(SellerDetailProperty(sellerId))
     }
 
     fun onNavigateToSellerSection(sectionId: String) {

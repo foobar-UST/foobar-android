@@ -23,6 +23,7 @@ data class OrderDetail(
     val imageUrl: String?,
     val type: OrderType,
     val orderItems: List<OrderItem>,
+    val orderItemsCount: Int,
     val state: OrderState,
     val isPaid: Boolean,
     val paymentMethod: String,

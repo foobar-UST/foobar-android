@@ -11,6 +11,119 @@
         android:id="@+id/exploreFragment"
         android:name="com.foobarust.android.explore.ExploreFragment"
         android:label="@string/nav_title_explore"
-        tools:layout="@layout/fragment_explore"/>
+        tools:layout="@layout/fragment_explore">
+        <action
+            android:id="@+id/action_exploreFragment_to_sellerListFragment"
+            app:destination="@id/sellerListFragment" />
+    </fragment>
+
+    <!-- SellerListFragment -->
+    <dialog
+        android:id="@+id/sellerListFragment"
+        android:name="com.foobarust.android.seller.SellerListFragment"
+        tools:layout="@layout/fragment_seller_list">
+        <argument
+            android:name="property"
+            app:argType="com.foobarust.android.seller.SellerListProperty"/>
+        <action
+            android:id="@+id/action_sellerListFragment_to_sellerDetailFragment"
+            app:destination="@id/sellerDetailFragment" />
+    </dialog>
+
+    <!-- SellerDetailFragment -->
+    <dialog
+        android:id="@+id/sellerDetailFragment"
+        android:name="com.foobarust.android.sellerdetail.SellerDetailFragment"
+        tools:layout="@layout/fragment_seller_detail">
+        <argument
+            android:name="property"
+            app:argType="com.foobarust.android.sellerdetail.SellerDetailProperty" />
+        <action
+            android:id="@+id/action_sellerDetailFragment_to_sellerMiscFragment"
+            app:destination="@id/sellerMiscFragment" />
+        <action
+            android:id="@+id/action_sellerDetailFragment_to_sellerItemDetailFragment"
+            app:destination="@id/sellerItemDetailFragment" />
+        <action
+            android:id="@+id/action_sellerDetailFragment_to_checkoutFragment"
+            app:destination="@id/checkoutFragment" />
+        <action
+            android:id="@+id/action_sellerDetailFragment_to_sellerListFragment"
+            app:destination="@id/sellerListFragment" />
+        <action
+            android:id="@+id/action_sellerDetailFragment_to_sellerRatingDetailFragment"
+            app:destination="@id/sellerRatingDetailFragment"/>
+    </dialog>
+
+    <!-- SellerMiscFragment -->
+    <dialog
+        android:id="@+id/sellerMiscFragment"
+        android:name="com.foobarust.android.sellermisc.SellerMiscFragment"
+        tools:layout="@layout/fragment_seller_misc">
+        <argument
+            android:name="sellerId"
+            app:argType="string"/>
+    </dialog>
+
+    <!-- SellerItemDetailFragment -->
+    <dialog
+        android:id="@+id/sellerItemDetailFragment"
+        android:name="com.foobarust.android.selleritem.SellerItemDetailFragment"
+        tools:layout="@layout/fragment_seller_item_detail">
+        <argument
+            android:name="property"
+            app:argType="com.foobarust.android.selleritem.SellerItemDetailProperty" />
+        <action
+            android:id="@+id/action_sellerItemDetailFragment_self"
+            app:destination="@id/sellerItemDetailFragment" />
+    </dialog>
+
+    <!-- CheckoutFragment -->
+    <dialog
+        android:id="@+id/checkoutFragment"
+        android:name="com.foobarust.android.checkout.CheckoutFragment"
+        tools:layout="@layout/fragment_checkout">
+        <action
+            android:id="@+id/action_checkoutFragment_to_sellerDetailFragment"
+            app:destination="@id/sellerDetailFragment" />
+        <action
+            android:id="@+id/action_checkoutFragment_to_sellerMiscFragment"
+            app:destination="@id/sellerMiscFragment" />
+        <action
+            android:id="@+id/action_checkoutFragment_to_sellerItemDetailFragment"
+            app:destination="@id/sellerItemDetailFragment" />
+        <action
+            android:id="@+id/action_checkoutFragment_to_sellerSectionFragment"
+            app:destination="@id/sellerSectionFragment" />
+    </dialog>
+
+    <!-- SellerSectionFragment -->
+    <dialog
+        android:id="@+id/sellerSectionFragment"
+        android:name="com.foobarust.android.sellersection.SellerSectionFragment"
+        tools:layout="@layout/fragment_seller_section">
+        <argument
+            android:name="sectionId"
+            app:argType="string"/>
+        <action
+            android:id="@+id/action_sellerSectionFragment_to_sellerDetailFragment"
+            app:destination="@id/sellerDetailFragment" />
+        <action
+            android:id="@+id/action_sellerSectionFragment_to_sellerMiscFragment"
+            app:destination="@+id/sellerMiscFragment" />
+        <action
+            android:id="@+id/action_sellerSectionFragment_self"
+            app:destination="@id/sellerSectionFragment" />
+    </dialog>
+
+    <!-- SellerRatingDetailFragment -->
+    <dialog
+        android:id="@+id/sellerRatingDetailFragment"
+        android:name="com.foobarust.android.sellerrating.SellerRatingDetailFragment"
+        tools:layout="@layout/fragment_seller_rating_detail">
+        <argument
+            android:name="property"
+            app:argType="com.foobarust.android.sellerrating.SellerRatingDetailProperty"/>
+    </dialog>
 
 </navigation>

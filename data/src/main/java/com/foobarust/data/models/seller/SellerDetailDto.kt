@@ -1,6 +1,7 @@
 package com.foobarust.data.models.seller
 
 import com.foobarust.data.constants.Constants.SELLER_BY_USER_ID
+import com.foobarust.data.constants.Constants.SELLER_DELIVERY_RATING_FIELD
 import com.foobarust.data.constants.Constants.SELLER_DESCRIPTION_FIELD
 import com.foobarust.data.constants.Constants.SELLER_DESCRIPTION_ZH_FIELD
 import com.foobarust.data.constants.Constants.SELLER_ID_FIELD
@@ -12,9 +13,9 @@ import com.foobarust.data.constants.Constants.SELLER_NAME_ZH_FIELD
 import com.foobarust.data.constants.Constants.SELLER_NOTICE_FIELD
 import com.foobarust.data.constants.Constants.SELLER_ONLINE_FIELD
 import com.foobarust.data.constants.Constants.SELLER_OPENING_HOURS_FIELD
+import com.foobarust.data.constants.Constants.SELLER_ORDER_RATING_FIELD
 import com.foobarust.data.constants.Constants.SELLER_PHONE_NUM_FIELD
 import com.foobarust.data.constants.Constants.SELLER_RATING_COUNT_FIELD
-import com.foobarust.data.constants.Constants.SELLER_RATING_FIELD
 import com.foobarust.data.constants.Constants.SELLER_TAGS_FIELD
 import com.foobarust.data.constants.Constants.SELLER_TYPE_FIELD
 import com.foobarust.data.constants.Constants.SELLER_WEBSITE_FIELD
@@ -68,12 +69,16 @@ data class SellerDetailDto(
     val min_spend: Double? = null,
 
     @JvmField
-    @PropertyName(SELLER_RATING_FIELD)
-    val rating: Double? = null,
+    @PropertyName(SELLER_ORDER_RATING_FIELD)
+    val orderRating: Double? = null,
+
+    @JvmField
+    @PropertyName(SELLER_DELIVERY_RATING_FIELD)
+    val deliveryRating: Double? = null,
 
     @JvmField
     @PropertyName(SELLER_RATING_COUNT_FIELD)
-    val ratingCount: Int? = null,
+    val ratingCount: SellerRatingCountDto? = null,
 
     @JvmField
     @PropertyName(SELLER_TYPE_FIELD)

@@ -5,11 +5,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import androidx.paging.*
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import androidx.paging.insertSeparators
+import androidx.paging.map
 import com.foobarust.android.R
 import com.foobarust.android.promotion.PromotionListModel
-import com.foobarust.android.promotion.PromotionListModel.*
+import com.foobarust.android.promotion.PromotionListModel.PromotionAdvertiseModel
 import com.foobarust.android.sellersection.SellerSectionsListModel
+import com.foobarust.android.sellersection.SellerSectionsListModel.*
 import com.foobarust.domain.models.seller.SellerType
 import com.foobarust.domain.models.seller.isRecentSection
 import com.foobarust.domain.states.Resource
@@ -60,27 +64,47 @@ class SellerOffCampusViewModel @Inject constructor(
     val sectionsListModels: Flow<PagingData<SellerSectionsListModel>> = getSellerSectionsUseCase(
             GetSellerSectionsParameters()
         ).map { pagingData ->
-            pagingData.map { SellerSectionsListModel.SellerSectionsItemModel(it) }
+            pagingData.map {
+                SellerSectionsItemModel(it)
+            }
         }.map { pagingData ->
             pagingData.insertSeparators { before, after ->
-                return@insertSeparators if (before == null) {
-                    SellerSectionsListModel.SellerSectionsSubtitleModel(
-                        subtitle = context.getString(R.string.seller_section_subtitle_recent)
-                    )
-                } else if (after !== null &&
-                    before.sellerSectionBasic.isRecentSection() &&
-                    !after.sellerSectionBasic.isRecentSection()
-                ) {
-                    SellerSectionsListModel.SellerSectionsSubtitleModel(
-                        subtitle = context.getString(R.string.seller_section_subtitle_upcoming)
-                    )
-                } else {
-                    null
-                }
+                insertSeparators(before, after)
             }
         }.cachedIn(viewModelScope)
 
     fun onReloadPromotion() {
         _fetchPromotion.offer(Unit)
+    }
+
+    private fun insertSeparators(
+        before: SellerSectionsListModel?,
+        after: SellerSectionsListModel?
+    ): SellerSectionsListModel? {
+        return if (before == null && after == null) {
+            SellerSectionsEmptyModel(
+                drawableRes = R.drawable.undraw_empty,
+                emptyMessage = context.getString(R.string.seller_section_empty_message)
+            )
+        } else if (
+            before == null &&
+            after is SellerSectionsItemModel && after.sellerSectionBasic.isRecentSection()
+        ) {
+            // Insert recent section subtitle
+            SellerSectionsSubtitleModel(
+                subtitle = context.getString(R.string.seller_section_subtitle_recent)
+            )
+        } else if (
+            after is SellerSectionsItemModel && !after.sellerSectionBasic.isRecentSection() &&
+            (before == null || before is SellerSectionsItemModel &&
+                before.sellerSectionBasic.isRecentSection())
+        ) {
+            // Insert upcoming section subtitle
+            SellerSectionsSubtitleModel(
+                subtitle = context.getString(R.string.seller_section_subtitle_upcoming)
+            )
+        } else {
+            null
+        }
     }
 }

@@ -1,8 +1,8 @@
 package com.foobarust.data.models.seller
 
-import com.foobarust.data.constants.Constants.SELLER_LOCATION_ADDRESS_FIELD
-import com.foobarust.data.constants.Constants.SELLER_LOCATION_ADDRESS_ZH_FIELD
-import com.foobarust.data.constants.Constants.SELLER_LOCATION_GEOPOINT_FIELD
+import com.foobarust.data.constants.Constants.GEO_LOCATION_ADDRESS_FIELD
+import com.foobarust.data.constants.Constants.GEO_LOCATION_ADDRESS_ZH_FIELD
+import com.foobarust.data.constants.Constants.GEO_LOCATION_GEOPOINT_FIELD
 import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.PropertyName
 
@@ -12,14 +12,14 @@ import com.google.firebase.firestore.PropertyName
 
 data class GeolocationDto(
     @JvmField
-    @PropertyName(SELLER_LOCATION_ADDRESS_FIELD)
+    @PropertyName(GEO_LOCATION_ADDRESS_FIELD)
     val address: String? = null,
 
     @JvmField
-    @PropertyName(SELLER_LOCATION_ADDRESS_ZH_FIELD)
+    @PropertyName(GEO_LOCATION_ADDRESS_ZH_FIELD)
     val addressZh: String? = null,
 
     @JvmField
-    @PropertyName(SELLER_LOCATION_GEOPOINT_FIELD)
+    @PropertyName(GEO_LOCATION_GEOPOINT_FIELD)
     val geoPoint: GeoPoint? = null
 )

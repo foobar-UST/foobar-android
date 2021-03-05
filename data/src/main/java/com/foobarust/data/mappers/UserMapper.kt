@@ -2,10 +2,8 @@ package com.foobarust.data.mappers
 
 import com.foobarust.data.models.user.UserDetailCacheDto
 import com.foobarust.data.models.user.UserDetailNetworkDto
-import com.foobarust.data.models.user.UserNotificationDto
 import com.foobarust.data.models.user.UserPublicDto
 import com.foobarust.domain.models.user.UserDetail
-import com.foobarust.domain.models.user.UserNotification
 import com.foobarust.domain.models.user.UserPublic
 import javax.inject.Inject
 
@@ -52,19 +50,6 @@ class UserMapper @Inject constructor() {
             id = dto.id!!,
             username = dto.username!!,
             photoUrl = dto.photoUrl
-        )
-    }
-
-    fun toUserNotification(dto: UserNotificationDto): UserNotification {
-        return UserNotification(
-            id = dto.id!!,
-            titleLocKey = dto.titleLocKey!!,
-            titleLocArgs = dto.titleLocArgs ?: emptyList(),
-            bodyLocKey = dto.bodyLocKey!!,
-            bodyLocArgs = dto.bodyLocArgs ?: emptyList(),
-            link = dto.link!!,
-            imageUrl = dto.imageUrl,
-            createdAt = dto.createdAt!!.toDate()
         )
     }
 }

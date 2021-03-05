@@ -47,6 +47,13 @@ class SellerSectionListFragment : FullScreenDialogFragment(),
     ): View {
         binding = FragmentSellerSectionListBinding.inflate(inflater, container, false)
 
+        ViewCompat.setOnApplyWindowInsetsListener(binding.collapsingToolbarLayout, null)
+
+        // Navigation back arrow button
+        binding.toolbar.setNavigationOnClickListener {
+            findNavController(R.id.sellerSectionListFragment)?.navigateUp()
+        }
+
         // Setup recycler view
         val sectionsAdapter = SellerSectionsAdapter(this)
 
@@ -72,12 +79,13 @@ class SellerSectionListFragment : FullScreenDialogFragment(),
                         placeholder = R.drawable.placeholder_card
                     )
 
-                    binding.collapsingToolbarLayout.title = sellerDetail.getNormalizedName()
+                    binding.collapsingToolbarLayout.title = getString(
+                        R.string.seller_section_list_toolbar_title,
+                        sellerDetail.getNormalizedName()
+                    )
                 }
             }
         }
-
-        ViewCompat.setOnApplyWindowInsetsListener(binding.collapsingToolbarLayout, null)
 
         // Retry button
         binding.loadErrorLayout.retryButton.setOnClickListener {
@@ -96,11 +104,6 @@ class SellerSectionListFragment : FullScreenDialogFragment(),
                     showShortToast(it.toString())
                 }
             }
-        }
-
-        // Navigation back arrow button
-        binding.toolbar.setNavigationOnClickListener {
-            findNavController(R.id.sellerSectionListFragment)?.navigateUp()
         }
 
         return binding.root

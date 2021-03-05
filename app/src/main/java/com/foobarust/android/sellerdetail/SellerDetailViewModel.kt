@@ -2,18 +2,15 @@ package com.foobarust.android.sellerdetail
 
 import android.content.Context
 import android.os.Parcelable
-import androidx.annotation.ColorRes
-import androidx.annotation.DrawableRes
 import androidx.lifecycle.*
 import androidx.viewpager2.widget.ViewPager2
 import com.foobarust.android.R
+import com.foobarust.android.sellerdetail.SellerDetailChipAction.*
 import com.foobarust.android.selleritem.SellerItemDetailProperty
+import com.foobarust.android.sellerrating.SellerRatingDetailProperty
 import com.foobarust.android.utils.AppBarLayoutState
-import com.foobarust.domain.models.cart.UserCart
 import com.foobarust.domain.models.seller.*
 import com.foobarust.domain.states.Resource
-import com.foobarust.domain.states.getSuccessDataOr
-import com.foobarust.domain.usecases.cart.GetUserCartUseCase
 import com.foobarust.domain.usecases.seller.GetSellerDetailWithCatalogsUseCase
 import com.foobarust.domain.usecases.seller.GetSellerSectionDetailUseCase
 import com.foobarust.domain.utils.cancelIfActive
@@ -24,37 +21,31 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
+import java.util.*
 import javax.inject.Inject
 
 /**
  * Created by kevin on 10/4/20
  */
 
-const val SELLER_DETAIL_ACTION_RATING = "action_rating"
-const val SELLER_DETAIL_ACTION_TAG = "action_tag"
-
 @HiltViewModel
 class SellerDetailViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val getSellerDetailWithCatalogsUseCase: GetSellerDetailWithCatalogsUseCase,
-    private val getSellerSectionDetailUseCase: GetSellerSectionDetailUseCase,
-    getUserCartUseCase: GetUserCartUseCase,
+    private val getSellerSectionDetailUseCase: GetSellerSectionDetailUseCase
 ) : ViewModel() {
 
     private val _sellerDetailUiState = MutableStateFlow<SellerDetailUiState>(SellerDetailUiState.Loading)
-    val sellerDetailUiState: LiveData<SellerDetailUiState> = _sellerDetailUiState
-        .asLiveData(viewModelScope.coroutineContext)
+    val sellerDetailUiState: StateFlow<SellerDetailUiState> = _sellerDetailUiState.asStateFlow()
 
     private val _sellerDetail = MutableStateFlow<SellerDetail?>(null)
-    val sellerDetail: LiveData<SellerDetail> = _sellerDetail
-        .filterNotNull()
-        .asLiveData(viewModelScope.coroutineContext)
+    val sellerDetail: StateFlow<SellerDetail?> = _sellerDetail.asStateFlow()
 
     private val _sellerCatalogs = MutableStateFlow<List<SellerCatalog>>(emptyList())
-    val sellerCatalogs: LiveData<List<SellerCatalog>> = _sellerCatalogs
-        .asLiveData(viewModelScope.coroutineContext)
+    val sellerCatalogs: StateFlow<List<SellerCatalog>> = _sellerCatalogs.asStateFlow()
 
     private val _sectionDetail = MutableStateFlow<SellerSectionDetail?>(null)
+    val sectionDetail: StateFlow<SellerSectionDetail?> = _sectionDetail.asStateFlow()
 
     private val _sellerDetailProperty = MutableStateFlow<SellerDetailProperty?>(null)
 
@@ -62,13 +53,11 @@ class SellerDetailViewModel @Inject constructor(
 
     private val _viewPagerState = MutableStateFlow(ViewPager2.SCROLL_STATE_IDLE)
 
-    private var fetchSellerDetailJob: Job? = null
-
-    private val _navigateToSellerMisc = Channel<Unit>()
-    val navigateToSellerMisc: Flow<Unit> = _navigateToSellerMisc.receiveAsFlow()
-
     private val _navigateToItemDetail = Channel<SellerItemDetailProperty>()
     val navigateToItemDetail: Flow<SellerItemDetailProperty> = _navigateToItemDetail.receiveAsFlow()
+
+    private val _navigateToRatingDetail = Channel<SellerRatingDetailProperty>()
+    val navigateToRatingDetail: Flow<SellerRatingDetailProperty> = _navigateToRatingDetail.receiveAsFlow()
 
     private val _snackBarMessage = Channel<String>()
     val snackBarMessage: Flow<String> = _snackBarMessage.receiveAsFlow()
@@ -76,50 +65,22 @@ class SellerDetailViewModel @Inject constructor(
     private val _finishSwipeRefresh = Channel<Unit>()
     val finishSwipeRefresh: Flow<Unit> = _finishSwipeRefresh.receiveAsFlow()
 
-    val chipActions: LiveData<List<SellerDetailChipAction>> = _sellerDetail
-        .filterNotNull()
-        .map { buildChipActionsList(it) }
-        .asLiveData(viewModelScope.coroutineContext)
+    private var fetchSellerDetailJob: Job? = null
 
-    val sellerInfoSpan: LiveData<String> = _sellerDetail
+    val sellerInfo: Flow<String> = _sellerDetail
         .filterNotNull()
         .map { buildSellerInfoSpan(it) }
-        .asLiveData(viewModelScope.coroutineContext)
 
-    val toolbarTitle: LiveData<String?> = combine(
+    val chipActions: Flow<List<SellerDetailChipAction>> = _sellerDetail
+        .filterNotNull()
+        .map { buildChipActionsList(it) }
+
+    val toolbarTitle: Flow<String?> = combine(
         _appBarLayoutState.map { it == AppBarLayoutState.COLLAPSED },
         _sellerDetail.filterNotNull().map { it.getNormalizedName() }
     ) { isCollapsed, sellerName ->
         if (isCollapsed) sellerName else null
     }
-        .asLiveData(viewModelScope.coroutineContext)
-
-    val userCart: LiveData<UserCart?> = getUserCartUseCase(Unit)
-        .map { it.getSuccessDataOr(null) }
-        .asLiveData(viewModelScope.coroutineContext)
-
-    val showCartBottomBar: LiveData<Boolean> = getUserCartUseCase(Unit)
-        .map { it.getSuccessDataOr(null) }
-        .map { userCart -> userCart != null && userCart.itemsCount > 0 }
-        .distinctUntilChanged()
-        .asLiveData(viewModelScope.coroutineContext)
-
-    val sellerName: LiveData<String> = _sellerDetail
-        .filterNotNull()
-        .map { it.getNormalizedName() }
-        .asLiveData(viewModelScope.coroutineContext)
-
-    val sellerTypeInfo: LiveData<String> = _sectionDetail
-        .map {
-            it?.let {
-                context.getString(
-                    R.string.seller_item_detail_type_info_off_campus,
-                    it.getDeliveryTimeString(),
-                    it.getDeliveryDateString()
-                )
-            } ?: context.getString(R.string.seller_item_detail_type_info_on_campus)
-        }
-        .asLiveData(viewModelScope.coroutineContext)
 
     val enableSwipeRefresh: Flow<Boolean> = _appBarLayoutState.combine(
         _viewPagerState
@@ -133,7 +94,10 @@ class SellerDetailViewModel @Inject constructor(
 
         fetchSellerDetailJob?.cancelIfActive()
         fetchSellerDetailJob = viewModelScope.launch {
+            // Fetch seller detail
             fetchSellerDetailWithCatalogs(property.sellerId, isSwipeRefresh)
+
+            // Fetch section detail
             property.sectionId?.let {
                 fetchSectionDetail(it)
             }
@@ -148,12 +112,7 @@ class SellerDetailViewModel @Inject constructor(
         _viewPagerState.value = state
     }
 
-    fun onNavigateToSellerMisc() {
-        _navigateToSellerMisc.offer(Unit)
-    }
-
     fun onNavigateToSellerItemDetail(itemId: String) = viewModelScope.launch {
-        // Check if the seller is online
         val sellerDetail = _sellerDetail.firstOrNull() ?: return@launch
 
         if (sellerDetail.online) {
@@ -167,6 +126,19 @@ class SellerDetailViewModel @Inject constructor(
         } else {
             _snackBarMessage.offer(context.getString(R.string.seller_detail_offline_message))
         }
+    }
+
+    fun onNavigateToSellerRatingDetail() = viewModelScope.launch {
+        val sellerDetail = _sellerDetail.firstOrNull() ?: return@launch
+
+        _navigateToRatingDetail.offer(
+            SellerRatingDetailProperty(
+                sellerId = sellerDetail.id,
+                orderRating = sellerDetail.orderRating,
+                deliveryRating = sellerDetail.deliveryRating,
+                ratingCount = sellerDetail.ratingCount
+            )
+        )
     }
 
     private fun fetchSellerDetailWithCatalogs(
@@ -217,10 +189,7 @@ class SellerDetailViewModel @Inject constructor(
 
     private fun buildSellerInfoSpan(sellerDetail: SellerDetail): String = buildList {
         // Min spend
-        add(context.getString(
-            R.string.seller_detail_format_min_spend,
-            sellerDetail.getNormalizedRatingString()
-        ))
+        add(context.getString(R.string.seller_detail_format_min_spend, sellerDetail.minSpend))
 
         // Delivery type
         if (sellerDetail.type == SellerType.ON_CAMPUS) {
@@ -237,21 +206,17 @@ class SellerDetailViewModel @Inject constructor(
         }
     }.joinToString("  ·  ")
 
-    private fun buildChipActionsList(sellerDetail: SellerDetail) = buildList {
-        // Rating
-        add(SellerDetailChipAction(
-            id = SELLER_DETAIL_ACTION_RATING,
-            title = sellerDetail.getNormalizedRatingString(),
-            drawableRes = R.drawable.ic_star,
-            colorRes = R.color.yellow
+    private fun buildChipActionsList(
+        sellerDetail: SellerDetail
+    ): List<SellerDetailChipAction> = buildList {
+        // Rating chip
+        add(SellerDetailChipRating(
+            ratingTitle = sellerDetail.getNormalizedOrderRating()
         ))
 
-        // Tags
-        addAll(sellerDetail.tags.map {
-            SellerDetailChipAction(
-                id = "${SELLER_DETAIL_ACTION_RATING}_$it",
-                title = it
-            )
+        // Tags chips
+        addAll(sellerDetail.tags.map { tag ->
+            SellerDetailChipCategory(categoryTag = tag)
         })
     }
 }
@@ -262,12 +227,15 @@ data class SellerDetailProperty(
     val sectionId: String? = null
 ) : Parcelable
 
-data class SellerDetailChipAction(
-    val id: String,
-    val title: String,
-    @DrawableRes val drawableRes: Int? = null,
-    @ColorRes val colorRes: Int = R.color.material_on_background_emphasis_medium
-)
+sealed class SellerDetailChipAction {
+    data class SellerDetailChipRating(
+        val ratingTitle: String
+    ) : SellerDetailChipAction()
+
+    data class SellerDetailChipCategory(
+        val categoryTag: String
+    ) : SellerDetailChipAction()
+}
 
 sealed class SellerDetailUiState {
     object Success : SellerDetailUiState()

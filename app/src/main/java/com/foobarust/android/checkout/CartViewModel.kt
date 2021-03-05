@@ -232,7 +232,12 @@ class CartViewModel @Inject constructor(
     ): List<CartListModel> {
         // Return if there is no item in cart
         if (cartItems.isEmpty()) {
-            return listOf(CartEmptyItemModel)
+            return listOf(
+                CartEmptyItemModel(
+                    drawableRes = R.drawable.undraw_empty_cart,
+                    emptyMessage = context.getString(R.string.cart_empty_message)
+                )
+            )
         }
 
         return buildList {

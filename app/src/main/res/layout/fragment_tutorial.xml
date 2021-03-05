@@ -1,22 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <FrameLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/view_pager"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content">
 
-        <com.google.android.material.tabs.TabLayout
-            style="@style/Widget.Foobar.TabLayout.Stepper"
-            android:id="@+id/indicator_tab_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="70dp"
-            android:layout_gravity="bottom|center_horizontal" />
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/tutorial_view_pager"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/scroll_indicator"/>
 
-    </FrameLayout>
+            <com.zhpan.indicator.IndicatorView
+                android:id="@+id/scroll_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="30dp"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_marginTop="@dimen/spacing_xmedium"
+                app:layout_constraintTop_toBottomOf="@id/tutorial_view_pager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
 
 </layout>

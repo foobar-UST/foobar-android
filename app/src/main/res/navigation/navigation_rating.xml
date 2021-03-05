@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_rating"
+    app:startDestination="@id/ratingOrderFragment">
+
+    <fragment
+        android:id="@+id/ratingOrderFragment"
+        android:name="com.foobarust.android.rating.RatingOrderFragment"
+        tools:layout="@layout/fragment_rating_order">
+        <action
+            android:id="@+id/action_ratingOrderFragment_to_ratingDeliveryFragment"
+            app:destination="@id/ratingDeliveryFragment" />
+        <action
+            android:id="@+id/action_ratingOrderFragment_to_ratingCompleteFragment"
+            app:destination="@id/ratingCompleteFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/ratingDeliveryFragment"
+        android:name="com.foobarust.android.rating.RatingDeliveryFragment"
+        tools:layout="@layout/fragment_rating_delivery">
+        <action
+            android:id="@+id/action_ratingDeliveryFragment_to_ratingCompleteFragment"
+            app:destination="@id/ratingCompleteFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/ratingCompleteFragment"
+        android:name="com.foobarust.android.rating.RatingCompleteFragment"
+        tools:layout="@layout/fragment_rating_complete"/>
+
+</navigation>

@@ -17,8 +17,9 @@ data class SellerDetail(
     val location: Geolocation,
     val imageUrl: String?,
     val minSpend: Double,
-    val rating: Double,
-    val ratingCount: Int,
+    val orderRating: Double,
+    val deliveryRating: Double?,
+    val ratingCount: SellerRatingCount,
     val type: SellerType,
     val online: Boolean,
     val notice: String?,
@@ -43,8 +44,8 @@ fun SellerDetail.getNormalizedAddress(): String {
     return "${location.address}\n${location.addressZh}"
 }
 
-fun SellerDetail.getNormalizedRatingString(): String {
-    return if (rating == 0.0) "n.a." else String.format("%.1f", rating)
+fun SellerDetail.getNormalizedOrderRating(): String {
+    return if (orderRating == 0.0) "n.a." else String.format("%.1f", orderRating)
 }
 
 fun SellerDetail.getNormalizedTags(): String {

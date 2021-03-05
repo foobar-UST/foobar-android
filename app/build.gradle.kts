@@ -25,38 +25,35 @@ android {
         versionCode = Application.MAIN_VERSION_CODE
         versionName = Application.MAIN_VERSION_NAME
         testInstrumentationRunner = Dependencies.HILT_TEST_RUNNER
+
+        // Read local properties
+        val localProperties = Properties().apply {
+            load(rootProject.file("local.properties").inputStream())
+        }
+        val mapsApiKey = localProperties.getProperty("MAPS_API_KEY", null)
+
+        addManifestPlaceholders(mapOf("mapsApiKey" to mapsApiKey))
     }
 
     buildTypes {
-        val localProperties = Properties()
-        localProperties.load(
-            rootProject.file("local.properties").inputStream()
-        )
-
         // Release build
         getByName("release") {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            setManifestPlaceholders(
+            addManifestPlaceholders(
                 mapOf(
-                    "mapsApiKey" to localProperties.getProperty("MAPS_API_KEY", null),
                     "clearTextTraffic" to false,
-                    "authLink" to "foobarust2.page.link",
-                    "appLink" to "foobarust.page.link",
-                    "linkScheme" to "https"
+                    "disableAnalytics" to false
                 )
             )
         }
 
         // Debug build
         getByName("debug") {
-            setManifestPlaceholders(
+            addManifestPlaceholders(
                 mapOf(
-                    "mapsApiKey" to localProperties.getProperty("MAPS_API_KEY", null),
                     "clearTextTraffic" to true,
-                    "authLink" to "foobarust2.page.link",
-                    "appLink" to "foobarust.page.link",
-                    "linkScheme" to "https"
+                    "disableAnalytics" to true
                 )
             )
         }

@@ -1,8 +1,16 @@
 # Changelog
-## 2020-02-24
+## 2021-03-04
+- Added SellerRatingDetailFragment.
+- Added recent order caching.
+
+## 2021-02-27
+- Added food categories to ExploreFragment.
+- Fixed email packages not found in API 30.
+
+## 2021-02-24
 - Added SellerSearchFragment.
 
-## 2020-02-22
+## 2021-02-22
 - Bug fixes and refactor.
 - Fixed rotation problem.
 - Added notifications.
@@ -10,7 +18,7 @@
 - Added swipe refresh to more layouts.
 - Migrated SingleLiveEvent to Channel.
 
-## 2020-02-01
+## 2021-02-01
 - Prepare for explore page.
 - Added dynamic links for launching from notifications.
 - Added notifications when order is updated.
@@ -21,12 +29,12 @@
 - Improved auth screen.
 - Completed checkout workflow.
 
-## 2020-01-27
+## 2021-01-27
 - Updated Dagger to 2.31.2.
 - Fixed gradient crashing on low API devices.
 - Fixed uneven header heights on AuthFragments.
 
-## 2020-01-26
+## 2021-01-26
 - Refactored CartFragment to a better design.
 - Added PaymentFragment.
 - Added OrderPlacingFragment.
@@ -35,7 +43,7 @@
 - Integrated with Room.
 - Many bug fixes.
 
-## 2020-01-11
+## 2021-01-11
 - Refactored photo upload job using WorkManager.
 - Refactored GetUserCartUseCase using SharedFlow.
 - Refactored GetUserDetailUseCase using SharedFlow.
@@ -46,7 +54,7 @@
 - Fixed fragment slide animation flickering.
 - Prepared for delivery options.
 
-## 2020-01-04
+## 2021-01-04
 - Added section detail screen.
 - Added more sections screen.
 - Improved cart screen.

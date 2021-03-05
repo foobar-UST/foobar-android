@@ -8,6 +8,7 @@ import androidx.paging.cachedIn
 import androidx.paging.insertSeparators
 import androidx.paging.map
 import com.foobarust.android.R
+import com.foobarust.android.sellersection.SellerSectionsListModel.*
 import com.foobarust.domain.models.seller.SellerDetail
 import com.foobarust.domain.models.seller.isRecentSection
 import com.foobarust.domain.states.getSuccessDataOr
@@ -40,23 +41,12 @@ class SellerSectionListViewModel @Inject constructor(
             getSellerSectionsUseCase(GetSellerSectionsParameters(it))
         }
         .map { pagingData ->
-            pagingData.map { SellerSectionsListModel.SellerSectionsItemModel(it) }
+            pagingData.map {
+                SellerSectionsItemModel(it)
+            }
         }.map { pagingData ->
             pagingData.insertSeparators { before, after ->
-                return@insertSeparators if (before == null) {
-                    SellerSectionsListModel.SellerSectionsSubtitleModel(
-                        subtitle = context.getString(R.string.seller_section_subtitle_recent)
-                    )
-                } else if (after !== null &&
-                    before.sellerSectionBasic.isRecentSection() &&
-                    !after.sellerSectionBasic.isRecentSection()
-                ) {
-                    SellerSectionsListModel.SellerSectionsSubtitleModel(
-                        subtitle = context.getString(R.string.seller_section_subtitle_upcoming)
-                    )
-                } else {
-                    null
-                }
+                insertSeparators(before, after)
             }
         }.cachedIn(viewModelScope)
 
@@ -73,5 +63,34 @@ class SellerSectionListViewModel @Inject constructor(
 
     fun onFetchSellerSections(sellerId: String) {
         _sellerId.offer(sellerId)
+    }
+
+    private fun insertSeparators(
+        before: SellerSectionsItemModel?,
+        after: SellerSectionsItemModel?
+    ): SellerSectionsListModel? {
+        return if (before == null && after == null) {
+            SellerSectionsEmptyModel(
+                drawableRes = R.drawable.undraw_empty,
+                emptyMessage = context.getString(R.string.seller_section_empty_message)
+            )
+        } else if (
+            before == null &&
+            after?.sellerSectionBasic?.isRecentSection() == true
+        ) {
+            SellerSectionsSubtitleModel(
+                subtitle = context.getString(R.string.seller_section_subtitle_recent)
+            )
+        } else if (
+            after?.sellerSectionBasic?.isRecentSection() == false && (
+                before == null || before.sellerSectionBasic.isRecentSection()
+                )
+        ) {
+            SellerSectionsSubtitleModel(
+                subtitle = context.getString(R.string.seller_section_subtitle_upcoming)
+            )
+        } else {
+            null
+        }
     }
 }

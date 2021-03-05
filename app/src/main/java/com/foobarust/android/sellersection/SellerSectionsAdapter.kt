@@ -3,6 +3,7 @@ package com.foobarust.android.sellersection
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.DrawableRes
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -37,6 +38,10 @@ class SellerSectionsAdapter(
                 SubtitleLargeItemBinding.inflate(inflater, parent, false)
             )
 
+            R.layout.empty_list_item -> SellerSectionEmptyViewHolder(
+                EmptyListItemBinding.inflate(inflater, parent, false)
+            )
+
             else -> throw IllegalStateException("Unknown view type $viewType")
         }
     }
@@ -59,6 +64,13 @@ class SellerSectionsAdapter(
                 subtitle = (getItem(position) as? SellerSectionsSubtitleModel)?.subtitle
                 executePendingBindings()
             }
+
+            is SellerSectionEmptyViewHolder -> holder.binding.run {
+                val currentItem = getItem(position) as? SellerSectionsEmptyModel
+                drawableRes = currentItem?.drawableRes
+                emptyMessage = currentItem?.emptyMessage
+                executePendingBindings()
+            }
         }
     }
 
@@ -72,6 +84,7 @@ class SellerSectionsAdapter(
                 }
             }
             is SellerSectionsSubtitleModel -> R.layout.subtitle_large_item
+            is SellerSectionsEmptyModel -> R.layout.empty_list_item
             else -> throw IllegalStateException("Unknown view type at: $position")
         }
     }
@@ -94,6 +107,10 @@ sealed class SellerSectionsViewHolder(itemView: View) : RecyclerView.ViewHolder(
     class SellerSectionsSubtitleViewHolder(
         val binding: SubtitleLargeItemBinding
     ) : SellerSectionsViewHolder(binding.root)
+
+    class SellerSectionEmptyViewHolder(
+        val binding: EmptyListItemBinding
+    ) : SellerSectionsViewHolder(binding.root)
 }
 
 sealed class SellerSectionsListModel {
@@ -103,6 +120,11 @@ sealed class SellerSectionsListModel {
 
     data class SellerSectionsSubtitleModel(
         val subtitle: String
+    ) : SellerSectionsListModel()
+
+    data class SellerSectionsEmptyModel(
+        @DrawableRes val drawableRes: Int,
+        val emptyMessage: String
     ) : SellerSectionsListModel()
 }
 
@@ -116,6 +138,8 @@ object SellerSectionsListModelDiff : DiffUtil.ItemCallback<SellerSectionsListMod
                 oldItem.sellerSectionBasic.id == newItem.sellerSectionBasic.id
             oldItem is SellerSectionsSubtitleModel && newItem is SellerSectionsSubtitleModel ->
                 oldItem.subtitle == newItem.subtitle
+            oldItem is SellerSectionsEmptyModel && newItem is SellerSectionsEmptyModel ->
+                true
             else -> false
         }
     }
@@ -129,6 +153,8 @@ object SellerSectionsListModelDiff : DiffUtil.ItemCallback<SellerSectionsListMod
                 oldItem.sellerSectionBasic == newItem.sellerSectionBasic
             oldItem is SellerSectionsSubtitleModel && newItem is SellerSectionsSubtitleModel ->
                 oldItem.subtitle == newItem.subtitle
+            oldItem is SellerSectionsEmptyModel && newItem is SellerSectionsEmptyModel ->
+                true
             else -> false
         }
     }

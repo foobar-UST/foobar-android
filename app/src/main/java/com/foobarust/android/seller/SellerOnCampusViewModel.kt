@@ -5,8 +5,8 @@ import androidx.lifecycle.*
 import androidx.paging.*
 import com.foobarust.android.R
 import com.foobarust.android.promotion.PromotionListModel
-import com.foobarust.android.seller.SellerOnCampusListModel.*
-import com.foobarust.domain.models.seller.SellerType
+import com.foobarust.android.seller.SellersListModel.*
+import com.foobarust.domain.models.seller.*
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.promotion.GetAdvertiseBasicsParameters
 import com.foobarust.domain.usecases.promotion.GetAdvertiseBasicsUseCase
@@ -47,17 +47,36 @@ class SellerOnCampusViewModel @Inject constructor(
         .filter { it.isNotEmpty() }
         .asLiveData(viewModelScope.coroutineContext)
 
-
-    val onCampusListModels: Flow<PagingData<SellerOnCampusListModel>> = getSellersPagingUseCase(SellerType.ON_CAMPUS)
+    val sellersListModels: Flow<PagingData<SellersListModel>> = getSellersPagingUseCase(
+        SellerBasicsFilter(
+            sellerType = SellerType.ON_CAMPUS
+        )
+    )
         .map { pagingData ->
-            pagingData.map { SellerOnCampusItemModel(it) }
+            pagingData.map { sellerBasic ->
+                SellersItemModel(
+                    sellerId = sellerBasic.id,
+                    sellerName = sellerBasic.getNormalizedName(),
+                    sellerImageUrl = sellerBasic.imageUrl,
+                    sellerRating = sellerBasic.getNormalizedOrderRating(),
+                    sellerMinSpend = context.getString(
+                        R.string.seller_on_campus_item_min_spend,
+                        sellerBasic.getNormalizedMinSpendString()
+                    ),
+                    sellerOnline = sellerBasic.online,
+                    sellerTags = sellerBasic.getNormalizedTags()
+                )
+            }
         }
         .map { pagingData ->
-            pagingData.insertSeparators { before, _ ->
-                return@insertSeparators if (before == null) {
-                    SellerOnCampusSubtitleModel(
-                        subtitle = context.getString(R.string.seller_subtitle)
+            pagingData.insertSeparators { before, after ->
+                return@insertSeparators if (before == null && after == null) {
+                    SellersEmptyModel(
+                        drawableRes = R.drawable.undraw_empty,
+                        emptyMessage = context.getString(R.string.seller_empty_message)
                     )
+                } else if (before == null && after is SellersItemModel) {
+                    SellersSubtitleModel(subtitle = context.getString(R.string.seller_subtitle))
                 } else {
                     null
                 }

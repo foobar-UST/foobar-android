@@ -1,20 +1,21 @@
 package com.foobarust.android.explore
 
+import android.content.Context
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
-import androidx.paging.insertSeparators
-import androidx.paging.map
-import com.foobarust.android.explore.NotificationsListModel.*
-import com.foobarust.android.shared.BaseViewModel
-import com.foobarust.android.utils.ResourceIdentifier
+import com.foobarust.android.R
+import com.foobarust.android.explore.ExploreListModel.ExploreItemCategoryItemModel
+import com.foobarust.android.explore.ExploreListModel.ExploreSubtitleItemModel
+import com.foobarust.android.seller.SellerListProperty
+import com.foobarust.domain.models.explore.SellerItemCategory
+import com.foobarust.domain.models.explore.getNormalizedTitle
 import com.foobarust.domain.states.Resource
-import com.foobarust.domain.usecases.user.GetUserNotificationsUseCase
-import com.foobarust.domain.usecases.user.RemoveUserNotificationUseCase
+import com.foobarust.domain.usecases.seller.GetSellerItemCategoriesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.map
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.ConflatedBroadcastChannel
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,42 +25,82 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ExploreViewModel @Inject constructor(
-    private val resourceIdentifier: ResourceIdentifier,
-    private val removeUserNotificationUseCase: RemoveUserNotificationUseCase,
-    getUserNotificationsUseCase: GetUserNotificationsUseCase
-) : BaseViewModel() {
+    @ApplicationContext private val context: Context,
+    getSellerItemCategoriesUseCase: GetSellerItemCategoriesUseCase
+) : ViewModel() {
 
-    val notificationListModels: Flow<PagingData<NotificationsListModel>> = getUserNotificationsUseCase(Unit)
-        .map { pagingData ->
-            pagingData.map {
-                @Suppress("USELESS_CAST")
-                NotificationsItemModel(
-                    notificationId = it.id,
-                    title = resourceIdentifier.getString(it.titleLocKey, it.titleLocArgs.toTypedArray()),
-                    body = resourceIdentifier.getString(it.bodyLocKey, it.bodyLocArgs.toTypedArray()),
-                    link = it.link,
-                    imageUrl = it.imageUrl
-                ) as NotificationsListModel
-            }
-        }
-        .map { pagingData ->
-            pagingData.insertSeparators { before, after ->
-                return@insertSeparators if (before == null && after == null) {
-                    NotificationEmptyModel
-                } else {
-                    null
+    private val _exploreUiState = MutableStateFlow<ExploreUiState>(ExploreUiState.Loading)
+    val exploreUiState: StateFlow<ExploreUiState> = _exploreUiState.asStateFlow()
+
+    private val _exploreListModels = MutableStateFlow<List<ExploreListModel>>(emptyList())
+    val exploreListModels: StateFlow<List<ExploreListModel>> = _exploreListModels.asStateFlow()
+
+    private val _refreshExploreList = ConflatedBroadcastChannel(Unit)
+
+    private val _navigateToSellerList = Channel<SellerListProperty>()
+    val navigateToSellerList: Flow<SellerListProperty> = _navigateToSellerList.receiveAsFlow()
+
+    init {
+        viewModelScope.launch {
+            _refreshExploreList.asFlow()
+                .flatMapLatest { getSellerItemCategoriesUseCase(Unit) }
+                .collectLatest {
+                    when (it) {
+                        is Resource.Success -> {
+                            _exploreUiState.value = ExploreUiState.Success
+                            _exploreListModels.value = buildExploreListModels(it.data)
+                        }
+                        is Resource.Error -> {
+                            _exploreUiState.value = ExploreUiState.Error(it.message)
+                        }
+                        is Resource.Loading -> {
+                            _exploreUiState.value = ExploreUiState.Loading
+                        }
+                    }
                 }
-            }
-        }
-        .cachedIn(viewModelScope)
-
-    fun onRemoveNotification(notificationId: String) = viewModelScope.launch {
-        removeUserNotificationUseCase(notificationId).collect {
-           when (it) {
-               is Resource.Success -> Unit
-               is Resource.Error -> showToastMessage(it.message)
-               is Resource.Loading -> Unit
-           }
         }
     }
+
+    fun onRefreshExploreList() {
+        _refreshExploreList.offer(Unit)
+    }
+
+    fun onNavigateToSellerList(categoryId: String) {
+        val categoryItemModel = _exploreListModels.value
+            .filterIsInstance<ExploreItemCategoryItemModel>()
+            .first { it.categoryId == categoryId }
+
+        _navigateToSellerList.offer(
+            SellerListProperty(
+                categoryTag = categoryItemModel.categoryTag,
+                categoryTitle = categoryItemModel.categoryTitle,
+                categoryImageUrl = categoryItemModel.categoryImageUrl
+            )
+        )
+    }
+
+    private fun buildExploreListModels(
+        itemCategories: List<SellerItemCategory>
+    ): List<ExploreListModel> = buildList {
+        if (itemCategories.isNotEmpty()) {
+            add(ExploreSubtitleItemModel(
+                context.getString(R.string.explore_item_categories_subtitle)
+            ))
+        }
+
+        addAll(itemCategories.map { itemCategory ->
+            ExploreItemCategoryItemModel(
+                categoryId = itemCategory.id,
+                categoryTag = itemCategory.tag,
+                categoryTitle = itemCategory.getNormalizedTitle(),
+                categoryImageUrl = itemCategory.imageUrl
+            )
+        })
+    }
+}
+
+sealed class ExploreUiState {
+    object Success : ExploreUiState()
+    data class Error(val message: String?) : ExploreUiState()
+    object Loading : ExploreUiState()
 }

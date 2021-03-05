@@ -1,6 +1,7 @@
 package com.foobarust.android.settings
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -22,6 +23,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SettingsFragment : Fragment(), SettingsAdapter.SettingsAdapterListener {
@@ -29,6 +31,9 @@ class SettingsFragment : Fragment(), SettingsAdapter.SettingsAdapterListener {
     private var binding: FragmentSettingsBinding by AutoClearedValue(this)
     private val mainViewModel: MainViewModel by activityViewModels()
     private val settingsViewModel: SettingsViewModel by viewModels()
+
+    @Inject
+    lateinit var packageManager: PackageManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,8 +50,10 @@ class SettingsFragment : Fragment(), SettingsAdapter.SettingsAdapterListener {
             setHasFixedSize(true)
         }
 
-        settingsViewModel.settingsListModels.observe(viewLifecycleOwner) {
-            settingsAdapter.submitList(it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            settingsViewModel.settingsListModels.collect {
+                settingsAdapter.submitList(it)
+            }
         }
 
         // Ui state
@@ -97,17 +104,17 @@ class SettingsFragment : Fragment(), SettingsAdapter.SettingsAdapterListener {
 
     override fun onSectionItemClicked(sectionId: String) {
         when (sectionId) {
-            SETTINGS_NOTIFICATIONS -> findNavController().navigate(
+            SETTINGS_NOTIFICATIONS -> findNavController(R.id.settingsFragment)?.navigate(
                 SettingsFragmentDirections.actionSettingsFragmentToNotificationFragment()
             )
-            SETTINGS_FAVORITE -> findNavController().navigate(
+            SETTINGS_FAVORITE -> findNavController(R.id.settingsFragment)?.navigate(
                 SettingsFragmentDirections.actionSettingsFragmentToFavoriteFragment()
             )
             SETTINGS_CONTACT_US -> sendContactUsEmail()
             SETTINGS_TERMS_CONDITIONS -> findNavController(R.id.settingsFragment)?.navigate(
                 SettingsFragmentDirections.actionSettingsFragmentToLicenseFragment()
             )
-            SETTINGS_FEATURES -> findNavController().navigate(
+            SETTINGS_FEATURES -> findNavController(R.id.settingsFragment)?.navigate(
                 SettingsFragmentDirections.actionSettingsFragmentToTutorialFragment()
             )
             SETTINGS_SIGN_OUT -> showSignOutConfirmDialog()
@@ -115,15 +122,12 @@ class SettingsFragment : Fragment(), SettingsAdapter.SettingsAdapterListener {
     }
 
     private fun sendContactUsEmail() {
-        // TODO: build a custom email with subject and content prefixes
         val intent = Intent(Intent.ACTION_SENDTO).apply {
             data = Uri.parse("mailto:")
             putExtra(Intent.EXTRA_EMAIL, arrayOf("kthon@connect.ust.hk"))
-            //putExtra(Intent.EXTRA_SUBJECT, "Email Subject")
-            //putExtra(Intent.EXTRA_TEXT, "Email Content")
         }
 
-        if (intent.resolveActivity(requireContext().packageManager) != null) {
+        if (intent.resolveActivity(packageManager) != null) {
             startActivity(intent)
         } else {
             showShortToast(getString(R.string.error_resolve_activity_failed))

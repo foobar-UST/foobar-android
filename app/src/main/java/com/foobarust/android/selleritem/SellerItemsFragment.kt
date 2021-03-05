@@ -6,14 +6,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentSellerItemsBinding
+import com.foobarust.android.main.MainViewModel
 import com.foobarust.android.sellerdetail.SellerDetailViewModel
 import com.foobarust.android.shared.PagingLoadStateAdapter
-import com.foobarust.android.utils.*
+import com.foobarust.android.utils.AutoClearedValue
+import com.foobarust.android.utils.anyError
+import com.foobarust.android.utils.parentViewModels
+import com.foobarust.android.utils.showShortToast
+import com.foobarust.domain.models.cart.hasItems
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -25,6 +32,7 @@ import kotlinx.coroutines.launch
 class SellerItemsFragment : Fragment(), SellerItemsAdapter.SellerItemsAdapterListener {
 
     private var binding: FragmentSellerItemsBinding by AutoClearedValue(this)
+    private val mainViewModel: MainViewModel by activityViewModels()
     private val sellerDetailViewModel: SellerDetailViewModel by parentViewModels()
     private val sellerItemsViewModel: SellerItemsViewModel by viewModels()
 
@@ -63,10 +71,6 @@ class SellerItemsFragment : Fragment(), SellerItemsAdapter.SellerItemsAdapterLis
         // Control views corresponding to load states
         sellerItemsAdapter.addLoadStateListener { loadStates ->
             with(loadStates) {
-                updateViews(
-                    mainLayout = binding.recyclerView,
-                    progressBar = binding.itemsProgressBar
-                )
                 anyError()?.let {
                     showShortToast(it.error.message)
                 }
@@ -74,12 +78,16 @@ class SellerItemsFragment : Fragment(), SellerItemsAdapter.SellerItemsAdapterLis
         }
 
         // Setup recyclerview bottom padding correspond to cart bottom bar
-        sellerDetailViewModel.showCartBottomBar.observe(viewLifecycleOwner) { show ->
-            val bottomPadding = if (show) {
-                requireContext().resources.getDimension(R.dimen.cart_bottom_bar_height)
-            } else 0f
-
-            binding.recyclerView.updatePadding(bottom = bottomPadding.toInt())
+        viewLifecycleOwner.lifecycleScope.launch {
+            mainViewModel.userCart.collect { userCart ->
+                val showCartBottomBar = userCart != null && userCart.hasItems()
+                val bottomPadding = if (showCartBottomBar) {
+                    requireContext().resources.getDimension(R.dimen.cart_bottom_bar_height)
+                } else {
+                    0f
+                }
+                binding.recyclerView.updatePadding(bottom = bottomPadding.toInt())
+            }
         }
 
         return binding.root
@@ -87,9 +95,10 @@ class SellerItemsFragment : Fragment(), SellerItemsAdapter.SellerItemsAdapterLis
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         // Fix crashing when using animateLayoutChanges on parent layout
         // See: https://stackoverflow.com/questions/60004140/pages-contain-a-viewgroup-with-a-layouttransition-or-animatelayoutchanges-tr
-        binding.itemsLayout.layoutTransition.setAnimateParentHierarchy(false)
+        //binding.itemsLayout.layoutTransition.setAnimateParentHierarchy(false)
     }
 
     override fun onSellerItemClicked(itemId: String) {

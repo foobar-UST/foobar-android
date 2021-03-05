@@ -24,6 +24,7 @@ import kotlinx.coroutines.tasks.await
 private const val TAG = "FirebaseExtensions"
 
 const val ERROR_DOCUMENT_NOT_EXIST = "Document does not exist."
+const val ERROR_NETWORK_UNAVAILABLE = "Network error."
 
 /**
  * Check if the query snapshot is came from network data instead of local caches.
@@ -33,14 +34,14 @@ internal fun QuerySnapshot.isNetworkData(): Boolean {
 }
 
 internal suspend inline fun <reified T, R> CollectionReference.getAwaitResult(mapper: (T) -> R): List<R> {
-    return this.get()
+    return get()
         .await()
         .toObjects(T::class.java)
         .map { mapper(it) }
 }
 
 internal suspend inline fun <reified T, R> DocumentReference.getAwaitResult(mapper: (T) -> R): R {
-    val result = this.get()
+    val result = get()
         .await()
         .toObject(T::class.java)
         ?: throw Exception(ERROR_DOCUMENT_NOT_EXIST)
@@ -49,7 +50,7 @@ internal suspend inline fun <reified T, R> DocumentReference.getAwaitResult(mapp
 }
 
 internal suspend inline fun <reified T, R> Query.getAwaitResult(mapper: (T) -> R): List<R> {
-    return this.get()
+    return get()
         .await()
         .toObjects(T::class.java)
         .map { mapper(it) }
@@ -66,12 +67,17 @@ internal inline fun <reified T, R> CollectionReference.snapshotFlow(
             channel.offer(Resource.Error(error.message))
             channel.close(CancellationException(error.message))
         } else {
-            snapshot?.let {
-                if (!it.metadata.hasPendingWrites()) {
-                    val results = it.toObjects(T::class.java)
-                    channel.offer(
-                        Resource.Success(results.map { result -> mapper(result) })
-                    )
+            snapshot?.let { snap ->
+                if (snap.isEmpty && snap.metadata.isFromCache) {
+                    channel.offer(Resource.Error(ERROR_NETWORK_UNAVAILABLE))
+                    if (!keepAlive) {
+                        channel.close()
+                    }
+                } else if (!snap.metadata.hasPendingWrites()) {
+                    val results = snap.toObjects(T::class.java)
+                    val successResult = Resource.Success(results.map { result -> mapper(result) })
+                    channel.offer(successResult)
+
                     if (results.isEmpty() && !keepAlive) {
                         channel.close()
                     }
@@ -94,11 +100,12 @@ internal inline fun <reified T, R> DocumentReference.snapshotFlow(
             channel.offer(Resource.Error(error.message))
             channel.close(CancellationException(error.message))
         } else {
-            snapshot?.let {
-                if (!it.metadata.hasPendingWrites()) {
-                    val result = it.toObject(T::class.java)
+            snapshot?.let { snap ->
+                if (!snap.metadata.hasPendingWrites()) {
+                    val result = snap.toObject(T::class.java)
                     if (result == null) {
                         channel.offer(Resource.Error(ERROR_DOCUMENT_NOT_EXIST))
+
                         if (!keepAlive) {
                             channel.close(CancellationException(ERROR_DOCUMENT_NOT_EXIST))
                         }
@@ -124,12 +131,17 @@ internal inline fun <reified T, R> Query.snapshotFlow(
             channel.offer(Resource.Error(error.message))
             channel.close(CancellationException(error.message))
         } else {
-            snapshot?.let {
-                if (!it.metadata.hasPendingWrites()) {
-                    val results = it.toObjects(T::class.java)
-                    channel.offer(
-                        Resource.Success(results.map { result -> mapper(result) })
-                    )
+            snapshot?.let { snap ->
+                if (snap.isEmpty && snap.metadata.isFromCache) {
+                    channel.offer(Resource.Error(ERROR_NETWORK_UNAVAILABLE))
+                    if (!keepAlive) {
+                        channel.close()
+                    }
+                } else if (!snap.metadata.hasPendingWrites()) {
+                    val results = snap.toObjects(T::class.java)
+                    val successResult = Resource.Success(results.map { result -> mapper(result) })
+                    channel.offer(successResult)
+
                     if (results.isEmpty() && !keepAlive) {
                         channel.close()
                     }

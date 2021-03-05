@@ -1,18 +1,15 @@
 package com.foobarust.android.services
 
 import android.app.NotificationManager
-import android.util.Log
-import androidx.work.WorkManager
+import androidx.work.*
 import com.foobarust.android.utils.ResourceIdentifier
 import com.foobarust.android.utils.sendImageNotification
 import com.foobarust.android.utils.sendNotification
-import com.foobarust.domain.states.Resource
-import com.foobarust.domain.usecases.messaging.InsertDeviceTokenUseCase
+import com.foobarust.android.works.UploadDeviceTokenWork
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
 private const val TAG = "MessagingService"
@@ -26,29 +23,32 @@ class MessagingService: FirebaseMessagingService() {
     lateinit var workManager: WorkManager
     @Inject
     lateinit var resourceIdentifier: ResourceIdentifier
-    @Inject
-    lateinit var insertDeviceTokenUseCase: InsertDeviceTokenUseCase
 
-    private val coroutineScope: CoroutineScope = CoroutineScope(SupervisorJob())
+    private val coroutineScope = CoroutineScope(SupervisorJob())
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         remoteMessage.notification?.let { notification ->
-            // Required fields
-            val channelId = notification.channelId ?: return
-            val titleLocId = notification.titleLocalizationKey ?: return
-            val link = notification.link ?: return
+            val channelId = notification.channelId ?: return@let
+            val titleLocId = notification.titleLocalizationKey ?: return@let
+            val bodyLocId = notification.bodyLocalizationKey ?: return@let
+            val link = notification.link ?: return@let
 
-            val titleLocArgs = notification.titleLocalizationArgs
-
-            val bodyLocId = notification.bodyLocalizationKey
             val imageUrl = notification.imageUrl
+
+            // String resources arguments
+            val titleLocArgs = notification.titleLocalizationArgs
+            val bodyLocArgs = notification.bodyLocalizationArgs
+
+            // Resolve notification string contents
+            val notificationTitle = resourceIdentifier.getString(titleLocId, titleLocArgs)
+            val notificationBody = resourceIdentifier.getString(bodyLocId, bodyLocArgs)
 
             if (imageUrl != null) {
                 coroutineScope.launch {
                     notificationManager.sendImageNotification(
                         context = applicationContext,
-                        title = resourceIdentifier.getString(titleLocId, titleLocArgs),
-                        messageBody = bodyLocId?.let { resourceIdentifier.getString(it) },
+                        title = notificationTitle,
+                        messageBody = notificationBody,
                         channelId = notification.channelId.toString(),
                         imageUrl = imageUrl.toString(),
                         link = notification.link.toString()
@@ -57,8 +57,8 @@ class MessagingService: FirebaseMessagingService() {
             } else {
                 notificationManager.sendNotification(
                     context = applicationContext,
-                    title = resourceIdentifier.getString(titleLocId, titleLocArgs),
-                    messageBody = bodyLocId?.let { resourceIdentifier.getString(it) },
+                    title = notificationTitle,
+                    messageBody = notificationBody,
                     channelId = channelId,
                     link = link.toString()
                 )
@@ -73,15 +73,23 @@ class MessagingService: FirebaseMessagingService() {
      * the token.
      */
     override fun onNewToken(token: String) {
-        GlobalScope.launch {
-            insertDeviceTokenUseCase(Unit).collect {
-                when (it) {
-                    is Resource.Success -> Log.d(TAG, "Uploaded device token.")
-                    is Resource.Error -> Log.d(TAG, "Failed to upload device token.")
-                    is Resource.Loading -> Log.d(TAG, "Uploading device token.")
-                }
-            }
-        }
+        // Upload device token using WorkManager,
+        // the work will retried until network is available.
+        val inputData = workDataOf(UploadDeviceTokenWork.DEVICE_TOKEN to token)
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+        val uploadRequest = OneTimeWorkRequestBuilder<UploadDeviceTokenWork>()
+            .setInputData(inputData)
+            .setConstraints(constraints)
+            .build()
+
+        workManager.beginUniqueWork(
+            UploadDeviceTokenWork.WORK_NAME,
+            ExistingWorkPolicy.REPLACE,
+            uploadRequest
+        ).enqueue()
     }
 
     override fun onDestroy() {

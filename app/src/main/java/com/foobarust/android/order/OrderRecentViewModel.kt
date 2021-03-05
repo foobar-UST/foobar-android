@@ -8,10 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.foobarust.android.R
 import com.foobarust.android.order.OrderRecentListModel.OrderRecentActiveItemModel
 import com.foobarust.android.order.OrderRecentListModel.OrderRecentEmptyItemModel
-import com.foobarust.domain.models.order.OrderBasic
-import com.foobarust.domain.models.order.getNormalizedDeliveryAddress
-import com.foobarust.domain.models.order.getNormalizedTitle
-import com.foobarust.domain.models.order.getUpdatedAtString
+import com.foobarust.domain.models.order.*
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.order.GetRecentOrdersUseCase
 import com.foobarust.domain.utils.cancelIfActive
@@ -91,27 +88,31 @@ class OrderRecentViewModel @Inject constructor(
         if (orderItems.isEmpty()) {
             return listOf(
                 OrderRecentEmptyItemModel(
-                    emptyTitle = context.getString(R.string.order_recent_empty_item_title)
+                    drawableRes = R.drawable.undraw_receipt,
+                    emptyMessage = context.getString(R.string.order_recent_empty_item_title)
                 )
             )
         }
 
-        return orderItems.map {
+        return orderItems.map { orderBasic ->
+            val orderImageTitle = when (orderBasic.type) {
+                OrderType.ON_CAMPUS -> orderBasic.getNormalizedSellerName()
+                OrderType.OFF_CAMPUS -> "${orderBasic.getNormalizedSellerName()}\n${orderBasic.getNormalizedTitle()}"
+            }
+
             OrderRecentActiveItemModel(
-                orderId = it.id,
-                orderIdentifierTitle = context.getString(
+                orderId = orderBasic.id,
+                orderImageTitle = orderImageTitle,
+                orderStateTitle = context.getString(
                     R.string.order_recent_item_identifier_title,
-                    it.identifier,
-                    orderStateUtil.getOrderStateTitle(it.state)
+                    orderBasic.identifier,
+                    orderStateUtil.getOrderStateTitle(orderBasic.state)
                 ),
-                orderTitle = it.getNormalizedTitle(),
-                orderDeliveryAddress = it.getNormalizedDeliveryAddress(),
-                orderImageUrl = it.imageUrl,
-                orderState = it.state,
-                orderUpdatedAt = context.getString(
-                    R.string.order_recent_active_item_last_updated,
-                    it.getUpdatedAtString()
-                )
+                orderDeliveryAddress = orderBasic.getNormalizedDeliveryAddress(),
+                orderImageUrl = orderBasic.imageUrl,
+                orderState = orderBasic.state,
+                orderUpdatedAt = orderBasic.getUpdatedAtString(),
+                orderTotalCost = orderBasic.totalCost
             )
         }
     }

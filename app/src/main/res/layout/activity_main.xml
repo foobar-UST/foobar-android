@@ -4,12 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-        <variable
-            name="viewModel"
-            type="com.foobarust.android.main.MainViewModel" />
-    </data>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -36,26 +30,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
                     android:background="?android:attr/colorBackground"
+                    app:title="@string/app_name"
                     app:layout_scrollFlags="scroll|enterAlways"
                     tools:menu="@menu/menu_toolbar_main"
                     tools:title="@string/app_name" />
 
             </com.google.android.material.appbar.AppBarLayout>
-
-            <!--
-            <TextView
-                android:id="@+id/offline_text_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:padding="@dimen/spacing_xmedium"
-                android:text="No Connection"
-                android:textAppearance="?attr/textAppearanceOverline"
-                android:textColor="?attr/colorOnSecondary"
-                android:background="?attr/colorSecondary"
-                app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
-                tools:visibility="visible"/>
-            -->
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/nav_host_container"
@@ -68,9 +48,7 @@
                 android:id="@+id/cart_bottom_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                app:userCart="@{viewModel.userCart}"
-                app:goneIf="@{!viewModel.showCartBottomBar}"/>
+                android:layout_gravity="bottom"/>
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

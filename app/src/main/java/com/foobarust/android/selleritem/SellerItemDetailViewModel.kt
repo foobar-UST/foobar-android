@@ -305,8 +305,7 @@ class SellerItemDetailViewModel @Inject constructor(
         // Add item info
         add(SellerItemDetailInfoItemModel(
             itemTitle = itemDetail.getNormalizedTitle(),
-            itemPrice = itemDetail.price,
-            itemCount = itemDetail.count
+            itemPrice = itemDetail.price
         ))
 
         // Add description

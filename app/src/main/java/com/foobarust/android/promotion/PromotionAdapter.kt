@@ -3,6 +3,7 @@ package com.foobarust.android.promotion
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -65,6 +66,7 @@ class PromotionAdapter(
             AdvertiseItemModel(advertiseBasic = it)
         }
 
+        // Setup banner view pager
         viewPager.apply {
             setAdapter(advertiseAdapter)
             setLifecycleRegistry(fragment.lifecycle)
@@ -77,6 +79,9 @@ class PromotionAdapter(
             setIndicatorView(scrollIndicator)
             removeDefaultPageTransformer()
         }.create(advertiseItemModels)
+
+        // Hide indicator view when there is only one item
+        scrollIndicator.isVisible = advertiseModel.advertiseBasics.size > 1
 
         executePendingBindings()
     }

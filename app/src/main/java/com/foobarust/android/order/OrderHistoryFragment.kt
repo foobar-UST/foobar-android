@@ -44,7 +44,7 @@ class OrderHistoryFragment : Fragment(), OrderHistoryAdapter.OrderHistoryAdapter
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            orderHistoryViewModel.recentListModels.collectLatest {
+            orderHistoryViewModel.orderHistoryListModels.collectLatest {
                 historyAdapter.submitData(it)
             }
         }
@@ -77,10 +77,21 @@ class OrderHistoryFragment : Fragment(), OrderHistoryAdapter.OrderHistoryAdapter
             }
         }
 
+        // Refresh history list after rating
+        viewLifecycleOwner.lifecycleScope.launch {
+            orderViewModel.refreshHistoryList.collect {
+                historyAdapter.refresh()
+            }
+        }
+
         return binding.root
     }
 
-    override fun onOrderClicked(orderId: String) {
+    override fun onOrderArchivedClicked(orderId: String) {
         orderViewModel.onNavigateToOrderDetail(orderId)
+    }
+
+    override fun onOrderDeliveredClicked(orderId: String) {
+        orderViewModel.onNavigateToRating(orderId)
     }
 }

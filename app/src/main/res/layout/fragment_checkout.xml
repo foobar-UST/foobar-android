@@ -4,12 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-        <variable
-            name="viewModel"
-            type="com.foobarust.android.checkout.CheckoutViewModel" />
-    </data>
-
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinator_layout"
         android:layout_width="match_parent"
@@ -27,7 +21,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="120dp"
                 app:contentScrim="?android:attr/colorBackground"
-                app:title="@{viewModel.toolbarTitle}"
+                app:collapsedTitleTextAppearance="?attr/textAppearanceHeadline6"
                 app:expandedTitleGravity="top"
                 app:expandedTitleMarginTop="?attr/actionBarSize"
                 app:expandedTitleTextAppearance="?attr/textAppearanceHeadline5"
@@ -52,8 +46,7 @@
                     android:indeterminate="true"
                     android:layout_gravity="bottom"
                     app:showAnimationBehavior="outward"
-                    app:hideAnimationBehavior="outward"
-                    app:progressHideIf="@{!viewModel.showLoadingProgressBar}"/>
+                    app:hideAnimationBehavior="outward" />
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -78,9 +71,7 @@
                 android:id="@+id/submit_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/spacing_large"
-                android:text="@{viewModel.submitButtonTitle}"
-                app:goneIf="@{!viewModel.showSubmitButton}"/>
+                android:layout_margin="@dimen/spacing_large" />
 
         </FrameLayout>
 

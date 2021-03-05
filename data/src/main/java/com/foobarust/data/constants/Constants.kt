@@ -67,18 +67,6 @@ object Constants {
     const val USER_CART_ITEMS_AVAILABLE_FIELD = "available"
     const val USER_CART_ITEMS_UPDATED_AT_FIELD = "updated_at"
 
-    // User notifications
-    const val USER_NOTIFICATIONS_SUB_COLLECTION = "notifications"
-
-    const val USER_NOTIFICATION_ID_FIELD = "id"
-    const val USER_NOTIFICATION_TITLE_LOC_KEY_FIELD = "title_loc_key"
-    const val USER_NOTIFICATION_TITLE_LOC_ARGS_FIELD = "title_loc_args"
-    const val USER_NOTIFICATION_BODY_LOC_KEY_FIELD = "body_loc_key"
-    const val USER_NOTIFICATION_BODY_LOC_ARGS_FIELD = "body_loc_args"
-    const val USER_NOTIFICATION_LINK_FIELD = "link"
-    const val USER_NOTIFICATION_IMAGE_URL_FIELD = "image_url"
-    const val USER_NOTIFICATION_CREATED_AT_FIELD = "created_at"
-
     // Sellers
     const val SELLERS_COLLECTION = "sellers"
     const val SELLERS_BASIC_COLLECTION = "sellers_basic"
@@ -92,7 +80,8 @@ object Constants {
     const val SELLER_IMAGE_URL_FIELD = "image_url"
     const val SELLER_OPENING_HOURS_FIELD = "opening_hours"
     const val SELLER_MIN_SPEND_FIELD = "min_spend"
-    const val SELLER_RATING_FIELD = "rating"
+    const val SELLER_ORDER_RATING_FIELD = "order_rating"
+    const val SELLER_DELIVERY_RATING_FIELD = "delivery_rating"
     const val SELLER_RATING_COUNT_FIELD = "rating_count"
     const val SELLER_TYPE_FIELD = "type"
     const val SELLER_WEBSITE_FIELD = "website"
@@ -103,10 +92,10 @@ object Constants {
     const val SELLER_TAGS_FIELD = "tags"
     const val SELLER_BY_USER_ID = "by_user_id"
 
-    // Seller Location
-    const val SELLER_LOCATION_ADDRESS_FIELD = "address"
-    const val SELLER_LOCATION_ADDRESS_ZH_FIELD = "address_zh"
-    const val SELLER_LOCATION_GEOPOINT_FIELD = "geopoint"
+    // Geo Location
+    const val GEO_LOCATION_ADDRESS_FIELD = "address"
+    const val GEO_LOCATION_ADDRESS_ZH_FIELD = "address_zh"
+    const val GEO_LOCATION_GEOPOINT_FIELD = "geopoint"
 
     // Seller Catalog
     const val SELLER_CATALOG_ID_FIELD = "id"
@@ -146,6 +135,24 @@ object Constants {
     const val SELLER_SECTION_STATE_SHIPPED = "shipped"
     const val SELLER_SECTION_STATE_DELIVERED = "delivered"
 
+    // Seller Rating
+    const val SELLER_RATINGS_SUB_COLLECTION = "ratings"
+    const val SELLER_RATINGS_BASIC_SUB_COLLECTION = "ratings_basic"
+
+    const val SELLER_RATING_ID_FIELD = "id"
+    const val SELLER_RATING_USERNAME_FIELD = "username"
+    const val SELLER_RATING_USER_PHOTO_URL_FIELD = "user_photo_url"
+    const val SELLER_RATING_ORDER_ID_FIELD = "order_id"
+    const val SELLER_RATING_ORDER_RATING_FIELD = "order_rating"
+    const val SELLER_RATING_DELIVERY_RATING_FIELD = "delivery_rating"
+    const val SELLER_RATING_CREATED_AT_FIELD = "created_at"
+
+    const val SELLER_RATING_COUNT_EXCELLENT_FIELD = "excellent"
+    const val SELLER_RATING_COUNT_VERY_GOOD_FIELD = "very_good"
+    const val SELLER_RATING_COUNT_GOOD_FIELD = "good"
+    const val SELLER_RATING_COUNT_FAIR_FIELD = "fair"
+    const val SELLER_RATING_COUNT_POOR_FIELD = "poor"
+
     // Advertise
     const val SELLER_ADVERTISES_SUB_COLLECTION = "advertises"
     const val ADVERTISES_BASIC_COLLECTION = "advertises_basic"
@@ -175,8 +182,11 @@ object Constants {
     const val SELLER_ITEM_UPDATED_AT_FIELD = "updated_at"
 
     // Order
+    const val ORDERS_BASIC_ENTITY = "orders_basic"
+    const val ORDERS_ENTITY = "orders"
     const val ORDERS_COLLECTION = "orders"
     const val ORDERS_BASIC_COLLECTION = "orders_basic"
+    const val ORDER_ITEMS_ENTITY = "order_items"
 
     const val ORDER_ID_FIELD = "id"
     const val ORDER_TITLE_FIELD = "title"
@@ -193,6 +203,7 @@ object Constants {
     const val ORDER_IMAGE_URL_FIELD = "image_url"
     const val ORDER_TYPE_FIELD = "type"
     const val ORDER_ORDER_ITEMS_FIELD = "order_items"
+    const val ORDER_ORDER_ITEMS_COUNT_FIELD = "order_items_count"
     const val ORDER_STATE_FIELD = "state"
     const val ORDER_IS_PAID_FIELD = "is_paid"
     const val ORDER_PAYMENT_METHOD_FIELD = "payment_method"
@@ -201,10 +212,14 @@ object Constants {
     const val ORDER_SUBTOTAL_COST_FIELD = "subtotal_cost"
     const val ORDER_DELIVERY_COST_FIELD = "delivery_cost"
     const val ORDER_TOTAL_COST_FIELD = "total_cost"
-    const val ORDER_CRATED_AT_FIELD = "created_at"
+    const val ORDER_CREATED_AT_FIELD = "created_at"
     const val ORDER_UPDATED_AT_FIELD = "updated_at"
+
     const val ORDER_BASIC_DELIVERY_ADDRESS_FIELD = "delivery_address"
     const val ORDER_BASIC_DELIVERY_ADDRESS_ZH_FIELD = "delivery_address_zh"
+
+    const val ORDER_DELIVERY_LOCATION_LATITUDE_FIELD = "delivery_location_latitude"
+    const val ORDER_DELIVERY_LOCATION_LONGITUDE_FIELD = "delivery_location_longitude"
 
     // Order Item
     const val ORDER_ITEM_ID_FIELD = "id"
@@ -216,6 +231,7 @@ object Constants {
     const val ORDER_ITEM_ITEM_IMAGE_URL_FIELD = "item_image_url"
     const val ORDER_ITEM_AMOUNTS_FIELD = "amounts"
     const val ORDER_ITEM_TOTAL_PRICE_FIELD = "total_price"
+    const val ORDER_ITEM_ORDER_ID_FIELD = "order_id"
 
     // Order States
     const val ORDER_STATE_PROCESSING = "processing"
@@ -233,6 +249,14 @@ object Constants {
     const val PAYMENT_METHOD_IDENTIFIER_FIELD = "identifier"
     const val PAYMENT_METHOD_ENABLED_FIELD = "enabled"
 
+    // Item Categories
+    const val ITEM_CATEGORIES_COLLECTION = "item_categories"
+
+    const val ITEM_CATEGORY_ID_FIELD = "id"
+    const val ITEM_CATEGORY_TAG_FIELD = "tag"
+    const val ITEM_CATEGORY_TITLE_FIELD = "title"
+    const val ITEM_CATEGORY_TITLE_ZH_FIELD = "title_zh"
+    const val ITEM_CATEGORY_IMAGE_URL_FIELD = "image_url"
 
     // Cloud Functions APIs
     const val REMOTE_REQUEST_URL = "https://asia-east2-foobar-group-delivery-app.cloudfunctions.net/api/"
@@ -278,4 +302,8 @@ object Constants {
     const val UNLINK_DEVICE_TOKEN_REQUEST_TOKEN = "token"
 
     const val SEARCH_SELLERS_REQUEST_SEARCH_QUERY = "query"
+
+    const val SUBMIT_ORDER_RATING_ORDER_ID = "order_id"
+    const val SUBMIT_ORDER_RATING_ORDER_RATING = "order_rating"
+    const val SUBMIT_ORDER_RATING_DELIVERY_RATING = "delivery_rating"
 }

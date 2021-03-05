@@ -38,9 +38,7 @@ class SellerSectionFragment : FullScreenDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentSellerSectionBinding.inflate(inflater, container, false).apply {
-            lifecycleOwner = viewLifecycleOwner
-        }
+        binding = FragmentSellerSectionBinding.inflate(inflater, container, false)
 
         // Setup navigation
         val navHostFragment = childFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
@@ -52,12 +50,15 @@ class SellerSectionFragment : FullScreenDialogFragment() {
         }
 
         // Get the nav graph viewModel instance
-        getHiltNavGraphViewModel<SellerSectionViewModel>(
+        viewModel = getHiltNavGraphViewModel(
             navGraphId = R.id.navigation_seller_section,
             navController = navController
-        ).also {
-            this.viewModel = it
-            binding.viewModel = it
+        )
+
+        // Bind ViewModel
+        binding.run {
+            this.viewModel = this@SellerSectionFragment.viewModel
+            lifecycleOwner = viewLifecycleOwner
         }
 
         // Record current destination

@@ -37,12 +37,12 @@ class GetUserAuthStateUseCase @Inject constructor(
     private var observeUserDetailJob: Job? = null
 
     private val authFlow: SharedFlow<AuthState<UserDetail>> = channelFlow<AuthState<UserDetail>> {
-        authRepository.authProfileObservable.collect {
+        authRepository.authProfileObservable.collect { authState ->
             stopObserveUserDetail()
-            when (it) {
+            when (authState) {
                 is AuthState.Authenticated -> {
                     println("[$TAG]: User is signed in. Start observe UserDetail.")
-                    startObserveUserDetail(authProfile = it.data)
+                    startObserveUserDetail(authProfile = authState.data)
                 }
                 AuthState.Unauthenticated -> {
                     println("[$TAG]: User is signed out.")

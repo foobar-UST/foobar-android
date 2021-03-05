@@ -14,15 +14,11 @@ import com.foobarust.domain.models.user.UserDetail
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.AuthState
 import com.foobarust.domain.usecases.auth.SignOutUseCase
-import com.foobarust.domain.usecases.user.DoOnSignOutUseCase
 import com.foobarust.domain.usecases.user.GetUserAuthStateUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -38,13 +34,11 @@ class SettingsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val workManager: WorkManager,
     private val signOutUseCase: SignOutUseCase,
-    private val doOnSignOutUseCase: DoOnSignOutUseCase,
     getUserAuthStateUseCase: GetUserAuthStateUseCase,
 ) : BaseViewModel() {
 
     private val _settingsListModels = MutableStateFlow<List<SettingsListModel>>(emptyList())
-    val settingsListModels: LiveData<List<SettingsListModel>> = _settingsListModels
-        .asLiveData(viewModelScope.coroutineContext)
+    val settingsListModels: StateFlow<List<SettingsListModel>> = _settingsListModels.asStateFlow()
 
     private val _settingsUiState = MutableStateFlow(SettingsUiState.LOADING)
     val settingsUiState: LiveData<SettingsUiState> = _settingsUiState
@@ -92,8 +86,7 @@ class SettingsViewModel @Inject constructor(
         signOutUseCase(Unit).collect {
             when (it) {
                 is Resource.Success -> {
-                    doOnSignOutUseCase(Unit)
-                    cancelWorkManagerWorks()
+                    cancelExistingWorks()
                     _isUserSignedOut.offer(Unit)
                 }
                 is Resource.Error -> {
@@ -104,7 +97,7 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    private fun cancelWorkManagerWorks() {
+    private fun cancelExistingWorks() {
         workManager.cancelUniqueWork(UploadUserPhotoWork.WORK_NAME)
     }
 

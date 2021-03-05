@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.annotation.DrawableRes
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -51,8 +52,8 @@ class CartAdapter(
                 CartPurchaseActionsItemBinding.inflate(inflater, parent, false)
             )
 
-            R.layout.cart_empty_item -> CartEmptyItemViewHolder(
-                CartEmptyItemBinding.inflate(inflater, parent, false)
+            R.layout.empty_list_item -> CartEmptyItemViewHolder(
+                EmptyListItemBinding.inflate(inflater, parent, false)
             )
 
             else -> throw IllegalStateException("Unknown view type $viewType")
@@ -94,6 +95,9 @@ class CartAdapter(
             }
 
             is CartEmptyItemViewHolder -> holder.binding.run {
+                val currentItem = getItem(position) as CartEmptyItemModel
+                drawableRes = currentItem.drawableRes
+                emptyMessage = currentItem.emptyMessage
                 executePendingBindings()
             }
         }
@@ -107,7 +111,7 @@ class CartAdapter(
             is CartOrderNotesItemModel -> R.layout.cart_order_notes_item
             is CartPurchaseSubtitleItemModel -> R.layout.subtitle_small_item
             is CartPurchaseActionsItemModel -> R.layout.cart_purchase_actions_item
-            is CartEmptyItemModel -> R.layout.cart_empty_item
+            is CartEmptyItemModel -> R.layout.empty_list_item
         }
     }
 
@@ -205,7 +209,7 @@ sealed class CartViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
     ) : CartViewHolder(binding.root)
 
     class CartEmptyItemViewHolder(
-        val binding: CartEmptyItemBinding
+        val binding: EmptyListItemBinding
     ) : CartViewHolder(binding.root)
 }
 
@@ -245,7 +249,10 @@ sealed class CartListModel {
         val sectionId: String?
     ) : CartListModel()
 
-    object CartEmptyItemModel : CartListModel()
+    data class CartEmptyItemModel(
+        @DrawableRes val drawableRes: Int,
+        val emptyMessage: String
+    ) : CartListModel()
 }
 
 object CartListModelDiff : DiffUtil.ItemCallback<CartListModel>() {

@@ -2,8 +2,6 @@ package com.foobarust.android.main
 
 import android.content.Context
 import android.net.Uri
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.work.*
 import com.foobarust.android.R
@@ -39,27 +37,13 @@ class MainViewModel @Inject constructor(
     private val clearUserCartUseCase: ClearUserCartUseCase,
     private val checkCartTimeOutUseCase: CheckCartTimeOutUseCase,
     private val getUserCompleteTutorialUseCase: GetUserCompleteTutorialUseCase,
-    getUserCartUseCase: GetUserCartUseCase,
+    private val getUserCartUseCase: GetUserCartUseCase,
 ) : BaseViewModel() {
 
+    private val _userCart = MutableStateFlow<UserCart?>(null)
+    val userCart: StateFlow<UserCart?> = _userCart.asStateFlow()
+
     private val _currentNavGraphId = MutableStateFlow<Int?>(null)
-
-    private val _userCart: StateFlow<UserCart?> = getUserCartUseCase(Unit)
-        .map { it.getSuccessDataOr(null) }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
-            initialValue = null
-        )
-
-    val userCart: LiveData<UserCart?> = _userCart.asLiveData(viewModelScope.coroutineContext)
-
-    val showCartBottomBar: LiveData<Boolean> =
-        _currentNavGraphId.combine(_userCart) { currentGraphId, userCart ->
-            currentGraphId == R.id.navigation_seller && userCart?.hasItems() == true
-        }
-        .distinctUntilChanged()
-        .asLiveData(viewModelScope.coroutineContext)
 
     // Scroll-to-top trigger to be consumed by top-level destinations
     private val _scrollToTop = MutableSharedFlow<Int>()
@@ -80,12 +64,30 @@ class MainViewModel @Inject constructor(
     private val _getUserPhoto = Channel<Unit>()
     val getUserPhoto: Flow<Unit> = _getUserPhoto.receiveAsFlow()
 
+    val showCartBottomBar: Flow<Boolean> = _currentNavGraphId.combine(
+        _userCart
+    ) { currentGraphId, userCart ->
+        currentGraphId == R.id.navigation_seller && userCart?.hasItems() == true
+    }
+        .distinctUntilChanged()
+
     private var checkedCartTimeout: Boolean = false
     private var currentDestinationId: Int = 0
 
     init {
         navigateToTutorial()
         navigateToCartTimeout()
+
+        // Get user cart
+        viewModelScope.launch {
+            getUserCartUseCase(Unit).collect {
+                _userCart.value = if (it is Resource.Success) {
+                    it.data
+                } else {
+                    null
+                }
+            }
+        }
     }
 
     fun getUserCart(): UserCart? = _userCart.value

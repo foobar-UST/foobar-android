@@ -8,7 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.work.WorkManager
 import com.foobarust.android.utils.DynamicLinksUtils
 import com.foobarust.android.utils.ResourceIdentifier
-import com.foobarust.domain.di.DispatcherModule
+import com.foobarust.domain.di.CoroutineModule
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
@@ -22,7 +22,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-@Module(includes = [DispatcherModule::class])
+@Module(includes = [CoroutineModule::class])
 @InstallIn(SingletonComponent::class)
 object AppModule {
 

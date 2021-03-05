@@ -12,7 +12,7 @@ import javax.inject.Singleton
  * Created by kevin on 2/6/21
  */
 
-@Module(includes = [PersistentModule::class])
+@Module
 @InstallIn(SingletonComponent::class)
 abstract class MessagingModule {
 

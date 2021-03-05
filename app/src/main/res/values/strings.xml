@@ -45,7 +45,6 @@
     <string name="auth_email_resend_timer_message">Please try a few seconds later.</string>
     <string name="auth_signed_out_message">Signed out.</string>
 
-
     <!-- Onboarding -->
     <string name="onboarding_get_started">Get Started</string>
     <string name="onboarding_browse_food_title">Browse your favourite food</string>
@@ -53,7 +52,7 @@
     <string name="onboarding_group_orders_title">Create group orders</string>
     <string name="onboarding_group_orders_description">You can create group orders with your friends and colleague to enjoy better discounts</string>
     <string name="onboarding_pick_up_delivery_title">Pick up or delivery</string>
-    <string name="onboarding_pick_up_delivery_description">You can choose our fast delivery service or pick up your orders in person</string>
+    <string name="onboarding_pick_up_delivery_description">You can enjoy our fast delivery service or pick up your orders in person</string>
 
     <!-- Fragment Label -->
     <string name="nav_title_seller">Restaurants</string>
@@ -95,13 +94,16 @@
     <string name="seller_subtitle">Restaurants</string>
     <string name="seller_status_online">Opening</string>
     <string name="seller_status_offline">Closed</string>
+    <string name="seller_on_campus_item_min_spend">$ %s Min</string>
+    <string name="seller_empty_message">No Restaurant Found</string>
 
     <!-- Seller Detail -->
     <string name="seller_detail_deliver_type_pick_up">Pickup</string>
     <string name="seller_detail_deliver_type_delivery">Delivery</string>
     <string name="seller_detail_offline_message">Restaurant is offline.</string>
-    <string name="seller_detail_format_min_spend">HKD %s Min</string>
+    <string name="seller_detail_format_min_spend">HKD %.2f Min</string>
     <string name="seller_detail_format_delivery_cost">HKD %s DELIVERY</string>
+    <string name="seller_detail_format_section_info">[%s] %s</string>
 
     <!-- Seller Search -->
     <string name="seller_search_hint_input">Find Restaurants</string>
@@ -134,8 +136,6 @@
     <string name="seller_item_detail_subtitle_more_items">Suggest Items (+$ %.1f)</string>
     <string name="seller_item_detail_toolbar_title_add">Add Item</string>
     <string name="seller_item_detail_toolbar_title_update">Update Item</string>
-    <string name="seller_item_detail_type_info_on_campus">Campus Restaurant</string>
-    <string name="seller_item_detail_type_info_off_campus">[%s] %s</string>
 
     <!-- Seller Section -->
     <string name="seller_section_date">Order opens at %s</string>
@@ -145,6 +145,7 @@
     <string name="seller_section_user_counts">%d/%d Joined</string>
     <string name="seller_section_subtitle_recent">Recent</string>
     <string name="seller_section_subtitle_upcoming">Upcoming</string>
+    <string name="seller_section_empty_message">No Group Section Found</string>
 
     <!-- Seller Section Detail -->
     <string name="seller_section_detail_users_subtitle">Participants (%d/%d)</string>
@@ -162,6 +163,9 @@
     <string name="more_sections_subtitle">More Orders</string>
     <string name="more_sections_section_item_format_delivery_time">Deliver %s</string>
     <string name="more_sections_show_more">More</string>
+
+    <!-- Seller Section List -->
+    <string name="seller_section_list_toolbar_title">Group Sections -\n%s</string>
 
     <!-- Checkout -->
     <string name="checkout_toolbar_title_cart">My Cart</string>
@@ -228,13 +232,15 @@
     <string name="order_recent_item_view_order">View Order</string>
     <string name="order_recent_item_subtitle_archived">Archived</string>
     <string name="order_recent_active_item_order_title">[%s] %s</string>
-    <string name="order_recent_active_item_last_updated">Last Update %s</string>
-    <string name="order_recent_delivered_item_rate_order">Rate Order</string>
+    <string name="order_recent_active_item_items_count">+ %d Items</string>
+    <string name="order_recent_active_item_total_cost">Total: $%.1f</string>
     <string name="order_recent_empty_item_title">No Recent Order</string>
 
     <!-- Order History -->
+    <string name="order_history_archived_item_view_order">View Order</string>
+    <string name="order_history_delivered_item_rate_order">Rate Order</string>
     <string name="order_history_item_identifier_title">[#%s] %s</string>
-    <string name="order_history_empty_item_title">No Order History</string>
+    <string name="order_history_empty_message">No Order History</string>
     <string name="order_history_ordered_date">Ordered on %s</string>
     <string name="order_history_total_cost">HKD $%.1f</string>
     <string name="order_history_item_view_order">View Receipt</string>
@@ -244,9 +250,9 @@
     <string name="order_state_title_preparing">Order Preparing</string>
     <string name="order_state_title_in_transit">Delivery In Progress</string>
     <string name="order_state_title_ready_for_pick_up">Ready for Pick Up</string>
-    <string name="order_state_title_delivered">Order is delivered</string>
-    <string name="order_state_title_archived">Order is archived</string>
-    <string name="order_state_title_cancelled">Order is cancelled</string>
+    <string name="order_state_title_delivered">Order Delivered</string>
+    <string name="order_state_title_archived">Order Archived</string>
+    <string name="order_state_title_cancelled">Order Cancelled</string>
 
     <string name="order_state_description_processing">Your order has been received.</string>
     <string name="order_state_description_preparing">Your order is getting prepared.</string>
@@ -271,12 +277,33 @@
     <string name="order_detail_actions_button_seller_contact">Contact Restaurant</string>
 
     <!-- Explore -->
-    <string name="explore_notification_empty_message">Notifications will be shown here</string>
+    <string name="explore_item_categories_subtitle">Categories</string>
 
     <!-- Payment Methods -->
     <string name="payment_methods_title_cash_on_delivery">Cash On Delivery</string>
     <string name="payment_methods_description_cash_on_delivery">Pay when you pick up the order.</string>
     <string name="payment_methods_title_google_pay">Google Pay</string>
     <string name="payment_methods_description_google_pay">Pay online using Google Pay service.</string>
+
+    <!-- Rating -->
+    <string name="rating_toolbar_title">Order #%s</string>
+    <string name="rating_order_title">How\'s the food quality?</string>
+    <string name="rating_delivery_title">How\'s the delivery service?</string>
+    <string name="rating_completed_title">Thank You!</string>
+    <string name="rating_completed_description">Your feedback has been recorded.</string>
+    <string name="rating_order_detail_button">Order Detail</string>
+    <string name="rating_navigate_button">Next</string>
+    <string name="rating_navigate_complete">Complete</string>
+
+    <!-- Seller Rating Detail -->
+    <string name="seller_rating_detail_info_item_rating_count">(%d)</string>
+    <string name="seller_rating_detail_info_item_delivery_rating">%.0f% Delivery Service</string>
+    <string name="seller_rating_detail_info_item_rating_count_percent">%d%%</string>
+    <string name="seller_rating_detail_info_item_subtitle">User Reviews</string>
+    <string name="seller_rating_detail_rating_count_excellent">Excellent</string>
+    <string name="seller_rating_detail_rating_count_very_good">Very Good</string>
+    <string name="seller_rating_detail_rating_count_good">Good</string>
+    <string name="seller_rating_detail_rating_count_fair">Fair</string>
+    <string name="seller_rating_detail_rating_count_poor">Poor</string>
 
 </resources>

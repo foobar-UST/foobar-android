@@ -19,9 +19,6 @@
             android:id="@+id/action_sellerFragment_to_sellerDetailFragment"
             app:destination="@id/sellerDetailFragment" />
         <action
-            android:id="@+id/action_sellerFragment_to_sellerActionDialog"
-            app:destination="@id/sellerActionDialog" />
-        <action
             android:id="@+id/action_sellerFragment_to_sellerSectionFragment"
             app:destination="@+id/sellerSectionFragment" />
     </fragment>
@@ -40,6 +37,15 @@
         <action
             android:id="@+id/action_sellerDetailFragment_to_sellerItemDetailFragment"
             app:destination="@id/sellerItemDetailFragment" />
+        <action
+            android:id="@+id/action_sellerDetailFragment_to_checkoutFragment"
+            app:destination="@id/checkoutFragment" />
+        <action
+            android:id="@+id/action_sellerDetailFragment_to_sellerListFragment"
+            app:destination="@id/sellerListFragment" />
+        <action
+            android:id="@+id/action_sellerDetailFragment_to_sellerRatingDetailFragment"
+            app:destination="@id/sellerRatingDetailFragment"/>
     </dialog>
 
     <!-- SellerItemDetailFragment -->
@@ -102,12 +108,6 @@
             app:destination="@id/sellerDetailFragment" />
     </dialog>
 
-    <!-- SellerActionDialog -->
-    <dialog
-        android:id="@+id/sellerActionDialog"
-        android:name="com.foobarust.android.seller.SellerActionDialog"
-        tools:layout="@layout/dialog_seller_action"/>
-
     <!-- SellerSectionFragment -->
     <dialog
         android:id="@+id/sellerSectionFragment"
@@ -138,6 +138,42 @@
         <action
             android:id="@+id/action_sellerSectionListFragment_to_sellerSectionFragment"
             app:destination="@id/sellerSectionFragment" />
+    </dialog>
+
+    <!-- SellerListFragment -->
+    <dialog
+        android:id="@+id/sellerListFragment"
+        android:name="com.foobarust.android.seller.SellerListFragment"
+        tools:layout="@layout/fragment_seller_list">
+        <argument
+            android:name="property"
+            app:argType="com.foobarust.android.seller.SellerListProperty"/>
+        <action
+            android:id="@+id/action_sellerListFragment_to_sellerDetailFragment"
+            app:destination="@id/sellerDetailFragment" />
+    </dialog>
+
+    <!-- SellerRatingDetailFragment -->
+    <dialog
+        android:id="@+id/sellerRatingDetailFragment"
+        android:name="com.foobarust.android.sellerrating.SellerRatingDetailFragment"
+        tools:layout="@layout/fragment_seller_rating_detail">
+        <argument
+            android:name="property"
+            app:argType="com.foobarust.android.sellerrating.SellerRatingDetailProperty"/>
+    </dialog>
+
+    <!-- Browser intent -->
+    <dialog
+        android:id="@+id/actionViewDialog"
+        android:name="com.foobarust.android.shared.ActionViewDialog">
+        <argument
+            android:name="uri"
+            app:argType="string"/>
+        <deepLink
+            android:id="@+id/orderDetailDeepLink"
+            android:autoVerify="true"
+            app:uri="foobar-group-delivery-app.web.app/link/{uri}" />
     </dialog>
 
 </navigation>

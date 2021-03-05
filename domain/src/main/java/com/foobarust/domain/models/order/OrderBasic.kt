@@ -12,10 +12,13 @@ data class OrderBasic(
     val title: String,
     val titleZh: String?,
     val sellerId: String,
+    val sellerName: String,
+    val sellerNameZh: String?,
     val sectionId: String?,
     val identifier: String,
     val imageUrl: String?,
     val type: OrderType,
+    val orderItemsCount: Int,
     val state: OrderState,
     val deliveryAddress: String,
     val deliveryAddressZh: String?,
@@ -26,6 +29,10 @@ data class OrderBasic(
 
 fun OrderBasic.getNormalizedTitle(): String {
     return if (titleZh != null) "$title $titleZh" else title
+}
+
+fun OrderBasic.getNormalizedSellerName(): String {
+    return if (sellerNameZh != null) "$sellerName $sellerNameZh" else sellerName
 }
 
 fun OrderBasic.getNormalizedDeliveryAddress(): String {
@@ -45,5 +52,5 @@ fun OrderBasic.getCreatedAtString(): String {
 }
 
 fun OrderBasic.getUpdatedAtString(): String {
-    return DateUtils.getDateString(date = createdAt, format = "HH:mm")
+    return DateUtils.getDateString(date = createdAt, format = "yyyy-MM-dd HH:mm")
 }

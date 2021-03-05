@@ -16,6 +16,10 @@
         <intent>
             <action android:name="android.support.customtabs.action.CustomTabsService" />
         </intent>
+        <intent>
+            <action android:name="android.intent.action.SENDTO" />
+            <data android:scheme="mailto" />
+        </intent>
     </queries>
 
     <application
@@ -41,7 +45,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:host="${appLink}" android:scheme="${linkScheme}"/>
+                <data android:host="foobarust.page.link" android:scheme="https"/>
             </intent-filter>
 
             <nav-graph android:value="@navigation/navigation_order" />
@@ -57,7 +61,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:host="${authLink}" android:scheme="${linkScheme}"/>
+                <data android:host="foobarust2.page.link" android:scheme="https"/>
             </intent-filter>
         </activity>
 
@@ -103,6 +107,10 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${mapsApiKey}" />
+
+        <meta-data
+            android:name="firebase_analytics_collection_deactivated"
+            android:value="${disableAnalytics}"/>
 
         <!-- Remove the default initializer of WorkManager.-->
         <provider

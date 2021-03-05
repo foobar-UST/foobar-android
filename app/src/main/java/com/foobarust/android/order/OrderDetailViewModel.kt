@@ -1,7 +1,6 @@
 package com.foobarust.android.order
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
@@ -76,8 +75,6 @@ class OrderDetailViewModel @Inject constructor(
                             OrderState.ARCHIVED,
                             OrderState.CANCELLED
                         )
-
-                        Log.d("OrderDetailViewModel", "${orderDetail.state}")
 
                         // Set last state item position
                         _lastOrderStateItemPosition.value = orderStateListModels.lastIndex

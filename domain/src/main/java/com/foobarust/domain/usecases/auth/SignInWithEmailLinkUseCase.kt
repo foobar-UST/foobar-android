@@ -2,6 +2,7 @@ package com.foobarust.domain.usecases.auth
 
 import com.foobarust.domain.di.IoDispatcher
 import com.foobarust.domain.repositories.AuthRepository
+import com.foobarust.domain.repositories.MessagingRepository
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.FlowUseCase
 import kotlinx.coroutines.CoroutineDispatcher
@@ -15,8 +16,9 @@ import javax.inject.Inject
 
 class SignInWithEmailLinkUseCase @Inject constructor(
     private val authRepository: AuthRepository,
-    @IoDispatcher dispatcher: CoroutineDispatcher
-): FlowUseCase<SignInWithEmailLinkParameters, Unit>(dispatcher) {
+    private val messagingRepository: MessagingRepository,
+    @IoDispatcher coroutineDispatcher: CoroutineDispatcher
+): FlowUseCase<SignInWithEmailLinkParameters, Unit>(coroutineDispatcher) {
 
     override fun execute(
         parameters: SignInWithEmailLinkParameters
@@ -25,6 +27,14 @@ class SignInWithEmailLinkUseCase @Inject constructor(
             email = parameters.email,
             emailLink = parameters.authLink
         )
+
+        messagingRepository.linkDeviceTokenToUser(
+            idToken = authRepository.getUserIdToken(),
+            deviceToken = messagingRepository.getDeviceToken()
+        )
+
+        authRepository.removeSavedAuthEmail()
+
         emit(Resource.Success(Unit))
     }
 }

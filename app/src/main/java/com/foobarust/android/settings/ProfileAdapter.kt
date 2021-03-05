@@ -24,15 +24,12 @@ class ProfileAdapter(
             R.layout.profile_info_item -> ProfileInfoViewHolder(
                 ProfileInfoItemBinding.inflate(inflater, parent, false)
             )
-
             R.layout.profile_edit_item -> ProfileEditViewHolder(
                 ProfileEditItemBinding.inflate(inflater, parent, false)
             )
-
             R.layout.profile_notice_item -> ProfileNoticeViewHolder(
                 ProfileNoticeItemBinding.inflate(inflater, parent, false)
             )
-
             else -> throw IllegalStateException("Unknown view type $viewType")
         }
     }

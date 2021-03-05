@@ -14,7 +14,7 @@ import javax.inject.Singleton
  * Created by kevin on 1/9/21
  */
 
-@Module(includes = [PersistentModule::class])
+@Module
 @InstallIn(SingletonComponent::class)
 abstract class CheckoutModule {
 

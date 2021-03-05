@@ -5,6 +5,8 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.foobarust.data.api.RemoteService
+import com.foobarust.data.constants.Constants.ITEM_CATEGORIES_COLLECTION
+import com.foobarust.data.constants.Constants.ITEM_CATEGORY_TAG_FIELD
 import com.foobarust.data.constants.Constants.SELLERS_CATALOGS_SUB_COLLECTION
 import com.foobarust.data.constants.Constants.SELLERS_COLLECTION
 import com.foobarust.data.constants.Constants.SELLER_CATALOG_AVAILABLE_FIELD
@@ -20,8 +22,10 @@ import com.foobarust.data.constants.Constants.SELLER_SECTION_SELLER_NAME_FIELD
 import com.foobarust.data.mappers.SellerMapper
 import com.foobarust.data.paging.SellerBasicsPagingSource
 import com.foobarust.data.paging.SellerItemBasicsPagingSource
+import com.foobarust.data.paging.SellerRatingBasicsPagingSource
 import com.foobarust.data.paging.SellerSectionsBasicPagingSource
 import com.foobarust.data.utils.getAwaitResult
+import com.foobarust.domain.models.explore.SellerItemCategory
 import com.foobarust.domain.models.seller.*
 import com.foobarust.domain.repositories.SellerRepository
 import com.google.firebase.firestore.FirebaseFirestore
@@ -38,6 +42,7 @@ import javax.inject.Inject
 private const val SELLER_BASICS_PAGE_SIZE = 7
 private const val SELLER_ITEMS_PAGE_SIZE = 10
 private const val SELLER_SECTIONS_PAGE_SIZE = 8
+private const val SELLER_RATINGS_PAGE_SIZE = 10
 
 class SellerRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
@@ -54,21 +59,23 @@ class SellerRepositoryImpl @Inject constructor(
         return firestore.collection(
             "$SELLERS_COLLECTION/$sellerId/$SELLERS_CATALOGS_SUB_COLLECTION"
         )
-            .whereEqualTo(SELLER_CATALOG_AVAILABLE_FIELD, true)     // Get available catalogs only
+            .whereEqualTo(SELLER_CATALOG_AVAILABLE_FIELD, true)
             .getAwaitResult(sellerMapper::toSellerCatalog)
     }
 
-    override fun getSellerBasicsPagingData(sellerType: SellerType): Flow<PagingData<SellerBasic>> {
+    override fun getSellerBasicsPagingData(
+        sellerBasicsFilter: SellerBasicsFilter
+    ): Flow<PagingData<SellerBasic>> {
         return Pager(
             config = PagingConfig(
                 initialLoadSize = SELLER_BASICS_PAGE_SIZE * 2,
                 pageSize = SELLER_BASICS_PAGE_SIZE,
                 enablePlaceholders = false
             ),
-            pagingSourceFactory = { SellerBasicsPagingSource(firestore, sellerType) }
-        ).flow.map { pagingData ->
-            pagingData.map { sellerMapper.toSellerBasic(it) }
-        }
+            pagingSourceFactory = { SellerBasicsPagingSource(firestore, sellerBasicsFilter) }
+        )
+            .flow
+            .map { pagingData -> pagingData.map { sellerMapper.toSellerBasic(it) } }
     }
 
     override suspend fun searchSellers(searchQuery: String, numOfSellers: Int): List<SellerBasic> {
@@ -83,7 +90,9 @@ class SellerRepositoryImpl @Inject constructor(
             .first()
     }
 
-    override fun getSellerItemsPagingData(sellerId: String, catalogId: String): Flow<PagingData<SellerItemBasic>> {
+    override fun getSellerItemsPagingData(
+        sellerId: String, catalogId: String
+    ): Flow<PagingData<SellerItemBasic>> {
         return Pager(
             config = PagingConfig(
                 initialLoadSize = SELLER_ITEMS_PAGE_SIZE * 2,
@@ -92,9 +101,9 @@ class SellerRepositoryImpl @Inject constructor(
             pagingSourceFactory = {
                 SellerItemBasicsPagingSource(firestore, sellerId, catalogId)
             }
-        ).flow.map { pagingData ->
-            pagingData.map { sellerMapper.toSellerItemBasic(it) }
-        }
+        )
+            .flow
+            .map { pagingData -> pagingData.map { sellerMapper.toSellerItemBasic(it) } }
     }
 
     override suspend fun getRecentSellerItems(
@@ -131,7 +140,9 @@ class SellerRepositoryImpl @Inject constructor(
             .getAwaitResult(sellerMapper::toSellerSectionBasic)
     }
 
-    override fun getSellerSectionBasicsPagingData(sellerId: String): Flow<PagingData<SellerSectionBasic>> {
+    override fun getSellerSectionBasicsPagingData(
+        sellerId: String
+    ): Flow<PagingData<SellerSectionBasic>> {
         return Pager(
             config = PagingConfig(
                 initialLoadSize = SELLER_SECTIONS_PAGE_SIZE * 2,
@@ -141,9 +152,9 @@ class SellerRepositoryImpl @Inject constructor(
             pagingSourceFactory = {
                 SellerSectionsBasicPagingSource(firestore, sellerId)
             }
-        ).flow.map { pagingData ->
-            pagingData.map { sellerMapper.toSellerSectionBasic(it) }
-        }
+        )
+            .flow
+            .map { pagingData -> pagingData.map { sellerMapper.toSellerSectionBasic(it) } }
     }
 
     override fun getAllSellerSectionBasicsPagingData(): Flow<PagingData<SellerSectionBasic>> {
@@ -156,8 +167,37 @@ class SellerRepositoryImpl @Inject constructor(
             pagingSourceFactory = {
                 SellerSectionsBasicPagingSource(firestore)
             }
-        ).flow.map { pagingData ->
-            pagingData.map { sellerMapper.toSellerSectionBasic(it) }
-        }
+        )
+            .flow
+            .map { pagingData -> pagingData.map { sellerMapper.toSellerSectionBasic(it) } }
+    }
+
+    override suspend fun getSellerItemCategories(): List<SellerItemCategory> {
+        return firestore.collection(ITEM_CATEGORIES_COLLECTION)
+            .getAwaitResult(sellerMapper::toSellerItemCategory)
+    }
+
+    override suspend fun getSellerItemCategory(categoryTag: String): SellerItemCategory {
+        return firestore.collection(ITEM_CATEGORIES_COLLECTION)
+            .whereEqualTo(ITEM_CATEGORY_TAG_FIELD, categoryTag)
+            .getAwaitResult(sellerMapper::toSellerItemCategory)
+            .first()
+    }
+
+    override fun getSellerRatingsPagingData(
+        sellerId: String
+    ): Flow<PagingData<SellerRatingBasic>> {
+        return Pager(
+            config = PagingConfig(
+                initialLoadSize = SELLER_RATINGS_PAGE_SIZE * 2,
+                pageSize = SELLER_RATINGS_PAGE_SIZE,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = {
+                SellerRatingBasicsPagingSource(firestore, sellerId)
+            }
+        )
+            .flow
+            .map { pagingData -> pagingData.map { sellerMapper.toSellerRatingBasic(it) } }
     }
 }

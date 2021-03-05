@@ -6,12 +6,6 @@
         <item name="android:windowLightStatusBar">false</item>
     </style>
 
-    <style name="Theme.Foobar.Onboarding.DayNight" parent="Theme.Foobar.Onboarding.Dark.v23"/>
-    <style name="Theme.Foobar.Onboarding.Dark.v23" parent="Theme.Foobar.Onboarding.Dark">
-        <item name="android:statusBarColor">?android:attr/colorBackground</item>
-        <item name="android:windowLightStatusBar">false</item>
-    </style>
-
     <style name="Theme.Foobar.Auth.DayNight" parent="Theme.Foobar.Auth.Dark.v23"/>
     <style name="Theme.Foobar.Auth.Dark.v23" parent="Theme.Foobar.Auth.Dark">
         <item name="android:statusBarColor">@android:color/transparent</item>

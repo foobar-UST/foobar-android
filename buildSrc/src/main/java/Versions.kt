@@ -29,7 +29,7 @@ object Versions {
     const val HILT_NAVIGATION = "1.0.0-alpha03"
     const val HILT_WORK = "1.0.0-alpha03"
     const val JUNIT = "4.13.1"
-    const val KOTLIN = "1.4.30"
+    const val KOTLIN = "1.4.21"
     const val KOTLIN_SERIALIZATION = "1.0.1"
     const val LEAK_CANARY = "2.6"
     const val LIFECYCLE = "2.3.0"

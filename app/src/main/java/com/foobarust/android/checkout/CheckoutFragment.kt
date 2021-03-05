@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -12,6 +13,7 @@ import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentCheckoutBinding
 import com.foobarust.android.shared.FullScreenDialogFragment
 import com.foobarust.android.utils.AutoClearedValue
+import com.foobarust.android.utils.bindProgressHideIf
 import com.foobarust.android.utils.findNavController
 import com.foobarust.android.utils.getHiltNavGraphViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,9 +37,7 @@ class CheckoutFragment : FullScreenDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentCheckoutBinding.inflate(inflater, container, false).apply {
-            lifecycleOwner = viewLifecycleOwner
-        }
+        binding = FragmentCheckoutBinding.inflate(inflater, container, false)
 
         val navHostFragment = childFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
         navController = navHostFragment.navController.apply {
@@ -49,8 +49,7 @@ class CheckoutFragment : FullScreenDialogFragment() {
             navGraphId = R.id.navigation_checkout,
             navController = navController
         ).also {
-            this.viewModel = it
-            binding.viewModel = it
+            viewModel = it
         }
 
         // Record current destination
@@ -69,15 +68,45 @@ class CheckoutFragment : FullScreenDialogFragment() {
         }
 
         // Expand collapsing toolbar
-        viewModel.expandCollapsingToolbar.observe(viewLifecycleOwner) {
-            binding.appBarLayout.setExpanded(true, true)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.expandCollapsingToolbar.collect {
+                binding.appBarLayout.setExpanded(true, true)
+            }
+        }
+
+        // Set toolbar title
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.toolbarTitle.collect {
+                binding.collapsingToolbarLayout.title = it
+            }
+        }
+
+        // Set submit button title
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.submitButtonTitle.collect {
+                binding.submitButton.text = it
+            }
+        }
+
+        // Show submit button
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.showSubmitButton.collect {
+                binding.submitButton.isVisible = it
+            }
+        }
+
+        // Show progress
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.showLoadingProgressBar.collect {
+                binding.loadingProgressBar.bindProgressHideIf(!it)
+            }
         }
 
         // Navigate to SellerDetail
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.navigateToSellerDetail.collect {
                 findNavController(R.id.checkoutFragment)?.navigate(
-                    CheckoutFragmentDirections.actionCheckoutFragmentToSellerDetailFragment(property = it)
+                    CheckoutFragmentDirections.actionCheckoutFragmentToSellerDetailFragment(it)
                 )
             }
         }

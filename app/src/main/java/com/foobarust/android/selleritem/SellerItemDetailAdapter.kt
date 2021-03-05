@@ -97,8 +97,7 @@ sealed class SellerItemDetailViewHolder(itemView: View) : RecyclerView.ViewHolde
 sealed class SellerItemDetailListModel {
     data class SellerItemDetailInfoItemModel(
         val itemTitle: String,
-        val itemPrice: Double,
-        val itemCount: Int
+        val itemPrice: Double
     ) : SellerItemDetailListModel()
 
     data class SellerItemDetailDescriptionItemModel(

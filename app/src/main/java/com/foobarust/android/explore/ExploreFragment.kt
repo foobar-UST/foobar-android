@@ -1,29 +1,27 @@
 package com.foobarust.android.explore
 
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentExploreBinding
-import com.foobarust.android.main.MainViewModel
-import com.foobarust.android.shared.PagingLoadStateAdapter
-import com.foobarust.android.utils.*
+import com.foobarust.android.utils.AutoClearedValue
+import com.foobarust.android.utils.findNavController
+import com.foobarust.android.utils.showShortToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class ExploreFragment : Fragment(), NotificationsAdapter.NotificationsAdapterListener {
+class ExploreFragment : Fragment(), ExploreAdapter.ExploreAdapterListener {
 
     private var binding: FragmentExploreBinding by AutoClearedValue(this)
-    private val mainViewModel: MainViewModel by activityViewModels()
-    private val exploreViewModel: ExploreViewModel by viewModels()
+    private val viewModel: ExploreViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,64 +31,51 @@ class ExploreFragment : Fragment(), NotificationsAdapter.NotificationsAdapterLis
         binding = FragmentExploreBinding.inflate(inflater, container, false)
 
         // Setup recycler view
-        val notificationsAdapter = NotificationsAdapter(this)
+        val itemCategoryAdapter = ExploreAdapter(this)
 
-        binding.exploreRecyclerView.run {
-            adapter = notificationsAdapter.withLoadStateFooter(
-                footer = PagingLoadStateAdapter { notificationsAdapter.retry() }
-            )
+        with(binding.exploreRecyclerView) {
+            adapter = itemCategoryAdapter
             setHasFixedSize(true)
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            exploreViewModel.notificationListModels.collectLatest {
-                notificationsAdapter.submitData(it)
+            viewModel.exploreListModels.collect {
+                itemCategoryAdapter.submitList(it)
             }
         }
 
-        // Retry
-        binding.loadErrorLayout.retryButton.setOnClickListener {
-            notificationsAdapter.refresh()
-        }
-
-        // Control views with respect to load states
-        notificationsAdapter.addLoadStateListener { loadStates ->
-            with(loadStates) {
-                updateViews(
-                    mainLayout = binding.exploreRecyclerView,
-                    errorLayout = binding.loadErrorLayout.loadErrorLayout,
-                    progressBar = binding.loadingProgressBar,
-                    swipeRefreshLayout = binding.swipeRefreshLayout
-                )
-                anyError()?.let {
-                    showShortToast(it.toString())
+        // Ui state
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.exploreUiState.collect {
+                with(binding) {
+                    loadingProgressBar.isVisible = it is ExploreUiState.Loading
+                    loadErrorLayout.loadErrorLayout.isVisible = it is ExploreUiState.Error
+                }
+                
+                if (it is ExploreUiState.Error) {
+                    showShortToast(it.message)
                 }
             }
         }
 
-        // Start swipe refresh
-        binding.swipeRefreshLayout.setOnRefreshListener {
-            notificationsAdapter.refresh()
+        // Error layout
+        binding.loadErrorLayout.retryButton.setOnClickListener {
+            viewModel.onRefreshExploreList()
         }
 
-        // Scroll to top when the tab is reselected
+        // Navigate to seller list
         viewLifecycleOwner.lifecycleScope.launch {
-            mainViewModel.scrollToTop.collect {
-                binding.exploreRecyclerView.smoothScrollToTop()
-            }
-        }
-
-        // Show toast
-        viewLifecycleOwner.lifecycleScope.launch {
-            exploreViewModel.toastMessage.collect {
-                showShortToast(it)
+            viewModel.navigateToSellerList.collect {
+                findNavController(R.id.exploreFragment)?.navigate(
+                    ExploreFragmentDirections.actionExploreFragmentToSellerListFragment(it)
+                )
             }
         }
 
         return binding.root
     }
 
-    override fun onNotificationClicked(link: String) {
-        mainViewModel.onDispatchDynamicLink(Uri.parse(link))
+    override fun onItemCategoryClicked(categoryId: String) {
+        viewModel.onNavigateToSellerList(categoryId)
     }
 }

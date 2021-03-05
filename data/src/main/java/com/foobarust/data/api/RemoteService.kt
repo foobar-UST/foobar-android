@@ -6,6 +6,7 @@ import com.foobarust.data.models.cart.AddUserCartItemRequest
 import com.foobarust.data.models.cart.UpdateUserCartItemRequest
 import com.foobarust.data.models.checkout.PlaceOrderRequest
 import com.foobarust.data.models.checkout.PlaceOrderResponse
+import com.foobarust.data.models.order.SubmitOrderRatingRequest
 import com.foobarust.data.models.seller.SearchSellerResponse
 import com.foobarust.data.models.user.InsertDeviceTokenRequest
 import com.foobarust.data.models.user.LinkDeviceTokenRequest
@@ -73,4 +74,10 @@ interface RemoteService {
     suspend fun searchSellers(
         @Query(SEARCH_SELLERS_REQUEST_SEARCH_QUERY) searchQuery: String
     ): List<SearchSellerResponse>
+
+    @PUT("order/rate")
+    suspend fun submitOrderRating(
+        @Header(REMOTE_AUTH_HEADER) idToken: String,
+        @Body submitOrderRatingRequest: SubmitOrderRatingRequest
+    )
 }

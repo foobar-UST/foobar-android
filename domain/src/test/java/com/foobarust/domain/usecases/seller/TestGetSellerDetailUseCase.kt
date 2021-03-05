@@ -86,7 +86,7 @@ class TestGetSellerDetailUseCase {
                 address = "abc road", addressZh = "地址", locationPoint =
                 GeolocationPoint(latitude = 1.0, longitude = 2.0)
             ),
-            imageUrl = "about:blank", minSpend = 10.0, rating = 4.9, ratingCount = 100,
+            imageUrl = "about:blank", minSpend = 10.0, orderRating = 4.9, ratingCount = 100,
             type = SellerType.ON_CAMPUS, online = true, notice = "notice",
             openingHours = "MonTueWed 15:00", tags = listOf("Chinese", "Western")
         )

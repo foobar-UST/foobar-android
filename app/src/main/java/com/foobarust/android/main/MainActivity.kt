@@ -9,12 +9,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupWithNavController
 import com.foobarust.android.*
 import com.foobarust.android.checkout.CartTimeoutDialog
 import com.foobarust.android.databinding.ActivityMainBinding
@@ -39,28 +38,27 @@ private val topLevelDestinations = listOf(
     R.id.settingsFragment
 )
 
+private const val TAG = "MainActivity"
+
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
 
     private lateinit var binding: ActivityMainBinding
     private val viewModel: MainViewModel by viewModels()
     private var currentNavController: LiveData<NavController>? = null
-
     private lateinit var getContentLauncher: ActivityResultLauncher<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.Theme_Foobar_DayNight)
         super.onCreate(savedInstanceState)
 
-        binding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main).apply {
-            viewModel = this@MainActivity.viewModel
-            lifecycleOwner = this@MainActivity
-        }
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         // Setup bottom navigation
         if (savedInstanceState == null) {
             viewModel.onDispatchDynamicLink(dynamicLink = intent.data)
             intent.data = null
+
             setupBottomNavigation()
         }
 
@@ -72,6 +70,14 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
             currentNavController?.value?.navigate(
                 NavigationSellerDirections.actionGlobalCheckoutFragment()
             )
+        }
+
+        // Register content launcher
+        getContentLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            uri?.let {
+                val extension = it.getFileExtension(this)
+                viewModel.onUploadUserPhoto(uri = it.toString(), extension = extension ?: "")
+            }
         }
 
         // Navigate to cart timeout dialog
@@ -109,21 +115,35 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
             }
         }
 
-        // Launch get content
+        // Register get image content launcher (Used for uploading user profile photo)
         lifecycleScope.launchWhenStarted {
             viewModel.getUserPhoto.collect {
                 getContentLauncher.launch("image/*")
             }
         }
 
-        // Register get content launcher
-        getContentLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            uri?.let {
-                val fileExtension = it.getFileExtension(this)
-                viewModel.onUploadUserPhoto(
-                    uri = it.toString(),
-                    extension = fileExtension ?: ""
-                )
+        // Setup cart bottom bar
+        lifecycleScope.launchWhenStarted {
+            viewModel.userCart.collect { userCart ->
+                if (userCart == null) return@collect
+
+                with(binding.cartBottomBar) {
+                    cartItemsCountTextView.text = getString(
+                        R.string.cart_bottom_bar_format_items_count,
+                        userCart.itemsCount
+                    )
+                    cartTotalPriceTextView.text = getString(
+                        R.string.cart_bottom_bar_format_total_price,
+                        userCart.totalCost
+                    )
+                }
+            }
+        }
+
+        // Show cart bottom bar
+        lifecycleScope.launchWhenStarted {
+            viewModel.showCartBottomBar.collect {
+                binding.cartBottomBar.root.isVisible = it
             }
         }
     }
@@ -140,11 +160,13 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
         when (menuItem?.itemId) {
             R.id.action_seller_search -> navigateToSellerSearch()
         }
+
         return true
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
+
         // Navigate to deep link
         viewModel.onDispatchDynamicLink(dynamicLink = intent?.data)
         intent?.data = null
@@ -177,24 +199,13 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
         }
 
         navController.observe(this) { controller ->
-            // Setup toolbar title
-            binding.toolbar.setupWithNavController(
-                navController = controller,
-                configuration = AppBarConfiguration(
-                    setOf(controller.graph.startDestination)
-                )
-            )
+
 
             // Setup views for different tab navigation
             controller.registerOnDestinationChangedListener(listener)
         }
 
         currentNavController = navController
-
-        // TODO: Setup badge
-        with(binding.bottomNavigationView) {
-            getOrCreateBadge(R.id.navigation_explore).isVisible = true
-        }
     }
 
     private fun navigateToDeepLink(deepLink: Uri) {

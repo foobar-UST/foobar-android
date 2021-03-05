@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Search dialog fragment -->
+    <style name="ThemeOverlay.Foobar.Dialog.Fullscreen.DayNight.Search" parent="ThemeOverlay.Foobar.Dialog.Fullscreen.DayNight">
+        <item name="android:windowBackground">@color/black_alpha_60</item>
+    </style>
+
     <!-- Full screen dialog fragment -->
     <style name="ThemeOverlay.Foobar.Dialog.Fullscreen.DayNight" parent="ThemeOverlay.Foobar.Dialog.Fullscreen.Dark"/>
     <style name="ThemeOverlay.Foobar.Dialog.Fullscreen.Dark" parent="@style/ThemeOverlay.Foobar.Dialog.Fullscreen">
         <item name="android:colorBackground">@color/background_dark</item>
-        <item name="android:windowBackground">@color/black_alpha_60</item>
     </style>
 
     <!-- Bottom sheet dialog -->
     <style name="ThemeOverlay.Foobar.BottomSheetDialog.DayNight" parent="@style/ThemeOverlay.Foobar.BottomSheetDialog.Dark"/>
     <style name="ThemeOverlay.Foobar.BottomSheetDialog.Dark" parent="@style/ThemeOverlay.Foobar.BottomSheetDialog"/>
-
-    <!-- Onboarding -->
-    <style name="Theme.Foobar.Onboarding.DayNight" parent="Theme.Foobar.Onboarding.Dark"/>
-    <style name="Theme.Foobar.Onboarding.Dark" parent="Theme.Foobar.Dark"/>
 
     <!-- Auth -->
     <style name="Theme.Foobar.Auth.DayNight" parent="Theme.Foobar.Auth.Dark"/>

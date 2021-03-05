@@ -20,14 +20,22 @@ android {
         testInstrumentationRunner = Dependencies.HILT_TEST_RUNNER
 
         consumerProguardFiles("consumer-proguard-rules.pro")
+
+        // Read local properties
+        val localProperties = Properties().apply {
+            load(rootProject.file("local.properties").inputStream())
+        }
+        val mapsApiKey = localProperties.getProperty("MAPS_API_KEY", null)
+
+        buildConfigField("Boolean", "USE_FIREBASE_EMULATOR", "false")
+        buildConfigField("String", "EMULATOR_HOST", "\"192.168.128.66\"")
+        buildConfigField("String", "EMULATOR_FIRESTORE_PORT", "\"8080\"")
+        buildConfigField("String", "EMULATOR_FUNCTIONS_PORT", "\"5001\"")
+        buildConfigField("int", "EMULATOR_AUTH_PORT", "9099")
+        buildConfigField("String", "GOOGLE_MAPS_API_KEY", "\"$mapsApiKey\"")
     }
 
     buildTypes {
-        val localProperties = Properties()
-        localProperties.load(
-            rootProject.file("local.properties").inputStream()
-        )
-
         // Release build
         getByName("release") {
             isMinifyEnabled = false
@@ -36,14 +44,7 @@ android {
 
         // Debug build
         getByName("debug") {
-            buildConfigField("Boolean", "USE_FIREBASE_EMULATOR", "true")
-            buildConfigField("String", "EMULATOR_HOST", "\"192.168.128.66\"")
-            buildConfigField("String", "EMULATOR_FIRESTORE_PORT", "\"8080\"")
-            buildConfigField("String", "EMULATOR_FUNCTIONS_PORT", "\"5001\"")
-            buildConfigField("int", "EMULATOR_AUTH_PORT", "9099")
-            buildConfigField("String", "GOOGLE_MAPS_API_KEY",
-                "\"${localProperties.getProperty("MAPS_API_KEY", "")}\""
-            )
+
         }
     }
 

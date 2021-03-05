@@ -110,7 +110,11 @@ class FakeSellerRepositoryImpl: SellerRepository {
         return flowOf(PagingData.from(result))
     }
 
-    override suspend fun getSellerItemDetail(sellerId: String, itemId: String): SellerItemDetail {
+    override suspend fun searchSellers(searchQuery: String, numOfSellers: Int): List<SellerBasic> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getSellerItemDetail(itemId: String): SellerItemDetail {
         if (shouldReturnNetworkError) throw Exception("Network error.")
         return sellerItemDetails.find {
             it.sellerId == sellerId && it.sellerItemDetail.id == itemId
@@ -133,6 +137,10 @@ class FakeSellerRepositoryImpl: SellerRepository {
         return sellerItems.filter { it.sellerId == sellerId }
             .take(limit)
             .map { it.sellerItemBasic }
+    }
+
+    override suspend fun getSellerSectionDetail(sectionId: String): SellerSectionDetail {
+        TODO("Not yet implemented")
     }
 
     override suspend fun getSellerSection(sellerId: String, sectionId: String): SellerSectionBasic {

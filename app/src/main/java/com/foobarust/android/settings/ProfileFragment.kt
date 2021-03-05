@@ -123,10 +123,7 @@ class ProfileFragment : FullScreenDialogFragment(), ProfileAdapter.ProfileAdapte
                 if (navBackStackEntry.savedStateHandle.contains(editItemId)) {
                     val result = navBackStackEntry.savedStateHandle.get<String>(editItemId)
                     result?.let {
-                        updateInputResult(
-                            editItemId = editItemId,
-                            result = it
-                        )
+                        updateInputResult(editItemId = editItemId, result = it)
                     }
                     navBackStackEntry.savedStateHandle.remove<String>(editItemId)
                 }

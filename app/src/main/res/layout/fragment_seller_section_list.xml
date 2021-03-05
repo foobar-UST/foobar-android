@@ -21,6 +21,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="210dp"
                 app:contentScrim="?android:attr/colorBackground"
+                app:collapsedTitleTextAppearance="?attr/textAppearanceHeadline6"
                 app:expandedTitleGravity="bottom"
                 app:expandedTitleMarginTop="?attr/actionBarSize"
                 app:expandedTitleTextAppearance="?attr/textAppearanceHeadline5"

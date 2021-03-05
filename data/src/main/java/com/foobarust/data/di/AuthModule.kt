@@ -17,7 +17,7 @@ import javax.inject.Singleton
  * Created by kevin on 9/14/20
  */
 
-@Module(includes = [PersistentModule::class])
+@Module
 @InstallIn(SingletonComponent::class)
 abstract class AuthModule {
 
@@ -36,8 +36,6 @@ abstract class AuthModule {
 
         @Singleton
         @Provides
-        fun provideAuthMapper(): AuthMapper {
-            return AuthMapper()
-        }
+        fun provideAuthMapper(): AuthMapper = AuthMapper()
     }
 }

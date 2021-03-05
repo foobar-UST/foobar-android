@@ -1,0 +1,51 @@
+[
+    {
+        "id": "6e0b1afe-47d4-4285-a9b2-115bf7495daf",
+        "tag": "chinese",
+        "title": "Chinese",
+        "title_zh": "中式",
+        "image_url": "https://storage.googleapis.com/foobar-group-delivery-app.appspot.com/item_categories_images/6e0b1afe-47d4-4285-a9b2-115bf7495daf%40s_1280_720.jpg?GoogleAccessId=firebase-adminsdk-3n4q6%40foobar-group-delivery-app.iam.gserviceaccount.com&Expires=1929900500&Signature=iGPfXgM9bdQ26tUNElikTior%2BM1jGQtDFkbtOzEBUjSxrebKtNwGfhxKbVc47kLzmXjkQn1Zcw2DsI4nGi%2F30LsF3ofh4gbI93NFLY5OO5Mtqis5W1%2FrghO62EYtFjQfQsFKahnnHFXKPsFd0O0j2H%2BY4VivvktG6NUhvxxAzRsoTpXE33mgKaRof5xhrnwP7zotKyqQ1VSsdeFexV2%2Bx86Y0fCmUXlV6Wum45FVbL2LpfQZ0FWkRjw%2BEjOTDh6muUAgQ0WY9toH29TT4Pz3nnasqnmLqmgcgUcJKwvWjJ72%2B13BmeR5Who1UeP0Ul6morlHxPpbzyMBJvepA6ddQw%3D%3D"
+    },
+    {
+        "id": "fc018aff-2e67-4c24-9f92-5eaa7e1e570b",
+        "tag": "japanese",
+        "title": "Japanese",
+        "title_zh": "日式",
+        "image_url": "https://storage.googleapis.com/foobar-group-delivery-app.appspot.com/item_categories_images/fc018aff-2e67-4c24-9f92-5eaa7e1e570b%40s_1280_720.jpg?GoogleAccessId=firebase-adminsdk-3n4q6%40foobar-group-delivery-app.iam.gserviceaccount.com&Expires=1929900498&Signature=evwsgyeT%2F8LhI%2FR2BSPkSDkAySOO2pjVfUBPsFRR5lLppHwyQc5VFHaPM7egkgBDReeN%2BVm8puG3qf7o8F%2B%2Fe61j26c014%2BgXH96SOMBFwQzhScDDJ2E448tWxtrEivt9hofY7DDg067c1dlxQGZhTozsM0VtGt38FtngfeFUTgMW3cbP7z9Gf8uCRLAd%2BOya42m7%2BVCuGSWUk3rEMyfv1vBwKFrJy6lB%2FkgUVRwFldgbU1bmK4Cff1ic93%2B1xG0SHhDaKv6np2qZSqzEawK1us2IrNL%2FuETsdMcqlGoQUznwu6sdlxTnxOZs%2FzKfD7YsyvV0HgzOKVpPdKP9em9cw%3D%3D"
+    },
+    {
+        "id": "a9c50c31-d537-494d-8381-a4144d9662b0",
+        "tag": "korean",
+        "title": "Korean",
+        "title_zh": "韓式",
+        "image_url": "https://storage.googleapis.com/foobar-group-delivery-app.appspot.com/item_categories_images/a9c50c31-d537-494d-8381-a4144d9662b0%40s_1280_720.jpg?GoogleAccessId=firebase-adminsdk-3n4q6%40foobar-group-delivery-app.iam.gserviceaccount.com&Expires=1929900501&Signature=e%2Ftus2lkrqZSNX6dSdFH4fTauBmTNP6R6SbE%2FH5Lyi60pE073rR%2F6mVfJM5V8xEoMn4eZ0WfY4OrhRm1n5SMcOsu3dpT331bA%2BXSfoV8cwI37ezF%2Bg18ezDTzTDGwprfVZh9T6rHzcJboTHES8nLtr6Lz74LToVFuMwg8YRZ0Ug8hrbacxx7%2BU92yvbKflfIHOPdI6nzed3opvK%2B%2B%2BfvS30x4w9Dzhtekupu%2Bau6uxhJfzhtQQeFKBq1Pr3jOso4EEYLro2XIxH%2BMLzDO07w%2BcCDr8%2BTwsxpUpnZ91ee0OF6SZ1zC5WYN964uT%2FDBT4z7k4e5Cd3K%2BKWYQzu%2FqIQYg%3D%3D"
+    },
+    {
+        "id": "9675772f-d09c-451f-857a-3c9718610ece",
+        "tag": "indian",
+        "title": "Indian",
+        "title_zh": "印度菜",
+        "image_url": "https://storage.googleapis.com/foobar-group-delivery-app.appspot.com/item_categories_images/9675772f-d09c-451f-857a-3c9718610ece%40s_1280_720.jpg?GoogleAccessId=firebase-adminsdk-3n4q6%40foobar-group-delivery-app.iam.gserviceaccount.com&Expires=1929900500&Signature=XiI3ourwmm%2FP4e499a%2Bd4oENkX6X96tnjsIEVeOrDTZpI2JaAq4gXwD6A9CjHzYcX1b77JQ0CtqW%2B9a4YHXKA6CYjY0XX1vByNKoipqzdk9On9jOTnd3h%2FIZzdgnb86OPzU44dDDtvqaW%2FL1o8aGtHnqWFEiCYlGvYuQl7s%2F3OW21zqP2Nt1CulZVFH4i2hd5n7c1yO7krxhWKhktF6xzt7o4gEM20WDDXIGJ9DEQzF7Essg%2Fmlg%2FgPosdtDsCDwBNnTj3PvQ3%2BsoJHiWiNFatO%2BI437V%2BqsB0o0rhxq6B6Vulry2rZFJDcoj7vJIjfZipB2s8e4Kk%2BS5BMEI79RCg%3D%3D"
+    },
+    {
+        "id": "4dca9009-0c28-40dd-8bc8-89c69fa319b7",
+        "tag": "western",
+        "title": "Western",
+        "title_zh": "西式",
+        "image_url": "https://storage.googleapis.com/foobar-group-delivery-app.appspot.com/item_categories_images/4dca9009-0c28-40dd-8bc8-89c69fa319b7%40s_1280_720.jpg?GoogleAccessId=firebase-adminsdk-3n4q6%40foobar-group-delivery-app.iam.gserviceaccount.com&Expires=1929900499&Signature=j%2B5YzWyDaFryz09NqrDUZJLrTp1ETECLAfEFfCg9XeiNHky%2Bvn5KPQnrt1RSZqZTJYf6gfkZHFaardYAKoGMWJU6wVK44gjn9Kgx1btTj%2B1ry5Umf%2BUnucGykK4FcASeVwm8iJ1VXK7yjq%2B5MAIuU0kFkOE%2BgtzlEu8c9WkEjR4bIRSsWBv1T1%2FdIllh4dPxCp1PlKsvO6qKQf6MXKSODJ7sqt8uDDP4qOMSMngjsbIoe6hnY1aZcQkUKF7%2FBTeHTEHL9TjGKmpkl0Sh%2FU5N6m1EVWUFpCvMDLzSY6WNWK7BbhYnufQxGQmcCAmgI%2B6onA%2Bqf1gvkQnNyyqFxKaynQ%3D%3D"
+    },
+    {
+        "id": "72ce9e3e-8670-4591-a3d1-9a6a1fab876c",
+        "tag": "american",
+        "title": "American",
+        "title_zh": "美式",
+        "image_url": "https://storage.googleapis.com/foobar-group-delivery-app.appspot.com/item_categories_images/72ce9e3e-8670-4591-a3d1-9a6a1fab876c%40s_1280_720.jpg?GoogleAccessId=firebase-adminsdk-3n4q6%40foobar-group-delivery-app.iam.gserviceaccount.com&Expires=1929900501&Signature=oDbZR9%2B5KiO%2BD7ZJFgMp2gG%2Fzv87p1kH9vCYD7Rcax3qWXyXTWe%2FDWpG20aGcUaZQ8LsiJ4N%2F%2FjBAGWpqcKfkI88%2Fpp0muSpPxvcwAdhCbLM5n8PIxv5lUgHXiPoQmyjoS4OVeeVre83Z7Uf5V3kxM5%2B7wuNtcUFe9mi3LLQk5BYz7vco%2Brl5D%2FIoIO7eTPlWZ%2Bz4BiseIW%2BjYdiyCB5J6fE7oDQ5NCUf8%2B1PugsxUY%2F3m%2FrDL%2BG4O4YiQqwCBAeWXlF5vXYKxAyaLG%2Boxe0R3hL6x2VOgpcWkTB34mDKM4dKyU393hMXH8wJvQT%2FWh7qXwMYDvxMb52Eb%2FXFZCD%2Fw%3D%3D"
+    },
+    {
+        "id": "3c557b2b-b96a-493d-ae76-16cee046eb91",
+        "tag": "european",
+        "title": "European",
+        "title_zh": "歐式",
+        "image_url": "https://storage.googleapis.com/foobar-group-delivery-app.appspot.com/item_categories_images/3c557b2b-b96a-493d-ae76-16cee046eb91%40s_1280_720.jpeg?GoogleAccessId=firebase-adminsdk-3n4q6%40foobar-group-delivery-app.iam.gserviceaccount.com&Expires=1929900501&Signature=PLS1bQA2GWgYlTOryWiy4IL7oMLFEQfWmW4uxde5MDkWZGF5sXzKd4CvXg9g7EUR2%2FuhphordVSNGVRQ4f0Km3nH6ZwswzesnsS41EQSuvad13uM6W7QzlBL5Caj0vWNbKvcKYMW0K20Ansns0%2Fgr6A0%2BEFzfRCjaBoBa8Q08LNwS%2F5ioSgf%2FBGHKcb3FXYi1dfiL5GozSmC2q%2FtaBeezAy4aFclpJDFfQi%2Bi6G6gbr6t280r0RzXMk72CB4lVnDGsQoysxLy%2Fdifp27Sl1rLsvXWtLHJnzPt9aL%2FG%2BZkM0XLAH8ULYV5kIDX%2BnkT2rqPgiZ24itb64diUVZtcv2KA%3D%3D"
+    }
+]

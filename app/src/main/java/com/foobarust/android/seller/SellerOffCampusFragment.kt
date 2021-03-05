@@ -113,13 +113,15 @@ class SellerOffCampusFragment : Fragment(),
         }
 
         // Setup recyclerview bottom padding correspond to cart bottom bar
-        mainViewModel.showCartBottomBar.observe(viewLifecycleOwner) { show ->
-            val bottomPadding = if (show) {
-                requireContext().resources.getDimension(R.dimen.cart_bottom_bar_height)
-            } else {
-                0.0
+        viewLifecycleOwner.lifecycleScope.launch {
+            mainViewModel.showCartBottomBar.collect { show ->
+                val bottomPadding = if (show) {
+                    requireContext().resources.getDimension(R.dimen.cart_bottom_bar_height)
+                } else {
+                    0.0
+                }
+                binding.sectionsRecyclerView.updatePadding(bottom = bottomPadding.toInt())
             }
-            binding.sectionsRecyclerView.updatePadding(bottom = bottomPadding.toInt())
         }
 
         return binding.root
