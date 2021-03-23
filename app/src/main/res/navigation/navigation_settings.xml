@@ -77,7 +77,7 @@
     <dialog
         android:id="@+id/textInputDialog"
         android:name="com.foobarust.android.settings.TextInputDialog"
-        tools:layout="@layout/dialog_text_input_entry">
+        tools:layout="@layout/dialog_text_input">
         <argument
             android:name="property"
             app:argType="com.foobarust.android.settings.TextInputProperty"

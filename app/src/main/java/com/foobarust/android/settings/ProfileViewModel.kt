@@ -14,8 +14,8 @@ import com.foobarust.domain.models.user.isDataCompleted
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.states.getSuccessDataOr
 import com.foobarust.domain.usecases.AuthState
-import com.foobarust.domain.usecases.common.GetFormattedPhoneNumUseCase
-import com.foobarust.domain.usecases.user.GetUserAuthStateUseCase
+import com.foobarust.domain.usecases.auth.GetUserAuthStateUseCase
+import com.foobarust.domain.usecases.shared.GetFormattedPhoneNumUseCase
 import com.foobarust.domain.usecases.user.UpdateUserDetailParameters
 import com.foobarust.domain.usecases.user.UpdateUserDetailUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel

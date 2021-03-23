@@ -7,8 +7,6 @@ import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentSellerSectionBinding
 import com.foobarust.android.shared.FullScreenDialogFragment
@@ -41,7 +39,8 @@ class SellerSectionFragment : FullScreenDialogFragment() {
         binding = FragmentSellerSectionBinding.inflate(inflater, container, false)
 
         // Setup navigation
-        val navHostFragment = childFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
+        val navHostFragment = childFragmentManager.findFragmentById(R.id.fragment_container)
+            as NavHostFragment
         navController = navHostFragment.navController.apply {
             setGraph(
                 R.navigation.navigation_seller_section,
@@ -55,12 +54,6 @@ class SellerSectionFragment : FullScreenDialogFragment() {
             navController = navController
         )
 
-        // Bind ViewModel
-        binding.run {
-            this.viewModel = this@SellerSectionFragment.viewModel
-            lifecycleOwner = viewLifecycleOwner
-        }
-
         // Record current destination
         navController.addOnDestinationChangedListener { _, destination, _ ->
             viewModel.onUpdateCurrentDestination(destination.id)
@@ -69,6 +62,13 @@ class SellerSectionFragment : FullScreenDialogFragment() {
         // Setup toolbar
         binding.toolbar.setNavigationOnClickListener {
             handleBackPressed()
+        }
+
+        // Toolbar title
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.toolbarTitle.collect {
+                binding.toolbar.title = it
+            }
         }
 
         // Navigate to seller detail
@@ -81,7 +81,6 @@ class SellerSectionFragment : FullScreenDialogFragment() {
                 )
             }
         }
-
 
         // Navigate to seller misc
         viewLifecycleOwner.lifecycleScope.launch {
@@ -110,7 +109,7 @@ class SellerSectionFragment : FullScreenDialogFragment() {
         // Dismiss the dialog when back pressing in start destination
         val currentDestination = navController.currentDestination?.id
         if (currentDestination == R.id.sellerSectionDetailFragment) {
-            findNavController().navigateUp()
+            findNavController(R.id.sellerSectionFragment)?.navigateUp()
         } else {
             viewModel.onBackPressed()
         }

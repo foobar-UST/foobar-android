@@ -1,8 +1,9 @@
 package com.foobarust.domain.models.seller
 
 import com.foobarust.domain.models.common.Geolocation
-import com.foobarust.domain.utils.DateUtils
-import com.foobarust.domain.utils.TimeUtils
+import com.foobarust.domain.utils.format
+import com.foobarust.domain.utils.getTimeBy12Hour
+import com.foobarust.domain.utils.isSameDay
 import java.util.*
 
 /**
@@ -34,7 +35,7 @@ data class SellerSectionDetail(
 fun SellerSectionDetail.isRecentSection(): Boolean {
     return available &&
         state == SellerSectionState.AVAILABLE &&
-        DateUtils.isSameDay(deliveryTime, Date())
+        deliveryTime.isSameDay(Date())
 }
 
 fun SellerSectionDetail.getNormalizedTitle(): String {
@@ -50,14 +51,8 @@ fun SellerSectionDetail.getNormalizedDeliveryAddress(): String {
     return if (addressZh != null) "$address\n$addressZh" else address
 }
 
-fun SellerSectionDetail.getCutoffTimeString(): String {
-    return TimeUtils.get12HourString(cutoffTime)
-}
+fun SellerSectionDetail.getCutoffTimeString(): String = cutoffTime.getTimeBy12Hour()
 
-fun SellerSectionDetail.getDeliveryDateString(): String {
-    return DateUtils.getDateString(date = deliveryTime, format = "yyyy-MM-dd")
-}
+fun SellerSectionDetail.getDeliveryDateString(): String = deliveryTime.format("yyyy-MM-dd")
 
-fun SellerSectionDetail.getDeliveryTimeString(): String {
-    return TimeUtils.get12HourString(deliveryTime)
-}
+fun SellerSectionDetail.getDeliveryTimeString(): String = deliveryTime.getTimeBy12Hour()

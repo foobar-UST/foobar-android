@@ -1,7 +1,8 @@
 package com.foobarust.domain.models.order
 
 import com.foobarust.domain.models.common.Geolocation
-import com.foobarust.domain.utils.DateUtils
+import com.foobarust.domain.models.common.GeolocationPoint
+import com.foobarust.domain.utils.format
 import java.util.*
 
 /**
@@ -19,6 +20,7 @@ data class OrderDetail(
     val sectionTitle: String?,
     val sectionTitleZh: String?,
     val delivererId: String?,
+    val delivererLocation: GeolocationPoint?,
     val identifier: String,
     val imageUrl: String?,
     val type: OrderType,
@@ -56,10 +58,6 @@ fun OrderDetail.getNormalizedDeliveryAddress(): String {
     return "${deliveryLocation.address} ${deliveryLocation.addressZh}"
 }
 
-fun OrderDetail.getCreatedAtString(): String {
-    return DateUtils.getDateString(date = createdAt, format = "yyyy-MM-dd HH:mm")
-}
+fun OrderDetail.getCreatedAtString(): String = createdAt.format("yyyy-MM-dd HH:mm")
 
-fun OrderDetail.getUpdatedAtString(): String {
-    return DateUtils.getDateString(date = updatedAt, format = "yyyy-MM-dd HH:mm")
-}
+fun OrderDetail.getUpdatedAtString(): String = updatedAt.format( "yyyy-MM-dd HH:mm")

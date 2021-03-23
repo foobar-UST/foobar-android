@@ -8,6 +8,7 @@ import com.foobarust.data.constants.Constants.GEO_LOCATION_ADDRESS_ZH_FIELD
 import com.foobarust.data.constants.Constants.ORDERS_ENTITY
 import com.foobarust.data.constants.Constants.ORDER_CREATED_AT_FIELD
 import com.foobarust.data.constants.Constants.ORDER_DELIVERER_ID_FIELD
+import com.foobarust.data.constants.Constants.ORDER_DELIVERER_LOCATION_FIELD
 import com.foobarust.data.constants.Constants.ORDER_DELIVERY_COST_FIELD
 import com.foobarust.data.constants.Constants.ORDER_DELIVERY_LOCATION_LATITUDE_FIELD
 import com.foobarust.data.constants.Constants.ORDER_DELIVERY_LOCATION_LONGITUDE_FIELD
@@ -69,6 +70,9 @@ data class OrderDetailCacheDto(
 
     @ColumnInfo(name = ORDER_DELIVERER_ID_FIELD)
     val delivererId: String? = null,
+
+    @ColumnInfo(name = ORDER_DELIVERER_LOCATION_FIELD)
+    val delivererLocation: String? = null,
 
     @ColumnInfo(name = ORDER_IDENTIFIER_FIELD)
     val identifier: String? = null,

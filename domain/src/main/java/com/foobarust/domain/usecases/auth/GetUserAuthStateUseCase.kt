@@ -1,4 +1,4 @@
-package com.foobarust.domain.usecases.user
+package com.foobarust.domain.usecases.auth
 
 import com.foobarust.domain.di.ApplicationScope
 import com.foobarust.domain.di.IoDispatcher

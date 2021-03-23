@@ -124,7 +124,7 @@ dependencies {
     implementation(Dependencies.MATERIAL)
     implementation(Dependencies.GLIDE)
     implementation(Dependencies.SPINKIT)
-    implementation(Dependencies.MAP)
+    implementation(Dependencies.MAPS)
     implementation(Dependencies.WORK)
 
     // Annotation Processors

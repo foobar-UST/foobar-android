@@ -15,8 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_xmedium"
         android:padding="@dimen/spacing_large"
-        android:background="?attr/colorSurface"
-        android:orientation="vertical">
+        android:background="?attr/colorSurface">
 
         <TextView
             android:id="@+id/description_text_view"
@@ -100,7 +99,7 @@
             android:id="@+id/pick_up_location_title_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_mxlarge"
+            android:layout_marginTop="@dimen/spacing_large"
             android:text="@string/seller_section_detail_pick_up_location"
             android:textAppearance="?attr/textAppearanceBody2"
             app:layout_constraintTop_toBottomOf="@id/delivery_time_title_text_view"

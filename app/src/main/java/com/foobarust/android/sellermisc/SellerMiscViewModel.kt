@@ -1,8 +1,6 @@
 package com.foobarust.android.sellermisc
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.foobarust.domain.models.seller.SellerDetail
 import com.foobarust.domain.models.seller.SellerType
@@ -28,11 +26,11 @@ class SellerMiscViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _sellerDetail = MutableStateFlow<SellerDetail?>(null)
-    private val _sellerMiscUiState = MutableStateFlow<SellerMiscUiState>(SellerMiscUiState.Loading)
-    val sellerMiscUiState: LiveData<SellerMiscUiState> = _sellerMiscUiState
-        .asLiveData(viewModelScope.coroutineContext)
 
-    val sellerLocation: LiveData<LatLng> = _sellerDetail
+    private val _sellerMiscUiState = MutableStateFlow<SellerMiscUiState>(SellerMiscUiState.Loading)
+    val sellerMiscUiState: StateFlow<SellerMiscUiState> = _sellerMiscUiState.asStateFlow()
+
+    val sellerLocation: Flow<LatLng> = _sellerDetail
         .filterNotNull()
         .map {
             LatLng(
@@ -40,23 +38,21 @@ class SellerMiscViewModel @Inject constructor(
                 it.location.locationPoint.longitude
             )
         }
-        .asLiveData(viewModelScope.coroutineContext)
 
-    val offCampusDeliveryRoute: LiveData<List<LatLng>?> = _sellerDetail
+    // Only show for off-campus seller
+    val deliveryRoute: Flow<List<LatLng>?> = _sellerDetail
         .filterNotNull()
         .filter { it.type == SellerType.OFF_CAMPUS }
         .map {
             getDirectionsUseCase(
                 GetDirectionsParameters(
-                    latitude = it.location.locationPoint.latitude,
-                    longitude = it.location.locationPoint.longitude
+                    destination = it.location.locationPoint
                 )
             ).getSuccessDataOr(null)
         }
         .map { geolocation ->
             geolocation?.map { LatLng(it.latitude, it.longitude) }
         }
-        .asLiveData(viewModelScope.coroutineContext)
 
 
     fun onFetchSellerDetail(sellerId: String) = viewModelScope.launch {

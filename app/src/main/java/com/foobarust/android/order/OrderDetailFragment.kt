@@ -12,7 +12,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentOrderDetailBinding
 import com.foobarust.android.shared.FullScreenDialogFragment
@@ -23,6 +23,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.maps.android.ktx.awaitMap
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 /**
@@ -51,10 +52,7 @@ class OrderDetailFragment : FullScreenDialogFragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentOrderDetailBinding.inflate(inflater, container, false).apply {
-            viewModel = this@OrderDetailFragment.viewModel
-            lifecycleOwner = viewLifecycleOwner
-        }
+        binding = FragmentOrderDetailBinding.inflate(inflater, container, false)
 
         // Hide bottom sheet at start
         binding.bottomSheet.isGone = true
@@ -62,34 +60,50 @@ class OrderDetailFragment : FullScreenDialogFragment(),
         // Setup order detail list
         val detailAdapter = OrderDetailAdapter(this)
 
-        binding.orderDetailRecyclerView.run {
+        with(binding.orderDetailRecyclerView) {
             adapter = detailAdapter
+            layoutManager = NotifyingLinearLayoutManager(
+                context, LinearLayoutManager.VERTICAL, false
+            )
             setHasFixedSize(true)
         }
 
-        viewModel.orderDetailListModels.observe(viewLifecycleOwner) {
-            detailAdapter.submitList(it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.orderDetailListModels.collectLatest {
+                detailAdapter.submitList(it)
+            }
         }
 
-        viewModel.orderDetailUiState.observe(viewLifecycleOwner) {
-            if (it is OrderDetailUiState.Error) {
-                showShortToast(it.message)
-            }
+        // Ui state
+        viewLifecycleOwner.lifecycleScope.launch {
+             viewModel.orderDetailUiState.collect { uiState ->
+                 with(binding) {
+                     loadingProgressBar.bindProgressHideIf(uiState !is OrderDetailUiState.Loading)
+                     loadErrorLayout.root.isVisible = uiState is OrderDetailUiState.Error
+                     mapContainer.isGone = uiState is OrderDetailUiState.Error
+                 }
+
+                 if (uiState is OrderDetailUiState.Error) {
+                     showShortToast(uiState.message)
+                 }
+             }
         }
 
         // Show map fragment for selected order states
-        viewModel.bottomSheetFullScreen.observe(viewLifecycleOwner) { fullScreen ->
-            with(binding) {
-                mapContainer.isVisible = fullScreen == false
-                binding.bottomSheet.isVisible = true
-            }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.bottomSheetExpanded.collect { expanded ->
+                with(binding) {
+                    mapContainer.isVisible = expanded == false
+                    binding.bottomSheet.isVisible = true
+                }
 
-            if (fullScreen == true) {
-                setupBottomSheetFullScreen()
-                updateToolbarColor(requireContext().themeColor(R.attr.colorSurface))
-            } else if (fullScreen == false) {
-                setupMapFragment()
-                setupBottomSheetCollapsed()
+                if (expanded == true) {
+                    setupBottomSheetFullScreen()
+                    updateToolbarColor(requireContext().themeColor(R.attr.colorSurface))
+                } else if (expanded == false) {
+                    setupMapFragment()
+                    setupBottomSheetCollapsed()
+                }
             }
         }
 
@@ -162,13 +176,16 @@ class OrderDetailFragment : FullScreenDialogFragment(),
 
         // Set bottom sheet peek height to show the last state item
         viewLifecycleOwner.lifecycleScope.launch {
-            binding.orderDetailRecyclerView.layoutCompletedFlow().collect { itemsShown ->
-                if (itemsShown <= 0) return@collect
-                val lastStateItemPos = viewModel.getLastOrderStateItemPosition()
+            val notifyingLinearLayoutManager = binding.orderDetailRecyclerView.layoutManager
+                as NotifyingLinearLayoutManager
+
+            notifyingLinearLayoutManager.getVisibleItemsCount().collect { visibleItemsCount ->
+                if (visibleItemsCount <= 0) return@collect
+
+                val lastStateItemPosition = viewModel.getLastOrderStateItemPosition()
                 val lastStateItemView = binding.orderDetailRecyclerView
-                    .findViewHolderForAdapterPosition(lastStateItemPos)
-                    ?.itemView
-                if (lastStateItemPos > 0 && lastStateItemView != null) {
+                    .findViewHolderForAdapterPosition(lastStateItemPosition)?.itemView
+                if (lastStateItemPosition > 0 && lastStateItemView != null) {
                     bottomSheetBehavior.setPeekHeight(lastStateItemView.bottom, true)
                 }
             }

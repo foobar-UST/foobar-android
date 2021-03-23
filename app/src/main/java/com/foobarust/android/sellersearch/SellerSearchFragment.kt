@@ -14,7 +14,7 @@ import com.foobarust.android.sellerdetail.SellerDetailProperty
 import com.foobarust.android.utils.AutoClearedValue
 import com.foobarust.android.utils.findNavController
 import com.foobarust.android.utils.showShortToast
-import com.foobarust.android.utils.touchOutsideItems
+import com.foobarust.android.utils.touchOutsideItemsFlow
 import com.foobarust.domain.models.seller.SellerType
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -62,7 +62,7 @@ class SellerSearchFragment : DialogFragment(),
 
         // Dismiss when clicking scrim region
         viewLifecycleOwner.lifecycleScope.launch {
-            binding.searchRecyclerView.touchOutsideItems().collect {
+            binding.searchRecyclerView.touchOutsideItemsFlow().collect {
                 findNavController(R.id.sellerSearchFragment)?.navigateUp()
             }
         }

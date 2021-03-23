@@ -1,6 +1,5 @@
 package com.foobarust.data.paging
 
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.foobarust.data.constants.Constants.ORDERS_BASIC_COLLECTION
@@ -55,7 +54,6 @@ class HistoryOrderBasicsPagingSource(
                 nextKey = nextPageQuery
             )
         } catch (e: Exception) {
-            Log.d("HistoryOrder", e.message.toString())
             LoadResult.Error(e)
         }
     }

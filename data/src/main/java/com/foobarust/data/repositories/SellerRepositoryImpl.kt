@@ -19,6 +19,8 @@ import com.foobarust.data.constants.Constants.SELLER_SECTION_AVAILABLE_FIELD
 import com.foobarust.data.constants.Constants.SELLER_SECTION_CUTOFF_TIME_FIELD
 import com.foobarust.data.constants.Constants.SELLER_SECTION_ID_FIELD
 import com.foobarust.data.constants.Constants.SELLER_SECTION_SELLER_NAME_FIELD
+import com.foobarust.data.constants.Constants.SELLER_SECTION_STATE_AVAILABLE
+import com.foobarust.data.constants.Constants.SELLER_SECTION_STATE_FIELD
 import com.foobarust.data.mappers.SellerMapper
 import com.foobarust.data.paging.SellerBasicsPagingSource
 import com.foobarust.data.paging.SellerItemBasicsPagingSource
@@ -133,6 +135,7 @@ class SellerRepositoryImpl @Inject constructor(
             "$SELLERS_COLLECTION/$sellerId/$SELLER_SECTIONS_BASIC_SUB_COLLECTION"
         )
             .whereEqualTo(SELLER_SECTION_AVAILABLE_FIELD, true)
+            .whereEqualTo(SELLER_SECTION_STATE_FIELD, SELLER_SECTION_STATE_AVAILABLE)
             .whereGreaterThan(SELLER_SECTION_CUTOFF_TIME_FIELD, Date())
             .orderBy(SELLER_SECTION_CUTOFF_TIME_FIELD, Query.Direction.ASCENDING)
             .orderBy(SELLER_SECTION_SELLER_NAME_FIELD, Query.Direction.ASCENDING)

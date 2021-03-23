@@ -9,12 +9,12 @@ import com.foobarust.android.R
 import com.foobarust.android.settings.SettingsListModel.SettingsAccountItemModel
 import com.foobarust.android.settings.SettingsListModel.SettingsSectionItemModel
 import com.foobarust.android.shared.BaseViewModel
-import com.foobarust.android.works.UploadUserPhotoWork
+import com.foobarust.android.works.UploadDeviceTokenWork
 import com.foobarust.domain.models.user.UserDetail
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.AuthState
+import com.foobarust.domain.usecases.auth.GetUserAuthStateUseCase
 import com.foobarust.domain.usecases.auth.SignOutUseCase
-import com.foobarust.domain.usecases.user.GetUserAuthStateUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
@@ -98,7 +98,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     private fun cancelExistingWorks() {
-        workManager.cancelUniqueWork(UploadUserPhotoWork.WORK_NAME)
+        workManager.cancelUniqueWork(UploadDeviceTokenWork.WORK_NAME)
     }
 
     private fun buildAuthenticatedListModels(

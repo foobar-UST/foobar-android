@@ -26,6 +26,8 @@ object Constants {
     const val USER_DEVICE_IDS_FIELD = "deviceIds"
     const val USER_UPDATED_AT_FIELD = "updated_at"
     const val USER_CREATED_REST_FIELD = "createdRest"
+    const val USER_EMPLOYED_BY_FIELD = "employed_by"
+    const val USER_SECTION_IN_DELIVERY = "section_in_delivery"
 
     // User Cart
     const val USER_CARTS_COLLECTION = "user_carts"
@@ -115,6 +117,8 @@ object Constants {
     const val SELLER_SECTION_SELLER_ID_FIELD = "seller_id"
     const val SELLER_SECTION_SELLER_NAME_FIELD = "seller_name"
     const val SELLER_SECTION_SELLER_NAME_ZH_FIELD = "seller_name_zh"
+    const val SELLER_SECTION_DELIVERER_ID_FIELD = "deliverer_id"
+    const val SELLER_SECTION_DELIVERER_LOCATION_FIELD = "deliverer_location"
     const val SELLER_SECTION_DELIVERY_COST_FIELD = "delivery_cost"
     const val SELLER_SECTION_DELIVERY_TIME_FIELD = "delivery_time"
     const val SELLER_SECTION_DELIVERY_LOCATION_FIELD = "delivery_location"
@@ -199,6 +203,7 @@ object Constants {
     const val ORDER_SECTION_TITLE_FIELD = "section_title"
     const val ORDER_SECTION_TITLE_ZH_FIELD = "section_title_zh"
     const val ORDER_DELIVERER_ID_FIELD = "deliverer_id"
+    const val ORDER_DELIVERER_LOCATION_FIELD = "deliverer_location"
     const val ORDER_IDENTIFIER_FIELD = "identifier"
     const val ORDER_IMAGE_URL_FIELD = "image_url"
     const val ORDER_TYPE_FIELD = "type"

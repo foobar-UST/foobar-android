@@ -7,6 +7,7 @@ import com.foobarust.data.constants.Constants.SELLER_SECTION_STATE_PROCESSING
 import com.foobarust.data.constants.Constants.SELLER_SECTION_STATE_SHIPPED
 import com.foobarust.data.models.explore.ItemCategoryDto
 import com.foobarust.data.models.seller.*
+import com.foobarust.domain.models.common.GeolocationPoint
 import com.foobarust.domain.models.explore.SellerItemCategory
 import com.foobarust.domain.models.seller.*
 import javax.inject.Inject
@@ -186,6 +187,18 @@ class SellerMapper @Inject constructor() {
             good = dto.good ?: 0,
             fair = dto.fair ?: 0,
             poor = dto.poor ?: 0
+        )
+    }
+
+    private fun fromGeoLocationPoint(latitude: Double, longitude: Double): String {
+        return "$latitude,$longitude"
+    }
+
+    private fun toGeoLocationPoint(location: String): GeolocationPoint {
+        val output = location.split(',')
+        return GeolocationPoint(
+            latitude = output[0].toDouble(),
+            longitude = output[1].toDouble()
         )
     }
 }

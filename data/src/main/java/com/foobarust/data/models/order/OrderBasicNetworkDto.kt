@@ -90,7 +90,6 @@ data class OrderBasicNetworkDto(
     @PropertyName(ORDER_TOTAL_COST_FIELD)
     val totalCost: Double? = null,
 
-
     @JvmField
     @PropertyName(ORDER_CREATED_AT_FIELD)
     val createdAt: Timestamp? = null,

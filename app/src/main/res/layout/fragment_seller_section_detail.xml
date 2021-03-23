@@ -4,13 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-        <variable
-            name="viewModel"
-            type="com.foobarust.android.sellersection.SellerSectionDetailViewModel" />
-        <import type="com.foobarust.android.sellersection.SellerSectionDetailUiState"/>
-    </data>
-
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
@@ -22,13 +15,12 @@
             android:animateLayoutChanges="true">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_view"
+                android:id="@+id/section_detail_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:paddingBottom="88dp"
                 android:clipToPadding="false"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:goneIf="@{!(viewModel.sectionDetailUiState instanceof SellerSectionDetailUiState.Success)}"
                 tools:listitem="@layout/seller_section_detail_participants_item"
                 tools:itemCount="1"/>
 
@@ -36,23 +28,20 @@
                 android:id="@+id/loading_progress_bar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                app:goneIf="@{!(viewModel.sectionDetailUiState instanceof SellerSectionDetailUiState.Loading)}"/>
+                android:layout_gravity="center" />
 
             <include
                 layout="@layout/load_error_layout"
                 android:id="@+id/load_error_layout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:goneIf="@{!(viewModel.sectionDetailUiState instanceof SellerSectionDetailUiState.Error)}"/>
+                android:layout_height="match_parent" />
 
             <FrameLayout
                 android:id="@+id/open_menu_button_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:background="@drawable/scrim_fade_bottom"
-                app:goneIf="@{!viewModel.showOpenMenuButton}">
+                android:background="@drawable/scrim_fade_bottom">
 
                 <com.google.android.material.button.MaterialButton
                     style="@style/Widget.MaterialComponents.Button"

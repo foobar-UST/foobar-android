@@ -9,7 +9,6 @@ import androidx.core.view.isGone
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentSellerMiscBinding
 import com.foobarust.android.shared.FullScreenDialogFragment
@@ -24,6 +23,7 @@ import com.google.maps.android.ktx.addMarker
 import com.google.maps.android.ktx.addPolyline
 import com.google.maps.android.ktx.awaitMap
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 /**
@@ -85,18 +85,20 @@ class SellerMiscFragment : FullScreenDialogFragment() {
         }
 
         // Ui state
-        viewModel.sellerMiscUiState.observe(viewLifecycleOwner) {
-            bottomSheetBehavior.hideIf(it !is SellerMiscUiState.Success)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.sellerMiscUiState.collect { uiState ->
+                bottomSheetBehavior.hideIf(uiState !is SellerMiscUiState.Success)
 
-            with(binding) {
-                loadingProgressBar.bindProgressHideIf(it !is SellerMiscUiState.Loading)
-                retryButton.bindHideIf(it !is SellerMiscUiState.Error)
-            }
+                with(binding) {
+                    loadingProgressBar.bindProgressHideIf(uiState !is SellerMiscUiState.Loading)
+                    retryButton.bindHideIf(uiState !is SellerMiscUiState.Error)
+                }
 
-            when (it) {
-                is SellerMiscUiState.Success -> setupSellerMiscLayout(it.sellerDetail)
-                is SellerMiscUiState.Error -> showShortToast(it.message)
-                SellerMiscUiState.Loading -> Unit
+                when (uiState) {
+                    is SellerMiscUiState.Success -> setupSellerMiscLayout(uiState.sellerDetail)
+                    is SellerMiscUiState.Error -> showShortToast(uiState.message)
+                    SellerMiscUiState.Loading -> Unit
+                }
             }
         }
 
@@ -130,25 +132,24 @@ class SellerMiscFragment : FullScreenDialogFragment() {
         }
 
         // Add seller coordinate
-        viewModel.sellerLocation.observe(viewLifecycleOwner) { latLng ->
-            viewLifecycleOwner.lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.sellerLocation.collect { location ->
                 getSupportMapFragment()?.awaitMap()?.run {
-                    addMarker { position(latLng) }
-                    moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, MAP_ZOOM_LEVEL))
+                    addMarker { position(location) }
+                    moveCamera(CameraUpdateFactory.newLatLngZoom(location, MAP_ZOOM_LEVEL))
                 }
             }
         }
 
         // Add seller route
-        viewModel.offCampusDeliveryRoute.observe(viewLifecycleOwner) { polyline ->
-            polyline?.let {
-                viewLifecycleOwner.lifecycleScope.launch {
-                    getSupportMapFragment()?.awaitMap()?.run {
-                        addPolyline {
-                            color(requireContext().themeColor(R.attr.colorSecondary))
-                            width(MAP_ROUTE_WIDTH)
-                            addAll(it)
-                        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.deliveryRoute.collect { latLngs ->
+                if (latLngs == null) return@collect
+                getSupportMapFragment()?.awaitMap()?.run {
+                    addPolyline {
+                        color(requireContext().themeColor(R.attr.colorSecondary))
+                        width(MAP_ROUTE_WIDTH)
+                        addAll(latLngs)
                     }
                 }
             }

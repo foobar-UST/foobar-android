@@ -40,14 +40,14 @@ class SellerSectionDetailViewModel @Inject constructor(
     private val _sellerSectionDetailListModels = MutableStateFlow<List<SellerSectionDetailListModel>>(
         emptyList()
     )
-    val sellerSectionDetailListModels: LiveData<List<SellerSectionDetailListModel>> = _sellerSectionDetailListModels
-        .asLiveData(viewModelScope.coroutineContext)
+    val sellerSectionDetailListModels: StateFlow<List<SellerSectionDetailListModel>> =
+        _sellerSectionDetailListModels.asStateFlow()
 
     private val _sectionDetailUiState = MutableStateFlow<SellerSectionDetailUiState>(
         SellerSectionDetailUiState.Loading
     )
-    val sectionDetailUiState: LiveData<SellerSectionDetailUiState> = _sectionDetailUiState
-        .asLiveData(viewModelScope.coroutineContext)
+    val sectionDetailUiState: StateFlow<SellerSectionDetailUiState> = _sectionDetailUiState
+        .asStateFlow()
 
     private val _navigateToSellerDetail = Channel<SellerDetailProperty>()
     val navigateToSellerDetail: Flow<SellerDetailProperty> = _navigateToSellerDetail
@@ -64,12 +64,11 @@ class SellerSectionDetailViewModel @Inject constructor(
     private val _participants = MutableStateFlow<List<UserPublic>>(emptyList())
     private val _relatedSections = MutableStateFlow<List<SellerSectionBasic>>(emptyList())
 
-    val showOpenMenuButton: LiveData<Boolean> = _sectionDetail
+    val showOpenMenuButton: Flow<Boolean> = _sectionDetail
         .combine(_sectionDetailUiState) { sectionDetail, uiState ->
             sectionDetail?.isRecentSection() == true &&
                 uiState is SellerSectionDetailUiState.Success
         }
-        .asLiveData(viewModelScope.coroutineContext)
 
     val toolbarTitle: LiveData<String> = _sectionDetail
         .filterNotNull()
@@ -100,10 +99,8 @@ class SellerSectionDetailViewModel @Inject constructor(
                                 _finishSwipeRefresh.offer(Unit)
                             }
                         }
-                        is Resource.Loading -> {
-                            if (!isSwipeRefresh) {
-                                _sectionDetailUiState.value = SellerSectionDetailUiState.Loading
-                            }
+                        is Resource.Loading -> if (!isSwipeRefresh) {
+                            _sectionDetailUiState.value = SellerSectionDetailUiState.Loading
                         }
                     }
                 }

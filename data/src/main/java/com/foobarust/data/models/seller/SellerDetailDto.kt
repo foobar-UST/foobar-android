@@ -23,8 +23,6 @@ import com.google.firebase.firestore.PropertyName
 
 /**
  * Created by kevin on 9/27/20
- *
- * Represent a document structure in 'sellers' collection.
  */
 
 data class SellerDetailDto(

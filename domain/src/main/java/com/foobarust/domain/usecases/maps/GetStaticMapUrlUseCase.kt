@@ -1,7 +1,7 @@
 package com.foobarust.domain.usecases.maps
 
 import com.foobarust.domain.di.MainDispatcher
-import com.foobarust.domain.models.common.Geolocation
+import com.foobarust.domain.models.common.GeolocationPoint
 import com.foobarust.domain.repositories.MapRepository
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.FlowUseCase
@@ -14,15 +14,14 @@ import javax.inject.Inject
  * Created by kevin on 1/20/21
  */
 
-class GetStaticMapImageUseCase @Inject constructor(
+class GetStaticMapUrlUseCase @Inject constructor(
     private val mapRepository: MapRepository,
     @MainDispatcher coroutineDispatcher: CoroutineDispatcher
-) : FlowUseCase<Geolocation, String>(coroutineDispatcher) {
+) : FlowUseCase<GeolocationPoint, String>(coroutineDispatcher) {
 
-    override fun execute(parameters: Geolocation): Flow<Resource<String>> = flow {
+    override fun execute(parameters: GeolocationPoint): Flow<Resource<String>> = flow {
         val imageUrl = mapRepository.getStaticMapImageUrl(
-            latitude = parameters.locationPoint.latitude,
-            longitude = parameters.locationPoint.longitude
+            centerLocation = parameters
         )
         emit(Resource.Success(imageUrl))
     }

@@ -54,7 +54,7 @@ fun NotificationManager.createNotificationChannel(
     }
 }
 
-fun NotificationManager.sendNotification(
+fun NotificationManager.sendSimpleNotification(
     context: Context,
     title: String,
     messageBody: String?,
@@ -179,10 +179,6 @@ data class ProgressNotification(
 ) {
     fun updateProgress(progress: Double) {
         builder.setProgress(MAX_PROGRESS, progress.toInt(), false)
-    }
-
-    fun clear() {
-        builder.setProgress(MIN_PROGRESS, MIN_PROGRESS, false)
     }
 
     fun getNotification() = builder.build()

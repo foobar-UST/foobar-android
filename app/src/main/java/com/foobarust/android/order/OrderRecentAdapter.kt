@@ -65,13 +65,10 @@ class OrderRecentAdapter(
         this.activeItemModel = activeItemModel
         listener = this@OrderRecentAdapter.listener
 
-        /*
-        stateProgressBar.setProgressCompat(
-            activeItemModel.orderState.precedence * 25,
+        orderStateProgressBar.setProgressCompat(
+            activeItemModel.orderState.precedence * 33 + 1,
             true
         )
-
-         */
 
         executePendingBindings()
     }
@@ -100,7 +97,7 @@ sealed class OrderRecentListModel {
         val orderTotalCost: Double,
         val orderImageUrl: String?,
         val orderState: OrderState,
-        val orderUpdatedAt: String
+        val orderCreatedAt: String
     ) : OrderRecentListModel()
 
     data class OrderRecentEmptyItemModel(

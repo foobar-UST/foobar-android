@@ -1,7 +1,8 @@
 package com.foobarust.domain.models.seller
 
-import com.foobarust.domain.utils.DateUtils
-import com.foobarust.domain.utils.TimeUtils
+import com.foobarust.domain.utils.format
+import com.foobarust.domain.utils.getTimeBy12Hour
+import com.foobarust.domain.utils.isSameDay
 import java.util.*
 
 /**
@@ -27,7 +28,7 @@ data class SellerSectionBasic(
 fun SellerSectionBasic.isRecentSection(): Boolean {
     return available &&
         state == SellerSectionState.AVAILABLE &&
-        DateUtils.isSameDay(deliveryTime, Date())
+        deliveryTime.isSameDay(Date())
 }
 
 fun SellerSectionBasic.getSellerNormalizedName(): String {
@@ -36,31 +37,25 @@ fun SellerSectionBasic.getSellerNormalizedName(): String {
 
 fun SellerSectionBasic.getNormalizedTitleForUpcoming(): String {
     val title = if (titleZh != null) "$title $titleZh" else title
-    val deliverTimeString = TimeUtils.get12HourString(deliveryTime)
+    val deliverTimeString = deliveryTime.getTimeBy12Hour()
     return "$title - $deliverTimeString"
 }
 
 fun SellerSectionBasic.getNormalizedTitleForRecent(): String {
     val title = if (titleZh != null) "$title $titleZh" else title
-    val dateString = DateUtils.getDateString(date = deliveryTime, format = "dd/MM")
-    val deliveryTimeString = TimeUtils.get12HourString(deliveryTime)
+    val dateString = deliveryTime.format("dd/MM")
+    val deliveryTimeString = deliveryTime.getTimeBy12Hour()
     return "($dateString) $title\n@ $deliveryTimeString"
 }
 
 fun SellerSectionBasic.getNormalizedTitleForMoreSections(): String {
     val title = if (titleZh != null) "$title - $titleZh" else title
-    val dateString = DateUtils.getDateString(date = deliveryTime, format = "dd/MM")
+    val dateString = deliveryTime.format("dd/MM")
     return "[$dateString] $title"
 }
 
-fun SellerSectionBasic.getDeliveryDateString(): String {
-    return DateUtils.getDateString(date = deliveryTime, format = "yyyy-MM-dd")
-}
+fun SellerSectionBasic.getDeliveryDateString(): String = deliveryTime.format("yyyy-MM-dd")
 
-fun SellerSectionBasic.getCutoffTimeString(): String {
-    return TimeUtils.get12HourString(cutoffTime)
-}
+fun SellerSectionBasic.getCutoffTimeString(): String = cutoffTime.getTimeBy12Hour()
 
-fun SellerSectionBasic.getDeliveryTimeString(): String {
-    return TimeUtils.get12HourString(deliveryTime)
-}
+fun SellerSectionBasic.getDeliveryTimeString(): String = cutoffTime.getTimeBy12Hour()

@@ -2,6 +2,7 @@ package com.foobarust.android.utils
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.graphics.Color
@@ -11,19 +12,27 @@ import android.view.animation.AnimationUtils
 import android.view.animation.Interpolator
 import androidx.annotation.*
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.use
-import com.foobarust.android.R
 
+/**
+ * Check if a permission is approved.
+ * @param permission Manifest.permission.*
+ */
+fun Context.isPermissionApproved(permission: String): Boolean {
+    return ActivityCompat.checkSelfPermission(
+        this,
+        permission
+    ) == PackageManager.PERMISSION_GRANTED
+}
+
+/**
+ * Check if night mode is enabled.
+ */
 fun Context.isNightModeOn(): Boolean {
     return resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK ==
         Configuration.UI_MODE_NIGHT_YES
-}
-
-fun Context.getActionBarSize(): Int {
-    val tv = TypedValue()
-    theme.resolveAttribute(R.attr.actionBarSize, tv, true)
-    return TypedValue.complexToDimensionPixelSize(tv.data, resources.displayMetrics)
 }
 
 /**

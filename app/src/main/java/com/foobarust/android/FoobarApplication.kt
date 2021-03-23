@@ -35,26 +35,26 @@ class FoobarApplication : Application(), Configuration.Provider {
     private fun createNotificationChannels() {
         // Default channel
         notificationManager.createNotificationChannel(
-            channelId = applicationContext.getString(R.string.notification_channel_default_id),
-            channelName = applicationContext.getString(R.string.notification_channel_default_name)
+            channelId = getString(R.string.notification_channel_default_id),
+            channelName = getString(R.string.notification_channel_default_name)
         )
 
         // Upload channel
         notificationManager.createNotificationChannel(
-            channelId = applicationContext.getString(R.string.notification_channel_upload_id),
-            channelName = applicationContext.getString(R.string.notification_channel_upload_name)
+            channelId = getString(R.string.notification_channel_upload_id),
+            channelName = getString(R.string.notification_channel_upload_name)
         )
 
         // Order update channel
         notificationManager.createNotificationChannel(
-            channelId = applicationContext.getString(R.string.notification_channel_order_id),
-            channelName = applicationContext.getString(R.string.notification_channel_order_name)
+            channelId = getString(R.string.notification_channel_order_id),
+            channelName = getString(R.string.notification_channel_order_name)
         )
 
         // Promotion channel
         notificationManager.createNotificationChannel(
-            channelId = applicationContext.getString(R.string.notification_channel_promotion_id),
-            channelName = applicationContext.getString(R.string.notification_channel_promotion_name)
+            channelId = getString(R.string.notification_channel_promotion_id),
+            channelName = getString(R.string.notification_channel_promotion_name)
         )
     }
 }

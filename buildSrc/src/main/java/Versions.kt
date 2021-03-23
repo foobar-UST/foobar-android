@@ -33,7 +33,7 @@ object Versions {
     const val KOTLIN_SERIALIZATION = "1.0.1"
     const val LEAK_CANARY = "2.6"
     const val LIFECYCLE = "2.3.0"
-    const val MAP = "2.2.0"
+    const val MAPS = "2.2.0"
     const val MATERIAL = "1.4.0-alpha01"
     const val MOCKITO_CORE = "3.6.28"
     const val NAVIGATION = "2.3.3"

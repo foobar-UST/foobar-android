@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentSettingsBinding
 import com.foobarust.android.main.MainViewModel
@@ -64,7 +63,7 @@ class SettingsFragment : Fragment(), SettingsAdapter.SettingsAdapterListener {
         // Navigate to SignInActivity
         viewLifecycleOwner.lifecycleScope.launch {
             settingsViewModel.navigateToSignIn.collect {
-                findNavController().navigate(
+                findNavController(R.id.settingsFragment)?.navigate(
                     SettingsFragmentDirections.actionSettingsFragmentToAuthActivity()
                 )
             }
@@ -73,7 +72,7 @@ class SettingsFragment : Fragment(), SettingsAdapter.SettingsAdapterListener {
         // Navigate to ProfileFragment
         viewLifecycleOwner.lifecycleScope.launch {
             settingsViewModel.navigateToProfile.collect {
-                findNavController().navigate(
+                findNavController(R.id.settingsFragment)?.navigate(
                     SettingsFragmentDirections.actionSettingsFragmentToProfileFragment()
                 )
             }

@@ -1,13 +1,15 @@
 package com.foobarust.android.main
 
+import android.app.NotificationManager
 import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.viewModelScope
-import androidx.work.*
 import com.foobarust.android.R
 import com.foobarust.android.shared.BaseViewModel
 import com.foobarust.android.utils.DynamicLinksUtils
-import com.foobarust.android.works.UploadUserPhotoWork
+import com.foobarust.android.utils.ProgressNotification
+import com.foobarust.android.utils.buildProgressNotification
+import com.foobarust.domain.di.ApplicationScope
 import com.foobarust.domain.models.cart.UserCart
 import com.foobarust.domain.models.cart.hasItems
 import com.foobarust.domain.states.Resource
@@ -16,8 +18,11 @@ import com.foobarust.domain.usecases.cart.CheckCartTimeOutUseCase
 import com.foobarust.domain.usecases.cart.ClearUserCartUseCase
 import com.foobarust.domain.usecases.cart.GetUserCartUseCase
 import com.foobarust.domain.usecases.onboarding.GetUserCompleteTutorialUseCase
+import com.foobarust.domain.usecases.user.UploadUserPhotoParameters
+import com.foobarust.domain.usecases.user.UploadUserPhotoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -32,12 +37,14 @@ private const val TAG = "MainViewModel"
 @HiltViewModel
 class MainViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val workManager: WorkManager,
+    @ApplicationScope private val externalScope: CoroutineScope,
+    private val notificationManager: NotificationManager,
     private val dynamicLinksUtils: DynamicLinksUtils,
     private val clearUserCartUseCase: ClearUserCartUseCase,
     private val checkCartTimeOutUseCase: CheckCartTimeOutUseCase,
     private val getUserCompleteTutorialUseCase: GetUserCompleteTutorialUseCase,
     private val getUserCartUseCase: GetUserCartUseCase,
+    private val uploadUserPhotoUseCase: UploadUserPhotoUseCase
 ) : BaseViewModel() {
 
     private val _userCart = MutableStateFlow<UserCart?>(null)
@@ -133,26 +140,33 @@ class MainViewModel @Inject constructor(
         _getUserPhoto.offer(Unit)
     }
 
-    fun onUploadUserPhoto(uri: String, extension: String) {
-        val inputData = workDataOf(
-            UploadUserPhotoWork.USER_PHOTO_URL to uri,
-            UploadUserPhotoWork.USER_PHOTO_EXTENSION to extension
+    fun onUploadUserPhoto(uri: String, extension: String) = externalScope.launch {
+        val progressNotification = notificationManager.buildProgressNotification(
+            context = context,
+            channelId = context.getString(R.string.notification_channel_upload_id),
+            title = context.getString(R.string.notification_upload_user_photo_title),
+            messageBody = context.getString(R.string.notification_upload_user_photo_body)
         )
 
-        val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .build()
+        val params = UploadUserPhotoParameters(
+            photoUri = uri,
+            photoExtension = extension
+        )
 
-        val uploadRequest = OneTimeWorkRequestBuilder<UploadUserPhotoWork>()
-            .setInputData(inputData)
-            .setConstraints(constraints)
-            .build()
-
-        workManager.beginUniqueWork(
-            UploadUserPhotoWork.WORK_NAME,
-            ExistingWorkPolicy.REPLACE,
-            uploadRequest
-        ).enqueue()
+        uploadUserPhotoUseCase(params).collect {
+            when (it) {
+                is Resource.Success -> {
+                    clearProgressNotification(progressNotification)
+                }
+                is Resource.Error -> {
+                    clearProgressNotification(progressNotification)
+                    showToastMessage(it.message)
+                }
+                is Resource.Loading -> {
+                    showProgressNotification(progressNotification, it.progress)
+                }
+            }
+        }
     }
 
     private fun navigateToTutorial() = viewModelScope.launch {
@@ -170,5 +184,17 @@ class MainViewModel @Inject constructor(
             }
             checkedCartTimeout = true
         }
+    }
+
+    private fun showProgressNotification(progressNotification: ProgressNotification, progress: Double?) {
+        progressNotification.updateProgress(progress ?: 0.0)
+        notificationManager.notify(
+            progressNotification.notificationId,
+            progressNotification.getNotification()
+        )
+    }
+
+    private fun clearProgressNotification(progressNotification: ProgressNotification) {
+        notificationManager.cancel(progressNotification.notificationId)
     }
 }

@@ -2,8 +2,8 @@ package com.foobarust.domain.models.cart
 
 import com.foobarust.domain.models.common.Geolocation
 import com.foobarust.domain.models.seller.SellerType
-import com.foobarust.domain.utils.DateUtils
-import com.foobarust.domain.utils.TimeUtils
+import com.foobarust.domain.utils.format
+import com.foobarust.domain.utils.getTimeBy12Hour
 import java.util.*
 
 data class UserCart(
@@ -43,15 +43,11 @@ fun UserCart.getNormalizedSectionTitle(): String? {
 }
 
 fun UserCart.getDeliveryDateString(): String? {
-    return deliveryTime?.let {
-        DateUtils.getDateString(date = it, format = "yyyy-MM-dd")
-    }
+    return deliveryTime?.format("yyyy-MM-dd")
 }
 
 fun UserCart.getDeliveryTimeString(): String? {
-    return deliveryTime?.let {
-        TimeUtils.get12HourString(it)
-    }
+    return deliveryTime?.getTimeBy12Hour()
 }
 
 fun UserCart.getNormalizedPickupAddress(): String {

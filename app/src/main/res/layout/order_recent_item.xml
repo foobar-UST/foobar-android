@@ -82,14 +82,14 @@
                 tools:text="[#EA2PE] Processing your order." />
 
             <TextView
-                android:id="@+id/order_updated_at_text_view"
+                android:id="@+id/order_created_at_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_xmedium"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:maxLines="1"
-                android:text="@{activeItemModel.orderUpdatedAt}"
+                android:text="@{activeItemModel.orderCreatedAt}"
                 android:textAppearance="?attr/textAppearanceCaption"
                 android:textColor="@color/material_on_surface_emphasis_medium"
                 app:layout_constraintStart_toStartOf="parent"
@@ -98,7 +98,7 @@
 
             <TextView
                 android:id="@+id/order_delivery_location_text_view"
-                android:layout_width="300dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_medium"
                 android:ellipsize="end"
@@ -106,9 +106,65 @@
                 android:text="@{activeItemModel.orderDeliveryAddress}"
                 android:textAppearance="?attr/textAppearanceCaption"
                 android:textColor="@color/material_on_surface_emphasis_medium"
-                app:layout_constraintTop_toBottomOf="@id/order_updated_at_text_view"
+                app:layout_constraintTop_toBottomOf="@id/order_created_at_text_view"
                 app:layout_constraintStart_toStartOf="parent"
                 tools:text="LG7/F, Academic Building, Hong Kong University of Science and Technology, Clear Water Bay, Sai Kung" />
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/order_state_progress_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:progress="33"
+                app:trackCornerRadius="10dp"
+                app:trackThickness="6dp"
+                app:layout_constraintTop_toBottomOf="@id/order_delivery_location_text_view"/>
+
+            <TextView
+                android:id="@+id/order_state_processing_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_xmedium"
+                android:text="@string/order_state_processing"
+                android:textAppearance="@style/TextAppearance.Foobar.Overline"
+                android:textColor="@color/material_on_surface_emphasis_medium"
+                app:layout_constraintTop_toBottomOf="@id/order_state_progress_bar"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/order_state_preparing_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_xmedium"
+                android:text="@string/order_state_preparing"
+                android:textAppearance="@style/TextAppearance.Foobar.Overline"
+                android:textColor="@color/material_on_surface_emphasis_medium"
+                app:layout_constraintTop_toBottomOf="@id/order_state_progress_bar"
+                app:layout_constraintStart_toEndOf="@id/order_state_processing_text_view"
+                app:layout_constraintEnd_toStartOf="@id/order_state_in_transit_text_view"/>
+
+            <TextView
+                android:id="@+id/order_state_in_transit_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_xmedium"
+                android:text="@string/order_state_in_transit"
+                android:textAppearance="@style/TextAppearance.Foobar.Overline"
+                android:textColor="@color/material_on_surface_emphasis_medium"
+                app:layout_constraintTop_toBottomOf="@id/order_state_progress_bar"
+                app:layout_constraintStart_toEndOf="@id/order_state_preparing_text_view"
+                app:layout_constraintEnd_toStartOf="@id/order_state_ready_for_pick_up_text_view"/>
+
+            <TextView
+                android:id="@+id/order_state_ready_for_pick_up_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_xmedium"
+                android:text="@string/order_state_ready_for_pick_up"
+                android:textAppearance="@style/TextAppearance.Foobar.Overline"
+                android:textColor="@color/material_on_surface_emphasis_medium"
+                app:layout_constraintTop_toBottomOf="@id/order_state_progress_bar"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
             <TextView
                 android:id="@+id/order_total_cost_text_view"
@@ -118,7 +174,7 @@
                 android:text="@{@string/order_recent_active_item_total_cost(activeItemModel.orderTotalCost)}"
                 android:textAppearance="?attr/textAppearanceSubtitle1"
                 android:textColor="?attr/colorSecondary"
-                app:layout_constraintTop_toBottomOf="@id/order_delivery_location_text_view"
+                app:layout_constraintTop_toBottomOf="@id/order_state_processing_text_view"
                 app:layout_constraintStart_toStartOf="parent"
                 tools:text="Total: $56.0"/>
 
@@ -127,7 +183,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_large"
-                android:text="@string/order_recent_item_view_order"
+                android:text="@string/order_item_view_order"
                 android:textColor="?attr/colorPrimary"
                 android:textAppearance="?attr/textAppearanceButton"
                 android:gravity="center_vertical"

@@ -11,6 +11,9 @@ import javax.inject.Inject
  * Created by kevin on 1/6/21
  */
 
+private const val HKUST_LATITUDE = 22.33776
+private const val HKUST_LONGITUDE = 114.26364
+
 class GetDirectionsUseCase @Inject constructor(
     private val mapRepository: MapRepository,
     @IoDispatcher coroutineDispatcher: CoroutineDispatcher
@@ -18,15 +21,15 @@ class GetDirectionsUseCase @Inject constructor(
 
     override suspend fun execute(parameters: GetDirectionsParameters): List<GeolocationPoint> {
         return mapRepository.getDirectionsPath(
-            originLatitude = parameters.latitude,
-            originLongitude = parameters.longitude,
-            destLatitude = 22.33776,
-            destLongitude = 114.26364
+            currentLocation = GeolocationPoint(
+                latitude = HKUST_LATITUDE,
+                longitude = HKUST_LONGITUDE
+            ),
+            destination = parameters.destination
         )
     }
 }
 
 data class GetDirectionsParameters(
-    val latitude: Double,
-    val longitude: Double
+    val destination: GeolocationPoint
 )

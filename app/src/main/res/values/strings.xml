@@ -109,11 +109,7 @@
     <string name="seller_search_hint_input">Find Restaurants</string>
 
     <!-- Seller Misc -->
-    <string name="seller_misc_title_opening_hours">Opening Hours</string>
-    <string name="seller_misc_title_contact_details">Contact Details</string>
     <string name="seller_misc_title_description">Seller Info</string>
-    <string name="seller_misc_data_format_phone">Tel: %s</string>
-    <string name="seller_misc_data_format_website">Website: %s</string>
 
     <!-- Seller Actions -->
     <string name="seller_action_add_favorite">Add to Favorite</string>
@@ -228,11 +224,11 @@
     <string name="order_tab_history">History</string>
 
     <!-- Order Recent -->
-    <string name="order_recent_item_identifier_title">[#%s] %s</string>
-    <string name="order_recent_item_view_order">View Order</string>
+    <string name="order_item_identifier_title">[#%s] %s</string>
+    <string name="order_item_view_order">View Order</string>
+    <string name="order_item_created_at">Ordered on %s</string>
+
     <string name="order_recent_item_subtitle_archived">Archived</string>
-    <string name="order_recent_active_item_order_title">[%s] %s</string>
-    <string name="order_recent_active_item_items_count">+ %d Items</string>
     <string name="order_recent_active_item_total_cost">Total: $%.1f</string>
     <string name="order_recent_empty_item_title">No Recent Order</string>
 
@@ -246,6 +242,11 @@
     <string name="order_history_item_view_order">View Receipt</string>
 
     <!-- Order States -->
+    <string name="order_state_processing">Processing</string>
+    <string name="order_state_preparing">Preparing</string>
+    <string name="order_state_in_transit">In Transit</string>
+    <string name="order_state_ready_for_pick_up">Pick Up</string>
+
     <string name="order_state_title_processing">Order Confirmed</string>
     <string name="order_state_title_preparing">Order Preparing</string>
     <string name="order_state_title_in_transit">Delivery In Progress</string>
@@ -267,7 +268,7 @@
     <string name="order_detail_header_item_delivery_address_title_off_campus">Deliver To</string>
     <string name="order_detail_info_item_identifier_title">Order #%s</string>
     <string name="order_detail_info_item_total_cost_title">Total Cost</string>
-    <string name="order_detail_info_item_created_at">Created at %s</string>
+    <string name="order_detail_info_item_created_at">Ordered on %s</string>
     <string name="order_detail_info_item_updated_at">Updated at %s</string>
     <string name="order_detail_info_item_total_cost">HKD $%.1f</string>
     <string name="order_detail_purchase_item_format_title">%s x %d</string>
@@ -297,7 +298,7 @@
 
     <!-- Seller Rating Detail -->
     <string name="seller_rating_detail_info_item_rating_count">(%d)</string>
-    <string name="seller_rating_detail_info_item_delivery_rating">%.0f% Delivery Service</string>
+    <string name="seller_rating_detail_info_item_delivery_rating">%.0f%% Delivery Service</string>
     <string name="seller_rating_detail_info_item_rating_count_percent">%d%%</string>
     <string name="seller_rating_detail_info_item_subtitle">User Reviews</string>
     <string name="seller_rating_detail_rating_count_excellent">Excellent</string>

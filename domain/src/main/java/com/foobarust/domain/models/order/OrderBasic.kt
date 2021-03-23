@@ -1,6 +1,6 @@
 package com.foobarust.domain.models.order
 
-import com.foobarust.domain.utils.DateUtils
+import com.foobarust.domain.utils.format
 import java.util.*
 
 /**
@@ -47,10 +47,6 @@ fun OrderBasic.getNormalizedTotalCost(): String {
     return String.format("%.1f", totalCost)
 }
 
-fun OrderBasic.getCreatedAtString(): String {
-    return DateUtils.getDateString(date = createdAt, format = "yyyy-MM-dd HH:mm")
-}
+fun OrderBasic.getCreatedAtString(): String = createdAt.format("yyyy-MM-dd HH:mm")
 
-fun OrderBasic.getUpdatedAtString(): String {
-    return DateUtils.getDateString(date = createdAt, format = "yyyy-MM-dd HH:mm")
-}
+fun OrderBasic.getUpdatedAtString(): String = updatedAt.format("yyyy-MM-dd HH:mm")

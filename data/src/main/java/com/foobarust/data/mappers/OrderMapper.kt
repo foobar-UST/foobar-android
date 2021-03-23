@@ -90,6 +90,12 @@ class OrderMapper @Inject constructor() {
             fromOrderItemNetworkDtoToOrderItem(it)
         } ?: emptyList()
 
+        val delivererLocation = networkDto.delivererLocation?.let {
+            GeolocationPoint(
+                latitude = it.latitude, longitude = it.longitude
+            )
+        }
+
         return OrderDetail(
             id = networkDto.id!!,
             title = networkDto.title!!,
@@ -101,6 +107,7 @@ class OrderMapper @Inject constructor() {
             sectionTitle = networkDto.sectionTitle,
             sectionTitleZh = networkDto.sectionTitleZh,
             delivererId = networkDto.delivererId,
+            delivererLocation = delivererLocation,
             identifier = networkDto.identifier!!,
             imageUrl = networkDto.imageUrl,
             type = OrderType.values()[networkDto.type!!],
@@ -137,6 +144,10 @@ class OrderMapper @Inject constructor() {
             )
         )
 
+        val delivererLocation = orderDetailCacheDto.delivererLocation?.let {
+            toGeoLocationPoint(it)
+        }
+
         return OrderDetail(
             id = orderDetailCacheDto.id,
             title = orderDetailCacheDto.title!!,
@@ -148,6 +159,7 @@ class OrderMapper @Inject constructor() {
             sectionTitle = orderDetailCacheDto.sectionTitle,
             sectionTitleZh = orderDetailCacheDto.sectionTitleZh,
             delivererId = orderDetailCacheDto.delivererId,
+            delivererLocation = delivererLocation,
             identifier = orderDetailCacheDto.identifier!!,
             imageUrl = orderDetailCacheDto.imageUrl,
             type = OrderType.values()[orderDetailCacheDto.type!!],
@@ -167,6 +179,13 @@ class OrderMapper @Inject constructor() {
     }
 
     fun toOrderDetailCacheDto(orderDetail: OrderDetail): OrderDetailCacheDto {
+        val delivererLocation = orderDetail.delivererLocation?.let { geoLocationPoint ->
+            fromGeoLocationPoint(
+                latitude = geoLocationPoint.latitude,
+                longitude = geoLocationPoint.longitude
+            )
+        }
+
         return OrderDetailCacheDto(
             id = orderDetail.id,
             title = orderDetail.title,
@@ -178,6 +197,7 @@ class OrderMapper @Inject constructor() {
             sectionTitle = orderDetail.sectionTitle,
             sectionTitleZh = orderDetail.sectionTitleZh,
             delivererId = orderDetail.delivererId,
+            delivererLocation = delivererLocation,
             identifier = orderDetail.identifier,
             imageUrl = orderDetail.imageUrl,
             type = orderDetail.type.ordinal,
@@ -274,5 +294,17 @@ class OrderMapper @Inject constructor() {
             OrderState.ARCHIVED -> ORDER_STATE_ARCHIVED
             OrderState.CANCELLED -> ORDER_STATE_CANCELLED
         }
+    }
+
+    private fun fromGeoLocationPoint(latitude: Double, longitude: Double): String {
+        return "$latitude,$longitude"
+    }
+
+    private fun toGeoLocationPoint(location: String): GeolocationPoint {
+        val output = location.split(',')
+        return GeolocationPoint(
+            latitude = output[0].toDouble(),
+            longitude = output[1].toDouble()
+        )
     }
 }

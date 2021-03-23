@@ -2,8 +2,6 @@ package com.foobarust.android.auth
 
 import android.content.Context
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.R
 import com.foobarust.android.shared.BaseViewModel
@@ -44,12 +42,16 @@ class AuthViewModel @Inject constructor(
     private var isResendEmailTimerActive: Boolean = false
 
     private val _authUiState = MutableStateFlow(AuthUiState.INPUT)
-    val authUiState: LiveData<AuthUiState> = _authUiState.asLiveData(viewModelScope.coroutineContext)
+    val authUiState: StateFlow<AuthUiState> = _authUiState.asStateFlow()
 
     private val _isUserSignedIn = Channel<Unit>()
     val isUserSignedIn: Flow<Unit> = _isUserSignedIn.receiveAsFlow()
 
     val emailDomains: List<AuthEmailDomain> = authEmailUtil.emailDomains
+
+    fun getSavedUsername(): String = _username.value
+
+    fun getSavedEmailDomain(): AuthEmailDomain = _emailDomain.value
 
     fun onRequestAuthEmail() = viewModelScope.launch {
         val signInEmail = signInEmail.first()
@@ -147,12 +149,12 @@ class AuthViewModel @Inject constructor(
         _emailDomain.value = domain
     }
 
-    fun onEmailVerificationCanceled() = viewModelScope.launch {
+    fun onEmailVerificationCancelled() = viewModelScope.launch {
         // Condition 4: cancel email verification
         _authUiState.value = AuthUiState.INPUT
     }
 
-    fun onSkipSignIn() {
+    fun onSignInSkipped() {
         _authUiState.value = AuthUiState.COMPLETED
     }
 
@@ -162,7 +164,6 @@ class AuthViewModel @Inject constructor(
     }
 
     private fun startResendEmailTimer() {
-        // Ensure there is only one timer instance.
         if (resendEmailTimerJob?.isActive == true) {
             Log.d(TAG, "Email resend timer is still active.")
             return

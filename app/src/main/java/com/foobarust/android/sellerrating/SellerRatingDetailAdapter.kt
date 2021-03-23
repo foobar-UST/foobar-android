@@ -17,7 +17,7 @@ import com.foobarust.android.utils.bindGlideUrl
 import com.foobarust.android.utils.round
 import com.foobarust.domain.models.seller.SellerRatingCount
 import com.foobarust.domain.models.seller.sum
-import com.foobarust.domain.utils.DateUtils
+import com.foobarust.domain.utils.format
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import java.util.*
 import kotlin.math.roundToInt
@@ -180,10 +180,7 @@ class SellerRatingDetailAdapter(
         ratingItemUsernameTextView.text = ratingItem.username
         ratingItemRatingBar.rating = ratingItem.orderRating.toFloat()
 
-        ratingItemCreatedAtTextView.text = DateUtils.getDateString(
-            date = ratingItem.createdAt,
-            format = "dd/MM/yyyy"
-        )
+        ratingItemCreatedAtTextView.text = ratingItem.createdAt.format("dd/MM/yyyy")
 
         executePendingBindings()
     }

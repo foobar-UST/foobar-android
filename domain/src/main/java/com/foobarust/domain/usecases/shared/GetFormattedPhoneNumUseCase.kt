@@ -1,4 +1,4 @@
-package com.foobarust.domain.usecases.common
+package com.foobarust.domain.usecases.shared
 
 import com.foobarust.domain.common.UseCaseExceptions.ERROR_PHONE_NUM_FORMAT_INVALID
 import com.foobarust.domain.di.MainDispatcher

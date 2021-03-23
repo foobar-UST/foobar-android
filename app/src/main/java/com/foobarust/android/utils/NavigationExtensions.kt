@@ -101,7 +101,7 @@ fun BottomNavigationView.setupWithNavController(
     fragmentManager: FragmentManager,
     containerId: Int,
     intent: Intent,
-    navReselected: () -> Unit,
+    navReselected: (() -> Unit)? = null,
     @AnimRes enterAnim: Int = R.anim.nav_default_enter_anim,
     @AnimRes exitAnim: Int = R.anim.nav_default_exit_anim,
     @AnimRes popEnterAnim: Int = R.anim.nav_default_pop_enter_anim,
@@ -250,7 +250,7 @@ private fun BottomNavigationView.setupDeepLinks(
 private fun BottomNavigationView.setupNavItemReselected(
     graphIdToTagMap: SparseArray<String>,
     fragmentManager: FragmentManager,
-    navReselected: () -> Unit
+    navReselected: (() -> Unit)?
 ) {
     setOnNavigationItemReselectedListener { item ->
         val newlySelectedItemTag = graphIdToTagMap[item.itemId]
@@ -262,7 +262,7 @@ private fun BottomNavigationView.setupNavItemReselected(
             navController.graph.startDestination, false
         )
         // Trigger reselect callback
-        navReselected()
+        navReselected?.invoke()
     }
 }
 

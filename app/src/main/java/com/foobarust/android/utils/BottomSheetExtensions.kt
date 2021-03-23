@@ -10,6 +10,18 @@ import kotlinx.coroutines.suspendCancellableCoroutine
  * Created by kevin on 1/27/21
  */
 
+fun BottomSheetBehavior<*>.isExpanded() = state == BottomSheetBehavior.STATE_EXPANDED
+
+fun BottomSheetBehavior<*>.isCollapsed() = state == BottomSheetBehavior.STATE_COLLAPSED
+
+fun BottomSheetBehavior<*>.expand() {
+    state = BottomSheetBehavior.STATE_EXPANDED
+}
+
+fun BottomSheetBehavior<*>.collapse() {
+    state = BottomSheetBehavior.STATE_COLLAPSED
+}
+
 /**
  * Hide the bottom sheet for a given condition.
  */

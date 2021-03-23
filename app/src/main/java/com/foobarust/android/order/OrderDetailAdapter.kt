@@ -184,7 +184,6 @@ sealed class OrderDetailListModel {
         val orderIdentifierTitle: String,
         val orderTitle: String,
         val orderCreatedDate: String,
-        val orderUpdatedDate: String,
         val orderTotalCost: String,
         val orderMessage: String?,
         val orderItemImageUrl: String?

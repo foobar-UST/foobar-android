@@ -1,9 +1,7 @@
 package com.foobarust.android.order
 
 import android.content.Context
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.R
 import com.foobarust.android.checkout.PaymentMethodUtil
@@ -16,10 +14,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -38,22 +33,22 @@ class OrderDetailViewModel @Inject constructor(
     private val _orderDetail = MutableStateFlow<OrderDetail?>(null)
 
     private val _orderDetailListModels = MutableStateFlow<List<OrderDetailListModel>>(emptyList())
-    val orderDetailListModels: LiveData<List<OrderDetailListModel>> = _orderDetailListModels
-        .asLiveData(viewModelScope.coroutineContext)
+    val orderDetailListModels: StateFlow<List<OrderDetailListModel>> = _orderDetailListModels
+        .asStateFlow()
 
     private val _orderDetailUiState = MutableStateFlow<OrderDetailUiState>(OrderDetailUiState.Loading)
-    val orderDetailUiState: LiveData<OrderDetailUiState> = _orderDetailUiState
-        .asLiveData(viewModelScope.coroutineContext)
+    val orderDetailUiState: StateFlow<OrderDetailUiState> = _orderDetailUiState
+        .asStateFlow()
 
-    private val _lastOrderStateItemPosition = MutableStateFlow(0)
-
-    private val _bottomSheetFullScreen = MutableStateFlow<Boolean?>(null)
-    val bottomSheetFullScreen: LiveData<Boolean?> = _bottomSheetFullScreen
-        .asLiveData(viewModelScope.coroutineContext)
+    private val _bottomSheetExpanded = MutableStateFlow<Boolean?>(null)
+    val bottomSheetExpanded: StateFlow<Boolean?> = _bottomSheetExpanded
+        .asStateFlow()
 
     // Argument: seller id
     private val _navigateToSellerMisc = Channel<String>()
     val navigateToSellerMisc: Flow<String> = _navigateToSellerMisc.receiveAsFlow()
+
+    private var lastOrderStateItemPosition = 0
 
     private var fetchOrderDetailJob: Job? = null
 
@@ -70,16 +65,16 @@ class OrderDetailViewModel @Inject constructor(
                         val orderInfoListModels = buildOrderInfoListModels(orderDetail)
 
                         // Set show map
-                        _bottomSheetFullScreen.value = orderDetail.state in listOf(
+                        _bottomSheetExpanded.value = orderDetail.state in listOf(
                             OrderState.DELIVERED,
                             OrderState.ARCHIVED,
                             OrderState.CANCELLED
                         )
 
                         // Set last state item position
-                        _lastOrderStateItemPosition.value = orderStateListModels.lastIndex
+                        lastOrderStateItemPosition = orderStateListModels.lastIndex
 
-                        _orderDetailListModels.value =  orderStateListModels + orderInfoListModels
+                        _orderDetailListModels.value = orderStateListModels + orderInfoListModels
                         _orderDetailUiState.value = OrderDetailUiState.Success
                     }
                     is Resource.Error -> {
@@ -93,7 +88,7 @@ class OrderDetailViewModel @Inject constructor(
         }
     }
 
-    fun getLastOrderStateItemPosition(): Int = _lastOrderStateItemPosition.value
+    fun getLastOrderStateItemPosition(): Int = lastOrderStateItemPosition
 
     fun onNavigateToSellerMisc() {
         _orderDetail.value?.let {
@@ -146,10 +141,6 @@ class OrderDetailViewModel @Inject constructor(
                 orderCreatedDate = context.getString(
                     R.string.order_detail_info_item_created_at,
                     orderDetail.getCreatedAtString()
-                ),
-                orderUpdatedDate = context.getString(
-                    R.string.order_detail_info_item_updated_at,
-                    orderDetail.getUpdatedAtString()
                 ),
                 orderTotalCost = context.getString(
                     R.string.order_detail_info_item_total_cost,

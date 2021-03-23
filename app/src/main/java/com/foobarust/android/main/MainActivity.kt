@@ -199,8 +199,6 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
         }
 
         navController.observe(this) { controller ->
-
-
             // Setup views for different tab navigation
             controller.registerOnDestinationChangedListener(listener)
         }

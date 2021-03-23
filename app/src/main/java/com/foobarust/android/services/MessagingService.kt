@@ -4,7 +4,7 @@ import android.app.NotificationManager
 import androidx.work.*
 import com.foobarust.android.utils.ResourceIdentifier
 import com.foobarust.android.utils.sendImageNotification
-import com.foobarust.android.utils.sendNotification
+import com.foobarust.android.utils.sendSimpleNotification
 import com.foobarust.android.works.UploadDeviceTokenWork
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -24,7 +24,7 @@ class MessagingService: FirebaseMessagingService() {
     @Inject
     lateinit var resourceIdentifier: ResourceIdentifier
 
-    private val coroutineScope = CoroutineScope(SupervisorJob())
+    private val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         remoteMessage.notification?.let { notification ->
@@ -55,7 +55,7 @@ class MessagingService: FirebaseMessagingService() {
                     )
                 }
             } else {
-                notificationManager.sendNotification(
+                notificationManager.sendSimpleNotification(
                     context = applicationContext,
                     title = notificationTitle,
                     messageBody = notificationBody,

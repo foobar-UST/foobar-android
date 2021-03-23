@@ -81,7 +81,7 @@ class ProfileFragment : FullScreenDialogFragment(), ProfileAdapter.ProfileAdapte
 
         // Dismiss dialog
         binding.toolbar.setNavigationOnClickListener {
-            findNavController().navigateUp()
+            findNavController(R.id.profileFragment)?.navigateUp()
         }
 
         return binding.root

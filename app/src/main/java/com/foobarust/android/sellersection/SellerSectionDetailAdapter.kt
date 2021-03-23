@@ -16,7 +16,7 @@ import com.foobarust.android.sellersection.SellerSectionDetailListModel.*
 import com.foobarust.android.sellersection.SellerSectionDetailViewHolder.*
 import com.foobarust.android.utils.ScrollStatesManager
 import com.foobarust.domain.models.user.UserPublic
-import com.foobarust.domain.utils.DateUtils
+import com.foobarust.domain.utils.format
 import kotlinx.coroutines.launch
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -211,10 +211,7 @@ class SellerSectionDetailAdapter(
             )
 
             // Show date for non-recent section
-            counterValueTextView.text = DateUtils.getDateString(
-                date = counterItemModel.cutoffTime,
-                format = "yyyy-MM-dd"
-            )
+            counterValueTextView.text = counterItemModel.cutoffTime.format("yyyy-MM-dd")
         }
 
         executePendingBindings()

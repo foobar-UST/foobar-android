@@ -2,7 +2,7 @@ package com.foobarust.android.settings
 
 import android.os.Parcelable
 import androidx.lifecycle.ViewModel
-import com.foobarust.domain.usecases.common.GetFormattedPhoneNumUseCase
+import com.foobarust.domain.usecases.shared.GetFormattedPhoneNumUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.parcelize.Parcelize
 import javax.inject.Inject

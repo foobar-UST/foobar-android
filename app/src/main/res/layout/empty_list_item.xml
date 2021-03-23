@@ -22,7 +22,7 @@
         <ImageView
             android:layout_width="@dimen/empty_icon_size"
             android:layout_height="@dimen/empty_icon_size"
-            android:contentDescription="@string/cart_empty_message"
+            android:contentDescription="@{emptyMessage}"
             app:src="@{drawableRes}"
             tools:src="@drawable/undraw_empty"/>
 

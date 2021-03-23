@@ -78,14 +78,14 @@
                 tools:text="[#EA2PE] Processing your order." />
 
             <TextView
-                android:id="@+id/order_updated_at_text_view"
+                android:id="@+id/order_created_at_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_xmedium"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:maxLines="1"
-                android:text="@{historyItemModel.orderUpdatedAt}"
+                android:text="@{historyItemModel.orderCreatedAt}"
                 android:textAppearance="?attr/textAppearanceCaption"
                 android:textColor="@color/material_on_surface_emphasis_medium"
                 app:layout_constraintStart_toStartOf="parent"
@@ -94,7 +94,7 @@
 
             <TextView
                 android:id="@+id/order_delivery_location_text_view"
-                android:layout_width="300dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_medium"
                 android:ellipsize="end"
@@ -102,7 +102,7 @@
                 android:text="@{historyItemModel.orderDeliveryAddress}"
                 android:textAppearance="?attr/textAppearanceCaption"
                 android:textColor="@color/material_on_surface_emphasis_medium"
-                app:layout_constraintTop_toBottomOf="@id/order_updated_at_text_view"
+                app:layout_constraintTop_toBottomOf="@id/order_created_at_text_view"
                 app:layout_constraintStart_toStartOf="parent"
                 tools:text="LG7/F, Academic Building, Hong Kong University of Science and Technology, Clear Water Bay, Sai Kung" />
 
@@ -131,7 +131,7 @@
                 app:layout_constraintTop_toBottomOf="@id/order_total_cost_text_view"
                 app:layout_constraintStart_toStartOf="parent"
                 tools:drawableStart="@drawable/ic_arrow_forward"
-                tools:text="@string/order_recent_item_view_order"/>
+                tools:text="@string/order_item_view_order"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

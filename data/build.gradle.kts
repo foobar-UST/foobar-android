@@ -27,7 +27,7 @@ android {
         }
         val mapsApiKey = localProperties.getProperty("MAPS_API_KEY", null)
 
-        buildConfigField("Boolean", "USE_FIREBASE_EMULATOR", "false")
+        buildConfigField("Boolean", "USE_FIREBASE_EMULATOR", "true")
         buildConfigField("String", "EMULATOR_HOST", "\"192.168.128.66\"")
         buildConfigField("String", "EMULATOR_FIRESTORE_PORT", "\"8080\"")
         buildConfigField("String", "EMULATOR_FUNCTIONS_PORT", "\"5001\"")
@@ -82,7 +82,7 @@ dependencies {
     implementation(Dependencies.RETROFIT_CONVERTER_GSON)
     implementation(Dependencies.OKHTTP_LOGGING_INTERCEPTOR)
     implementation(Dependencies.PLAY_SERVICES_MAP)
-    implementation(Dependencies.MAP_UTILS)
+    implementation(Dependencies.MAPS_UTILS)
     api(Dependencies.FIREBASE_AUTH)
     api(Dependencies.FIREBASE_FIRESTORE)
     api(Dependencies.FIREBASE_STORAGE)

@@ -25,29 +25,27 @@ class MapRepositoryImpl @Inject constructor(
 ) : MapRepository {
 
     override suspend fun getDirectionsPath(
-        originLatitude: Double,
-        originLongitude: Double,
-        destLatitude: Double,
-        destLongitude: Double
+        currentLocation: GeolocationPoint,
+        destination: GeolocationPoint,
     ): List<GeolocationPoint> {
         val response = mapService.getDirections(
             key = GOOGLE_MAPS_API_KEY,
-            origin = "$originLatitude,$originLongitude",
-            destination = "$destLatitude,$destLongitude"
+            origin = "${currentLocation.latitude},${currentLocation.longitude}",
+            destination = "$${destination.latitude},${destination.longitude}"
         )
 
         return PolyUtil.decode(response.encodedPoints)
             .map { it.asGeolocationPoint() }
     }
 
-    override fun getStaticMapImageUrl(latitude: Double, longitude: Double): String {
+    override fun getStaticMapImageUrl(centerLocation: GeolocationPoint): String {
         return MAPS_API_URL +
             "$MAPS_STATIC_MAP_END_POINT?" +
             "$MAPS_STATIC_MAP_PARAM_KEY=$GOOGLE_MAPS_API_KEY&" +
             "$MAPS_STATIC_MAP_PARAM_AUTO_SCALE=1&" +
-            "$MAPS_STATIC_MAP_PARAM_SIZE=1280x720&" +
+            "$MAPS_STATIC_MAP_PARAM_SIZE=1920x1080&" +
             "$MAPS_STATIC_MAP_PARAM_FORMAT=png&" +
             "$MAPS_STATIC_MAP_PARAM_VISUAL_REFRESH=true&" +
-            "$MAPS_STATIC_MAP_PARAM_MARKERS=$latitude,$longitude"
+            "$MAPS_STATIC_MAP_PARAM_MARKERS=${centerLocation.latitude},${centerLocation.longitude}"
     }
 }

@@ -1,15 +1,11 @@
 package com.foobarust.android.sellersection
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.sellerdetail.SellerDetailProperty
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -35,8 +31,7 @@ class SellerSectionViewModel @Inject constructor(): ViewModel() {
     val navigateToSellerMisc: Flow<String> = _navigateToSellerMisc.receiveAsFlow()
 
     private val _toolbarTitle = MutableStateFlow<String?>(null)
-    val toolbarTitle: LiveData<String?> = _toolbarTitle
-        .asLiveData(viewModelScope.coroutineContext)
+    val toolbarTitle: StateFlow<String?> = _toolbarTitle.asStateFlow()
 
     private val _currentDestination = MutableStateFlow(-1)
 

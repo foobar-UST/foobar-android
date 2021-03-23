@@ -9,27 +9,26 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.foobarust.android.R
-import com.foobarust.android.databinding.DialogTextInputEntryBinding
+import com.foobarust.android.databinding.DialogTextInputBinding
 import com.foobarust.android.settings.TextInputType.*
 import com.foobarust.android.utils.findNavController
 import com.foobarust.android.utils.showShortToast
-import com.foobarust.domain.usecases.common.GetFormattedPhoneNumUseCase
+import com.foobarust.domain.usecases.shared.GetFormattedPhoneNumUseCase
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class TextInputDialog : DialogFragment() {
 
-    private var binding: DialogTextInputEntryBinding? = null
+    private var binding: DialogTextInputBinding? = null
     private val viewModel: TextInputViewModel by viewModels()
     private val navArgs: TextInputDialogArgs by navArgs()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val inflater = LayoutInflater.from(requireContext())
 
-        binding = DialogTextInputEntryBinding.inflate(inflater).apply {
+        binding = DialogTextInputBinding.inflate(inflater).apply {
             textInputProperty = navArgs.property
             viewModel.onUpdateTextInputProperty(navArgs.property)
 

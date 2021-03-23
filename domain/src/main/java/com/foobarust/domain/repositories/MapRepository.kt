@@ -8,9 +8,10 @@ import com.foobarust.domain.models.common.GeolocationPoint
 
 interface MapRepository {
 
-    suspend fun getDirectionsPath(originLatitude: Double, originLongitude: Double,
-                                  destLatitude: Double, destLongitude: Double
+    suspend fun getDirectionsPath(
+        currentLocation: GeolocationPoint,
+        destination: GeolocationPoint
     ): List<GeolocationPoint>
 
-    fun getStaticMapImageUrl(latitude: Double, longitude: Double): String
+    fun getStaticMapImageUrl(centerLocation: GeolocationPoint): String
 }

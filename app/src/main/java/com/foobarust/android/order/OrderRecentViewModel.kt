@@ -104,14 +104,17 @@ class OrderRecentViewModel @Inject constructor(
                 orderId = orderBasic.id,
                 orderImageTitle = orderImageTitle,
                 orderStateTitle = context.getString(
-                    R.string.order_recent_item_identifier_title,
+                    R.string.order_item_identifier_title,
                     orderBasic.identifier,
                     orderStateUtil.getOrderStateTitle(orderBasic.state)
                 ),
                 orderDeliveryAddress = orderBasic.getNormalizedDeliveryAddress(),
                 orderImageUrl = orderBasic.imageUrl,
                 orderState = orderBasic.state,
-                orderUpdatedAt = orderBasic.getUpdatedAtString(),
+                orderCreatedAt = context.getString(
+                    R.string.order_item_created_at,
+                    orderBasic.getCreatedAtString()
+                ),
                 orderTotalCost = orderBasic.totalCost
             )
         }

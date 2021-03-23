@@ -139,7 +139,7 @@ sealed class OrderHistoryListModel {
         val orderTotalCost: Double,
         val orderImageUrl: String?,
         val orderState: OrderState,
-        val orderUpdatedAt: String
+        val orderCreatedAt: String
     ) : OrderHistoryListModel()
 
     data class OrderHistoryEmptyItemModel(

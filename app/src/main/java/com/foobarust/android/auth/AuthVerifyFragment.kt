@@ -13,12 +13,15 @@ import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentAuthVerifyBinding
 import com.foobarust.android.utils.AutoClearedValue
 import com.foobarust.android.utils.findNavController
 import com.foobarust.android.utils.themeColor
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class AuthVerifyFragment : Fragment() {
@@ -28,7 +31,7 @@ class AuthVerifyFragment : Fragment() {
 
     private val backPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
-            authViewModel.onEmailVerificationCanceled()
+            authViewModel.onEmailVerificationCancelled()
         }
     }
 
@@ -49,16 +52,22 @@ class AuthVerifyFragment : Fragment() {
             lifecycleOwner = viewLifecycleOwner
         }
 
-        authViewModel.authUiState.observe(viewLifecycleOwner) { state ->
-            if (state == AuthUiState.INPUT) {
-                findNavController(R.id.authVerifyFragment)?.navigate(
-                    AuthVerifyFragmentDirections.actionAuthVerifyFragmentToAuthInputFragment()
-                )
-            } else if (state == AuthUiState.COMPLETED) {
-                findNavController(R.id.authVerifyFragment)?.navigate(
-                    AuthVerifyFragmentDirections.actionAuthVerifyFragmentToMainActivity()
-                )
-                requireActivity().finish()
+        viewLifecycleOwner.lifecycleScope.launch {
+            authViewModel.authUiState.collect { uiState ->
+                when (uiState) {
+                    AuthUiState.INPUT -> {
+                        findNavController(R.id.authVerifyFragment)?.navigate(
+                            AuthVerifyFragmentDirections.actionAuthVerifyFragmentToAuthInputFragment()
+                        )
+                    }
+                    AuthUiState.COMPLETED -> {
+                        findNavController(R.id.authVerifyFragment)?.navigate(
+                            AuthVerifyFragmentDirections.actionAuthVerifyFragmentToMainActivity()
+                        )
+                        requireActivity().finish()
+                    }
+                    else -> Unit
+                }
             }
         }
 

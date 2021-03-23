@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
 import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentSellerSectionDetailBinding
@@ -18,6 +17,7 @@ import com.foobarust.android.utils.findNavController
 import com.foobarust.android.utils.showShortToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 /**
@@ -48,34 +48,40 @@ class SellerSectionDetailFragment : Fragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentSellerSectionDetailBinding.inflate(
-            inflater, container, false
-        ).apply {
-            viewModel = sectionDetailViewModel
-            lifecycleOwner = viewLifecycleOwner
-        }
+        binding = FragmentSellerSectionDetailBinding.inflate(inflater, container, false)
 
         // Setup recycler view
         val sectionDetailAdapter = SellerSectionDetailAdapter(this)
 
-        binding.recyclerView.run {
+        with(binding.sectionDetailRecyclerView) {
             adapter = sectionDetailAdapter
             setHasFixedSize(true)
         }
 
-        sectionDetailViewModel.sellerSectionDetailListModels.observe(viewLifecycleOwner) {
-            sectionDetailAdapter.submitList(it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            sectionDetailViewModel.sellerSectionDetailListModels.collectLatest {
+                sectionDetailAdapter.submitList(it)
+            }
         }
 
-        sectionDetailViewModel.sectionDetailUiState.observe(viewLifecycleOwner) {
-            if (it is SellerSectionDetailUiState.Error) {
-                showShortToast(it.message)
+        viewLifecycleOwner.lifecycleScope.launch {
+            sectionDetailViewModel.sectionDetailUiState.collect { uiState ->
+                with(binding) {
+                    loadingProgressBar.isVisible = uiState is SellerSectionDetailUiState.Loading
+                    loadErrorLayout.root.isVisible = uiState is SellerSectionDetailUiState.Error
+                }
+
+                if (uiState is SellerSectionDetailUiState.Error) {
+                    showShortToast(uiState.message)
+                }
             }
         }
 
         // Show menu button
-        sectionDetailViewModel.showOpenMenuButton.observe(viewLifecycleOwner) {
-            binding.openMenuButton.isVisible = it
+        viewLifecycleOwner.lifecycleScope.launch {
+            sectionDetailViewModel.showOpenMenuButton.collect { isShow ->
+                binding.openMenuButtonLayout.isVisible = isShow
+            }
         }
 
         // Add to cart button

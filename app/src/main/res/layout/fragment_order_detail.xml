@@ -4,13 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-        <variable
-            name="viewModel"
-            type="com.foobarust.android.order.OrderDetailViewModel" />
-        <import type="com.foobarust.android.order.OrderDetailUiState" />
-    </data>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -20,15 +13,13 @@
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/map_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:goneIf="@{viewModel.orderDetailUiState instanceof OrderDetailUiState.Error}"/>
+            android:layout_height="match_parent" />
 
         <include
             layout="@layout/load_error_layout"
             android:id="@+id/load_error_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:goneIf="@{!(viewModel.orderDetailUiState instanceof OrderDetailUiState.Error)}"/>
+            android:layout_height="match_parent" />
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
@@ -47,7 +38,6 @@
             android:indeterminate="true"
             app:hideAnimationBehavior="outward"
             app:goneAfterHide="@{true}"
-            app:progressHideIf="@{!(viewModel.orderDetailUiState instanceof OrderDetailUiState.Loading)}"
             app:layout_constraintTop_toBottomOf="@id/toolbar"/>
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -67,7 +57,6 @@
                     android:id="@+id/order_detail_recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:listitem="@layout/order_detail_header_item"
                     tools:itemCount="1"/>
 

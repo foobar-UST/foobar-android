@@ -67,21 +67,7 @@
             app:layout_constraintTop_toBottomOf="@id/order_title_text_view"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/seller_image_view"
-            tools:text="· Created at 2021-01-24"/>
-
-        <TextView
-            android:id="@+id/updated_at_text_view"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_xmedium"
-            android:layout_marginEnd="@dimen/spacing_large"
-            android:text="@{`· ` + infoItemModel.orderUpdatedDate}"
-            android:textAppearance="?attr/textAppearanceBody2"
-            android:textColor="@color/material_on_surface_emphasis_medium"
-            app:layout_constraintTop_toBottomOf="@id/created_at_text_view"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/seller_image_view"
-            tools:text="· Updated at 2021-01-24"/>
+            tools:text="· Ordered on 2021-01-24"/>
 
         <TextView
             android:id="@+id/message_text_view"
@@ -92,7 +78,7 @@
             android:text="@{`· ` + infoItemModel.orderMessage}"
             android:textAppearance="?attr/textAppearanceBody2"
             android:textColor="@color/material_on_surface_emphasis_medium"
-            app:layout_constraintTop_toBottomOf="@id/updated_at_text_view"
+            app:layout_constraintTop_toBottomOf="@id/created_at_text_view"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/seller_image_view"
             app:goneIf="@{infoItemModel.orderMessage == null}"

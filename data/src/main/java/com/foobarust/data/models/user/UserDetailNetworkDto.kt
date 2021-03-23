@@ -3,11 +3,13 @@ package com.foobarust.data.models.user
 import com.foobarust.data.constants.Constants.USER_CREATED_REST_FIELD
 import com.foobarust.data.constants.Constants.USER_DEVICE_IDS_FIELD
 import com.foobarust.data.constants.Constants.USER_EMAIL_FIELD
+import com.foobarust.data.constants.Constants.USER_EMPLOYED_BY_FIELD
 import com.foobarust.data.constants.Constants.USER_ID_FIELD
 import com.foobarust.data.constants.Constants.USER_NAME_FIELD
 import com.foobarust.data.constants.Constants.USER_PHONE_NUM_FIELD
 import com.foobarust.data.constants.Constants.USER_PHOTO_URL_FIELD
 import com.foobarust.data.constants.Constants.USER_ROLES_FIELD
+import com.foobarust.data.constants.Constants.USER_SECTION_IN_DELIVERY
 import com.foobarust.data.constants.Constants.USER_UPDATED_AT_FIELD
 import com.foobarust.data.constants.Constants.USER_USERNAME_FIELD
 import com.google.firebase.Timestamp
@@ -55,4 +57,12 @@ data class UserDetailNetworkDto(
     @JvmField
     @PropertyName(USER_CREATED_REST_FIELD)
     val createdRest: Boolean? = null,
+
+    @JvmField
+    @PropertyName(USER_EMPLOYED_BY_FIELD)
+    val employedBy: String? = null,
+
+    @JvmField
+    @PropertyName(USER_SECTION_IN_DELIVERY)
+    val sectionInDelivery: String? = null
 )

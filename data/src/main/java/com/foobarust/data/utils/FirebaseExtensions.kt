@@ -62,7 +62,7 @@ internal inline fun <reified T, R> CollectionReference.snapshotFlow(
 ): Flow<Resource<List<R>>> = callbackFlow {
     channel.offer(Resource.Loading())
 
-    val subscription = this@snapshotFlow.addSnapshotListener { snapshot, error ->
+    val listener = this@snapshotFlow.addSnapshotListener { snapshot, error ->
         if (error != null) {
             channel.offer(Resource.Error(error.message))
             channel.close(CancellationException(error.message))
@@ -86,7 +86,7 @@ internal inline fun <reified T, R> CollectionReference.snapshotFlow(
         }
     }
 
-    awaitClose { subscription.remove() }
+    awaitClose { listener.remove() }
 }
 
 internal inline fun <reified T, R> DocumentReference.snapshotFlow(
@@ -95,7 +95,7 @@ internal inline fun <reified T, R> DocumentReference.snapshotFlow(
 ): Flow<Resource<R>> = callbackFlow {
     channel.offer(Resource.Loading())
 
-    val subscription = this@snapshotFlow.addSnapshotListener { snapshot, error ->
+    val listener = this@snapshotFlow.addSnapshotListener { snapshot, error ->
         if (error != null) {
             channel.offer(Resource.Error(error.message))
             channel.close(CancellationException(error.message))
@@ -117,7 +117,7 @@ internal inline fun <reified T, R> DocumentReference.snapshotFlow(
         }
     }
 
-    awaitClose { subscription.remove() }
+    awaitClose { listener.remove() }
 }
 
 internal inline fun <reified T, R> Query.snapshotFlow(
@@ -126,7 +126,7 @@ internal inline fun <reified T, R> Query.snapshotFlow(
 ): Flow<Resource<List<R>>> = callbackFlow {
     channel.offer(Resource.Loading())
 
-    val subscription = this@snapshotFlow.addSnapshotListener { snapshot, error ->
+    val listener = this@snapshotFlow.addSnapshotListener { snapshot, error ->
         if (error != null) {
             channel.offer(Resource.Error(error.message))
             channel.close(CancellationException(error.message))
@@ -150,7 +150,7 @@ internal inline fun <reified T, R> Query.snapshotFlow(
         }
     }
 
-    awaitClose { subscription.remove() }
+    awaitClose { listener.remove() }
 }
 
 internal fun StorageReference.putFileFlow(uri: Uri): Flow<Resource<Unit>> = callbackFlow {
