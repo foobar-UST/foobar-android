@@ -69,16 +69,11 @@ class OrderDetailViewModel @Inject constructor(
         }
 
     // Show map and collapse bottom sheet
-    val showMap: StateFlow<Boolean> = _orderDetail
+    val showMap: Flow<Boolean?> = _orderDetail
         .filterNotNull()
         .mapLatest { orderDetail ->
             orderDetail.state !in orderCompletedStates
         }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
-            initialValue = false
-        )
 
     private var lastOrderStateItemPosition = 0
 

@@ -116,17 +116,19 @@ class OrderDetailFragment : FullScreenDialogFragment(),
         // Show map fragment for selected order states
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.showMap.collect { showMap ->
-                with(binding) {
-                    mapContainer.isVisible = showMap
-                    bottomSheet.isVisible = !showMap
-                }
+                showMap?.let {
+                    with(binding) {
+                        mapContainer.isVisible = it
+                        bottomSheet.isVisible = true
+                    }
 
-                if (showMap) {
-                    initializeMapFragment()
-                    setupBottomSheetCollapsed()
-                } else {
-                    setupBottomSheetFullScreen()
-                    updateToolbarColor(requireContext().themeColor(R.attr.colorSurface))
+                    if (it) {
+                        initializeMapFragment()
+                        setupBottomSheetCollapsed()
+                    } else {
+                        setupBottomSheetFullScreen()
+                        updateToolbarColor(requireContext().themeColor(R.attr.colorSurface))
+                    }
                 }
             }
         }
