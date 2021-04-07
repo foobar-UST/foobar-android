@@ -4,6 +4,7 @@ import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -144,14 +145,17 @@ class SellerSectionDetailAdapter(
             setHasFixedSize(true)
         }
 
-        participantsSubtitleTextView.text = if (participantsItemModel.usersCount > 0) {
-            root.context.getString(
-                R.string.seller_section_detail_users_subtitle,
-                participantsItemModel.usersCount,
-                participantsItemModel.maxUsers
-            )
-        } else {
-            root.context.getString(R.string.seller_section_detail_users_subtitle_empty)
+        with(participantsTitleTextView) {
+            val hasParticipants = participantsItemModel.usersCount > 0
+            isVisible = hasParticipants
+
+            if (hasParticipants) {
+                text = context.getString(
+                    R.string.seller_section_detail_users_title,
+                    participantsItemModel.usersCount,
+                    participantsItemModel.maxUsers
+                )
+            }
         }
     }
 

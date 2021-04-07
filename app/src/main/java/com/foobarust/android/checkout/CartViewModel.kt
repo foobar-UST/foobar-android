@@ -50,7 +50,6 @@ class CartViewModel @Inject constructor(
     private val _cartUpdateState = MutableStateFlow<CartUpdateState>(CartUpdateState.Idle)
     val cartUpdateState: StateFlow<CartUpdateState> = _cartUpdateState.asStateFlow()
 
-
     private val _sellerDetail = MutableStateFlow<SellerDetail?>(null)
     private val _orderNotes = MutableStateFlow<String?>(null)
 
@@ -63,18 +62,17 @@ class CartViewModel @Inject constructor(
         onFetchCart()
     }
 
-    fun onFetchCart(isSwipeRefresh: Boolean = false) {
+    fun onFetchCart() {
         fetchCartJob?.cancelIfActive()
         fetchCartJob = viewModelScope.launch {
             // Get user cart
-            viewModelScope.launch {
+            launch {
                 getUserCartUseCase(Unit).collect {
                     when (it) {
                         is Resource.Success -> {
                             _userCart.value = it.data
                         }
                         is Resource.Error -> {
-                            _userCart.value = null
                             _cartUiState.value = CartUiState.Error(it.message)
                         }
                         is Resource.Loading -> Unit
@@ -83,23 +81,17 @@ class CartViewModel @Inject constructor(
             }
 
             // Get cart items
-            viewModelScope.launch {
+            launch {
                 getUserCartItemsUseCase(Unit).collect {
                     when (it) {
                         is Resource.Success -> {
                             _cartItems.value = it.data
                             _cartUiState.value = CartUiState.Success
-
-                            if (isSwipeRefresh) {
-                                _finishSwipeRefresh.offer(Unit)
-                            }
+                            _finishSwipeRefresh.offer(Unit)
                         }
                         is Resource.Error -> {
                             _cartUiState.value = CartUiState.Error(it.message)
-
-                            if (isSwipeRefresh) {
-                                _finishSwipeRefresh.offer(Unit)
-                            }
+                            _finishSwipeRefresh.offer(Unit)
                         }
                         is Resource.Loading -> {
                             _cartUiState.value = CartUiState.Loading
@@ -109,7 +101,7 @@ class CartViewModel @Inject constructor(
             }
 
             // Get seller detail
-            viewModelScope.launch {
+            launch {
                 _userCart.filterNotNull()
                     .flatMapLatest { getSellerDetailUseCase(it.sellerId) }
                     .collect {
@@ -122,7 +114,7 @@ class CartViewModel @Inject constructor(
             }
 
             // Build cart list
-            viewModelScope.launch {
+            launch {
                 combine(
                     _userCart.filterNotNull(),
                     _cartItems,
@@ -136,7 +128,7 @@ class CartViewModel @Inject constructor(
             }
 
             // Check cart modifiable
-            viewModelScope.launch {
+            launch {
                 combine(
                     _userCart.filterNotNull(),
                     _cartItems,

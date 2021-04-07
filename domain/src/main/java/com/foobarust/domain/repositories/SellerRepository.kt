@@ -42,5 +42,8 @@ interface SellerRepository {
     suspend fun getSellerItemCategory(categoryTag: String): SellerItemCategory
 
     /* Rating */
-    fun getSellerRatingsPagingData(sellerId: String): Flow<PagingData<SellerRatingBasic>>
+    fun getSellerRatingsPagingData(
+        sellerId: String,
+        sortOption: SellerRatingSortOption
+    ): Flow<PagingData<SellerRatingBasic>>
 }

@@ -204,8 +204,8 @@ class SellerSectionDetailViewModel @Inject constructor(
             deliveryLocation = sectionDetail.getNormalizedDeliveryAddress()
         ))
 
-        // Add participants row
-        if (sectionDetail.isRecentSection()) {
+        // Add participants
+        if (sectionDetail.isRecentSection() && sectionDetail.joinedUsersCount > 0) {
             add(SellerSectionDetailParticipantsItemModel(
                 sectionId = sectionDetail.id,
                 usersCount = sectionDetail.joinedUsersCount,

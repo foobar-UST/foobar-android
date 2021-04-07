@@ -12,6 +12,8 @@ import com.foobarust.android.databinding.FragmentSellerRatingDetailBinding
 import com.foobarust.android.shared.FullScreenDialogFragment
 import com.foobarust.android.shared.PagingLoadStateAdapter
 import com.foobarust.android.utils.*
+import com.foobarust.domain.models.seller.SellerRatingSortOption
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -96,6 +98,31 @@ class SellerRatingDetailFragment : FullScreenDialogFragment(),
     }
 
     override fun onSortRatingButtonClicked() {
-        // TODO: onSortRatingButtonClicked
+        val sortOptionPairs = arrayOf(
+            SellerRatingSortOption.LATEST to getString(
+                R.string.seller_rating_detail_sort_option_latest
+            ),
+            SellerRatingSortOption.ORDER_RATING_DESC to getString(
+                R.string.seller_rating_detail_sort_option_order_desc
+            ),
+            SellerRatingSortOption.ORDER_RATING_ASC to getString(
+                R.string.seller_rating_detail_sort_option_order_asc
+            )
+        )
+        val singleChoiceItems = sortOptionPairs.map { it.second }.toTypedArray()
+        val selectedOptionIndex = sortOptionPairs.indexOfFirst {
+            it.first == viewModel.ratingSortOption.value
+        }
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.seller_rating_detail_sort_dialog_title)
+            .setSingleChoiceItems(singleChoiceItems, selectedOptionIndex) { dialog, which ->
+                viewModel.onUpdateSortOption(sortOption = sortOptionPairs[which].first)
+                dialog.dismiss()
+            }
+            .setNegativeButton(android.R.string.cancel) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 }

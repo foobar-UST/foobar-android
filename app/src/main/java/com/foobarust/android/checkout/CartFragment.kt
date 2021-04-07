@@ -56,7 +56,7 @@ class CartFragment : Fragment(), CartAdapter.CartAdapterListener {
 
         // Swipe to refresh layout
         binding.swipeRefreshLayout.setOnRefreshListener {
-            cartViewModel.onFetchCart(isSwipeRefresh = true)
+            cartViewModel.onFetchCart()
         }
 
         // Restore order notes when navigate back to CartFragment
@@ -95,11 +95,11 @@ class CartFragment : Fragment(), CartAdapter.CartAdapterListener {
 
         // Ui state
         viewLifecycleOwner.lifecycleScope.launch {
-            cartViewModel.cartUiState.collect {
-                checkoutViewModel.showLoadingProgressBar(it is CartUiState.Loading)
+            cartViewModel.cartUiState.collect { uiState ->
+                checkoutViewModel.showLoadingProgressBar(uiState is CartUiState.Loading)
 
-                if (it is CartUiState.Error) {
-                    showShortToast(it.message)
+                if (uiState is CartUiState.Error) {
+                    showShortToast(uiState.message)
                 }
             }
         }
@@ -173,7 +173,6 @@ class CartFragment : Fragment(), CartAdapter.CartAdapterListener {
     }
 
     override fun onClearCart() {
-        // Show confirm dialog
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(getString(R.string.cart_clear_cart_dialog_title))
             .setMessage(getString(R.string.cart_clear_Cart_dialog_message))

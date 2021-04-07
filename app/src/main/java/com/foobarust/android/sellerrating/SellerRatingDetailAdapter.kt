@@ -19,6 +19,7 @@ import com.foobarust.android.utils.loadGlideUrl
 import com.foobarust.android.utils.round
 import com.foobarust.android.utils.setSrc
 import com.foobarust.domain.models.seller.SellerRatingCount
+import com.foobarust.domain.models.seller.SellerRatingSortOption
 import com.foobarust.domain.models.seller.sum
 import com.foobarust.domain.utils.format
 import com.google.android.material.progressindicator.LinearProgressIndicator
@@ -152,7 +153,18 @@ class SellerRatingDetailAdapter(
 
         // Sorting button
         with(ratingSubtitleSortButton) {
-            text = "Sort By"
+            when (infoItem.ratingSortOption) {
+                SellerRatingSortOption.ORDER_RATING_DESC -> setText(
+                    R.string.seller_rating_detail_sort_option_order_desc
+                )
+                SellerRatingSortOption.ORDER_RATING_ASC -> setText(
+                    R.string.seller_rating_detail_sort_option_order_asc
+                )
+                SellerRatingSortOption.LATEST -> setText(
+                    R.string.seller_rating_detail_sort_option_latest
+                )
+            }
+
             setOnClickListener {
                 listener.onSortRatingButtonClicked()
             }
@@ -224,7 +236,8 @@ sealed class SellerRatingDetailListModel {
     data class SellerRatingDetailInfoItem(
         val orderRating: Double,                // round to .1f
         val deliveryRating: Double?,            // round to percent int
-        val ratingCount: SellerRatingCount
+        val ratingCount: SellerRatingCount,
+        val ratingSortOption: SellerRatingSortOption
     ) : SellerRatingDetailListModel()
 
     data class SellerRatingDetailRatingItem(

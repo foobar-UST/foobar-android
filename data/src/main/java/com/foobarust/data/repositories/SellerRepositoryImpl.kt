@@ -188,7 +188,8 @@ class SellerRepositoryImpl @Inject constructor(
     }
 
     override fun getSellerRatingsPagingData(
-        sellerId: String
+        sellerId: String,
+        sortOption: SellerRatingSortOption
     ): Flow<PagingData<SellerRatingBasic>> {
         return Pager(
             config = PagingConfig(
@@ -197,7 +198,7 @@ class SellerRepositoryImpl @Inject constructor(
                 enablePlaceholders = false
             ),
             pagingSourceFactory = {
-                SellerRatingBasicsPagingSource(firestore, sellerId)
+                SellerRatingBasicsPagingSource(firestore, sellerId, sortOption)
             }
         )
             .flow

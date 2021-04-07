@@ -10,17 +10,15 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/participants_subtitle_text_view"
+        android:id="@+id/participants_title_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/spacing_large"
-        android:layout_gravity="center_horizontal"
+        android:textAppearance="?attr/textAppearanceOverline"
         android:textColor="@color/material_on_surface_emphasis_medium"
-        android:textAppearance="?attr/textAppearanceSubtitle1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="No joined users yet."/>
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="Participants (16/20)" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/participants_recycler_view"

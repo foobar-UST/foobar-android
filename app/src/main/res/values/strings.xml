@@ -136,8 +136,7 @@
 
     <!-- Seller Section Detail -->
     <string name="seller_section_detail_info_title">Order Detail</string>
-    <string name="seller_section_detail_users_subtitle">Participants (%d/%d)</string>
-    <string name="seller_section_detail_users_subtitle_empty">No participants yet.</string>
+    <string name="seller_section_detail_users_title">Participants (%d/%d)</string>
     <string name="seller_section_detail_counter_on_subtitle">Time Left</string>
     <string name="seller_section_detail_counter_off_subtitle">Available On</string>
     <string name="seller_section_detail_title_delivery_date">Date</string>
@@ -301,6 +300,10 @@
     <string name="seller_rating_detail_rating_count_fair">Fair</string>
     <string name="seller_rating_detail_rating_count_poor">Poor</string>
     <string name="seller_rating_detail_empty_item_message">Ratings will be shown here</string>
+    <string name="seller_rating_detail_sort_dialog_title">Sort Rating</string>
+    <string name="seller_rating_detail_sort_option_order_desc">Best</string>
+    <string name="seller_rating_detail_sort_option_order_asc">Poor</string>
+    <string name="seller_rating_detail_sort_option_latest">Latest</string>
 
     <!-- Deliverer Info -->
     <string name="deliverer_info_description">is delivering your order.</string>
