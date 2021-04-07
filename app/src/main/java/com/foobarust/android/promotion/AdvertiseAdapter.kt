@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import com.foobarust.android.R
 import com.foobarust.android.databinding.AdvertiseItemBinding
 import com.foobarust.android.promotion.AdvertiseAdapter.AdvertiseAdapterListener
+import com.foobarust.android.utils.loadGlideUrl
 import com.foobarust.domain.models.promotion.AdvertiseBasic
 import com.zhpan.bannerview.BaseBannerAdapter
 import com.zhpan.bannerview.BaseViewHolder
@@ -48,11 +49,17 @@ class AdvertiseItemViewHolder(
     private val listener: AdvertiseAdapterListener
 ) : BaseViewHolder<AdvertiseItemModel>(binding.root) {
 
-    override fun bindData(data: AdvertiseItemModel?, position: Int, pageSize: Int) {
-        binding.run {
-            advertiseItemModel = data
-            listener = this@AdvertiseItemViewHolder.listener
-            executePendingBindings()
+    override fun bindData(data: AdvertiseItemModel?, position: Int, pageSize: Int) = binding.run {
+        val advertiseBasic = data?.advertiseBasic ?: return@run
+
+        promotionImageView.loadGlideUrl(
+            imageUrl = advertiseBasic.imageUrl,
+            centerCrop = true,
+            placeholder = R.drawable.placeholder_card
+        )
+
+        promotionCardView.setOnClickListener {
+            listener.onAdvertiseItemClicked(advertiseBasic)
         }
     }
 }

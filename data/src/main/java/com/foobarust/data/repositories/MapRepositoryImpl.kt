@@ -10,8 +10,10 @@ import com.foobarust.data.constants.Constants.MAPS_STATIC_MAP_PARAM_KEY
 import com.foobarust.data.constants.Constants.MAPS_STATIC_MAP_PARAM_MARKERS
 import com.foobarust.data.constants.Constants.MAPS_STATIC_MAP_PARAM_SIZE
 import com.foobarust.data.constants.Constants.MAPS_STATIC_MAP_PARAM_VISUAL_REFRESH
+import com.foobarust.data.mappers.MapMapper
 import com.foobarust.data.utils.asGeolocationPoint
 import com.foobarust.domain.models.common.GeolocationPoint
+import com.foobarust.domain.models.map.TravelMode
 import com.foobarust.domain.repositories.MapRepository
 import com.google.maps.android.PolyUtil
 import javax.inject.Inject
@@ -21,17 +23,20 @@ import javax.inject.Inject
  */
 
 class MapRepositoryImpl @Inject constructor(
-    private val mapService: MapService
+    private val mapService: MapService,
+    private val mapMapper: MapMapper
 ) : MapRepository {
 
     override suspend fun getDirectionsPath(
         currentLocation: GeolocationPoint,
         destination: GeolocationPoint,
+        travelMode: TravelMode
     ): List<GeolocationPoint> {
         val response = mapService.getDirections(
             key = GOOGLE_MAPS_API_KEY,
             origin = "${currentLocation.latitude},${currentLocation.longitude}",
-            destination = "$${destination.latitude},${destination.longitude}"
+            destination = "${destination.latitude},${destination.longitude}",
+            travelMode = mapMapper.fromTravelMode(travelMode)
         )
 
         return PolyUtil.decode(response.encodedPoints)

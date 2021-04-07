@@ -1,6 +1,5 @@
 package com.foobarust.android.seller
 
-import android.content.Context
 import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,7 +7,6 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.insertSeparators
 import androidx.paging.map
-import com.foobarust.android.R
 import com.foobarust.android.seller.SellersListModel.*
 import com.foobarust.domain.models.explore.getNormalizedTitle
 import com.foobarust.domain.models.seller.*
@@ -17,7 +15,6 @@ import com.foobarust.domain.usecases.seller.GetSellerItemCategoryUseCase
 import com.foobarust.domain.usecases.seller.GetSellersPagingUseCase
 import com.foobarust.domain.utils.cancelIfActive
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.*
@@ -31,7 +28,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SellerListViewModel @Inject constructor(
-    @ApplicationContext context: Context,
     getSellersPagingUseCase: GetSellersPagingUseCase,
     private val getSellerItemCategoryUseCase: GetSellerItemCategoryUseCase
 ) : ViewModel() {
@@ -65,10 +61,7 @@ class SellerListViewModel @Inject constructor(
                     sellerName = sellerBasic.getNormalizedName(),
                     sellerImageUrl = sellerBasic.imageUrl,
                     sellerRating = sellerBasic.getNormalizedOrderRating(),
-                    sellerMinSpend = context.getString(
-                        R.string.seller_on_campus_item_min_spend,
-                        sellerBasic.getNormalizedMinSpendString()
-                    ),
+                    sellerMinSpend = sellerBasic.minSpend,
                     sellerOnline = sellerBasic.online,
                     sellerTags = sellerBasic.getNormalizedTags()
                 ) as SellersListModel
@@ -77,10 +70,7 @@ class SellerListViewModel @Inject constructor(
         .map { pagingData ->
             pagingData.insertSeparators { before, after ->
                 return@insertSeparators if (before == null && after == null) {
-                    SellersEmptyModel(
-                        drawableRes = R.drawable.undraw_empty,
-                        emptyMessage = context.getString(R.string.seller_empty_message)
-                    )
+                    SellersEmptyModel
                 } else {
                     null
                 }
@@ -96,7 +86,6 @@ class SellerListViewModel @Inject constructor(
                     when (it) {
                         is Resource.Success -> {
                             val sellerItemCategory = it.data
-
                             _sellerListProperty.offer(
                                 SellerListProperty(
                                     categoryTag = sellerItemCategory.tag,

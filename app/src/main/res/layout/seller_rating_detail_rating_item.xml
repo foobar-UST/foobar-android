@@ -1,71 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="@dimen/spacing_medium"
+    android:background="?attr/colorSurface"
+    android:padding="@dimen/spacing_large">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/rating_item_user_image_view"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Foobar.Circle"
+        tools:src="@tools:sample/avatars"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/rating_item_username_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_large"
+        android:textAppearance="?attr/textAppearanceSubtitle2"
+        app:layout_constraintStart_toEndOf="@id/rating_item_user_image_view"
+        app:layout_constraintTop_toTopOf="@id/rating_item_user_image_view"
+        app:layout_constraintBottom_toBottomOf="@id/rating_item_user_image_view"
+        tools:text="user"/>
+
+    <RatingBar
+        style="?attr/ratingBarStyleIndicator"
+        android:id="@+id/rating_item_rating_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_xmedium"
+        android:stepSize="0.01"
+        android:numStars="5"
+        android:isIndicator="true"
+        app:layout_constraintTop_toBottomOf="@id/rating_item_user_image_view"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:rating="4"/>
+
+    <TextView
+        android:id="@+id/rating_item_created_at_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_xmedium"
+        android:textAppearance="?attr/textAppearanceOverline"
+        android:textColor="@color/material_on_surface_emphasis_medium"
+        app:layout_constraintStart_toEndOf="@id/rating_item_rating_bar"
+        app:layout_constraintTop_toTopOf="@id/rating_item_rating_bar"
+        app:layout_constraintBottom_toBottomOf="@id/rating_item_rating_bar"
+        tools:text="dd/MM/yyyy"/>
+
+    <TextView
+        android:id="@+id/rating_item_comment_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="@dimen/spacing_medium"
-        android:background="?attr/colorSurface"
-        android:padding="@dimen/spacing_large">
+        android:layout_marginTop="@dimen/spacing_large"
+        android:text="No Comment"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:textColor="@color/material_on_surface_disabled"
+        android:textStyle="italic"
+        android:lineSpacingMultiplier="1.2"
+        app:layout_constraintTop_toBottomOf="@id/rating_item_rating_bar"/>
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/rating_item_user_image_view"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Foobar.Circle"
-            tools:src="@sample/sample_image_1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
-
-        <TextView
-            android:id="@+id/rating_item_username_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/spacing_large"
-            android:textAppearance="?attr/textAppearanceSubtitle2"
-            app:layout_constraintStart_toEndOf="@id/rating_item_user_image_view"
-            app:layout_constraintTop_toTopOf="@id/rating_item_user_image_view"
-            app:layout_constraintBottom_toBottomOf="@id/rating_item_user_image_view"
-            tools:text="user"/>
-
-        <RatingBar
-            style="?attr/ratingBarStyleIndicator"
-            android:id="@+id/rating_item_rating_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_xmedium"
-            android:stepSize="0.01"
-            android:numStars="5"
-            app:layout_constraintTop_toBottomOf="@id/rating_item_user_image_view"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:rating="4"/>
-
-        <TextView
-            android:id="@+id/rating_item_created_at_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/spacing_xmedium"
-            android:textAppearance="?attr/textAppearanceOverline"
-            android:textColor="@color/material_on_surface_emphasis_medium"
-            app:layout_constraintStart_toEndOf="@id/rating_item_rating_bar"
-            app:layout_constraintTop_toTopOf="@id/rating_item_rating_bar"
-            app:layout_constraintBottom_toBottomOf="@id/rating_item_rating_bar"
-            tools:text="dd/MM/yyyy"/>
-
-        <TextView
-            android:id="@+id/rating_item_comment_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_large"
-            android:text="No Comment"
-            android:textAppearance="?attr/textAppearanceBody2"
-            android:textColor="@color/material_on_surface_disabled"
-            android:textStyle="italic"
-            android:lineSpacingMultiplier="1.2"
-            app:layout_constraintTop_toBottomOf="@id/rating_item_rating_bar"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</layout>
+</androidx.constraintlayout.widget.ConstraintLayout>

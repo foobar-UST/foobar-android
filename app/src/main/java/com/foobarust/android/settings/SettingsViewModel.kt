@@ -22,12 +22,10 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-const val SETTINGS_NOTIFICATIONS = "settings_notifications"
 const val SETTINGS_CONTACT_US = "settings_contact_us"
 const val SETTINGS_TERMS_CONDITIONS = "settings_terms_conditions"
 const val SETTINGS_FEATURES = "settings_features"
 const val SETTINGS_SIGN_OUT = "settings_sign_out"
-const val SETTINGS_FAVORITE = "setting_favorite"
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
@@ -110,12 +108,6 @@ class SettingsViewModel @Inject constructor(
             photoUrl = userDetail.photoUrl
         ))
 
-        add(SettingsSectionItemModel(
-            id = SETTINGS_FAVORITE,
-            drawableRes = R.drawable.ic_loyalty,
-            title = context.getString(R.string.settings_section_favorite_title)
-        ))
-
         addAll(buildCommonListModels())
 
         add(SettingsSectionItemModel(
@@ -132,11 +124,6 @@ class SettingsViewModel @Inject constructor(
 
     private fun buildCommonListModels(): List<SettingsListModel> = buildList {
         addAll(listOf(
-            SettingsSectionItemModel(
-                id = SETTINGS_NOTIFICATIONS,
-                drawableRes = R.drawable.ic_notification_important,
-                title = context.getString(R.string.settings_section_notifications_title)
-            ),
             SettingsSectionItemModel(
                 id = SETTINGS_FEATURES,
                 drawableRes = R.drawable.ic_whatshot,

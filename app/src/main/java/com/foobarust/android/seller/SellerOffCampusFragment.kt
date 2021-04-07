@@ -87,7 +87,7 @@ class SellerOffCampusFragment : Fragment(),
                 updateViews(
                     mainLayout = binding.sectionsRecyclerView,
                     errorLayout = binding.loadErrorLayout.loadErrorLayout,
-                    progressBar = binding.loadinProgressBar,
+                    progressBar = binding.loadingProgressBar,
                     swipeRefreshLayout = binding.swipeRefreshLayout
                 )
                 anyError()?.let {
@@ -127,17 +127,8 @@ class SellerOffCampusFragment : Fragment(),
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding.frameLayout.layoutTransition.setAnimateParentHierarchy(false)
-    }
-
     override fun onSellerSectionItemClicked(sectionBasic: SellerSectionBasic) {
         sellerViewModel.onNavigateToSellerSection(sectionBasic.id)
-    }
-
-    override fun onSellerSectionItemLongClicked(view: View, sectionBasic: SellerSectionBasic): Boolean {
-        return true
     }
 
     override fun onAdvertiseItemClicked(advertiseBasic: AdvertiseBasic) {

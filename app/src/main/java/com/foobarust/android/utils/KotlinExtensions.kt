@@ -1,5 +1,7 @@
 package com.foobarust.android.utils
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlin.math.round
 
 /**
@@ -21,3 +23,5 @@ fun Double.round(decimals: Int): Double {
     repeat(decimals) { multiplier *= 10 }
     return round(this * multiplier) / multiplier
 }
+
+suspend fun <T> Flow<T?>.firstNotNull(): T = (first { it != null })!!

@@ -92,17 +92,14 @@ class RatingFragment : FullScreenDialogFragment(),
             viewModel.ratingUiSubmitState.collect { uiState ->
                 if (uiState == null) return@collect
 
-                with(binding) {
-                    loadingProgressBar.bindGoneIf(uiState !is RatingUiState.Loading)
-                }
+                binding.loadingProgressBar.isVisible = uiState is RatingUiState.Loading
 
                 when (uiState) {
                     RatingUiState.Success -> {
-                        findNavController(R.id.ratingFragment)?.run {
-                            previousBackStackEntry?.savedStateHandle?.set(
+                        findNavController(R.id.ratingFragment)
+                            ?.previousBackStackEntry?.savedStateHandle?.set(
                                 SAVED_STATE_KEY_RATING_COMPLETED, true
                             )
-                        }
                     }
                     is RatingUiState.Error -> {
                         showShortToast(uiState.message)

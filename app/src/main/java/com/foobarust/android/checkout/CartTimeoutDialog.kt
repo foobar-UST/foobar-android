@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import com.foobarust.android.R
 import com.foobarust.android.databinding.DialogCartTimeOutBinding
 import com.foobarust.android.main.MainViewModel
 import com.foobarust.android.utils.AutoClearedValue
@@ -20,17 +21,18 @@ class CartTimeoutDialog : BottomSheetDialogFragment() {
 
     private var binding: DialogCartTimeOutBinding by AutoClearedValue(this)
     private val mainViewModel: MainViewModel by activityViewModels()
-    private val cartItemsCount: Int by lazy { requireArguments().getInt(ARG_CART_ITEMS_COUNT) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DialogCartTimeOutBinding.inflate(inflater, container, false).apply {
-            cartItemsCount = this@CartTimeoutDialog.cartItemsCount
-            lifecycleOwner = viewLifecycleOwner
-        }
+        binding = DialogCartTimeOutBinding.inflate(inflater, container, false)
+
+        binding.timeOutMessageTextView.text = getString(
+            R.string.cart_timeout_dialog_message,
+            requireArguments().getInt(ARG_CART_ITEMS_COUNT)
+        )
 
         // Dismiss the dialog
         binding.continueButton.setOnClickListener {

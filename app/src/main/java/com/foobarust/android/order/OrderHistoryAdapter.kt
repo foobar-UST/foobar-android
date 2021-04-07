@@ -3,7 +3,7 @@ package com.foobarust.android.order
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.DrawableRes
+import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -11,8 +11,11 @@ import com.foobarust.android.R
 import com.foobarust.android.databinding.*
 import com.foobarust.android.order.OrderHistoryListModel.*
 import com.foobarust.android.order.OrderHistoryViewHolder.*
-import com.foobarust.android.utils.bindDrawables
-import com.foobarust.domain.models.order.OrderState
+import com.foobarust.android.utils.loadGlideUrl
+import com.foobarust.android.utils.setSrc
+import com.foobarust.domain.models.order.*
+import com.foobarust.domain.utils.format
+import java.util.*
 
 /**
  * Created by kevin on 1/31/21
@@ -25,14 +28,11 @@ class OrderHistoryAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrderHistoryViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
-            R.layout.order_history_item -> OrderHistoryArchivedItemViewHolder(
+            R.layout.order_history_item -> OrderHistoryItemViewHolder(
                 OrderHistoryItemBinding.inflate(inflater, parent, false)
             )
             R.layout.empty_list_item -> OrderHistoryEmptyItemViewHolder(
                 EmptyListItemBinding.inflate(inflater, parent, false)
-            )
-            R.layout.subtitle_large_item -> OrderHistorySubtitleItemViewHolder(
-                SubtitleLargeItemBinding.inflate(inflater, parent, false)
             )
             else -> throw IllegalStateException("Unknown view type $viewType")
         }
@@ -40,22 +40,22 @@ class OrderHistoryAdapter(
 
     override fun onBindViewHolder(holder: OrderHistoryViewHolder, position: Int) {
         when (holder) {
-            is OrderHistoryArchivedItemViewHolder -> bindHistoryItem(
+            is OrderHistoryItemViewHolder -> bindHistoryItem(
                 binding = holder.binding,
                 historyItemModel = getItem(position) as? OrderHistoryItemModel
             )
 
-            is OrderHistoryEmptyItemViewHolder -> holder.binding.run {
-                val currentItem = getItem(position) as? OrderHistoryEmptyItemModel
-                drawableRes = currentItem?.drawableRes
-                emptyMessage = currentItem?.emptyMessage
-                executePendingBindings()
-            }
+            is OrderHistoryEmptyItemViewHolder -> bindHistoryEmptyItem(
+                binding = holder.binding
+            )
+        }
+    }
 
-            is OrderHistorySubtitleItemViewHolder -> holder.binding.run {
-                subtitle = (getItem(position) as? OrderHistorySubtitleItemModel)?.subtitle
-                executePendingBindings()
-            }
+    override fun getItemViewType(position: Int): Int {
+        return when (getItem(position)) {
+            is OrderHistoryItemModel -> R.layout.order_history_item
+            is OrderHistoryEmptyItemModel -> R.layout.empty_list_item
+            else -> throw IllegalStateException("Unknown view type at: $position")
         }
     }
 
@@ -65,91 +65,109 @@ class OrderHistoryAdapter(
     ) = binding.run {
         if (historyItemModel == null) return@run
 
-        this.historyItemModel = historyItemModel
-
-        val context = root.context
-
-        when (historyItemModel.orderState) {
-            OrderState.DELIVERED -> {
-                orderHistoryCardView.setOnClickListener {
-                    listener.onOrderDeliveredClicked(historyItemModel.orderId)
-                }
-            }
-            OrderState.ARCHIVED -> {
-                orderHistoryCardView.setOnClickListener {
-                    listener.onOrderArchivedClicked(historyItemModel.orderId)
-                }
-            }
-            else -> Unit
-        }
-
-        with(showDetailTextView) {
+        orderHistoryCardView.setOnClickListener {
             when (historyItemModel.orderState) {
                 OrderState.DELIVERED -> {
-                    text = context.getString(R.string.order_history_delivered_item_rate_order)
-                    bindDrawables(drawableLeft = R.drawable.ic_star)
+                    listener.onDeliveredOrderClickedClicked(historyItemModel.orderId)
                 }
                 OrderState.ARCHIVED -> {
-                    text = context.getString(R.string.order_history_archived_item_view_order)
-                    bindDrawables(drawableLeft = R.drawable.ic_arrow_forward)
+                    listener.onArchivedOrderClicked(historyItemModel.orderId)
                 }
-                else -> Unit
+                else -> throw IllegalStateException("Invalid state.")
             }
         }
 
-        executePendingBindings()
+        orderImageTitleTextView.text = when (historyItemModel.orderType) {
+            OrderType.ON_CAMPUS -> historyItemModel.sellerName
+            OrderType.OFF_CAMPUS -> root.context.getString(
+                R.string.order_history_item_image_title,
+                historyItemModel.sellerName,
+                historyItemModel.orderTitle
+            )
+        }
+
+        with(orderImageView) {
+            val orderImageUrl = historyItemModel.orderImageUrl
+            isVisible = orderImageUrl != null
+            contentDescription = orderImageTitleTextView.text
+
+            if (orderImageUrl != null) {
+                loadGlideUrl(
+                    imageUrl = orderImageUrl,
+                    centerCrop = true,
+                    placeholder = R.drawable.placeholder_card
+                )
+            }
+        }
+
+        orderStateTitleTextView.text = root.context.getString(
+            R.string.order_item_identifier_title,
+            historyItemModel.orderIdentifier,
+            historyItemModel.orderStateTitle
+        )
+
+        orderCreatedAtTextView.text = root.context.getString(
+            R.string.order_item_created_at,
+            historyItemModel.orderCreatedAt.format("yyyy-MM-dd HH:mm")
+        )
+
+        orderDeliveryLocationTextView.text = historyItemModel.orderDeliveryAddress
+
+        orderTotalCostTextView.text = root.context.getString(
+            R.string.order_item_total_cost,
+            historyItemModel.orderTotalCost
+        )
+
+        showDetailTextView.text = when (historyItemModel.orderState) {
+            OrderState.DELIVERED -> {
+                root.context.getString(R.string.order_history_delivered_item_rate_order)
+            }
+            OrderState.ARCHIVED -> {
+                root.context.getString(R.string.order_history_archived_item_view_order)
+            }
+            else -> throw IllegalStateException("Invalid order state.")
+        }
     }
 
-    override fun getItemViewType(position: Int): Int {
-        return when (getItem(position)) {
-            is OrderHistoryItemModel -> R.layout.order_history_item
-            is OrderHistoryEmptyItemModel -> R.layout.empty_list_item
-            is OrderHistorySubtitleItemModel -> R.layout.subtitle_large_item
-            else -> throw IllegalStateException("Unknown view type at: $position")
-        }
+    private fun bindHistoryEmptyItem(
+        binding: EmptyListItemBinding
+    ) = binding.run {
+        emptyImageView.setSrc(R.drawable.undraw_receipt)
+        emptyMessageTextView.text = root.context.getString(R.string.order_history_empty_message)
     }
 
     interface OrderHistoryAdapterListener {
-        fun onOrderArchivedClicked(orderId: String)
-        fun onOrderDeliveredClicked(orderId: String)
+        fun onArchivedOrderClicked(orderId: String)
+        fun onDeliveredOrderClickedClicked(orderId: String)
     }
 }
 
 sealed class OrderHistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    class OrderHistoryArchivedItemViewHolder(
+    class OrderHistoryItemViewHolder(
         val binding: OrderHistoryItemBinding
     ) : OrderHistoryViewHolder(binding.root)
 
     data class OrderHistoryEmptyItemViewHolder(
         val binding: EmptyListItemBinding
     ) : OrderHistoryViewHolder(binding.root)
-
-
-    data class OrderHistorySubtitleItemViewHolder(
-        val binding: SubtitleLargeItemBinding
-    ) : OrderHistoryViewHolder(binding.root)
 }
 
 sealed class OrderHistoryListModel {
     data class OrderHistoryItemModel(
         val orderId: String,
-        val orderImageTitle: String,
+        val orderTitle: String,
+        val orderType: OrderType,
+        val orderIdentifier: String,
+        val orderState: OrderState,
         val orderStateTitle: String,
         val orderDeliveryAddress: String,
         val orderTotalCost: Double,
         val orderImageUrl: String?,
-        val orderState: OrderState,
-        val orderCreatedAt: String
+        val orderCreatedAt: Date,
+        val sellerName: String,
     ) : OrderHistoryListModel()
 
-    data class OrderHistoryEmptyItemModel(
-        @DrawableRes val drawableRes: Int,
-        val emptyMessage: String
-    ) : OrderHistoryListModel()
-
-    data class OrderHistorySubtitleItemModel(
-        val subtitle: String
-    ) : OrderHistoryListModel()
+    object OrderHistoryEmptyItemModel : OrderHistoryListModel()
 }
 
 object OrderHistoryListModelDiff : DiffUtil.ItemCallback<OrderHistoryListModel>() {
@@ -162,8 +180,6 @@ object OrderHistoryListModelDiff : DiffUtil.ItemCallback<OrderHistoryListModel>(
                 oldItem.orderId == newItem.orderId
             oldItem is OrderHistoryEmptyItemModel && newItem is OrderHistoryEmptyItemModel ->
                 true
-            oldItem is OrderHistorySubtitleItemModel && newItem is OrderHistorySubtitleItemModel ->
-                oldItem.subtitle == newItem.subtitle
             else -> false
         }
     }
@@ -177,8 +193,6 @@ object OrderHistoryListModelDiff : DiffUtil.ItemCallback<OrderHistoryListModel>(
                 oldItem == newItem
             oldItem is OrderHistoryEmptyItemModel && newItem is OrderHistoryEmptyItemModel ->
                 true
-            oldItem is OrderHistorySubtitleItemModel && newItem is OrderHistorySubtitleItemModel ->
-                oldItem == newItem
             else -> false
         }
     }

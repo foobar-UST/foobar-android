@@ -103,12 +103,6 @@ class SettingsFragment : Fragment(), SettingsAdapter.SettingsAdapterListener {
 
     override fun onSectionItemClicked(sectionId: String) {
         when (sectionId) {
-            SETTINGS_NOTIFICATIONS -> findNavController(R.id.settingsFragment)?.navigate(
-                SettingsFragmentDirections.actionSettingsFragmentToNotificationFragment()
-            )
-            SETTINGS_FAVORITE -> findNavController(R.id.settingsFragment)?.navigate(
-                SettingsFragmentDirections.actionSettingsFragmentToFavoriteFragment()
-            )
             SETTINGS_CONTACT_US -> sendContactUsEmail()
             SETTINGS_TERMS_CONDITIONS -> findNavController(R.id.settingsFragment)?.navigate(
                 SettingsFragmentDirections.actionSettingsFragmentToLicenseFragment()

@@ -2,7 +2,8 @@ plugins {
     id(Plugins.JAVA_LIBRARY)
     id(Plugins.KOTLIN)
     id(Plugins.KOTLIN_KAPT)
-    id(Plugins.CHECK_DEPENDENCY_UPDATES) version "1.0.211"
+    id(Plugins.CHECK_DEPENDENCY_UPDATES) version Versions.CHECK_DEPENDENCY_UPDATES
+    id(Plugins.LICENSE)
 }
 
 dependencies {

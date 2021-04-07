@@ -10,7 +10,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -52,7 +51,11 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
         setTheme(R.style.Theme_Foobar_DayNight)
         super.onCreate(savedInstanceState)
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater).apply {
+            setContentView(root)
+            root.applyLayoutFullscreen()
+            appBarLayout.applySystemWindowInsetsPadding(applyTop = true)
+        }
 
         // Setup bottom navigation
         if (savedInstanceState == null) {

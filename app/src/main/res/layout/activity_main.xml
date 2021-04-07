@@ -1,68 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinator_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layoutFullscreen="@{true}">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
-            android:id="@+id/coordinator_layout"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
-
-            <com.google.android.material.appbar.AppBarLayout
-                android:id="@+id/app_bar_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?android:attr/colorBackground"
-                app:elevation="@dimen/elevation_none"
-                app:paddingTopSystemWindowInsets="@{true}">
-
-                <com.google.android.material.appbar.MaterialToolbar
-                    style="@style/Widget.MaterialComponents.Toolbar.Surface"
-                    android:id="@+id/toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    android:background="?android:attr/colorBackground"
-                    app:title="@string/app_name"
-                    app:layout_scrollFlags="scroll|enterAlways"
-                    tools:menu="@menu/menu_toolbar_main"
-                    tools:title="@string/app_name" />
-
-            </com.google.android.material.appbar.AppBarLayout>
-
-            <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/nav_host_container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>
-
-            <include
-                layout="@layout/cart_bottom_bar"
-                android:id="@+id/cart_bottom_bar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"/>
-
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            style="@style/Widget.MaterialComponents.BottomNavigationView.PrimarySurface"
-            android:id="@+id/bottom_navigation_view"
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/app_bar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            app:menu="@menu/menu_main" />
+            android:background="?android:attr/colorBackground"
+            app:elevation="@dimen/elevation_none">
 
-    </LinearLayout>
+            <com.google.android.material.appbar.MaterialToolbar
+                style="@style/Widget.MaterialComponents.Toolbar.Surface"
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?android:attr/colorBackground"
+                app:title="@string/app_name"
+                app:layout_scrollFlags="scroll|enterAlways"
+                tools:menu="@menu/menu_toolbar_main"
+                tools:title="@string/app_name" />
 
-</layout>
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/nav_host_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>
+
+        <include
+            layout="@layout/cart_bottom_bar"
+            android:id="@+id/cart_bottom_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"/>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        style="@style/Widget.MaterialComponents.BottomNavigationView.PrimarySurface"
+        android:id="@+id/bottom_navigation_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:menu="@menu/menu_main" />
+
+</LinearLayout>
 
 
 

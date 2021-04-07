@@ -7,10 +7,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.foobarust.android.R
-import com.foobarust.android.databinding.*
+import com.foobarust.android.databinding.SellerItemDetailDescriptionItemBinding
+import com.foobarust.android.databinding.SellerItemDetailInfoItemBinding
+import com.foobarust.android.databinding.SellerItemDetailSubtitleItemBinding
+import com.foobarust.android.databinding.SellerItemDetailSuggestItemBinding
 import com.foobarust.android.selleritem.SellerItemDetailListModel.*
 import com.foobarust.android.selleritem.SellerItemDetailViewHolder.*
 import com.foobarust.domain.models.seller.SellerItemBasic
+import com.foobarust.domain.models.seller.getNormalizedTitle
 
 /**
  * Created by kevin on 1/19/21
@@ -41,23 +45,23 @@ class SellerItemDetailAdapter(
 
     override fun onBindViewHolder(holder: SellerItemDetailViewHolder, position: Int) {
         when (holder) {
-            is SellerItemDetailInfoViewHolder -> holder.binding.run {
-                infoItemModel = (getItem(position)) as SellerItemDetailInfoItemModel
-                executePendingBindings()
-            }
-            is SellerItemDetailDescriptionViewHolder -> holder.binding.run {
-                descriptionItemModel = (getItem(position)) as SellerItemDetailDescriptionItemModel
-                executePendingBindings()
-            }
-            is SellerItemDetailSubtitleViewHolder -> holder.binding.run {
-                subtitleItemModel = (getItem(position)) as SellerItemDetailSubtitleItemModel
-                executePendingBindings()
-            }
-            is SellerItemDetailSuggestViewHolder -> holder.binding.run {
-                suggestItemModel = (getItem(position)) as SellerItemDetailSuggestItemModel
-                listener = this@SellerItemDetailAdapter.listener
-                executePendingBindings()
-            }
+            is SellerItemDetailInfoViewHolder -> bindItemDetailInfoItem(
+                binding = holder.binding,
+                infoItemModel = getItem(position) as SellerItemDetailInfoItemModel
+            )
+            is SellerItemDetailDescriptionViewHolder -> bindItemDetailDescriptionItem(
+                binding = holder.binding,
+                descriptionItemModel = getItem(position) as SellerItemDetailDescriptionItemModel
+            )
+
+            is SellerItemDetailSubtitleViewHolder -> bindItemDetailSubtitleItem(
+                binding = holder.binding,
+                subtitleItemModel = getItem(position) as SellerItemDetailSubtitleItemModel
+            )
+            is SellerItemDetailSuggestViewHolder -> bindItemDetailSuggestItem(
+                binding = holder.binding,
+                suggestItemModel = getItem(position) as SellerItemDetailSuggestItemModel
+            )
         }
     }
 
@@ -68,6 +72,54 @@ class SellerItemDetailAdapter(
             is SellerItemDetailSubtitleItemModel -> R.layout.seller_item_detail_subtitle_item
             is SellerItemDetailSuggestItemModel -> R.layout.seller_item_detail_suggest_item
         }
+    }
+
+    private fun bindItemDetailInfoItem(
+        binding: SellerItemDetailInfoItemBinding,
+        infoItemModel: SellerItemDetailInfoItemModel
+    ) = binding.run {
+        titleTextView.text = infoItemModel.itemTitle
+        priceTextView.text = root.context.getString(
+            R.string.seller_item_data_format_price,
+            infoItemModel.itemPrice
+        )
+    }
+
+    private fun bindItemDetailDescriptionItem(
+        binding: SellerItemDetailDescriptionItemBinding,
+        descriptionItemModel: SellerItemDetailDescriptionItemModel
+    ) = binding.run {
+        descriptionTextView.text = descriptionItemModel.itemDescription
+    }
+
+    private fun bindItemDetailSubtitleItem(
+        binding: SellerItemDetailSubtitleItemBinding,
+        subtitleItemModel: SellerItemDetailSubtitleItemModel
+    ) = binding.run {
+        subtitleTextView.text = root.context.getString(
+            R.string.seller_item_detail_subtitle_more_items,
+            subtitleItemModel.extraPrice
+        )
+    }
+
+    private fun bindItemDetailSuggestItem(
+        binding: SellerItemDetailSuggestItemBinding,
+        suggestItemModel: SellerItemDetailSuggestItemModel
+    ) = binding.run {
+        root.setOnClickListener {
+            listener.onSuggestedItemClicked(suggestItemModel.itemBasic)
+        }
+
+        selectCheckBox.setOnCheckedChangeListener { _, isChecked ->
+            listener.onSuggestedItemChecked(suggestItemModel.itemBasic, isChecked)
+        }
+
+        titleTextView.text = suggestItemModel.itemBasic.getNormalizedTitle()
+
+        priceTextView.text = root.context.getString(
+            R.string.seller_item_data_format_price,
+            suggestItemModel.itemBasic.price
+        )
     }
 
     interface SellerItemDetailAdapterListener {

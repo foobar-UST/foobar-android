@@ -1,15 +1,12 @@
 package com.foobarust.android.checkout
 
 import android.content.Context
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.R
 import com.foobarust.android.checkout.CartListModel.*
 import com.foobarust.domain.models.cart.*
 import com.foobarust.domain.models.seller.SellerDetail
-import com.foobarust.domain.models.seller.SellerType
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.cart.*
 import com.foobarust.domain.usecases.seller.GetSellerDetailUseCase
@@ -39,19 +36,21 @@ class CartViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _cartListModels = MutableStateFlow<List<CartListModel>>(emptyList())
-    val cartListModels: LiveData<List<CartListModel>> = _cartListModels
-        .asLiveData(viewModelScope.coroutineContext)
+    val cartListModels: StateFlow<List<CartListModel>> = _cartListModels.asStateFlow()
 
-    private val _cartUiState = MutableStateFlow<CartUiState>(CartUiState.Loading)
-    val cartUiState: LiveData<CartUiState> = _cartUiState
-        .asLiveData(viewModelScope.coroutineContext)
-
-    private val _cartUpdateState = MutableStateFlow<CartUpdateState>(CartUpdateState.Idle)
-    val cartUpdateState: LiveData<CartUpdateState> = _cartUpdateState
-        .asLiveData(viewModelScope.coroutineContext)
+    private val _cartItems = MutableStateFlow<List<UserCartItem>>(emptyList())
+    val cartItems: StateFlow<List<UserCartItem>> = _cartItems.asStateFlow()
 
     private val _userCart = MutableStateFlow<UserCart?>(null)
-    private val _cartItems = MutableStateFlow<List<UserCartItem>>(emptyList())
+    val userCart: StateFlow<UserCart?> = _userCart.asStateFlow()
+
+    private val _cartUiState = MutableStateFlow<CartUiState>(CartUiState.Loading)
+    val cartUiState: StateFlow<CartUiState> = _cartUiState.asStateFlow()
+
+    private val _cartUpdateState = MutableStateFlow<CartUpdateState>(CartUpdateState.Idle)
+    val cartUpdateState: StateFlow<CartUpdateState> = _cartUpdateState.asStateFlow()
+
+
     private val _sellerDetail = MutableStateFlow<SellerDetail?>(null)
     private val _orderNotes = MutableStateFlow<String?>(null)
 
@@ -59,24 +58,6 @@ class CartViewModel @Inject constructor(
     val finishSwipeRefresh: Flow<Unit> = _finishSwipeRefresh.receiveAsFlow()
 
     private var fetchCartJob: Job? = null
-
-    // Number of cart items show in app bar
-    val cartItemsCount: LiveData<Int> = _cartItems
-        .map { it.size }
-        .asLiveData(viewModelScope.coroutineContext)
-
-    val showSyncRequired: LiveData<Boolean> = _userCart
-        .filterNotNull()
-        .distinctUntilChanged()
-        .map { it.syncRequired }
-        .asLiveData(viewModelScope.coroutineContext)
-
-    val toolbarTitle: LiveData<String> = _userCart
-        .map { userCart ->
-            userCart?.getNormalizedTitle() ?:
-            context.getString(R.string.checkout_toolbar_title_cart)
-        }
-        .asLiveData(viewModelScope.coroutineContext)
 
     init {
         onFetchCart()
@@ -230,14 +211,8 @@ class CartViewModel @Inject constructor(
         sellerDetail: SellerDetail,
         orderNotes: String?
     ): List<CartListModel> {
-        // Return if there is no item in cart
         if (cartItems.isEmpty()) {
-            return listOf(
-                CartEmptyItemModel(
-                    drawableRes = R.drawable.undraw_empty_cart,
-                    emptyMessage = context.getString(R.string.cart_empty_message)
-                )
-            )
+            return listOf(CartEmptyItemModel)
         }
 
         return buildList {
@@ -245,23 +220,12 @@ class CartViewModel @Inject constructor(
                 cartTitle = userCart.getNormalizedTitle(),
                 cartImageUrl = userCart.imageUrl,
                 cartPickupAddress = userCart.getNormalizedPickupAddress(),
-                cartDeliveryTime = context.getString(
-                    R.string.cart_info_nav_format_section,
-                    userCart.getDeliveryDateString(),
-                    userCart.getDeliveryTimeString()
-                ),
+                cartDeliveryTime = userCart.deliveryTime,
                 sellerId = userCart.sellerId,
+                sellerName = userCart.getNormalizedSellerName(),
                 sellerOnline = sellerDetail.online,
                 sectionId = userCart.sectionId,
-                sectionNavSubtitle = context.getString(
-                    R.string.cart_info_nav_subtitle_section,
-                    userCart.getNormalizedSellerName()
-                ),
-                miscNavSubtitle = if (userCart.sellerType == SellerType.ON_CAMPUS) {
-                    context.getString(R.string.cart_info_nav_subtitle_misc_on_campus)
-                } else {
-                    context.getString(R.string.cart_info_nav_subtitle_misc_off_campus)
-                }
+                sellerType = userCart.sellerType,
             ))
 
             // Add cart items section

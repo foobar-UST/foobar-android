@@ -1,83 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/coordinator_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/coordinator_layout"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/colorBackground"
+        app:elevation="@dimen/elevation_none">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            style="@style/Widget.MaterialComponents.Toolbar.Surface"
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@android:color/transparent"
+            app:layout_scrollFlags="noScroll"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:navigationIconTint="@color/material_on_surface_emphasis_medium" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layoutFullscreen="@{true}">
+        android:animateLayoutChanges="true"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/app_bar_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?android:attr/colorBackground"
-            app:elevation="@dimen/elevation_none">
-
-            <com.google.android.material.appbar.CollapsingToolbarLayout
-                android:id="@+id/collapsing_toolbar_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:contentScrim="?android:attr/colorBackground"
-                app:collapsedTitleTextAppearance="?attr/textAppearanceHeadline6"
-                app:expandedTitleGravity="bottom"
-                app:expandedTitleMarginTop="?attr/actionBarSize"
-                app:expandedTitleTextAppearance="?attr/textAppearanceHeadline5"
-                app:maxLines="2"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
-
-                <ImageView
-                    android:id="@+id/seller_image_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="210dp"
-                    android:scaleType="centerCrop"
-                    android:alpha="0.25"
-                    android:importantForAccessibility="no"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
-
-                <com.google.android.material.appbar.MaterialToolbar
-                    style="@style/Widget.MaterialComponents.Toolbar.Surface"
-                    android:id="@+id/toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    android:background="@android:color/transparent"
-                    app:layout_collapseMode="pin"
-                    app:navigationIcon="@drawable/ic_arrow_back"
-                    app:navigationIconTint="@color/material_on_surface_emphasis_medium"
-                    app:marginTopSystemWindowInsets="@{true}"/>
-
-            </com.google.android.material.appbar.CollapsingToolbarLayout>
-
-        </com.google.android.material.appbar.AppBarLayout>
-
-        <FrameLayout
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/sellers_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:animateLayoutChanges="true"
-            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/sellers_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        <ProgressBar
+            android:id="@+id/loading_progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
 
-            <ProgressBar
-                android:id="@+id/loading_progress_bar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center" />
+        <include
+            layout="@layout/load_error_layout"
+            android:id="@+id/load_error_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
-            <include
-                layout="@layout/load_error_layout"
-                android:id="@+id/load_error_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+    </FrameLayout>
 
-        </FrameLayout>
-
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-</layout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

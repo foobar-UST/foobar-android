@@ -1,45 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
-    <ScrollView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:layout_height="wrap_content">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <TextView
+            android:id="@+id/loading_text_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="@dimen/spacing_large"
+            android:text="@string/order_placing_message"
+            android:textAppearance="?attr/textAppearanceCaption"
+            android:lineSpacingMultiplier="1.2"
+            android:drawablePadding="@dimen/spacing_large"
+            app:drawableStartCompat="@drawable/ic_error_outline"
+            app:drawableTint="@color/material_on_surface_emphasis_medium"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/loading_text_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/spacing_large"
-                android:text="@string/order_placing_message"
-                android:textAppearance="?attr/textAppearanceCaption"
-                android:lineSpacingMultiplier="1.2"
-                android:drawablePadding="@dimen/spacing_large"
-                app:drawableStartCompat="@drawable/ic_error_outline"
-                app:drawableTint="@color/material_on_surface_emphasis_medium"
-                app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/loading_image_view"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:layout_marginBottom="56dp"
+            android:layout_gravity="center"
+            android:src="@drawable/undraw_ice_cream"
+            android:importantForAccessibility="no"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
-            <ImageView
-                android:id="@+id/loading_image_view"
-                android:layout_width="250dp"
-                android:layout_height="250dp"
-                android:layout_marginBottom="56dp"
-                android:layout_gravity="center"
-                android:src="@drawable/undraw_ice_cream"
-                android:importantForAccessibility="no"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </ScrollView>
-
-</layout>
+</ScrollView>

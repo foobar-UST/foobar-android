@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -13,10 +15,10 @@ import androidx.navigation.fragment.navArgs
 import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentSellerItemDetailBinding
 import com.foobarust.android.main.MainViewModel
-import com.foobarust.android.sellerdetail.*
 import com.foobarust.android.shared.FullScreenDialogFragment
 import com.foobarust.android.utils.*
 import com.foobarust.domain.models.seller.SellerItemBasic
+import com.foobarust.domain.models.seller.getNormalizedTitle
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -49,9 +51,12 @@ class SellerItemDetailFragment : FullScreenDialogFragment(),
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSellerItemDetailBinding.inflate(inflater, container, false).apply {
-            viewModel = this@SellerItemDetailFragment.itemDetailViewModel
-            lifecycleOwner = viewLifecycleOwner
+            root.applyLayoutFullscreen()
+            toolbar.applySystemWindowInsetsPadding(applyTop = true)
         }
+
+        // Remove listener on CollapsingToolbarLayout, so that toolbar top padding can work properly
+        ViewCompat.setOnApplyWindowInsetsListener(binding.collapsingToolbarLayout, null)
 
         // Setup recycler view
         val itemDetailAdapter = SellerItemDetailAdapter(this)
@@ -59,40 +64,6 @@ class SellerItemDetailFragment : FullScreenDialogFragment(),
         binding.recyclerView.run {
             adapter = itemDetailAdapter
             setHasFixedSize(true)
-        }
-
-        itemDetailViewModel.sellerItemDetailListModels.observe(viewLifecycleOwner) {
-            itemDetailAdapter.submitList(it)
-        }
-
-        itemDetailViewModel.sellerItemDetailUiState.observe(viewLifecycleOwner) {
-            if (it is SellerItemDetailUiState.Error) {
-                showShortToast(it.message)
-            }
-        }
-
-        itemDetailViewModel.sellerItemDetailUpdateState.observe(viewLifecycleOwner) { updateState ->
-            updateState?.let {
-                when (it) {
-                    SellerItemDetailUiState.Success -> {
-                        findNavController(R.id.sellerItemDetailFragment)?.navigateUp()
-                    }
-                    is SellerItemDetailUiState.Error -> {
-                        showErrorMessageDialog(message = it.message)
-                    }
-                    SellerItemDetailUiState.Loading -> Unit
-                }
-            }
-        }
-
-        // Remove listener on CollapsingToolbarLayout, so that toolbar top padding can work properly
-        ViewCompat.setOnApplyWindowInsetsListener(binding.collapsingToolbarLayout, null)
-
-        // Show toolbar title only when collapsed
-        viewLifecycleOwner.lifecycleScope.launch {
-            binding.appBarLayout.state().collect {
-                itemDetailViewModel.onToolbarScrollStateChanged(it)
-            }
         }
 
         // Setup amount widget
@@ -104,7 +75,7 @@ class SellerItemDetailFragment : FullScreenDialogFragment(),
             itemDetailViewModel.onAmountDecrement()
         }
 
-        // Toolbar navigate back
+        // Toolbar navigation
         binding.toolbar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
@@ -121,10 +92,108 @@ class SellerItemDetailFragment : FullScreenDialogFragment(),
             itemDetailViewModel.onFetchItemDetail(navArgs.property)
         }
 
+        // Item detail
+        viewLifecycleOwner.lifecycleScope.launch {
+            itemDetailViewModel.sellerItemDetail.collect { itemDetail ->
+                itemDetail?.let {
+                    val itemImageUrl = it.imageUrl
+                    binding.itemImageLayout.isVisible = itemImageUrl != null
+                    binding.itemImageView.contentDescription = itemDetail.getNormalizedTitle()
+                    binding.appBarLayout.setExpanded(itemImageUrl != null)
+
+                    if (itemImageUrl != null) {
+                        binding.itemImageView.loadGlideUrl(
+                            imageUrl = itemImageUrl,
+                            centerCrop = true,
+                            placeholder = R.drawable.placeholder_card
+                        )
+                    }
+                }
+            }
+        }
+
+        // List models
+        viewLifecycleOwner.lifecycleScope.launch {
+            itemDetailViewModel.sellerItemDetailListModels.collect {
+                itemDetailAdapter.submitList(it)
+            }
+        }
+
+        // Ui state
+        viewLifecycleOwner.lifecycleScope.launch {
+            itemDetailViewModel.sellerItemDetailUiState.collect { uiState ->
+                with(binding) {
+                    loadingProgressBar.isVisible = uiState is SellerItemDetailUiState.Loading
+                    loadErrorLayout.root.isVisible = uiState is SellerItemDetailUiState.Error
+                }
+
+                if (uiState is SellerItemDetailUiState.Error) {
+                    showShortToast(uiState.message)
+                }
+            }
+        }
+
+        // Update state
+        viewLifecycleOwner.lifecycleScope.launch {
+            itemDetailViewModel.sellerItemDetailUpdateState.collect { uiState ->
+                uiState?.let {
+                    binding.submitButton.isInvisible = uiState is SellerItemDetailUiState.Loading
+
+                    when (it) {
+                        SellerItemDetailUiState.Success -> {
+                            findNavController(R.id.sellerItemDetailFragment)?.navigateUp()
+                        }
+                        is SellerItemDetailUiState.Error -> {
+                            showErrorMessageDialog(message = it.message)
+                        }
+                        SellerItemDetailUiState.Loading -> Unit
+                    }
+                }
+            }
+        }
+
+        // Toolbar title
+        viewLifecycleOwner.lifecycleScope.launch {
+            itemDetailViewModel.toolbarTitle.collect {
+                binding.toolbar.title = it
+            }
+        }
+
+        // Submit button title
+        viewLifecycleOwner.lifecycleScope.launch {
+            itemDetailViewModel.submitButtonTitle.collect {
+                binding.submitButton.text = it
+            }
+        }
+
+        // Modify buttons
+        viewLifecycleOwner.lifecycleScope.launch {
+            itemDetailViewModel.showModifyButtons.collect {
+                with(binding) {
+                    modifyButtonsGroup.isVisible = it
+                    submitProgressBar.isVisible = !it
+                }
+            }
+        }
+
+        // Show toolbar title only when collapsed
+        viewLifecycleOwner.lifecycleScope.launch {
+            binding.appBarLayout.state().collect {
+                itemDetailViewModel.onToolbarScrollStateChanged(it)
+            }
+        }
+
         // Show toast
         viewLifecycleOwner.lifecycleScope.launch {
             itemDetailViewModel.toastMessage.collect {
                 showShortToast(it)
+            }
+        }
+
+        // Amount input
+        viewLifecycleOwner.lifecycleScope.launch {
+            itemDetailViewModel.amountsInput.collect { amount ->
+                binding.amountTextView.text = amount.toString()
             }
         }
 

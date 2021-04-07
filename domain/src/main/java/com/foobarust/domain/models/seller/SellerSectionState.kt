@@ -9,5 +9,6 @@ enum class SellerSectionState {
     PROCESSING,
     PREPARING,
     SHIPPED,
+    READY_FOR_PICK_UP,
     DELIVERED
 }

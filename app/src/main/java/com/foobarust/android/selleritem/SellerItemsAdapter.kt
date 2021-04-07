@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.foobarust.android.R
 import com.foobarust.android.databinding.SellerItemsListItemBinding
 import com.foobarust.android.selleritem.SellerItemsAdapter.SellerItemsAdapterListener
 
@@ -18,7 +19,6 @@ class SellerItemsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SellerItemsViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-
         return SellerItemsViewHolder(
             SellerItemsListItemBinding.inflate(inflater, parent, false),
             listener
@@ -40,9 +40,22 @@ class SellerItemsViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(itemModel: SellerItemsListModel) = binding.run {
-        this.itemModel = itemModel
-        listener = this@SellerItemsViewHolder.listener
-        executePendingBindings()
+        with(root) {
+            isEnabled = itemModel.itemPurchasable
+            setOnClickListener {
+                listener.onSellerItemClicked(itemModel.itemId)
+            }
+        }
+
+        with(titleTextView) {
+            isEnabled = itemModel.itemPurchasable
+            text = itemModel.itemTitle
+        }
+
+        with(priceTextView) {
+            isEnabled = itemModel.itemPurchasable
+            text = context.getString(R.string.seller_item_data_format_price, itemModel.itemPrice)
+        }
     }
 }
 

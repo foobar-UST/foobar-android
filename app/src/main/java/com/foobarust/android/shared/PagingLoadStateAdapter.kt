@@ -2,6 +2,7 @@ package com.foobarust.android.shared
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.paging.LoadState
 import androidx.paging.LoadStateAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -33,11 +34,10 @@ class PagingLoadStateViewHolder(
     private val retryAction: () -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(loadState: LoadState) {
-        binding.run {
-            this.loadState = loadState
-            this.retryAction = this@PagingLoadStateViewHolder.retryAction
-            executePendingBindings()
-        }
+    fun bind(loadState: LoadState) = binding.run {
+        progressBar.isVisible = loadState is LoadState.Loading
+
+        retryButton.isVisible = loadState !is LoadState.Loading
+        retryButton.setOnClickListener { retryAction() }
     }
 }

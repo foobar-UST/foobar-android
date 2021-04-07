@@ -9,12 +9,15 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.foobarust.android.R
+import com.foobarust.android.databinding.EmptyListItemBinding
 import com.foobarust.android.databinding.SellerRatingDetailInfoItemBinding
 import com.foobarust.android.databinding.SellerRatingDetailRatingItemBinding
 import com.foobarust.android.sellerrating.SellerRatingDetailListModel.*
 import com.foobarust.android.sellerrating.SellerRatingDetailViewHolder.*
-import com.foobarust.android.utils.bindGlideUrl
+import com.foobarust.android.utils.drawableFitVertical
+import com.foobarust.android.utils.loadGlideUrl
 import com.foobarust.android.utils.round
+import com.foobarust.android.utils.setSrc
 import com.foobarust.domain.models.seller.SellerRatingCount
 import com.foobarust.domain.models.seller.sum
 import com.foobarust.domain.utils.format
@@ -44,6 +47,9 @@ class SellerRatingDetailAdapter(
             R.layout.seller_rating_detail_rating_item -> SellerRatingDetailRatingViewHolder(
                 SellerRatingDetailRatingItemBinding.inflate(inflater, parent, false)
             )
+            R.layout.empty_list_item -> SellerRatingDetailEmptyViewHolder(
+                EmptyListItemBinding.inflate(inflater, parent, false)
+            )
             else -> throw IllegalStateException("Unknown view type $viewType")
 
         }
@@ -59,6 +65,9 @@ class SellerRatingDetailAdapter(
                binding = holder.binding,
                ratingItem = getItem(position) as? SellerRatingDetailRatingItem
            )
+           is SellerRatingDetailEmptyViewHolder -> bindEmptyItem(
+               binding = holder.binding
+           )
        }
     }
 
@@ -66,6 +75,7 @@ class SellerRatingDetailAdapter(
         return when (getItem(position)) {
             is SellerRatingDetailInfoItem -> R.layout.seller_rating_detail_info_item
             is SellerRatingDetailRatingItem -> R.layout.seller_rating_detail_rating_item
+            is SellerRatingDetailEmptyItem -> R.layout.empty_list_item
             else -> throw IllegalStateException("Unknown view type at: $position")
         }
     }
@@ -76,15 +86,17 @@ class SellerRatingDetailAdapter(
     ) = binding.run {
         if (infoItem == null) return@run
 
-        val context = root.context
-
         // Order rating
-        orderRatingTextView.text = String.format("%.1f", infoItem.orderRating)
+        with(orderRatingTextView) {
+            text = String.format("%.1f", infoItem.orderRating)
+            drawableFitVertical()
+        }
+
         orderRatingRatingBar.rating = infoItem.orderRating.round(1).toFloat()
 
         val totalRatingCount = infoItem.ratingCount.sum()
 
-        ratingCountTextView.text = context.getString(
+        ratingCountTextView.text = root.context.getString(
             R.string.seller_rating_detail_info_item_rating_count,
             totalRatingCount
         )
@@ -145,8 +157,6 @@ class SellerRatingDetailAdapter(
                 listener.onSortRatingButtonClicked()
             }
         }
-
-        executePendingBindings()
     }
 
     private fun setOrderRatingCount(
@@ -171,7 +181,7 @@ class SellerRatingDetailAdapter(
     ) = binding.run {
         if (ratingItem == null) return@run
 
-        ratingItemUserImageView.bindGlideUrl(
+        ratingItemUserImageView.loadGlideUrl(
             imageUrl = ratingItem.userPhotoUrl,
             centerCrop = true,
             placeholder = R.drawable.ic_user
@@ -179,10 +189,16 @@ class SellerRatingDetailAdapter(
 
         ratingItemUsernameTextView.text = ratingItem.username
         ratingItemRatingBar.rating = ratingItem.orderRating.toFloat()
-
         ratingItemCreatedAtTextView.text = ratingItem.createdAt.format("dd/MM/yyyy")
+    }
 
-        executePendingBindings()
+    private fun bindEmptyItem(
+        binding: EmptyListItemBinding
+    ) = binding.run {
+        emptyImageView.setSrc(R.drawable.undraw_reviews)
+        emptyMessageTextView.text = root.context.getString(
+            R.string.seller_rating_detail_empty_item_message
+        )
     }
 
     interface SellerRatingDetailAdapterListener {
@@ -197,6 +213,10 @@ sealed class SellerRatingDetailViewHolder(itemView: View) : RecyclerView.ViewHol
 
     class SellerRatingDetailRatingViewHolder(
         val binding: SellerRatingDetailRatingItemBinding
+    ) : SellerRatingDetailViewHolder(binding.root)
+
+    class SellerRatingDetailEmptyViewHolder(
+        val binding: EmptyListItemBinding
     ) : SellerRatingDetailViewHolder(binding.root)
 }
 
@@ -214,6 +234,8 @@ sealed class SellerRatingDetailListModel {
         val orderRating: Double,
         val createdAt: Date
     ) : SellerRatingDetailListModel()
+
+    object SellerRatingDetailEmptyItem : SellerRatingDetailListModel()
 }
 
 object SellerRatingDetailListModelDiff : DiffUtil.ItemCallback<SellerRatingDetailListModel>() {
@@ -226,6 +248,8 @@ object SellerRatingDetailListModelDiff : DiffUtil.ItemCallback<SellerRatingDetai
                 true
             oldItem is SellerRatingDetailRatingItem && newItem is SellerRatingDetailRatingItem ->
                 oldItem.ratingId == newItem.ratingId
+            oldItem is SellerRatingDetailEmptyItem && newItem is SellerRatingDetailEmptyItem ->
+                true
             else -> false
         }
     }
@@ -239,6 +263,8 @@ object SellerRatingDetailListModelDiff : DiffUtil.ItemCallback<SellerRatingDetai
                 oldItem == newItem
             oldItem is SellerRatingDetailRatingItem && newItem is SellerRatingDetailRatingItem ->
                 oldItem == newItem
+            oldItem is SellerRatingDetailEmptyItem && newItem is SellerRatingDetailEmptyItem ->
+                true
             else -> false
         }
     }

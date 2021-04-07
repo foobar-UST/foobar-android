@@ -57,5 +57,3 @@ fun SellerSectionBasic.getNormalizedTitleForMoreSections(): String {
 fun SellerSectionBasic.getDeliveryDateString(): String = deliveryTime.format("yyyy-MM-dd")
 
 fun SellerSectionBasic.getCutoffTimeString(): String = cutoffTime.getTimeBy12Hour()
-
-fun SellerSectionBasic.getDeliveryTimeString(): String = cutoffTime.getTimeBy12Hour()

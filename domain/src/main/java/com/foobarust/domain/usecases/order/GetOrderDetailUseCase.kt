@@ -28,8 +28,6 @@ class GetOrderDetailUseCase @Inject constructor(
             throw Exception(ERROR_USER_NOT_SIGNED_IN)
         }
 
-        emitAll(
-            orderRepository.getOrderDetailObservable(orderId = parameters)
-        )
+        emitAll(orderRepository.getOrderDetailObservable(orderId = parameters))
     }
 }

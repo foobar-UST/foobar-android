@@ -12,7 +12,7 @@ plugins {
     id(Plugins.CHECK_DEPENDENCY_UPDATES) version Versions.CHECK_DEPENDENCY_UPDATES
     id(Plugins.FIREBASE_CRASHLYTICS)
     kotlin(Plugins.KOTLIN_SERIALIZATION) version Versions.SERIALIZATION
-    id("com.jaredsburrows.license")
+    id(Plugins.LICENSE)
 }
 
 android {
@@ -64,6 +64,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
+    buildFeatures {
+        viewBinding = true
+    }
+
     tasks.withType<KotlinCompile> {
         kotlinOptions {
             jvmTarget = "1.8"
@@ -80,10 +84,6 @@ android {
         generateCsvReport = false
         generateHtmlReport = true
         generateJsonReport = false
-    }
-
-    buildFeatures {
-        dataBinding = true
     }
 }
 
@@ -113,7 +113,6 @@ dependencies {
     implementation(Dependencies.HILT_NAVIGATION)
     implementation(Dependencies.HILT_WORK)
     implementation(Dependencies.PAGING_RUNTIME)
-    implementation(Dependencies.PREFERENCES)
     implementation(Dependencies.SWIPE_REFRESH_LAYOUT)
     implementation(Dependencies.BROWSER)
     implementation(Dependencies.FIREBASE_CRASHLYTICS)
@@ -124,8 +123,10 @@ dependencies {
     implementation(Dependencies.MATERIAL)
     implementation(Dependencies.GLIDE)
     implementation(Dependencies.SPINKIT)
-    implementation(Dependencies.MAPS)
+    implementation(Dependencies.MAPS_KTX)
     implementation(Dependencies.WORK)
+    implementation(Dependencies.ZXING_CORE)
+    implementation(Dependencies.ZXING_EMBEDDED) { isTransitive = false }
 
     // Annotation Processors
     kapt(Annotation.HILT_ANDROID_COMPILER)

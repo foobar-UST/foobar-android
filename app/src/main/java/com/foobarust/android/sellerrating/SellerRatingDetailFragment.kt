@@ -60,8 +60,11 @@ class SellerRatingDetailFragment : FullScreenDialogFragment(),
         }
 
         // Toolbar
-        binding.toolbar.setNavigationOnClickListener {
-            findNavController(R.id.sellerRatingDetailFragment)?.navigateUp()
+        with(binding.toolbar) {
+            title = navArgs.property.sellerName
+            setNavigationOnClickListener {
+                findNavController(R.id.sellerRatingDetailFragment)?.navigateUp()
+            }
         }
 
         // Retry
@@ -93,6 +96,6 @@ class SellerRatingDetailFragment : FullScreenDialogFragment(),
     }
 
     override fun onSortRatingButtonClicked() {
-
+        // TODO: onSortRatingButtonClicked
     }
 }

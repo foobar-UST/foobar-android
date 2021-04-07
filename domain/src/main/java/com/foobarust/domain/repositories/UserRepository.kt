@@ -1,5 +1,6 @@
 package com.foobarust.domain.repositories
 
+import com.foobarust.domain.models.user.UserDelivery
 import com.foobarust.domain.models.user.UserDetail
 import com.foobarust.domain.models.user.UserPublic
 import com.foobarust.domain.states.Resource
@@ -27,4 +28,6 @@ interface UserRepository {
 
     /* Public */
     suspend fun getUserPublicProfile(userId: String): UserPublic
+
+    suspend fun getUserDeliveryProfile(userId: String): UserDelivery
 }

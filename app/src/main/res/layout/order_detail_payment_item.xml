@@ -1,39 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/spacing_large"
+    android:orientation="vertical">
 
-    <data>
-        <variable
-            name="paymentItemModel"
-            type="com.foobarust.android.order.OrderDetailListModel.OrderDetailPaymentItemModel" />
-    </data>
+    <TextView
+        android:id="@+id/payment_method_title_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/order_detail_payment_item_title"
+        android:textAppearance="?attr/textAppearanceSubtitle1"/>
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/payment_method_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/spacing_large"
-        android:orientation="vertical">
+        android:layout_marginTop="@dimen/spacing_large"
+        android:gravity="center_vertical"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:textColor="@color/material_on_surface_emphasis_medium"
+        android:drawablePadding="@dimen/spacing_large"
+        tools:drawableStart="@drawable/ic_local_atm"
+        tools:text="Cash On Delivery"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/order_detail_payment_item_title"
-            android:textAppearance="?attr/textAppearanceSubtitle1"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_large"
-            android:gravity="center_vertical"
-            android:text="@{paymentItemModel.paymentMethodItem.title}"
-            android:textAppearance="?attr/textAppearanceBody2"
-            android:textColor="@color/material_on_surface_emphasis_medium"
-            android:drawablePadding="@dimen/spacing_large"
-            app:drawableLeft="@{paymentItemModel.paymentMethodItem.drawable}"
-            tools:drawableStart="@drawable/ic_local_atm"
-            tools:text="Cash On Delivery"/>
-
-    </LinearLayout>
-
-</layout>
+</LinearLayout>

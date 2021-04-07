@@ -4,6 +4,7 @@ import com.foobarust.data.constants.Constants.SELLER_SECTION_STATE_AVAILABLE
 import com.foobarust.data.constants.Constants.SELLER_SECTION_STATE_DELIVERED
 import com.foobarust.data.constants.Constants.SELLER_SECTION_STATE_PREPARING
 import com.foobarust.data.constants.Constants.SELLER_SECTION_STATE_PROCESSING
+import com.foobarust.data.constants.Constants.SELLER_SECTION_STATE_READY_FOR_PICK_UP
 import com.foobarust.data.constants.Constants.SELLER_SECTION_STATE_SHIPPED
 import com.foobarust.data.models.explore.ItemCategoryDto
 import com.foobarust.data.models.seller.*
@@ -175,6 +176,7 @@ class SellerMapper @Inject constructor() {
             SELLER_SECTION_STATE_PROCESSING -> SellerSectionState.PROCESSING
             SELLER_SECTION_STATE_PREPARING -> SellerSectionState.PREPARING
             SELLER_SECTION_STATE_SHIPPED -> SellerSectionState.SHIPPED
+            SELLER_SECTION_STATE_READY_FOR_PICK_UP -> SellerSectionState.READY_FOR_PICK_UP
             SELLER_SECTION_STATE_DELIVERED -> SellerSectionState.DELIVERED
             else -> throw IllegalArgumentException("Invalid SellerSectionState.")
         }

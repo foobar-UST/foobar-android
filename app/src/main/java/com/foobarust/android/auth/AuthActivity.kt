@@ -4,12 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.foobarust.android.R
 import com.foobarust.android.databinding.ActivityAuthBinding
+import com.foobarust.android.utils.applyLayoutFullscreen
 import com.foobarust.android.utils.showShortToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -23,7 +23,11 @@ class AuthActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_auth)
+
+        binding = ActivityAuthBinding.inflate(layoutInflater).apply {
+            setContentView(root)
+            root.applyLayoutFullscreen()
+        }
 
         // Setup Navigation
         val navHostFragment = supportFragmentManager.findFragmentById(

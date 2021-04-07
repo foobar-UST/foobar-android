@@ -10,8 +10,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.foobarust.android.R
 import com.foobarust.android.databinding.ItemCategoryItemBinding
 import com.foobarust.android.databinding.SubtitleLargeItemBinding
-import com.foobarust.android.explore.ExploreListModel.*
-import com.foobarust.android.explore.ExploreViewHolder.*
+import com.foobarust.android.explore.ExploreListModel.ExploreItemCategoryItemModel
+import com.foobarust.android.explore.ExploreListModel.ExploreSubtitleItemModel
+import com.foobarust.android.explore.ExploreViewHolder.ExploreItemCategoryItemViewHolder
+import com.foobarust.android.explore.ExploreViewHolder.ExploreSubtitleItemViewHolder
+import com.foobarust.android.utils.loadGlideUrl
 
 /**
  * Created by kevin on 2/26/21
@@ -36,15 +39,13 @@ class ExploreAdapter(
 
     override fun onBindViewHolder(holder: ExploreViewHolder, position: Int) {
         when (holder) {
-            is ExploreItemCategoryItemViewHolder -> holder.binding.run {
-                categoryItemModel = getItem(position) as ExploreItemCategoryItemModel
-                listener = this@ExploreAdapter.listener
-                executePendingBindings()
-            }
-            is ExploreSubtitleItemViewHolder -> holder.binding.run {
-                subtitle = (getItem(position) as ExploreSubtitleItemModel).subtitle
-                executePendingBindings()
-            }
+            is ExploreItemCategoryItemViewHolder -> bindItemCategory(
+                binding = holder.binding,
+                itemCategoryItemModel = getItem(position) as ExploreItemCategoryItemModel
+            )
+            is ExploreSubtitleItemViewHolder -> bindSubtitleItem(
+                binding = holder.binding
+            )
         }
     }
 
@@ -70,6 +71,32 @@ class ExploreAdapter(
         }
     }
 
+    private fun bindItemCategory(
+        binding: ItemCategoryItemBinding,
+        itemCategoryItemModel: ExploreItemCategoryItemModel
+    ) = binding.run {
+        root.setOnClickListener {
+            listener.onItemCategoryClicked(itemCategoryItemModel.categoryId)
+        }
+
+        with(itemCategoryImageView) {
+            contentDescription = itemCategoryItemModel.categoryTitle
+            loadGlideUrl(
+                imageUrl = itemCategoryItemModel.categoryImageUrl,
+                centerCrop = true,
+                placeholder = R.drawable.placeholder_card
+            )
+        }
+
+        itemCategoryTitleTextView.text = itemCategoryItemModel.categoryTitle
+    }
+
+    private fun bindSubtitleItem(
+        binding: SubtitleLargeItemBinding
+    ) = binding.run {
+        subtitleTextView.text = root.context.getString(R.string.explore_item_categories_subtitle)
+    }
+
     interface ExploreAdapterListener {
         fun onItemCategoryClicked(categoryId: String)
     }
@@ -93,9 +120,7 @@ sealed class ExploreListModel {
         val categoryImageUrl: String?
     ) : ExploreListModel()
 
-    data class ExploreSubtitleItemModel(
-        val subtitle: String
-    ) : ExploreListModel()
+    object ExploreSubtitleItemModel : ExploreListModel()
 }
 
 object ExploreListModelDiff : DiffUtil.ItemCallback<ExploreListModel>() {
@@ -107,7 +132,7 @@ object ExploreListModelDiff : DiffUtil.ItemCallback<ExploreListModel>() {
             oldItem is ExploreItemCategoryItemModel && newItem is ExploreItemCategoryItemModel ->
                 oldItem.categoryId == newItem.categoryId
             oldItem is ExploreSubtitleItemModel && newItem is ExploreSubtitleItemModel ->
-                oldItem.subtitle == newItem.subtitle
+                true
             else -> false
         }
     }

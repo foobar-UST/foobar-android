@@ -47,10 +47,7 @@ class AuthVerifyFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentAuthVerifyBinding.inflate(inflater, container, false).apply {
-            viewModel = this@AuthVerifyFragment.authViewModel
-            lifecycleOwner = viewLifecycleOwner
-        }
+        binding = FragmentAuthVerifyBinding.inflate(inflater, container, false)
 
         viewLifecycleOwner.lifecycleScope.launch {
             authViewModel.authUiState.collect { uiState ->

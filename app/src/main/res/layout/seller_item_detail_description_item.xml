@@ -1,22 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-        <variable
-            name="descriptionItemModel"
-            type="com.foobarust.android.selleritem.SellerItemDetailListModel.SellerItemDetailDescriptionItemModel" />
-    </data>
-
-    <TextView
-        android:id="@+id/description_text_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/spacing_large"
-        android:text="@{descriptionItemModel.itemDescription}"
-        android:textColor="@color/material_on_surface_emphasis_medium"
-        android:textAppearance="?attr/textAppearanceBody2"
-        android:lineSpacingMultiplier="1.2"
-        tools:text="People want more chicken and turkey burgers, the survey found, which are considered healthier options.\n調查發現，人們想要更多的雞肉和火雞漢堡，它們被認為是更健康的選擇。"/>
-
-</layout>
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/description_text_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/spacing_large"
+    android:textColor="@color/material_on_surface_emphasis_medium"
+    android:textAppearance="?attr/textAppearanceBody2"
+    android:lineSpacingMultiplier="1.2"
+    tools:text="People want more chicken and turkey burgers, the survey found, which are considered healthier options.\n調查發現，人們想要更多的雞肉和火雞漢堡，它們被認為是更健康的選擇。"/>

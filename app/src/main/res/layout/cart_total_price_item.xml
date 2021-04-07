@@ -1,81 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="@dimen/spacing_large">
 
-    <data>
-        <variable
-            name="totalPriceItemModel"
-            type="com.foobarust.android.checkout.CartListModel.CartTotalPriceItemModel" />
-    </data>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/total_title_text_view"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="@dimen/spacing_large">
+        android:gravity="center_vertical"
+        android:text="@string/cart_total_price_title_total"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        app:layout_constraintTop_toTopOf="@id/total_value_text_view"
+        app:layout_constraintBottom_toBottomOf="@id/total_value_text_view"
+        app:layout_constraintStart_toStartOf="parent"/>
 
-        <TextView
-            android:id="@+id/total_title_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@id/total_value_text_view"
-            android:layout_alignBottom="@id/total_value_text_view"
-            android:gravity="center_vertical"
-            android:text="@string/cart_total_price_title_total"
-            android:textAppearance="?attr/textAppearanceSubtitle1"/>
+    <TextView
+        android:id="@+id/total_value_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_large"
+        android:gravity="end"
+        android:textColor="?attr/colorPrimary"
+        android:textAppearance="?attr/textAppearanceHeadline4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/total_title_text_view"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="$1,052.84"/>
 
-        <TextView
-            android:id="@+id/total_value_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:text="@{@string/cart_total_price_format_cost(totalPriceItemModel.total)}"
-            android:textColor="?attr/colorPrimary"
-            android:textAppearance="?attr/textAppearanceHeadline4"
-            tools:text="$1,052.84"/>
+    <TextView
+        android:id="@+id/subtotal_title_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cart_total_price_title_subtotal"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/subtotal_value_text_view"
+        app:layout_constraintBottom_toBottomOf="@id/subtotal_value_text_view"/>
 
-        <TextView
-            android:id="@+id/subtotal_title_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_xmedium"
-            android:layout_below="@id/total_title_text_view"
-            android:text="@string/cart_total_price_title_subtotal"
-            android:textAppearance="?attr/textAppearanceSubtitle1"/>
+    <TextView
+        android:id="@+id/subtotal_value_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_xmedium"
+        android:layout_marginStart="@dimen/spacing_large"
+        android:gravity="end"
+        android:textColor="?attr/colorPrimary"
+        android:textAppearance="?attr/textAppearanceBody1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/total_value_text_view"
+        app:layout_constraintStart_toEndOf="@id/subtotal_title_text_view"
+        tools:text="$914.00"/>
 
-        <TextView
-            android:id="@+id/subtotal_value_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_xmedium"
-            android:layout_alignParentEnd="true"
-            android:layout_below="@id/total_value_text_view"
-            android:text="@{@string/cart_total_price_format_cost(totalPriceItemModel.subtotal)}"
-            android:textColor="?attr/colorPrimary"
-            android:textAppearance="?attr/textAppearanceBody1"
-            tools:text="$914.00"/>
+    <TextView
+        android:id="@+id/delivery_fee_title_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cart_total_price_title_delivery_fee"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/delivery_fee_value_text_view"
+        app:layout_constraintBottom_toBottomOf="@id/delivery_fee_value_text_view"/>
 
-        <TextView
-            android:id="@+id/delivery_fee_title_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_xmedium"
-            android:layout_below="@id/subtotal_title_text_view"
-            android:text="@string/cart_total_price_title_delivery_fee"
-            android:textAppearance="?attr/textAppearanceSubtitle1"/>
+    <TextView
+        android:id="@+id/delivery_fee_value_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_large"
+        android:layout_marginTop="@dimen/spacing_xmedium"
+        android:gravity="end"
+        android:textColor="?attr/colorPrimary"
+        android:textAppearance="?attr/textAppearanceBody1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/subtotal_value_text_view"
+        app:layout_constraintStart_toEndOf="@id/delivery_fee_title_text_view"
+        tools:text="$84.00"/>
 
-        <TextView
-            android:id="@+id/delivery_fee_value_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_xmedium"
-            android:layout_alignParentEnd="true"
-            android:layout_below="@id/subtotal_value_text_view"
-            android:text="@{@string/cart_total_price_format_cost(totalPriceItemModel.deliveryFee)}"
-            android:textColor="?attr/colorPrimary"
-            android:textAppearance="?attr/textAppearanceBody1"
-            tools:text="$84.00"/>
-
-    </RelativeLayout>
-
-</layout>
+</androidx.constraintlayout.widget.ConstraintLayout>

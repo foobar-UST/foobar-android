@@ -108,11 +108,4 @@ class SellerSectionRelatedFragment : Fragment(),
     override fun onSellerSectionItemClicked(sectionBasic: SellerSectionBasic) {
         sectionViewModel.onNavigateToSellerSection(sectionId = sectionBasic.id)
     }
-
-    override fun onSellerSectionItemLongClicked(
-        view: View,
-        sectionBasic: SellerSectionBasic
-    ): Boolean {
-        return true
-    }
 }

@@ -1,24 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
+<TextView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <!--suppress AndroidUnknownAttribute -->
-    <TextView
-        android:id="@+id/notice_text_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="@dimen/spacing_large"
-        android:paddingEnd="@dimen/spacing_large"
-        android:paddingTop="@dimen/spacing_xmedium"
-        android:paddingBottom="@dimen/spacing_xmedium"
-        android:gravity="center_vertical"
-        android:textAppearance="?attr/textAppearanceCaption"
-        android:textColor="?attr/colorOnSecondary"
-        android:selected="@{true}"
-        android:singleLine="true"
-        android:ellipsize="marquee"
-        android:marqueeRepeatLimit="marquee_forever"
-        tools:text="🎉 Restaurant notice will be shown here. Hello World. Testing Here." />
-
-</layout>
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/notice_text_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="@dimen/spacing_large"
+    android:paddingEnd="@dimen/spacing_large"
+    android:paddingTop="@dimen/spacing_xmedium"
+    android:paddingBottom="@dimen/spacing_xmedium"
+    android:gravity="center_vertical"
+    android:textAppearance="?attr/textAppearanceCaption"
+    android:textColor="?attr/colorOnSecondary"
+    android:singleLine="true"
+    android:ellipsize="marquee"
+    android:marqueeRepeatLimit="marquee_forever"
+    tools:text="🎉 Restaurant notice will be shown here. Hello World. Testing Here." />

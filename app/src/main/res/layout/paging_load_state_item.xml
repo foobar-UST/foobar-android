@@ -1,43 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:padding="@dimen/spacing_xmedium">
 
-    <data>
-        <variable
-            name="loadState"
-            type="androidx.paging.LoadState" />
-        <variable
-            name="retryAction"
-            type="Function0&lt;Unit>" />
-        <import type="androidx.paging.LoadState" />
-        <import type="kotlin.jvm.functions.Function0"/>
-        <import type="kotlin.Unit"/>
-    </data>
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_gravity="center" />
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:padding="@dimen/spacing_xmedium">
+    <Button
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:id="@+id/retry_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/load_state_retry"
+        app:icon="@drawable/ic_refresh" />
 
-        <ProgressBar
-            android:id="@+id/progress_bar"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_gravity="center"
-            app:goneIf="@{!(loadState instanceof LoadState.Loading)}"/>
-
-        <Button
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:id="@+id/retry_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/load_state_retry"
-            android:onClick="@{() -> retryAction.invoke()}"
-            app:icon="@drawable/ic_refresh"
-            app:goneIf="@{loadState instanceof LoadState.Loading}" />
-
-    </FrameLayout>
-
-</layout>
+</FrameLayout>

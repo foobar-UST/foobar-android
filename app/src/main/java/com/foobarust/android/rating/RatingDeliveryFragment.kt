@@ -10,8 +10,8 @@ import androidx.lifecycle.lifecycleScope
 import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentRatingDeliveryBinding
 import com.foobarust.android.utils.AutoClearedValue
-import com.foobarust.android.utils.bindGlideUrl
 import com.foobarust.android.utils.findNavController
+import com.foobarust.android.utils.loadGlideUrl
 import com.foobarust.domain.models.order.getNormalizedSellerName
 import com.google.android.material.transition.MaterialSharedAxis
 import dagger.hilt.android.AndroidEntryPoint
@@ -60,9 +60,10 @@ class RatingDeliveryFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             ratingViewModel.orderDetail.collect { orderDetail ->
                 binding.ratingSellerNameTextView.text = orderDetail.getNormalizedSellerName()
-                binding.ratingImageView.bindGlideUrl(
+                binding.ratingImageView.loadGlideUrl(
                     imageUrl = orderDetail.imageUrl,
-                    centerCrop = true
+                    centerCrop = true,
+                    placeholder = R.drawable.placeholder_card
                 )
             }
         }

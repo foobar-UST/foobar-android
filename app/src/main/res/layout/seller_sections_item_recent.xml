@@ -1,147 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
+<com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_large"
+    android:layout_marginEnd="@dimen/spacing_large"
+    android:layout_marginTop="@dimen/spacing_xmedium"
+    android:layout_marginBottom="@dimen/spacing_xmedium"
+    android:focusable="true"
+    android:clickable="true">
 
-    <data>
-        <variable
-            name="sectionBasic"
-            type="com.foobarust.domain.models.seller.SellerSectionBasic" />
-        <variable
-            name="listener"
-            type="com.foobarust.android.sellersection.SellerSectionsAdapter.SellerSectionsAdapterListener" />
-        <import type="com.foobarust.android.R" />
-        <import type="com.foobarust.domain.models.seller.SellerSectionBasicKt" />
-    </data>
-
-    <!--suppress AndroidUnknownAttribute -->
-    <com.google.android.material.card.MaterialCardView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/spacing_large"
-        android:layout_marginEnd="@dimen/spacing_large"
-        android:layout_marginTop="@dimen/spacing_xmedium"
-        android:layout_marginBottom="@dimen/spacing_xmedium"
-        android:focusable="true"
-        android:clickable="true"
-        android:onClick="@{() -> listener.onSellerSectionItemClicked(sectionBasic)}"
-        android:onLongClick="@{(view) -> listener.onSellerSectionItemLongClicked(view, sectionBasic)}">
+        android:layout_height="wrap_content">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <ImageView
+            android:id="@+id/section_image_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="0dp"
+            android:scaleType="centerCrop"
+            android:alpha="0.1"
+            android:importantForAccessibility="no"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
-            <ImageView
-                android:id="@+id/section_image_view"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:scaleType="centerCrop"
-                android:alpha="0.1"
-                android:importantForAccessibility="no"
-                app:glideUrl="@{sectionBasic.imageUrl}"
-                app:glideCenterCrop="@{true}"
-                app:glidePlaceholder="@{R.drawable.placeholder_card}"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+        <TextView
+            android:id="@+id/title_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:layout_marginStart="@dimen/spacing_large"
+            android:layout_marginEnd="@dimen/spacing_large"
+            android:textColor="@color/material_on_surface_emphasis_high_type"
+            android:textAppearance="?attr/textAppearanceHeadline6"
+            android:maxLines="2"
+            android:ellipsize="end"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="(20/12) Lunch Order 午餐訂單 - 12:30 PM" />
 
-            <TextView
-                android:id="@+id/title_text_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_large"
-                android:layout_marginStart="@dimen/spacing_large"
-                android:layout_marginEnd="@dimen/spacing_large"
-                android:text="@{SellerSectionBasicKt.getNormalizedTitleForRecent(sectionBasic)}"
-                android:textColor="@color/material_on_surface_emphasis_high_type"
-                android:textAppearance="?attr/textAppearanceHeadline6"
-                android:maxLines="2"
-                android:ellipsize="end"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="(20/12) Lunch Order 午餐訂單 - 12:30 PM" />
+        <TextView
+            android:id="@+id/delivery_time_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_xmedium"
+            android:layout_marginStart="@dimen/spacing_large"
+            android:layout_marginEnd="@dimen/spacing_large"
+            android:gravity="center_vertical"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="@color/material_on_surface_emphasis_high_type"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintTop_toBottomOf="@id/title_text_view"
+            tools:text="@string/seller_section_cutoff_time"/>
 
-            <TextView
-                android:id="@+id/delivery_time_text_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_xmedium"
-                android:layout_marginStart="@dimen/spacing_large"
-                android:layout_marginEnd="@dimen/spacing_large"
-                android:gravity="center_vertical"
-                android:text="@{@string/seller_section_cutoff_time(SellerSectionBasicKt.getCutoffTimeString(sectionBasic))}"
-                android:textAppearance="?attr/textAppearanceBody2"
-                android:textColor="@color/material_on_surface_emphasis_high_type"
-                android:maxLines="1"
-                android:ellipsize="end"
-                app:layout_constraintTop_toBottomOf="@id/title_text_view"
-                tools:text="@string/seller_section_cutoff_time"/>
+        <View
+            android:id="@+id/state_indicator_image_view"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:background="@drawable/shape_circle"
+            app:layout_constraintStart_toStartOf="@id/delivery_time_text_view"
+            app:layout_constraintTop_toTopOf="@id/state_text_view"
+            app:layout_constraintBottom_toBottomOf="@id/state_text_view" />
 
-            <View
-                android:id="@+id/state_indicator_image_view"
-                android:layout_width="8dp"
-                android:layout_height="8dp"
-                android:background="@drawable/shape_circle"
-                app:layout_constraintStart_toStartOf="@id/delivery_time_text_view"
-                app:layout_constraintTop_toTopOf="@id/state_text_view"
-                app:layout_constraintBottom_toBottomOf="@id/state_text_view" />
+        <TextView
+            android:id="@+id/state_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:layout_marginStart="@dimen/spacing_xmedium"
+            android:text="@string/seller_section_available"
+            android:textAppearance="?attr/textAppearanceOverline"
+            android:textColor="@color/material_on_surface_emphasis_high_type"
+            app:layout_constraintTop_toBottomOf="@id/delivery_time_text_view"
+            app:layout_constraintStart_toEndOf="@id/state_indicator_image_view"/>
 
-            <TextView
-                android:id="@+id/state_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_large"
-                android:layout_marginStart="@dimen/spacing_xmedium"
-                android:text="@string/seller_section_available"
-                android:textAppearance="?attr/textAppearanceOverline"
-                android:textColor="@color/material_on_surface_emphasis_high_type"
-                app:layout_constraintTop_toBottomOf="@id/delivery_time_text_view"
-                app:layout_constraintStart_toEndOf="@id/state_indicator_image_view"/>
+        <View
+            android:id="@+id/bottom_bar_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:background="?attr/colorPrimarySurface"
+            app:layout_constraintTop_toBottomOf="@id/state_text_view"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
-            <View
-                android:id="@+id/bottom_bar_view"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="@dimen/spacing_large"
-                android:background="?attr/colorPrimarySurface"
-                app:layout_constraintTop_toBottomOf="@id/state_text_view"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+        <TextView
+            android:id="@+id/seller_name_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_large"
+            android:layout_marginTop="@dimen/spacing_xmedium"
+            android:layout_marginBottom="@dimen/spacing_xmedium"
+            android:textColor="?attr/colorOnPrimarySurface"
+            android:textAppearance="?attr/textAppearanceCaption"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/bottom_bar_view"
+            app:layout_constraintBottom_toBottomOf="@id/bottom_bar_view"
+            tools:text="Foobarify"/>
 
-            <TextView
-                android:id="@+id/seller_name_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/spacing_large"
-                android:layout_marginTop="@dimen/spacing_xmedium"
-                android:layout_marginBottom="@dimen/spacing_xmedium"
-                android:text="@{SellerSectionBasicKt.getSellerNormalizedName(sectionBasic)}"
-                android:textColor="?attr/colorOnPrimarySurface"
-                android:textAppearance="?attr/textAppearanceCaption"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/bottom_bar_view"
-                app:layout_constraintBottom_toBottomOf="@id/bottom_bar_view"
-                tools:text="Foobarify"/>
+        <TextView
+            android:id="@+id/users_count_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/spacing_large"
+            android:layout_marginTop="@dimen/spacing_xmedium"
+            android:layout_marginBottom="@dimen/spacing_xmedium"
+            android:gravity="center_vertical"
+            android:textColor="?attr/colorOnPrimarySurface"
+            android:textAppearance="?attr/textAppearanceCaption"
+            android:drawablePadding="@dimen/spacing_xmedium"
+            app:drawableStartCompat="@drawable/ic_person_outline"
+            app:drawableTint="?attr/colorOnPrimarySurface"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/bottom_bar_view"
+            app:layout_constraintBottom_toBottomOf="@id/bottom_bar_view"/>
 
-            <TextView
-                android:id="@+id/users_count_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/spacing_large"
-                android:layout_marginTop="@dimen/spacing_xmedium"
-                android:layout_marginBottom="@dimen/spacing_xmedium"
-                android:gravity="center_vertical"
-                android:text="@{@string/seller_section_user_counts(sectionBasic.joinedUsersCount, sectionBasic.maxUsers)}"
-                android:textColor="?attr/colorOnPrimarySurface"
-                android:textAppearance="?attr/textAppearanceCaption"
-                android:drawablePadding="@dimen/spacing_xmedium"
-                app:drawableStartCompat="@drawable/ic_person_outline"
-                app:drawableFitVertical="@{true}"
-                app:drawableTint="?attr/colorOnPrimarySurface"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/bottom_bar_view"
-                app:layout_constraintBottom_toBottomOf="@id/bottom_bar_view"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </com.google.android.material.card.MaterialCardView>
-
-</layout>
+</com.google.android.material.card.MaterialCardView>

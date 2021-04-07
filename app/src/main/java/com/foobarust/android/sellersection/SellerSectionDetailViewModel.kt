@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.foobarust.android.R
 import com.foobarust.android.sellerdetail.SellerDetailProperty
 import com.foobarust.android.sellersection.RelatedSectionsListModel.RelatedSectionsItemModel
 import com.foobarust.android.sellersection.SellerSectionDetailListModel.*
@@ -113,7 +112,7 @@ class SellerSectionDetailViewModel @Inject constructor(
                     .flatMapLatest {
                         val params = GetSectionParticipantsParameters(
                             userIds = it.joinedUsersIds,
-                            numOfUsers = NUM_OF_PARTICIPANTS
+                            displayUsersCount = NUM_OF_PARTICIPANTS
                         )
                         getSectionParticipantsUseCase(params)
                     }
@@ -200,9 +199,8 @@ class SellerSectionDetailViewModel @Inject constructor(
         // Add order info
         add(SellerSectionDetailSectionInfoItemModel(
             description = sectionDetail.getNormalizedDescription(),
-            cutoffTime = sectionDetail.getCutoffTimeString(),
-            deliveryDate = sectionDetail.getDeliveryDateString(),
-            deliveryTime = sectionDetail.getDeliveryTimeString(),
+            cutoffTime = sectionDetail.cutoffTime,
+            deliveryTime = sectionDetail.deliveryTime,
             deliveryLocation = sectionDetail.getNormalizedDeliveryAddress()
         ))
 
@@ -218,21 +216,15 @@ class SellerSectionDetailViewModel @Inject constructor(
 
         // Add more sections
         if (relatedSections.isNotEmpty()) {
-            val sectionItems = relatedSections.map {
+            val sectionItems = relatedSections.map { sectionBasic ->
                 RelatedSectionsItemModel(
-                    sectionId = it.id,
-                    sectionTitle = it.getNormalizedTitleForMoreSections(),
-                    sectionDeliveryTime = context.getString(
-                        R.string.more_sections_section_item_format_delivery_time,
-                        it.getDeliveryTimeString()
-                    ),
-                    sectionImageUrl = it.imageUrl
+                    sectionId = sectionBasic.id,
+                    sectionTitle = sectionBasic.getNormalizedTitleForMoreSections(),
+                    sectionDeliveryTime = sectionBasic.deliveryTime,
+                    sectionImageUrl = sectionBasic.imageUrl
                 )
             }
 
-            add(SellerSectionDetailSubtitleItemModel(
-                subtitle = context.getString(R.string.more_sections_subtitle)
-            ))
             add(SellerSectionDetailRelatedItemModel(
                 sellerId = sectionDetail.sellerId,
                 itemModels = sectionItems

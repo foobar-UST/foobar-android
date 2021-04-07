@@ -1,48 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <data>
-        <variable
-            name="advertiseItemModel"
-            type="com.foobarust.android.promotion.AdvertiseItemModel" />
-        <variable
-            name="listener"
-            type="com.foobarust.android.promotion.AdvertiseAdapter.AdvertiseAdapterListener" />
-        <import type="com.foobarust.android.R" />
-    </data>
-
-    <RelativeLayout
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/promotion_card_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:focusable="true"
+        android:clickable="true"
+        app:cardElevation="@dimen/elevation_small">
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/promotion_card_view"
+        <ImageView
+            android:id="@+id/promotion_image_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:focusable="true"
-            android:clickable="true"
-            android:onClick="@{() -> listener.onAdvertiseItemClicked(advertiseItemModel.advertiseBasic)}"
-            app:cardElevation="@dimen/elevation_small">
+            android:scaleType="centerCrop"
+            android:importantForAccessibility="no"
+            tools:src="@sample/sample_image_1"/>
 
-            <ImageView
-                android:id="@+id/promotion_image_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:importantForAccessibility="no"
-                app:glideUrl="@{advertiseItemModel.advertiseBasic.imageUrl}"
-                app:glideCenterCrop="@{true}"
-                app:glidePlaceholder="@{R.drawable.placeholder_card}"
-                tools:scaleType="centerInside"
-                tools:src="@sample/sample_image_1"/>
+    </com.google.android.material.card.MaterialCardView>
 
-        </com.google.android.material.card.MaterialCardView>
-
-    </RelativeLayout>
-
-</layout>
+</RelativeLayout>
 
 

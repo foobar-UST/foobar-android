@@ -23,7 +23,7 @@ class GetSectionParticipantsUseCase @Inject constructor(
         parameters: GetSectionParticipantsParameters
     ): Flow<Resource<List<UserPublic>>> = flow {
         val usersPublicInfo = parameters.userIds
-            .take(parameters.numOfUsers)
+            .take(parameters.displayUsersCount)
             .map { userId -> userRepository.getUserPublicProfile(userId = userId) }
 
         emit(Resource.Success(usersPublicInfo))
@@ -32,5 +32,5 @@ class GetSectionParticipantsUseCase @Inject constructor(
 
 data class GetSectionParticipantsParameters(
     val userIds: List<String>,
-    val numOfUsers: Int
+    val displayUsersCount: Int
 )

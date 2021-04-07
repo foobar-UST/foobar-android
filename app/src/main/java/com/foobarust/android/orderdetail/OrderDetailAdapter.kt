@@ -1,4 +1,4 @@
-package com.foobarust.android.order
+package com.foobarust.android.orderdetail
 
 import android.view.LayoutInflater
 import android.view.View
@@ -10,10 +10,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.foobarust.android.R
 import com.foobarust.android.checkout.PaymentMethodItem
 import com.foobarust.android.databinding.*
-import com.foobarust.android.order.OrderDetailListModel.*
-import com.foobarust.android.order.OrderDetailViewHolder.*
+import com.foobarust.android.orderdetail.OrderDetailListModel.*
+import com.foobarust.android.orderdetail.OrderDetailViewHolder.*
 import com.foobarust.android.utils.buildColorStateListWith
+import com.foobarust.android.utils.loadGlideUrl
+import com.foobarust.android.utils.setDrawables
 import com.foobarust.domain.models.order.OrderState
+import com.foobarust.domain.models.order.OrderType
+import com.foobarust.domain.utils.format
+import java.util.*
 
 /**
  * Created by kevin on 2/1/21
@@ -53,51 +58,75 @@ class OrderDetailAdapter(
 
     override fun onBindViewHolder(holder: OrderDetailViewHolder, position: Int) {
         when (holder) {
-            is OrderDetailHeaderItemViewHolder -> holder.binding.run {
+            is OrderDetailHeaderItemViewHolder -> bindOrderDetailHeaderItem(
+                binding = holder.binding,
                 headerItemModel = getItem(position) as OrderDetailHeaderItemModel
-                executePendingBindings()
-            }
+            )
             is OrderDetailStateItemViewHolder -> bindOrderDetailStateItem(
                 binding = holder.binding,
                 stateItemModel = getItem(position) as OrderDetailStateItemModel
             )
-            is OrderDetailInfoItemViewHolder -> holder.binding.run {
+            is OrderDetailInfoItemViewHolder -> bindOrderDetailInfoItem(
+                binding = holder.binding,
                 infoItemModel = getItem(position) as OrderDetailInfoItemModel
-                executePendingBindings()
-            }
-            is OrderDetailPurchaseItemViewHolder -> holder.binding.run {
+            )
+            is OrderDetailPurchaseItemViewHolder -> bindOrderDetailPurchaseItem(
+                binding = holder.binding,
                 purchaseItemModel = getItem(position) as OrderDetailPurchaseItemModel
-                executePendingBindings()
-            }
-            is OrderDetailCostItemViewHolder -> holder.binding.run {
+            )
+            is OrderDetailCostItemViewHolder -> bindOrderDetailCostItem(
+                binding = holder.binding,
                 costItemModel = getItem(position) as OrderDetailCostItemModel
-                executePendingBindings()
-            }
-            is OrderDetailPaymentItemViewHolder -> holder.binding.run {
+            )
+            is OrderDetailPaymentItemViewHolder -> bindOrderDetailPaymentItem(
+                binding = holder.binding,
                 paymentItemModel = getItem(position) as OrderDetailPaymentItemModel
-                executePendingBindings()
-            }
-            is OrderDetailActionsItemViewHolder -> holder.binding.run {
-                actionsItemModel = getItem(position) as OrderDetailActionsItemModel
-                listener = this@OrderDetailAdapter.listener
-                executePendingBindings()
-            }
+            )
+            is OrderDetailActionsItemViewHolder -> bindOrderDetailActionsItem(
+                binding = holder.binding
+            )
         }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return when (getItem(position)) {
+            is OrderDetailHeaderItemModel -> R.layout.order_detail_header_item
+            is OrderDetailStateItemModel -> R.layout.order_detail_state_item
+            is OrderDetailInfoItemModel -> R.layout.order_detail_info_item
+            is OrderDetailPurchaseItemModel -> R.layout.order_detail_purchase_item
+            is OrderDetailCostItemModel -> R.layout.order_detail_cost_item
+            is OrderDetailPaymentItemModel -> R.layout.order_detail_payment_item
+            is OrderDetailActionsItemModel -> R.layout.order_detail_actions_item
+        }
+    }
+
+    private fun bindOrderDetailHeaderItem(
+        binding: OrderDetailHeaderItemBinding,
+        headerItemModel: OrderDetailHeaderItemModel
+    ) = binding.run {
+        deliveryAddressTitleTextView.text = when (headerItemModel.orderType) {
+            OrderType.ON_CAMPUS -> root.context.getString(
+                R.string.order_detail_header_item_delivery_address_title_on_campus
+            )
+            OrderType.OFF_CAMPUS -> root.context.getString(
+                R.string.order_detail_header_item_delivery_address_title_off_campus
+            )
+        }
+
+        deliveryAddressTextView.text = headerItemModel.deliveryAddress
     }
 
     private fun bindOrderDetailStateItem(
         binding: OrderDetailStateItemBinding,
         stateItemModel: OrderDetailStateItemModel
     ) = binding.run {
-        this.stateItemModel = stateItemModel
-
         val showProgressBar = stateItemModel.currentOrderState == stateItemModel.listOrderState &&
             stateItemModel.currentOrderState !in setOf(
                 OrderState.DELIVERED, OrderState.ARCHIVED, OrderState.CANCELLED
             )
 
         // Set grey state icon for cancelled state, green otherwise.
-        with(binding.stateImageView) {
+        with(stateImageView) {
             imageTintList = if (stateItemModel.currentOrderState == OrderState.CANCELLED) {
                 context.buildColorStateListWith(R.color.material_on_surface_disabled)
             } else {
@@ -113,27 +142,131 @@ class OrderDetailAdapter(
             isVisible = !showProgressBar
         }
 
-        with(binding.loadingProgressBar) {
-            isVisible = showProgressBar
+        loadingProgressBar.isVisible = showProgressBar
+
+        with(pickUpVerifyButton) {
+            isVisible = stateItemModel.listOrderState == OrderState.READY_FOR_PICK_UP &&
+                stateItemModel.currentOrderState == OrderState.READY_FOR_PICK_UP
+            setOnClickListener {
+                listener.onPickupVerifyOrder()
+            }
         }
 
-        executePendingBindings()
+        stateTitleTextView.text = stateItemModel.listStateTitle
+
+        stateDescriptionTextView.text = stateItemModel.listStateDescription
     }
 
-    override fun getItemViewType(position: Int): Int {
-        return when (getItem(position)) {
-            is OrderDetailHeaderItemModel -> R.layout.order_detail_header_item
-            is OrderDetailStateItemModel -> R.layout.order_detail_state_item
-            is OrderDetailInfoItemModel -> R.layout.order_detail_info_item
-            is OrderDetailPurchaseItemModel -> R.layout.order_detail_purchase_item
-            is OrderDetailCostItemModel -> R.layout.order_detail_cost_item
-            is OrderDetailPaymentItemModel -> R.layout.order_detail_payment_item
-            is OrderDetailActionsItemModel -> R.layout.order_detail_actions_item
+    private fun bindOrderDetailInfoItem(
+        binding: OrderDetailInfoItemBinding,
+        infoItemModel: OrderDetailInfoItemModel
+    ) = binding.run {
+        with(orderImageView) {
+            val orderImageUrl = infoItemModel.orderItemImageUrl
+            isVisible = orderImageUrl != null
+
+            if (orderImageUrl != null) {
+                loadGlideUrl(
+                    imageUrl = orderImageUrl,
+                    centerCrop = true,
+                    placeholder = R.drawable.placeholder_card
+                )
+            }
+        }
+
+        identifierTitleTextView.text = root.context.getString(
+            R.string.order_detail_info_item_identifier_title,
+            infoItemModel.orderIdentifier
+        )
+
+        orderTitleTextView.text = infoItemModel.orderTitle
+
+        createdAtTextView.text = root.context.getString(
+            R.string.order_detail_info_item_created_at,
+            infoItemModel.orderCreatedDate.format("yyyy-MM-dd HH:mm")
+        )
+
+        with(messageTextView) {
+            isVisible = infoItemModel.orderMessage != null
+            text = root.context.getString(
+                R.string.order_detail_info_item_message,
+                infoItemModel.orderMessage
+            )
+        }
+
+        totalCostTextView.text = root.context.getString(
+            R.string.order_detail_info_item_total_cost,
+            infoItemModel.orderTotalCost
+        )
+    }
+
+    private fun bindOrderDetailPurchaseItem(
+        binding: OrderDetailPurchaseItemBinding,
+        purchaseItemModel: OrderDetailPurchaseItemModel
+    ) = binding.run {
+        with(itemImageView) {
+            val itemImageUrl = purchaseItemModel.orderItemImageUrl
+            isVisible = itemImageUrl != null
+
+            if (itemImageUrl != null) {
+                loadGlideUrl(
+                    imageUrl = itemImageUrl,
+                    centerCrop = true,
+                    placeholder = R.drawable.placeholder_card
+                )
+            }
+        }
+
+        itemTitleTextView.text = root.context.getString(
+            R.string.order_detail_purchase_item_format_title,
+            purchaseItemModel.orderItemTitle,
+            purchaseItemModel.orderItemAmounts
+        )
+
+        itemPriceTextView.text = root.context.getString(
+            R.string.order_detail_purchase_item_format_price,
+            purchaseItemModel.orderItemTotalPrice
+        )
+    }
+
+    private fun bindOrderDetailCostItem(
+        binding: OrderDetailCostItemBinding,
+        costItemModel: OrderDetailCostItemModel
+    ) = binding.run {
+        subtotalValueTextView.text = root.context.getString(
+            R.string.order_detail_purchase_item_format_price,
+            costItemModel.orderSubtotal
+        )
+
+        deliveryFeeValueTextView.text = root.context.getString(
+            R.string.order_detail_purchase_item_format_price,
+            costItemModel.orderDeliveryCost
+        )
+    }
+
+    private fun bindOrderDetailPaymentItem(
+        binding: OrderDetailPaymentItemBinding,
+        paymentItemModel: OrderDetailPaymentItemModel
+    ) = binding.run {
+        with(paymentMethodTextView) {
+            text = paymentItemModel.paymentMethodItem.title
+            setDrawables(
+                drawableLeft = paymentItemModel.paymentMethodItem.drawable
+            )
+        }
+    }
+
+    private fun bindOrderDetailActionsItem(
+        binding: OrderDetailActionsItemBinding
+    ) = binding.run {
+        sellerContactButton.setOnClickListener {
+            listener.onNavigateToSellerMisc()
         }
     }
 
     interface OrderDetailAdapterListener {
-        fun onNavigateToSellerContact()
+        fun onNavigateToSellerMisc()
+        fun onPickupVerifyOrder()
     }
 }
 
@@ -169,7 +302,7 @@ sealed class OrderDetailViewHolder(itemView: View) : RecyclerView.ViewHolder(ite
 
 sealed class OrderDetailListModel {
     data class OrderDetailHeaderItemModel(
-        val deliveryAddressTitle: String,
+        val orderType: OrderType,
         val deliveryAddress: String
     ) : OrderDetailListModel()
 
@@ -181,10 +314,10 @@ sealed class OrderDetailListModel {
     ) : OrderDetailListModel()
 
     data class OrderDetailInfoItemModel(
-        val orderIdentifierTitle: String,
+        val orderIdentifier: String,
         val orderTitle: String,
-        val orderCreatedDate: String,
-        val orderTotalCost: String,
+        val orderCreatedDate: Date,
+        val orderTotalCost: Double,
         val orderMessage: String?,
         val orderItemImageUrl: String?
     ) : OrderDetailListModel()

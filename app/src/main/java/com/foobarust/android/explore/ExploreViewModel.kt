@@ -3,7 +3,6 @@ package com.foobarust.android.explore
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.foobarust.android.R
 import com.foobarust.android.explore.ExploreListModel.ExploreItemCategoryItemModel
 import com.foobarust.android.explore.ExploreListModel.ExploreSubtitleItemModel
 import com.foobarust.android.seller.SellerListProperty
@@ -83,9 +82,7 @@ class ExploreViewModel @Inject constructor(
         itemCategories: List<SellerItemCategory>
     ): List<ExploreListModel> = buildList {
         if (itemCategories.isNotEmpty()) {
-            add(ExploreSubtitleItemModel(
-                context.getString(R.string.explore_item_categories_subtitle)
-            ))
+            add(ExploreSubtitleItemModel)
         }
 
         addAll(itemCategories.map { itemCategory ->

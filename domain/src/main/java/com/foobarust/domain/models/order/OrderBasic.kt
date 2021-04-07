@@ -1,6 +1,5 @@
 package com.foobarust.domain.models.order
 
-import com.foobarust.domain.utils.format
 import java.util.*
 
 /**
@@ -42,11 +41,3 @@ fun OrderBasic.getNormalizedDeliveryAddress(): String {
         deliveryAddress
     }
 }
-
-fun OrderBasic.getNormalizedTotalCost(): String {
-    return String.format("%.1f", totalCost)
-}
-
-fun OrderBasic.getCreatedAtString(): String = createdAt.format("yyyy-MM-dd HH:mm")
-
-fun OrderBasic.getUpdatedAtString(): String = updatedAt.format("yyyy-MM-dd HH:mm")

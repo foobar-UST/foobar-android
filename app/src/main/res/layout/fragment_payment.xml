@@ -1,42 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipe_refresh_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <data>
-        <variable
-            name="viewModel"
-            type="com.foobarust.android.checkout.PaymentViewModel" />
-        <import type="com.foobarust.android.checkout.PaymentUiState" />
-    </data>
-
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_refresh_layout"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true">
 
-        <FrameLayout
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/payment_methods_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:animateLayoutChanges="true">
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/payment_method_item"/>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/payment_methods_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/payment_method_item"/>
+        <include
+            layout="@layout/load_error_layout"
+            android:id="@+id/load_error_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-            <include
-                layout="@layout/load_error_layout"
-                android:id="@+id/load_error_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:goneIf="@{!(viewModel.paymentUiState instanceof PaymentUiState.Error)}"/>
+    </FrameLayout>
 
-        </FrameLayout>
-
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-</layout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

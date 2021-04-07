@@ -8,8 +8,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.foobarust.android.R
 import com.foobarust.android.databinding.SellerSearchItemBinding
-import com.foobarust.android.sellersearch.SellerSearchListModel.*
-import com.foobarust.android.sellersearch.SellerSearchViewHolder.*
+import com.foobarust.android.sellersearch.SellerSearchListModel.SellerSearchItemModel
+import com.foobarust.android.sellersearch.SellerSearchViewHolder.SellerSearchItemViewHolder
+import com.foobarust.android.utils.loadGlideUrl
 import com.foobarust.android.utils.themeColor
 import com.foobarust.domain.models.seller.SellerType
 
@@ -44,10 +45,19 @@ class SellerSearchAdapter(
         binding: SellerSearchItemBinding,
         searchItemModel: SellerSearchItemModel
     ) = binding.run {
-        val context = root.context
+        root.setOnClickListener {
+            listener.onSellerItemClicked(searchItemModel.sellerId, searchItemModel.sellerType)
+        }
 
-        this.searchItemModel = searchItemModel
-        listener = this@SellerSearchAdapter.listener
+        sellerItemImageView.loadGlideUrl(
+            imageUrl = searchItemModel.sellerImageUrl,
+            centerCrop = true,
+            placeholder = R.drawable.placeholder_card
+        )
+
+        sellerNameTextView.text = searchItemModel.sellerName
+
+        sellerTagsTextView.text = searchItemModel.sellerTags
 
         with(sellerTypeTextView) {
             if (searchItemModel.sellerType == SellerType.ON_CAMPUS) {
@@ -58,8 +68,6 @@ class SellerSearchAdapter(
                 setTextColor(context.themeColor(R.attr.colorPrimary))
             }
         }
-
-        executePendingBindings()
     }
 
     override fun getItemViewType(position: Int): Int {

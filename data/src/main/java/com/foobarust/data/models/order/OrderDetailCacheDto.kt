@@ -9,6 +9,7 @@ import com.foobarust.data.constants.Constants.ORDERS_ENTITY
 import com.foobarust.data.constants.Constants.ORDER_CREATED_AT_FIELD
 import com.foobarust.data.constants.Constants.ORDER_DELIVERER_ID_FIELD
 import com.foobarust.data.constants.Constants.ORDER_DELIVERER_LOCATION_FIELD
+import com.foobarust.data.constants.Constants.ORDER_DELIVERER_TRAVEL_MODE_FIELD
 import com.foobarust.data.constants.Constants.ORDER_DELIVERY_COST_FIELD
 import com.foobarust.data.constants.Constants.ORDER_DELIVERY_LOCATION_LATITUDE_FIELD
 import com.foobarust.data.constants.Constants.ORDER_DELIVERY_LOCATION_LONGITUDE_FIELD
@@ -32,6 +33,7 @@ import com.foobarust.data.constants.Constants.ORDER_TITLE_ZH_FIELD
 import com.foobarust.data.constants.Constants.ORDER_TOTAL_COST_FIELD
 import com.foobarust.data.constants.Constants.ORDER_TYPE_FIELD
 import com.foobarust.data.constants.Constants.ORDER_UPDATED_AT_FIELD
+import com.foobarust.data.constants.Constants.ORDER_VERIFY_CODE_FIELD
 import java.util.*
 
 /**
@@ -73,6 +75,9 @@ data class OrderDetailCacheDto(
 
     @ColumnInfo(name = ORDER_DELIVERER_LOCATION_FIELD)
     val delivererLocation: String? = null,
+
+    @ColumnInfo(name = ORDER_DELIVERER_TRAVEL_MODE_FIELD)
+    val delivererTravelMode: String? = null,
 
     @ColumnInfo(name = ORDER_IDENTIFIER_FIELD)
     val identifier: String? = null,
@@ -118,6 +123,9 @@ data class OrderDetailCacheDto(
 
     @ColumnInfo(name = ORDER_TOTAL_COST_FIELD)
     val totalCost: Double? = null,
+
+    @ColumnInfo(name = ORDER_VERIFY_CODE_FIELD)
+    val verifyCode: String? = null,
 
     @ColumnInfo(name = ORDER_CREATED_AT_FIELD)
     val createdAt: Date? = null,

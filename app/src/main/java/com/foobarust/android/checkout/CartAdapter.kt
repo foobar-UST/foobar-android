@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import androidx.annotation.DrawableRes
+import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -15,8 +15,15 @@ import com.foobarust.android.checkout.CartAdapter.*
 import com.foobarust.android.checkout.CartListModel.*
 import com.foobarust.android.checkout.CartViewHolder.*
 import com.foobarust.android.databinding.*
+import com.foobarust.android.utils.drawableFitVertical
 import com.foobarust.android.utils.getColorCompat
-import com.foobarust.domain.models.cart.UserCartItem
+import com.foobarust.android.utils.loadGlideUrl
+import com.foobarust.android.utils.setSrc
+import com.foobarust.domain.models.cart.*
+import com.foobarust.domain.models.seller.SellerType
+import com.foobarust.domain.utils.format
+import com.foobarust.domain.utils.getTimeBy12Hour
+import java.util.*
 
 /**
  * Created by kevin on 12/1/20
@@ -31,31 +38,24 @@ class CartAdapter(
             R.layout.cart_info_item -> CartInfoItemViewHolder(
                 CartInfoItemBinding.inflate(inflater, parent, false)
             )
-
             R.layout.cart_purchase_item -> CartPurchaseItemViewHolder(
                 CartPurchaseItemBinding.inflate(inflater, parent, false)
             )
-
             R.layout.cart_total_price_item -> CartTotalPriceItemViewHolder(
                 CartTotalPriceItemBinding.inflate(inflater, parent, false)
             )
-
             R.layout.cart_order_notes_item -> CartOrderNotesItemViewHolder(
                 CartOrderNotesItemBinding.inflate(inflater, parent, false)
             )
-
             R.layout.subtitle_small_item -> CartPurchaseSubtitleItemViewHolder(
                 SubtitleSmallItemBinding.inflate(inflater, parent, false)
             )
-
             R.layout.cart_purchase_actions_item -> CartPurchaseActionsItemViewHolder(
                 CartPurchaseActionsItemBinding.inflate(inflater, parent, false)
             )
-
             R.layout.empty_list_item -> CartEmptyItemViewHolder(
                 EmptyListItemBinding.inflate(inflater, parent, false)
             )
-
             else -> throw IllegalStateException("Unknown view type $viewType")
         }
     }
@@ -64,42 +64,31 @@ class CartAdapter(
         when (holder) {
             is CartInfoItemViewHolder -> bindCartInfoItem(
                 binding = holder.binding,
-                cartInfoItemModel = getItem(position) as CartInfoItemModel
+                infoItemModel = getItem(position) as CartInfoItemModel
             )
-
-            is CartPurchaseItemViewHolder -> holder.binding.run {
+            is CartPurchaseItemViewHolder -> bindCartPurchaseItem(
+                binding = holder.binding,
                 purchaseItemModel = getItem(position) as CartPurchaseItemModel
-                listener = this@CartAdapter.listener
-                executePendingBindings()
-            }
-
-            is CartTotalPriceItemViewHolder -> holder.binding.run {
+            )
+            is CartTotalPriceItemViewHolder -> bindCartTotalPriceItem(
+                binding = holder.binding,
                 totalPriceItemModel = getItem(position) as CartTotalPriceItemModel
-                executePendingBindings()
-            }
-
-            is CartOrderNotesItemViewHolder -> bindOrderNotesItem(
+            )
+            is CartOrderNotesItemViewHolder -> bindCartOrderNotesItem(
                 binding = holder.binding,
                 orderNotesItemModel = getItem(position) as CartOrderNotesItemModel
             )
-
-            is CartPurchaseSubtitleItemViewHolder -> holder.binding.run {
-                subtitle = (getItem(position) as CartPurchaseSubtitleItemModel).subtitle
-                executePendingBindings()
-            }
-
-            is CartPurchaseActionsItemViewHolder -> holder.binding.run {
-                menuItemModel = getItem(position) as CartPurchaseActionsItemModel
-                listener = this@CartAdapter.listener
-                executePendingBindings()
-            }
-
-            is CartEmptyItemViewHolder -> holder.binding.run {
-                val currentItem = getItem(position) as CartEmptyItemModel
-                drawableRes = currentItem.drawableRes
-                emptyMessage = currentItem.emptyMessage
-                executePendingBindings()
-            }
+            is CartPurchaseSubtitleItemViewHolder -> bindCartPurchaseSubtitleItem(
+                binding = holder.binding,
+                purchaseSubtitleItemModel = getItem(position) as CartPurchaseSubtitleItemModel
+            )
+            is CartPurchaseActionsItemViewHolder -> bindCartPurchaseActionsItem(
+                binding = holder.binding,
+                purchaseActionsItemModel = getItem(position) as CartPurchaseActionsItemModel
+            )
+            is CartEmptyItemViewHolder -> bindCartEmptyItem(
+                binding = holder.binding
+            )
         }
     }
 
@@ -117,59 +106,194 @@ class CartAdapter(
 
     private fun bindCartInfoItem(
         binding: CartInfoItemBinding,
-        cartInfoItemModel: CartInfoItemModel
+        infoItemModel: CartInfoItemModel
     ) = binding.run {
-        this.cartInfoItemModel = cartInfoItemModel
+        with(sellerOfflineNoticeBanner.root) {
+            isSelected = true // Enable moving text
+            isVisible = !infoItemModel.sellerOnline
+        }
+
+        with(sellerImageView) {
+            contentDescription = infoItemModel.cartTitle
+            loadGlideUrl(
+                imageUrl = infoItemModel.cartImageUrl,
+                centerCrop = true,
+                placeholder = R.drawable.placeholder_card
+            )
+        }
+
+        with(sectionNav) {
+            iconImageView.setSrc(R.drawable.ic_today)
+
+            titleTextView.text = root.context.getString(
+                R.string.cart_info_nav_subtitle_section,
+                infoItemModel.sellerName
+            )
+
+            contentTextView.text = root.context.getString(
+                R.string.cart_info_nav_format_section,
+                infoItemModel.cartDeliveryTime?.format("yyyy-MM-dd"),
+                infoItemModel.cartDeliveryTime?.getTimeBy12Hour()
+            )
+
+            root.isVisible = infoItemModel.sectionId != null // Show only for section cart
+        }
+
+        with(miscNav) {
+            iconImageView.setSrc(R.drawable.ic_location_on)
+
+            val titleRes = when (infoItemModel.sellerType) {
+                SellerType.ON_CAMPUS -> R.string.cart_info_nav_subtitle_misc_on_campus
+                SellerType.OFF_CAMPUS -> R.string.cart_info_nav_subtitle_misc_off_campus
+            }
+            titleTextView.text = root.context.getString(titleRes)
+
+            contentTextView.text = infoItemModel.cartPickupAddress
+        }
 
         // Navigate to SellerSection
-        if (cartInfoItemModel.sectionId != null) {
-            sectionNav.navLayout.setOnClickListener {
-                listener.onSectionOptionClicked(sectionId = cartInfoItemModel.sectionId)
+        if (infoItemModel.sectionId != null) {
+            sectionNav.root.setOnClickListener {
+                listener.onSectionOptionClicked(sectionId = infoItemModel.sectionId)
             }
         }
 
         // Navigate to SellerMisc
-        miscNav.navLayout.setOnClickListener {
+        miscNav.root.setOnClickListener {
             listener.onSellerMiscOptionClicked(
-                sellerId = cartInfoItemModel.sellerId
+                sellerId = infoItemModel.sellerId
             )
         }
 
         // Setup offline banner
         with(sellerOfflineNoticeBanner.noticeTextView) {
             val context = root.context
-            if (!cartInfoItemModel.sellerOnline) {
-                text = context.getString(
-                    R.string.seller_detail_offline_message
-                )
-                background = ColorDrawable(
-                    context.getColorCompat(R.color.grey_disabled)
+            if (!infoItemModel.sellerOnline) {
+                text = context.getString(R.string.seller_detail_offline_message)
+                background = ColorDrawable(context.getColorCompat(R.color.grey_disabled))
+            }
+        }
+    }
+
+    private fun bindCartPurchaseItem(
+        binding: CartPurchaseItemBinding,
+        purchaseItemModel: CartPurchaseItemModel
+    ) = binding.run {
+        root.setOnClickListener {
+            listener.onCartItemClicked(purchaseItemModel.userCartItem)
+        }
+
+        removeButton.setOnClickListener {
+            listener.onRemoveCartItem(purchaseItemModel.userCartItem)
+        }
+
+        with(itemImageView) {
+            val itemImageUrl = purchaseItemModel.userCartItem.itemImageUrl
+            isVisible = itemImageUrl != null
+
+            if (itemImageUrl != null) {
+                loadGlideUrl(
+                    imageUrl = itemImageUrl,
+                    centerCrop = true,
+                    placeholder = R.drawable.placeholder_card
                 )
             }
         }
 
-        executePendingBindings()
+        titleTextView.text = purchaseItemModel.userCartItem.getNormalizedTitle()
+
+        quantityTextView.text = root.context.getString(
+            R.string.cart_purchase_item_format_amount,
+            purchaseItemModel.userCartItem.amounts
+        )
+
+        priceTextView.text = root.context.getString(
+            R.string.cart_purchase_item_format_total_price,
+            purchaseItemModel.userCartItem.totalPrice
+        )
+
+        with(unavailableTextView) {
+            drawableFitVertical()
+            isVisible = !purchaseItemModel.userCartItem.available
+        }
     }
 
-    private fun bindOrderNotesItem(
+    private fun bindCartTotalPriceItem(
+        binding: CartTotalPriceItemBinding,
+        totalPriceItemModel: CartTotalPriceItemModel
+    ) = binding.run {
+        totalValueTextView.text = root.context.getString(
+            R.string.cart_total_price_format_cost,
+            totalPriceItemModel.total
+        )
+
+        subtotalValueTextView.text = root.context.getString(
+            R.string.cart_total_price_format_cost,
+            totalPriceItemModel.subtotal
+        )
+
+        deliveryFeeValueTextView.text = root.context.getString(
+            R.string.cart_total_price_format_cost,
+            totalPriceItemModel.deliveryFee
+        )
+
+    }
+
+    private fun bindCartOrderNotesItem(
         binding: CartOrderNotesItemBinding,
         orderNotesItemModel: CartOrderNotesItemModel
     ) = binding.run {
-        this.orderNotesItemModel = orderNotesItemModel
+        with(notesEditText) {
+            setText(orderNotesItemModel.orderNotes)
 
-        notesEditText.doOnTextChanged { text, _, _, _ ->
-            listener.onUpdateOrderNotes(notes = text.toString())
-        }
-
-        // Clear focus after exit keyboard
-        notesEditText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                notesEditText.clearFocus()
+            doOnTextChanged { text, _, _, _ ->
+                listener.onUpdateOrderNotes(notes = text.toString())
             }
-            return@setOnEditorActionListener false
+
+            // Clear focus after exit keyboard
+            setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    notesEditText.clearFocus()
+                }
+                return@setOnEditorActionListener false
+            }
+        }
+    }
+
+    private fun bindCartPurchaseSubtitleItem(
+        binding: SubtitleSmallItemBinding,
+        purchaseSubtitleItemModel: CartPurchaseSubtitleItemModel
+    ) = binding.run {
+        subtitleTextView.text = purchaseSubtitleItemModel.subtitle
+    }
+
+    private fun bindCartPurchaseActionsItem(
+        binding: CartPurchaseActionsItemBinding,
+        purchaseActionsItemModel: CartPurchaseActionsItemModel
+    ) = binding.run {
+        addItemChip.setOnClickListener {
+            listener.onAddMoreItemClicked(
+                purchaseActionsItemModel.sellerId,
+                purchaseActionsItemModel.sectionId
+            )
         }
 
-        executePendingBindings()
+        removeItemsChip.setOnClickListener {
+            listener.onClearCart()
+        }
+    }
+
+    private fun bindCartEmptyItem(
+        binding: EmptyListItemBinding
+    ) = binding.run {
+        val message = root.context.getString(R.string.cart_empty_message)
+
+        with(emptyImageView) {
+            setSrc(R.drawable.undraw_empty_cart)
+            contentDescription = message
+        }
+
+        emptyMessageTextView.text = message
     }
 
     interface CartAdapterListener {
@@ -218,12 +342,12 @@ sealed class CartListModel {
         val cartTitle: String,
         val cartImageUrl: String?,
         val cartPickupAddress: String,
-        val cartDeliveryTime: String?,
+        val cartDeliveryTime: Date?,
         val sellerId: String,
+        val sellerName: String,
         val sellerOnline: Boolean,
+        val sellerType: SellerType,
         val sectionId: String?,
-        val sectionNavSubtitle: String,
-        val miscNavSubtitle: String
     ) : CartListModel()
 
     data class CartPurchaseItemModel(
@@ -249,10 +373,7 @@ sealed class CartListModel {
         val sectionId: String?
     ) : CartListModel()
 
-    data class CartEmptyItemModel(
-        @DrawableRes val drawableRes: Int,
-        val emptyMessage: String
-    ) : CartListModel()
+    object CartEmptyItemModel : CartListModel()
 }
 
 object CartListModelDiff : DiffUtil.ItemCallback<CartListModel>() {

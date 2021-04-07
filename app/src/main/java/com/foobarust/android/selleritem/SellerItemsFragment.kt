@@ -90,15 +90,11 @@ class SellerItemsFragment : Fragment(), SellerItemsAdapter.SellerItemsAdapterLis
             }
         }
 
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
         // Fix crashing when using animateLayoutChanges on parent layout
         // See: https://stackoverflow.com/questions/60004140/pages-contain-a-viewgroup-with-a-layouttransition-or-animatelayoutchanges-tr
         //binding.itemsLayout.layoutTransition.setAnimateParentHierarchy(false)
+
+        return binding.root
     }
 
     override fun onSellerItemClicked(itemId: String) {

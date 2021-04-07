@@ -3,6 +3,7 @@ package com.foobarust.data.models.order
 import com.foobarust.data.constants.Constants.ORDER_CREATED_AT_FIELD
 import com.foobarust.data.constants.Constants.ORDER_DELIVERER_ID_FIELD
 import com.foobarust.data.constants.Constants.ORDER_DELIVERER_LOCATION_FIELD
+import com.foobarust.data.constants.Constants.ORDER_DELIVERER_TRAVEL_MODE_FIELD
 import com.foobarust.data.constants.Constants.ORDER_DELIVERY_COST_FIELD
 import com.foobarust.data.constants.Constants.ORDER_DELIVERY_LOCATION_FIELD
 import com.foobarust.data.constants.Constants.ORDER_IDENTIFIER_FIELD
@@ -27,6 +28,7 @@ import com.foobarust.data.constants.Constants.ORDER_TOTAL_COST_FIELD
 import com.foobarust.data.constants.Constants.ORDER_TYPE_FIELD
 import com.foobarust.data.constants.Constants.ORDER_UPDATED_AT_FIELD
 import com.foobarust.data.constants.Constants.ORDER_USER_ID_FIELD
+import com.foobarust.data.constants.Constants.ORDER_VERIFY_CODE_FIELD
 import com.foobarust.data.models.seller.GeolocationDto
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.GeoPoint
@@ -86,6 +88,10 @@ data class OrderDetailNetworkDto(
     val delivererLocation: GeoPoint? = null,
 
     @JvmField
+    @PropertyName(ORDER_DELIVERER_TRAVEL_MODE_FIELD)
+    val delivererTravelMode: String? = null,
+
+    @JvmField
     @PropertyName(ORDER_IDENTIFIER_FIELD)
     val identifier: String? = null,
 
@@ -136,6 +142,10 @@ data class OrderDetailNetworkDto(
     @JvmField
     @PropertyName(ORDER_TOTAL_COST_FIELD)
     val totalCost: Double? = null,
+
+    @JvmField
+    @PropertyName(ORDER_VERIFY_CODE_FIELD)
+    val verifyCode: String? = null,
 
     @JvmField
     @PropertyName(ORDER_CREATED_AT_FIELD)

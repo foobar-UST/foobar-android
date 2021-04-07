@@ -6,21 +6,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentSellerMiscBinding
+import com.foobarust.android.shared.AppConfig.MAP_ZOOM_LEVEL
 import com.foobarust.android.shared.FullScreenDialogFragment
 import com.foobarust.android.utils.*
 import com.foobarust.domain.models.seller.*
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.maps.android.ktx.addMarker
-import com.google.maps.android.ktx.addPolyline
 import com.google.maps.android.ktx.awaitMap
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -29,9 +33,6 @@ import kotlinx.coroutines.launch
 /**
  * Created by kevin on 10/11/20
  */
-
-private const val MAP_ZOOM_LEVEL = 15f
-private const val MAP_ROUTE_WIDTH = 10f
 
 @AndroidEntryPoint
 class SellerMiscFragment : FullScreenDialogFragment() {
@@ -45,7 +46,7 @@ class SellerMiscFragment : FullScreenDialogFragment() {
         super.onCreate(savedInstanceState)
 
         if (savedInstanceState == null) {
-            viewModel.onFetchSellerDetail(sellerId = navArgs.sellerId)
+            viewModel.onFetchSellerMisc(sellerId = navArgs.sellerId)
         }
     }
 
@@ -54,7 +55,14 @@ class SellerMiscFragment : FullScreenDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentSellerMiscBinding.inflate(inflater, container, false)
+        binding = FragmentSellerMiscBinding.inflate(inflater, container, false).apply {
+            root.applyLayoutFullscreen()
+            toolbarLayout.applySystemWindowInsetsPadding(applyTop = true)
+            bottomSheet.applySystemWindowInsetsMargin(applyTop = true)
+            miscLayout.applySystemWindowInsetsPadding(applyBottom = true)
+            phoneNumTextView.drawableFitVertical()
+            websiteTextView.drawableFitVertical()
+        }
 
         // Setup toolbar
         binding.toolbar.setNavigationOnClickListener {
@@ -90,8 +98,8 @@ class SellerMiscFragment : FullScreenDialogFragment() {
                 bottomSheetBehavior.hideIf(uiState !is SellerMiscUiState.Success)
 
                 with(binding) {
-                    loadingProgressBar.bindProgressHideIf(uiState !is SellerMiscUiState.Loading)
-                    retryButton.bindHideIf(uiState !is SellerMiscUiState.Error)
+                    loadingProgressBar.hideIf(uiState !is SellerMiscUiState.Loading)
+                    retryButton.isVisible = uiState is SellerMiscUiState.Error
                 }
 
                 when (uiState) {
@@ -104,7 +112,7 @@ class SellerMiscFragment : FullScreenDialogFragment() {
 
         // Retry button
         binding.retryButton.setOnClickListener {
-            viewModel.onFetchSellerDetail(navArgs.sellerId)
+            viewModel.onFetchSellerMisc(navArgs.sellerId)
         }
 
         return binding.root
@@ -121,35 +129,22 @@ class SellerMiscFragment : FullScreenDialogFragment() {
         // Set map night mode
         viewLifecycleOwner.lifecycleScope.launch {
             if (requireContext().isNightModeOn()) {
-                getSupportMapFragment()?.awaitMap()?.run {
-                    val nightStyle = MapStyleOptions.loadRawResourceStyle(
-                        requireContext(),
-                        R.raw.night_map_style
-                    )
-                    setMapStyle(nightStyle)
-                }
+                val nightStyle = MapStyleOptions.loadRawResourceStyle(
+                    requireContext(),
+                    R.raw.night_map_style
+                )
+                getMapInstance().setMapStyle(nightStyle)
             }
         }
 
         // Add seller coordinate
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.sellerLocation.collect { location ->
-                getSupportMapFragment()?.awaitMap()?.run {
-                    addMarker { position(location) }
-                    moveCamera(CameraUpdateFactory.newLatLngZoom(location, MAP_ZOOM_LEVEL))
-                }
-            }
-        }
-
-        // Add seller route
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.deliveryRoute.collect { latLngs ->
-                if (latLngs == null) return@collect
-                getSupportMapFragment()?.awaitMap()?.run {
-                    addPolyline {
-                        color(requireContext().themeColor(R.attr.colorSecondary))
-                        width(MAP_ROUTE_WIDTH)
-                        addAll(latLngs)
+                location?.let {
+                    getMapInstance().run {
+                        val latLng = LatLng(it.latitude, it.longitude)
+                        addMarker { position(latLng) }
+                        moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, MAP_ZOOM_LEVEL))
                     }
                 }
             }
@@ -175,7 +170,9 @@ class SellerMiscFragment : FullScreenDialogFragment() {
         descriptionTextView.isGone = sellerDetail.description.isNullOrBlank()
     }
 
-    private fun getSupportMapFragment(): SupportMapFragment? {
-        return childFragmentManager.findFragmentById(R.id.map_container) as? SupportMapFragment
+    private suspend fun getMapInstance(): GoogleMap {
+        val mapFragment = childFragmentManager.findFragmentById(R.id.map_container)
+            as SupportMapFragment
+        return mapFragment.awaitMap()
     }
 }

@@ -2,8 +2,6 @@ package com.foobarust.android.selleritem
 
 import android.content.Context
 import android.os.Parcelable
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.R
 import com.foobarust.android.selleritem.SellerItemDetailListModel.*
@@ -40,9 +38,7 @@ class SellerItemDetailViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     private val _sellerItemDetail = MutableStateFlow<SellerItemDetail?>(null)
-    val sellerItemDetail: LiveData<SellerItemDetail> = _sellerItemDetail
-        .filterNotNull()
-        .asLiveData(viewModelScope.coroutineContext)
+    val sellerItemDetail: StateFlow<SellerItemDetail?> = _sellerItemDetail.asStateFlow()
 
     private val _suggestedItems = MutableStateFlow<List<SellerItemBasic>>(emptyList())
 
@@ -51,23 +47,21 @@ class SellerItemDetailViewModel @Inject constructor(
         .map { checkedBundleItems -> checkedBundleItems.sumOf { it.price } }
 
     private val _sellerItemDetailListModels = MutableStateFlow<List<SellerItemDetailListModel>>(emptyList())
-    val sellerItemDetailListModels: LiveData<List<SellerItemDetailListModel>> = _sellerItemDetailListModels
-        .asLiveData(viewModelScope.coroutineContext)
+    val sellerItemDetailListModels: StateFlow<List<SellerItemDetailListModel>> = _sellerItemDetailListModels
+        .asStateFlow()
 
     private val _sellerItemDetailUiState = MutableStateFlow<SellerItemDetailUiState>(
         SellerItemDetailUiState.Loading
     )
-    val sellerItemDetailUiState: LiveData<SellerItemDetailUiState> = _sellerItemDetailUiState
-        .asLiveData(viewModelScope.coroutineContext)
+    val sellerItemDetailUiState: StateFlow<SellerItemDetailUiState> = _sellerItemDetailUiState
+        .asStateFlow()
 
     private val _sellerItemDetailUpdateState = MutableStateFlow<SellerItemDetailUiState?>(null)
-    val sellerItemDetailUpdateState: LiveData<SellerItemDetailUiState?> = _sellerItemDetailUpdateState
-        .asLiveData(viewModelScope.coroutineContext)
+    val sellerItemDetailUpdateState: StateFlow<SellerItemDetailUiState?> = _sellerItemDetailUpdateState
+        .asStateFlow()
 
     private val _amountsInput = MutableStateFlow(1)
-    val amountsInput: LiveData<String> = _amountsInput
-        .map { it.toString() }
-        .asLiveData(viewModelScope.coroutineContext)
+    val amountsInput: StateFlow<Int> = _amountsInput.asStateFlow()
 
     private val totalPrice: Flow<Double> = combine(
         _sellerItemDetail.filterNotNull(),
@@ -81,7 +75,7 @@ class SellerItemDetailViewModel @Inject constructor(
 
     private val _toolbarScrollState = MutableStateFlow(AppBarLayoutState.IDLE)
 
-    val toolbarTitle: LiveData<String?> = combine(
+    val toolbarTitle: StateFlow<String?> = combine(
         _toolbarScrollState.map { it == AppBarLayoutState.COLLAPSED },
         _itemProperty.filterNotNull().map { it.isUpdateItemState() }
     ) { isCollapsed, isUpdateItemState ->
@@ -95,9 +89,13 @@ class SellerItemDetailViewModel @Inject constructor(
             else -> null
         }
     }
-        .asLiveData(viewModelScope.coroutineContext)
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = null
+        )
 
-    val submitButtonTitle: LiveData<String?> = combine(
+    val submitButtonTitle: StateFlow<String?> = combine(
         totalPrice,
         _itemProperty.filterNotNull()
     ) { totalPrice, property ->
@@ -109,19 +107,23 @@ class SellerItemDetailViewModel @Inject constructor(
             else -> context.getString(R.string.seller_item_submit_add, totalPrice)
         }
     }
-        .asLiveData(viewModelScope.coroutineContext)
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = null
+        )
 
-    val showItemImage: LiveData<Boolean> = _sellerItemDetail
-        .map { it?.imageUrl != null }
-        .asLiveData(viewModelScope.coroutineContext)
-
-    val showModifyButtons: LiveData<Boolean> = _sellerItemDetailUiState.combine(
+    val showModifyButtons: StateFlow<Boolean> = _sellerItemDetailUiState.combine(
         _sellerItemDetailUpdateState
     ) { uiState, updateState ->
         uiState is SellerItemDetailUiState.Success &&
             updateState !is SellerItemDetailUiState.Loading
     }
-        .asLiveData(viewModelScope.coroutineContext)
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = false
+        )
 
     private var fetchItemDetailJob: Job? = null
 

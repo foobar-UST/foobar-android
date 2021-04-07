@@ -2,13 +2,6 @@
     <!-- System -->
     <string name="app_name">Foobar++</string>
 
-    <string name="shortcut_seller_short_label">Restaurants</string>
-    <string name="shortcut_seller_long_label">Restaurants</string>
-    <string name="shortcut_order_short_label">Order</string>
-    <string name="shortcut_order_long_label">Order</string>
-    <string name="shortcut_explore_short_label">Explore</string>
-    <string name="shortcut_explore_long_label">Explore</string>
-
     <!-- Actions -->
     <string name="action_clear_text">Clear Text</string>
     <string name="action_search">Search</string>
@@ -64,12 +57,10 @@
     <string name="settings_account_edit_profile">View My Profile</string>
     <string name="settings_account_guest">Guest</string>
     <string name="settings_account_sign_in">Click to Sign In</string>
-    <string name="settings_section_notifications_title">Notifications</string>
     <string name="settings_section_contact_us_title">Contact Us</string>
     <string name="settings_section_license_title">License</string>
     <string name="settings_section_features_title">Features</string>
     <string name="settings_section_sign_out_title">Sign Out</string>
-    <string name="settings_section_favorite_title">My Favourite</string>
 
     <!-- Profile -->
     <string name="profile_toolbar_title">My Profile</string>
@@ -94,7 +85,7 @@
     <string name="seller_subtitle">Restaurants</string>
     <string name="seller_status_online">Opening</string>
     <string name="seller_status_offline">Closed</string>
-    <string name="seller_on_campus_item_min_spend">$ %s Min</string>
+    <string name="seller_on_campus_item_min_spend">$ %.1f Min</string>
     <string name="seller_empty_message">No Restaurant Found</string>
 
     <!-- Seller Detail -->
@@ -121,7 +112,7 @@
     <string name="seller_item_data_format_price">$ %.1f</string>
     <string name="seller_item_submit_add">Add To Cart ($ %.1f)</string>
     <string name="seller_item_submit_update">Update To Cart ($ %.1f)</string>
-    <string name="seller_item_info"># %s</string>
+    <string name="seller_item_rating_null">n.a.</string>
 
     <!-- Seller Item Detail -->
     <string name="seller_item_detail_format_item_count">%d Items Left</string>
@@ -144,18 +135,18 @@
     <string name="seller_section_empty_message">No Group Section Found</string>
 
     <!-- Seller Section Detail -->
+    <string name="seller_section_detail_info_title">Order Detail</string>
     <string name="seller_section_detail_users_subtitle">Participants (%d/%d)</string>
     <string name="seller_section_detail_users_subtitle_empty">No participants yet.</string>
     <string name="seller_section_detail_counter_on_subtitle">Time Left</string>
     <string name="seller_section_detail_counter_off_subtitle">Available On</string>
-
-    <string name="seller_section_detail_title_delivery_date">Delivery Date</string>
+    <string name="seller_section_detail_title_delivery_date">Date</string>
     <string name="seller_section_detail_title_due_time">Due Time</string>
     <string name="seller_section_detail_title_delivery_time">Delivery Time</string>
     <string name="seller_section_detail_pick_up_location">Pick Up</string>
-
     <string name="seller_section_detail_seller_info_ship_from">Detail</string>
     <string name="seller_section_detail_button_menu">Open Menu</string>
+    <string name="seller_section_detail_related_sections_title">More Orders</string>
     <string name="more_sections_subtitle">More Orders</string>
     <string name="more_sections_section_item_format_delivery_time">Deliver %s</string>
     <string name="more_sections_show_more">More</string>
@@ -187,7 +178,7 @@
     <!-- Cart -->
     <string name="cart_bottom_bar_title_items_count">Items in Cart</string>
     <string name="cart_bottom_bar_format_items_count">%d</string>
-    <string name="cart_info_nav_subtitle_section">Section from %s</string>
+    <string name="cart_info_nav_subtitle_section">From %s</string>
     <string name="cart_info_nav_format_section">%s @ %s</string>
     <string name="cart_info_nav_subtitle_misc_on_campus">[On Campus] Pick Up</string>
     <string name="cart_info_nav_subtitle_misc_off_campus">[Off Campus] Deliver To</string>
@@ -223,20 +214,17 @@
     <string name="order_tab_recent">Recent</string>
     <string name="order_tab_history">History</string>
 
-    <!-- Order Recent -->
+    <!-- Order List -->
     <string name="order_item_identifier_title">[#%s] %s</string>
     <string name="order_item_view_order">View Order</string>
     <string name="order_item_created_at">Ordered on %s</string>
-
-    <string name="order_recent_item_subtitle_archived">Archived</string>
-    <string name="order_recent_active_item_total_cost">Total: $%.1f</string>
-    <string name="order_recent_empty_item_title">No Recent Order</string>
-
-    <!-- Order History -->
+    <string name="order_item_total_cost">Total: $%.1f</string>
+    <string name="order_active_empty_message">No Recent Order</string>
+    <string name="order_history_empty_message">No Order History</string>
+    <string name="order_history_item_image_title">%s\n%s</string>
     <string name="order_history_archived_item_view_order">View Order</string>
     <string name="order_history_delivered_item_rate_order">Rate Order</string>
     <string name="order_history_item_identifier_title">[#%s] %s</string>
-    <string name="order_history_empty_message">No Order History</string>
     <string name="order_history_ordered_date">Ordered on %s</string>
     <string name="order_history_total_cost">HKD $%.1f</string>
     <string name="order_history_item_view_order">View Receipt</string>
@@ -268,7 +256,8 @@
     <string name="order_detail_header_item_delivery_address_title_off_campus">Deliver To</string>
     <string name="order_detail_info_item_identifier_title">Order #%s</string>
     <string name="order_detail_info_item_total_cost_title">Total Cost</string>
-    <string name="order_detail_info_item_created_at">Ordered on %s</string>
+    <string name="order_detail_info_item_created_at">· Ordered on %s</string>
+    <string name="order_detail_info_item_message">· %s</string>
     <string name="order_detail_info_item_updated_at">Updated at %s</string>
     <string name="order_detail_info_item_total_cost">HKD $%.1f</string>
     <string name="order_detail_purchase_item_format_title">%s x %d</string>
@@ -276,6 +265,11 @@
     <string name="order_detail_payment_item_title">Payment Method</string>
     <string name="order_detail_actions_button_seller_menu">Restaurant Menu</string>
     <string name="order_detail_actions_button_seller_contact">Contact Restaurant</string>
+    <string name="order_detail_state_button_verify_button">Verify Order</string>
+
+    <!-- Verify Order -->
+    <string name="verify_order_toolbar_title">Verify Title</string>
+    <string name="verify_order_scan_message">Provide the code when picking up your order.</string>
 
     <!-- Explore -->
     <string name="explore_item_categories_subtitle">Categories</string>
@@ -306,5 +300,8 @@
     <string name="seller_rating_detail_rating_count_good">Good</string>
     <string name="seller_rating_detail_rating_count_fair">Fair</string>
     <string name="seller_rating_detail_rating_count_poor">Poor</string>
+    <string name="seller_rating_detail_empty_item_message">Ratings will be shown here</string>
 
+    <!-- Deliverer Info -->
+    <string name="deliverer_info_description">is delivering your order.</string>
 </resources>

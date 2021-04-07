@@ -1,147 +1,144 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <View
+        android:id="@+id/header_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:background="?attr/colorPrimarySurface"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHeight_percent="0.6"/>
 
-        <View
-            android:id="@+id/header_view"
+    <TextView
+        android:id="@+id/title_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/spacing_xmedium"
+        android:layout_marginStart="@dimen/spacing_xlarge"
+        android:layout_marginEnd="@dimen/spacing_xlarge"
+        android:text="@string/auth_input_title"
+        android:textColor="?attr/colorOnPrimary"
+        android:textStyle="bold"
+        android:textAppearance="?attr/textAppearanceHeadline4"
+        app:layout_constraintBottom_toTopOf="@id/description_text_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/description_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_xlarge"
+        android:layout_marginBottom="@dimen/spacing_xlarge"
+        android:layout_marginEnd="@dimen/spacing_xlarge"
+        android:text="@string/auth_input_description"
+        android:textColor="?attr/colorOnPrimarySurface"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/header_view"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@id/header_view"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:background="?attr/colorPrimarySurface"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintHeight_percent="0.6"/>
+            android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/title_text_view"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_xmedium"
-            android:layout_marginStart="@dimen/spacing_xlarge"
-            android:layout_marginEnd="@dimen/spacing_xlarge"
-            android:text="@string/auth_input_title"
-            android:textColor="?attr/colorOnPrimary"
-            android:textStyle="bold"
-            android:textAppearance="?attr/textAppearanceHeadline4"
-            app:layout_constraintBottom_toTopOf="@id/description_text_view"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-        <TextView
-            android:id="@+id/description_text_view"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/spacing_xlarge"
-            android:layout_marginBottom="@dimen/spacing_xlarge"
-            android:layout_marginEnd="@dimen/spacing_xlarge"
-            android:text="@string/auth_input_description"
-            android:textColor="?attr/colorOnPrimarySurface"
-            android:textAppearance="?attr/textAppearanceSubtitle1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/header_view"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:fillViewport="true"
-            app:layout_constraintTop_toBottomOf="@id/header_view"
-            app:layout_constraintBottom_toBottomOf="parent">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:id="@+id/username_text_input_layout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:layout_marginHorizontal="@dimen/spacing_mxlarge"
+                android:paddingBottom="@dimen/spacing_medium"
+                android:hint="@string/auth_input_hint_username"
+                app:startIconTint="@color/material_on_surface_emphasis_medium"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/email_suffix_text_input_layout">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:id="@+id/username_text_input_layout"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/username_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_large"
-                    android:layout_marginHorizontal="@dimen/spacing_mxlarge"
-                    android:paddingBottom="@dimen/spacing_medium"
-                    android:hint="@string/auth_input_hint_username"
-                    app:startIconTint="@color/material_on_surface_emphasis_medium"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toTopOf="@id/email_suffix_text_input_layout">
+                    android:singleLine="true"
+                    android:maxLength="10"
+                    android:inputType="textVisiblePassword|textNoSuggestions"
+                    android:textColor="@color/material_on_background_emphasis_medium" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/username_edit_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:singleLine="true"
-                        android:maxLength="10"
-                        android:inputType="textVisiblePassword|textNoSuggestions"
-                        android:textColor="@color/material_on_background_emphasis_medium" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:id="@+id/email_suffix_text_input_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_xmedium"
+                android:layout_marginHorizontal="@dimen/spacing_mxlarge"
+                android:paddingBottom="@dimen/spacing_medium"
+                android:hint="@string/auth_input_email_hint_domain"
+                app:startIconTint="@color/material_on_surface_emphasis_medium"
+                app:layout_constraintTop_toBottomOf="@id/username_text_input_layout">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                    android:id="@+id/email_suffix_text_input_layout"
+                <AutoCompleteTextView
+                    android:id="@+id/email_domains_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_xmedium"
-                    android:layout_marginHorizontal="@dimen/spacing_mxlarge"
-                    android:paddingBottom="@dimen/spacing_medium"
                     android:hint="@string/auth_input_email_hint_domain"
-                    app:startIconTint="@color/material_on_surface_emphasis_medium"
-                    app:layout_constraintTop_toBottomOf="@id/username_text_input_layout">
+                    android:textColor="@color/material_on_background_emphasis_medium"
+                    android:inputType="none"/>
 
-                    <AutoCompleteTextView
-                        android:id="@+id/email_domains_text_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/auth_input_email_hint_domain"
-                        android:textColor="@color/material_on_background_emphasis_medium"
-                        android:inputType="none"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
-                </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/loading_progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                app:layout_constraintTop_toBottomOf="@id/email_suffix_text_input_layout"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
-                <com.google.android.material.progressindicator.CircularProgressIndicator
-                    android:id="@+id/loading_progress_bar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:indeterminate="true"
-                    app:layout_constraintTop_toBottomOf="@id/email_suffix_text_input_layout"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"/>
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/sign_in_buttons_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="confirm_button,skip_button" />
 
-                <androidx.constraintlayout.widget.Group
-                    android:id="@+id/sign_in_buttons_group"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:constraint_referenced_ids="confirm_button,skip_button" />
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                android:id="@+id/confirm_button"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:text="@string/auth_input_confirm"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/email_suffix_text_input_layout"
+                app:layout_constraintBottom_toTopOf="@id/skip_button"/>
 
-                <com.google.android.material.button.MaterialButton
-                    style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-                    android:id="@+id/confirm_button"
-                    android:layout_width="160dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/auth_input_confirm"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/email_suffix_text_input_layout"
-                    app:layout_constraintBottom_toTopOf="@id/skip_button"/>
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:id="@+id/skip_button"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:text="@string/auth_input_skip"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/confirm_button"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
-                <com.google.android.material.button.MaterialButton
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:id="@+id/skip_button"
-                    android:layout_width="160dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/auth_input_skip"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/confirm_button"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 
-        </androidx.core.widget.NestedScrollView>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</layout>
+</androidx.constraintlayout.widget.ConstraintLayout>

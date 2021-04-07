@@ -11,9 +11,7 @@ import javax.inject.Inject
  * Created by kevin on 1/25/21
  */
 
-class PaymentMethodUtil @Inject constructor(
-    @ApplicationContext private val context: Context
-) {
+class PaymentMethodUtil @Inject constructor(@ApplicationContext private val context: Context) {
 
     fun getPaymentMethodItem(identifier: String): PaymentMethodItem {
         return PaymentMethodItem(

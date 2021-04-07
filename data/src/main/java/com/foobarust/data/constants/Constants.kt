@@ -119,6 +119,7 @@ object Constants {
     const val SELLER_SECTION_SELLER_NAME_ZH_FIELD = "seller_name_zh"
     const val SELLER_SECTION_DELIVERER_ID_FIELD = "deliverer_id"
     const val SELLER_SECTION_DELIVERER_LOCATION_FIELD = "deliverer_location"
+    const val SELLER_SECTION_DELIVERER_TRAVEL_MODE_FIELD = "deliverer_travel_mode"
     const val SELLER_SECTION_DELIVERY_COST_FIELD = "delivery_cost"
     const val SELLER_SECTION_DELIVERY_TIME_FIELD = "delivery_time"
     const val SELLER_SECTION_DELIVERY_LOCATION_FIELD = "delivery_location"
@@ -133,11 +134,12 @@ object Constants {
     const val SELLER_SECTION_AVAILABLE_FIELD = "available"
     const val SELLER_SECTION_UPDATED_AT_FIELD = "updated_at"
 
-    const val SELLER_SECTION_STATE_AVAILABLE = "available"
-    const val SELLER_SECTION_STATE_PROCESSING = "processing"
-    const val SELLER_SECTION_STATE_PREPARING = "preparing"
-    const val SELLER_SECTION_STATE_SHIPPED = "shipped"
-    const val SELLER_SECTION_STATE_DELIVERED = "delivered"
+    const val SELLER_SECTION_STATE_AVAILABLE = "0_available"
+    const val SELLER_SECTION_STATE_PROCESSING = "1_processing"
+    const val SELLER_SECTION_STATE_PREPARING = "2_preparing"
+    const val SELLER_SECTION_STATE_SHIPPED = "3_shipped"
+    const val SELLER_SECTION_STATE_READY_FOR_PICK_UP = "4_ready_for_pick_up"
+    const val SELLER_SECTION_STATE_DELIVERED = "5_delivered"
 
     // Seller Rating
     const val SELLER_RATINGS_SUB_COLLECTION = "ratings"
@@ -204,6 +206,7 @@ object Constants {
     const val ORDER_SECTION_TITLE_ZH_FIELD = "section_title_zh"
     const val ORDER_DELIVERER_ID_FIELD = "deliverer_id"
     const val ORDER_DELIVERER_LOCATION_FIELD = "deliverer_location"
+    const val ORDER_DELIVERER_TRAVEL_MODE_FIELD = "deliverer_travel_mode"
     const val ORDER_IDENTIFIER_FIELD = "identifier"
     const val ORDER_IMAGE_URL_FIELD = "image_url"
     const val ORDER_TYPE_FIELD = "type"
@@ -217,6 +220,7 @@ object Constants {
     const val ORDER_SUBTOTAL_COST_FIELD = "subtotal_cost"
     const val ORDER_DELIVERY_COST_FIELD = "delivery_cost"
     const val ORDER_TOTAL_COST_FIELD = "total_cost"
+    const val ORDER_VERIFY_CODE_FIELD = "verify_code"
     const val ORDER_CREATED_AT_FIELD = "created_at"
     const val ORDER_UPDATED_AT_FIELD = "updated_at"
 
@@ -239,13 +243,13 @@ object Constants {
     const val ORDER_ITEM_ORDER_ID_FIELD = "order_id"
 
     // Order States
-    const val ORDER_STATE_PROCESSING = "processing"
-    const val ORDER_STATE_PREPARING = "preparing"
-    const val ORDER_STATE_IN_TRANSIT = "in_transit"
-    const val ORDER_STATE_READY_FOR_PICK_UP = "ready_for_pick_up"
-    const val ORDER_STATE_DELIVERED = "delivered"
-    const val ORDER_STATE_ARCHIVED = "archived"
-    const val ORDER_STATE_CANCELLED = "cancelled"
+    const val ORDER_STATE_PROCESSING = "0_processing"
+    const val ORDER_STATE_PREPARING = "1_preparing"
+    const val ORDER_STATE_IN_TRANSIT = "2_in_transit"
+    const val ORDER_STATE_READY_FOR_PICK_UP = "3_ready_for_pick_up"
+    const val ORDER_STATE_DELIVERED = "4_delivered"
+    const val ORDER_STATE_ARCHIVED = "5_archived"
+    const val ORDER_STATE_CANCELLED = "6_cancelled"
 
     // Payment Methods
     const val PAYMENT_METHODS_COLLECTION = "payment_methods"
@@ -279,6 +283,9 @@ object Constants {
     const val MAPS_DIRECTIONS_PARAM_KEY = "key"
     const val MAPS_DIRECTIONS_PARAM_ORIGIN = "origin"
     const val MAPS_DIRECTIONS_PARAM_DEST = "destination"
+    const val MAPS_DIRECTIONS_PARAM_MODE = "mode"
+    const val MAPS_DIRECTIONS_MODE_DRIVING = "driving"
+    const val MAPS_DIRECTIONS_MODE_WALKING = "walking"
     const val MAPS_STATIC_MAP_END_POINT = "staticmap"
     const val MAPS_STATIC_MAP_PARAM_KEY = "key"
     const val MAPS_STATIC_MAP_PARAM_AUTO_SCALE = "autoscale"

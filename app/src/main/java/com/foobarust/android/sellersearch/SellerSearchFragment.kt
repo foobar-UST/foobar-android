@@ -11,10 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentSellerSearchBinding
 import com.foobarust.android.sellerdetail.SellerDetailProperty
-import com.foobarust.android.utils.AutoClearedValue
-import com.foobarust.android.utils.findNavController
-import com.foobarust.android.utils.showShortToast
-import com.foobarust.android.utils.touchOutsideItemsFlow
+import com.foobarust.android.utils.*
 import com.foobarust.domain.models.seller.SellerType
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -40,7 +37,16 @@ class SellerSearchFragment : DialogFragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentSellerSearchBinding.inflate(inflater, container, false)
+        binding = FragmentSellerSearchBinding.inflate(inflater, container, false).apply {
+            root.applyLayoutFullscreen()
+
+            with(searchEditText) {
+                applySystemWindowInsetsMargin(applyTop = true)
+                requestFocus()
+            }
+
+            clearTextButton.applySystemWindowInsetsMargin(applyTop = true)
+        }
 
         val sellerSearchAdapter = SellerSearchAdapter(this)
 
@@ -49,14 +55,18 @@ class SellerSearchFragment : DialogFragment(),
             setHasFixedSize(true)
         }
 
-        viewModel.searchListModels.observe(viewLifecycleOwner) {
-            sellerSearchAdapter.submitList(it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.searchListModels.collect {
+                sellerSearchAdapter.submitList(it)
+            }
         }
 
         // Ui state
-        viewModel.searchUiState.observe(viewLifecycleOwner) {
-            if (it is SellerSearchUiState.Error) {
-                showShortToast(it.message)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.searchUiState.collect { uiState ->
+                if (uiState is SellerSearchUiState.Error) {
+                    showShortToast(uiState.message)
+                }
             }
         }
 

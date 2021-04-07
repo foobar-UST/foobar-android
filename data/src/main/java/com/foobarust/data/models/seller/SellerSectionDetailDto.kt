@@ -4,6 +4,7 @@ import com.foobarust.data.constants.Constants.SELLER_SECTION_AVAILABLE_FIELD
 import com.foobarust.data.constants.Constants.SELLER_SECTION_CUTOFF_TIME_FIELD
 import com.foobarust.data.constants.Constants.SELLER_SECTION_DELIVERER_ID_FIELD
 import com.foobarust.data.constants.Constants.SELLER_SECTION_DELIVERER_LOCATION_FIELD
+import com.foobarust.data.constants.Constants.SELLER_SECTION_DELIVERER_TRAVEL_MODE_FIELD
 import com.foobarust.data.constants.Constants.SELLER_SECTION_DELIVERY_COST_FIELD
 import com.foobarust.data.constants.Constants.SELLER_SECTION_DELIVERY_LOCATION_FIELD
 import com.foobarust.data.constants.Constants.SELLER_SECTION_DELIVERY_TIME_FIELD
@@ -67,6 +68,10 @@ data class SellerSectionDetailDto(
     @JvmField
     @PropertyName(SELLER_SECTION_DELIVERER_LOCATION_FIELD)
     val delivererLocation: GeoPoint? = null,
+
+    @JvmField
+    @PropertyName(SELLER_SECTION_DELIVERER_TRAVEL_MODE_FIELD)
+    val delivererTravelMode: String? = null,
 
     @JvmField
     @PropertyName(SELLER_SECTION_DELIVERY_COST_FIELD)

@@ -22,12 +22,6 @@
             android:id="@+id/action_settingsFragment_to_licenseFragment"
             app:destination="@id/licenseFragment" />
         <action
-            android:id="@+id/action_settingsFragment_to_notificationFragment"
-            app:destination="@id/notificationFragment" />
-        <action
-            android:id="@+id/action_settingsFragment_to_favoriteFragment"
-            app:destination="@id/favoriteFragment" />
-        <action
             android:id="@+id/action_settingsFragment_to_tutorialFragment"
             app:destination="@id/tutorialFragment" />
         <action
@@ -39,23 +33,11 @@
             app:destination="@id/profileFragment" />
     </fragment>
 
-    <!-- NotificationFragment -->
-    <dialog
-        android:id="@+id/notificationFragment"
-        android:name="com.foobarust.android.settings.NotificationFragment"
-        tools:layout="@layout/fragment_notification"/>
-
     <!-- LicenseFragment -->
     <dialog
         android:id="@+id/licenseFragment"
         android:name="com.foobarust.android.settings.LicenseFragment"
         tools:layout="@layout/fragment_license"/>
-
-    <!-- FavoriteFragment -->
-    <dialog
-        android:id="@+id/favoriteFragment"
-        android:name="com.foobarust.android.settings.FavoriteFragment"
-        tools:layout="@layout/fragment_favorite"/>
 
     <!-- ProfileFragment -->
     <dialog

@@ -13,9 +13,9 @@ import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentCheckoutBinding
 import com.foobarust.android.shared.FullScreenDialogFragment
 import com.foobarust.android.utils.AutoClearedValue
-import com.foobarust.android.utils.bindProgressHideIf
 import com.foobarust.android.utils.findNavController
 import com.foobarust.android.utils.getHiltNavGraphViewModel
+import com.foobarust.android.utils.hideIf
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -97,8 +97,8 @@ class CheckoutFragment : FullScreenDialogFragment() {
 
         // Show progress
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.showLoadingProgressBar.collect {
-                binding.loadingProgressBar.bindProgressHideIf(!it)
+            viewModel.showLoading.collect { showLoading ->
+                binding.loadingProgressBar.hideIf(!showLoading)
             }
         }
 

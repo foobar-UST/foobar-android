@@ -7,12 +7,11 @@ import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.navArgs
 import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentSellerSectionBinding
 import com.foobarust.android.shared.FullScreenDialogFragment
-import com.foobarust.android.utils.AutoClearedValue
-import com.foobarust.android.utils.findNavController
-import com.foobarust.android.utils.getHiltNavGraphViewModel
+import com.foobarust.android.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -36,11 +35,15 @@ class SellerSectionFragment : FullScreenDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentSellerSectionBinding.inflate(inflater, container, false)
+        binding = FragmentSellerSectionBinding.inflate(inflater, container, false).apply {
+            root.applyLayoutFullscreen()
+            appBarLayout.applySystemWindowInsetsPadding(applyTop = true)
+        }
 
         // Setup navigation
         val navHostFragment = childFragmentManager.findFragmentById(R.id.fragment_container)
             as NavHostFragment
+
         navController = navHostFragment.navController.apply {
             setGraph(
                 R.navigation.navigation_seller_section,

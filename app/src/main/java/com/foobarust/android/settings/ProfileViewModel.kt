@@ -1,30 +1,24 @@
 package com.foobarust.android.settings
 
 import android.content.Context
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.R
 import com.foobarust.android.settings.ProfileListModel.*
 import com.foobarust.android.settings.TextInputType.NAME
 import com.foobarust.android.settings.TextInputType.PHONE_NUM
+import com.foobarust.android.shared.AppConfig.PHONE_NUM_PREFIX
 import com.foobarust.domain.models.user.UserDetail
 import com.foobarust.domain.models.user.isDataCompleted
 import com.foobarust.domain.states.Resource
-import com.foobarust.domain.states.getSuccessDataOr
 import com.foobarust.domain.usecases.AuthState
 import com.foobarust.domain.usecases.auth.GetUserAuthStateUseCase
-import com.foobarust.domain.usecases.shared.GetFormattedPhoneNumUseCase
 import com.foobarust.domain.usecases.user.UpdateUserDetailParameters
 import com.foobarust.domain.usecases.user.UpdateUserDetailUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -35,17 +29,14 @@ const val EDIT_PROFILE_PHONE_NUMBER = "profile_phone_number"
 class ProfileViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val updateUserDetailUseCase: UpdateUserDetailUseCase,
-    private val getFormattedPhoneNumUseCase: GetFormattedPhoneNumUseCase,
     getUserAuthStateUseCase: GetUserAuthStateUseCase,
 ) : ViewModel() {
 
     private val _profileListModels = MutableStateFlow<List<ProfileListModel>>(emptyList())
-    val profileListModels: LiveData<List<ProfileListModel>> = _profileListModels
-        .asLiveData(viewModelScope.coroutineContext)
+    val profileListModels: StateFlow<List<ProfileListModel>> = _profileListModels.asStateFlow()
 
     private val _profileUiState = MutableStateFlow<ProfileUiState>(ProfileUiState.Loading)
-    val profileUiState: LiveData<ProfileUiState> = _profileUiState
-        .asLiveData(viewModelScope.coroutineContext)
+    val profileUiState: StateFlow<ProfileUiState> = _profileUiState.asStateFlow()
 
     private val _navigateToTextInput = Channel<TextInputProperty>()
     val navigateToTextInput: Flow<TextInputProperty> = _navigateToTextInput.receiveAsFlow()
@@ -143,20 +134,19 @@ class ProfileViewModel @Inject constructor(
                 title = context.getString(R.string.profile_edit_field_name),
                 value = userDetail.name,
                 displayValue = userDetail.name.takeIf { !it.isNullOrEmpty() } ?:
-                context.getString(R.string.profile_edit_field_input_not_set)
+                    context.getString(R.string.profile_edit_field_input_not_set)
             ))
 
             // Add user phone number section
             val formattedPhoneNum = userDetail.phoneNum?.let {
-                getFormattedPhoneNumUseCase(it).getSuccessDataOr(null)
-            }
+                "$PHONE_NUM_PREFIX $it"
+            } ?: context.getString(R.string.profile_edit_field_input_not_set)
 
             add(ProfileEditItemModel(
                 id = EDIT_PROFILE_PHONE_NUMBER,
                 title = context.getString(R.string.profile_edit_field_phone_number),
                 value = userDetail.phoneNum,
-                displayValue = formattedPhoneNum ?:
-                context.getString(R.string.profile_edit_field_input_not_set)
+                displayValue = formattedPhoneNum
             ))
         }
     }

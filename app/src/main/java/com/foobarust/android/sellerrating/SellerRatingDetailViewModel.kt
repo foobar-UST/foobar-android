@@ -7,8 +7,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.insertSeparators
 import androidx.paging.map
-import com.foobarust.android.sellerrating.SellerRatingDetailListModel.SellerRatingDetailInfoItem
-import com.foobarust.android.sellerrating.SellerRatingDetailListModel.SellerRatingDetailRatingItem
+import com.foobarust.android.sellerrating.SellerRatingDetailListModel.*
 import com.foobarust.domain.models.seller.SellerRatingCount
 import com.foobarust.domain.usecases.seller.GetSellerRatingsPagingUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -47,7 +46,9 @@ class SellerRatingDetailViewModel @Inject constructor(
             }
         }
         .map { pagingData ->
-            pagingData.insertSeparators { before, _ -> insertSeparators(before) }
+            pagingData.insertSeparators { before, after ->
+                insertSeparators(before, after)
+            }
         }
         .cachedIn(viewModelScope)
 
@@ -55,16 +56,18 @@ class SellerRatingDetailViewModel @Inject constructor(
         _ratingDetailProperty.offer(property)
     }
 
-    private fun insertSeparators(before: SellerRatingDetailListModel?): SellerRatingDetailListModel? {
-        return if (before == null) {
-            SellerRatingDetailInfoItem(
+    private fun insertSeparators(
+        before: SellerRatingDetailListModel?,
+        after: SellerRatingDetailListModel?
+    ): SellerRatingDetailListModel? {
+        return when {
+            before == null && after == null -> SellerRatingDetailEmptyItem
+            before == null -> SellerRatingDetailInfoItem(
                 orderRating = _ratingDetailProperty.value.orderRating,
                 deliveryRating = _ratingDetailProperty.value.deliveryRating,
                 ratingCount = _ratingDetailProperty.value.ratingCount
             )
-        }
-        else {
-            null
+            else -> null
         }
     }
 }
@@ -72,6 +75,7 @@ class SellerRatingDetailViewModel @Inject constructor(
 @Parcelize
 data class SellerRatingDetailProperty(
     val sellerId: String,
+    val sellerName: String,
     val orderRating: Double,
     val deliveryRating: Double?,
     val ratingCount: @RawValue SellerRatingCount

@@ -8,11 +8,11 @@ object Dependencies {
     const val FIREBASE_CRASHLYTICS_PLUGIN = "com.google.firebase:firebase-crashlytics-gradle:${Versions.FIREBASE_CRASHLYTICS_GRADLE}"
 
     // Kotlin
-    const val KOTLIN_STDLIB = "org.jetbrains.kotlin:kotlin-stdlib-jdk7"
+    const val KOTLIN_STDLIB = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Versions.KOTLIN}"
+    const val KOTLIN_SERIALIZATION = "org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.KOTLIN_SERIALIZATION_JSON}"
     const val COROUTINE_CORE = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.COROUTINE}"
     const val COROUTINE_ANDROID = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.COROUTINE}"
     const val COROUTINE_PLAY_SERVICES = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:${Versions.COROUTINE}"
-    const val KOTLIN_SERIALIZATION = "org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.KOTLIN_SERIALIZATION}"
 
     // Android
     const val APPCOMPAT = "androidx.appcompat:appcompat:${Versions.APPCOMPAT}"
@@ -20,12 +20,10 @@ object Dependencies {
     const val BROWSER = "androidx.browser:browser:${Versions.BROWSER}"
     const val CORE_KTX = "androidx.core:core-ktx:${Versions.CORE_KTX}"
     const val CONSTRAINT_LAYOUT = "androidx.constraintlayout:constraintlayout:${Versions.CONSTRAINT_LAYOUT}"
-    const val DATA_STORE_PREFERENCES = "androidx.datastore:datastore-preferences:${Versions.DATA_STORE}"
     const val FRAGMENT = "androidx.fragment:fragment-ktx:${Versions.FRAGMENT}"
     const val GLIDE = "com.github.bumptech.glide:glide:${Versions.GLIDE}"
     const val NAVIGATION_FRAGMENT = "androidx.navigation:navigation-fragment-ktx:${Versions.NAVIGATION}"
     const val NAVIGATION_UI = "androidx.navigation:navigation-ui-ktx:${Versions.NAVIGATION}"
-    const val NAVIGATION_FEATURES = "androidx.navigation:navigation-dynamic-features-fragment:${Versions.NAVIGATION}"
     const val LIFECYCLE_VIEWMODEL = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.LIFECYCLE}"
     const val LIFECYCLE_VIEWMODEL_SAVEDSTATE = "androidx.lifecycle:lifecycle-viewmodel-savedstate:${Versions.LIFECYCLE}"
     const val LIFECYCLE_LIVEDATA = "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.LIFECYCLE}"
@@ -50,7 +48,6 @@ object Dependencies {
     const val FIREBASE_CRASHLYTICS = "com.google.firebase:firebase-crashlytics-ktx:${Versions.FIREBASE_CRASHLTCICS}"
     const val FIREBASE_DYNAMIC_LINKS = "com.google.firebase:firebase-dynamic-links-ktx:${Versions.FIREBASE_DYNAMIC_LINKS}"
     const val FIREBASE_FIRESTORE = "com.google.firebase:firebase-firestore-ktx:${Versions.FIREBASE_FIRESTORE}"
-    const val FIREBASE_FUNCTIONS = "com.google.firebase:firebase-functions-ktx:${Versions.FIREBASE_FUNCTIONS}"
     const val FIREBASE_MESSAGING = "com.google.firebase:firebase-messaging:${Versions.FIREBASE_MESSAGING}"
     const val FIREBASE_STORAGE = "com.google.firebase:firebase-storage-ktx:${Versions.FIREBASE_STORAGE}"
 
@@ -62,13 +59,13 @@ object Dependencies {
     const val BANNER_VIEW_PAGER = "com.github.zhpanvip:BannerViewPager:${Versions.BANNER_VIEW_PAGER}"
     const val DAGGER = "com.google.dagger:dagger:${Versions.DAGGER}"
     const val SPINKIT = "com.github.ybq:Android-SpinKit:${Versions.SPINKIT}"
-    const val GSON = "com.google.code.gson:gson:${Versions.GSON}"
-    const val SHIMMER = "com.facebook.shimmer:shimmer:${Versions.SHIMMER}"
-    const val MAPS = "com.google.maps.android:maps-ktx:${Versions.MAPS}"
-    const val MAPS_UTILS = "com.google.maps.android:android-maps-utils:${Versions.MAPS}"
+    const val MAPS_KTX = "com.google.maps.android:maps-ktx:${Versions.MAPS_KTX}"
+    const val MAPS_UTILS = "com.google.maps.android:android-maps-utils:${Versions.MAPS_UTILS}"
     const val RETROFIT = "com.squareup.retrofit2:retrofit:${Versions.RETROFIT}"
     const val RETROFIT_CONVERTER_GSON = "com.squareup.retrofit2:converter-gson:${Versions.RETROFIT}"
     const val OKHTTP_LOGGING_INTERCEPTOR = "com.squareup.okhttp3:logging-interceptor:${Versions.OKHTTP_LOGGING_INTERCEPTOR}"
+    const val ZXING_CORE = "com.google.zxing:core:${Versions.ZXING_CORE}"
+    const val ZXING_EMBEDDED = "com.journeyapps:zxing-android-embedded:${Versions.ZXING_EMBEDDED}"
 
     // Test
     const val ARCH_CORE_TESTING = "androidx.arch.core:core-testing:${Versions.ARCH}"

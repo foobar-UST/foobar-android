@@ -12,6 +12,8 @@ import com.foobarust.android.databinding.ProfileInfoItemBinding
 import com.foobarust.android.databinding.ProfileNoticeItemBinding
 import com.foobarust.android.settings.ProfileListModel.*
 import com.foobarust.android.settings.ProfileViewHolder.*
+import com.foobarust.android.utils.drawableFitVertical
+import com.foobarust.android.utils.loadGlideUrl
 import com.foobarust.domain.models.user.UserDetail
 
 class ProfileAdapter(
@@ -36,22 +38,20 @@ class ProfileAdapter(
 
     override fun onBindViewHolder(holder: ProfileViewHolder, position: Int) {
         when (holder) {
-            is ProfileInfoViewHolder -> holder.binding.run {
+            is ProfileInfoViewHolder -> bindProfileInfoItem(
+                binding = holder.binding,
                 infoItemModel = getItem(position) as ProfileInfoItemModel
-                listener = this@ProfileAdapter.listener
-                executePendingBindings()
-            }
+            )
 
-            is ProfileEditViewHolder -> holder.binding.run {
+            is ProfileEditViewHolder -> bindProfileEditItem(
+                binding = holder.binding,
                 editItemModel = getItem(position) as ProfileEditItemModel
-                listener = this@ProfileAdapter.listener
-                executePendingBindings()
-            }
+            )
 
-            is ProfileNoticeViewHolder -> holder.binding.run {
+            is ProfileNoticeViewHolder -> bindProfileNoticeItem(
+                binding = holder.binding,
                 noticeItemModel = getItem(position) as ProfileNoticeItemModel
-                executePendingBindings()
-            }
+            )
         }
     }
 
@@ -63,9 +63,54 @@ class ProfileAdapter(
         }
     }
 
+    private fun bindProfileInfoItem(
+        binding: ProfileInfoItemBinding,
+        infoItemModel: ProfileInfoItemModel
+    ) = binding.run {
+        avatarImageView.setOnClickListener {
+            listener.onChangeProfilePhoto()
+        }
+
+        avatarImageView.loadGlideUrl(
+            imageUrl = infoItemModel.userDetail.photoUrl,
+            centerCrop = true,
+            placeholder = R.drawable.ic_user
+        )
+
+        usernameTextView.text = infoItemModel.userDetail.username
+
+        emailTextView.text = infoItemModel.userDetail.email
+    }
+
+    private fun bindProfileEditItem(
+        binding: ProfileEditItemBinding,
+        editItemModel: ProfileEditItemModel
+    ) = binding.run {
+        root.setOnClickListener {
+            listener.onEditProfileItem(editItemModel)
+        }
+
+        titleTextView.text = editItemModel.title
+
+        with(valueTextView) {
+            text = editItemModel.displayValue
+            drawableFitVertical()
+        }
+    }
+
+    private fun bindProfileNoticeItem(
+        binding: ProfileNoticeItemBinding,
+        noticeItemModel: ProfileNoticeItemModel
+    ) = binding.run {
+        with(noticeTextView) {
+            isSelected = true
+            text = noticeItemModel.message
+        }
+    }
+
     interface ProfileAdapterListener {
-        fun onProfileAvatarClicked()
-        fun onProfileEditItemClicked(editItemModel: ProfileEditItemModel)
+        fun onChangeProfilePhoto()
+        fun onEditProfileItem(editItemModel: ProfileEditItemModel)
     }
 }
 

@@ -1,8 +1,10 @@
 package com.foobarust.data.mappers
 
+import com.foobarust.data.models.user.UserDeliveryDto
 import com.foobarust.data.models.user.UserDetailCacheDto
 import com.foobarust.data.models.user.UserDetailNetworkDto
 import com.foobarust.data.models.user.UserPublicDto
+import com.foobarust.domain.models.user.UserDelivery
 import com.foobarust.domain.models.user.UserDetail
 import com.foobarust.domain.models.user.UserPublic
 import javax.inject.Inject
@@ -49,6 +51,15 @@ class UserMapper @Inject constructor() {
         return UserPublic(
             id = dto.id!!,
             username = dto.username!!,
+            photoUrl = dto.photoUrl
+        )
+    }
+
+    fun toUserDelivery(dto: UserDeliveryDto): UserDelivery {
+        return UserDelivery(
+            id = dto.id!!,
+            name = dto.name,
+            phoneNum = dto.phoneNum,
             photoUrl = dto.photoUrl
         )
     }

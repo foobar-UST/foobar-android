@@ -16,10 +16,7 @@ import com.foobarust.android.databinding.FragmentProfileBinding
 import com.foobarust.android.main.MainViewModel
 import com.foobarust.android.settings.ProfileListModel.ProfileEditItemModel
 import com.foobarust.android.shared.FullScreenDialogFragment
-import com.foobarust.android.utils.AutoClearedValue
-import com.foobarust.android.utils.bindProgressHideIf
-import com.foobarust.android.utils.findNavController
-import com.foobarust.android.utils.showShortToast
+import com.foobarust.android.utils.*
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -38,7 +35,10 @@ class ProfileFragment : FullScreenDialogFragment(), ProfileAdapter.ProfileAdapte
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentProfileBinding.inflate(inflater, container, false)
+        binding = FragmentProfileBinding.inflate(inflater, container, false).apply {
+            root.applyLayoutFullscreen()
+            appBarLayout.applySystemWindowInsetsPadding(applyTop = true)
+        }
 
         // Setup recycler view
         val profileAdapter = ProfileAdapter(this)
@@ -49,15 +49,19 @@ class ProfileFragment : FullScreenDialogFragment(), ProfileAdapter.ProfileAdapte
             setHasFixedSize(true)
         }
 
-        profileViewModel.profileListModels.observe(viewLifecycleOwner) {
-            profileAdapter.submitList(it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            profileViewModel.profileListModels.collect {
+                profileAdapter.submitList(it)
+            }
         }
 
-        profileViewModel.profileUiState.observe(viewLifecycleOwner) {
-            binding.loadingProgressBar.bindProgressHideIf(it !is ProfileUiState.Loading)
+        viewLifecycleOwner.lifecycleScope.launch {
+            profileViewModel.profileUiState.collect { uiState ->
+                binding.loadingProgressBar.hideIf(uiState !is ProfileUiState.Loading)
 
-            if (it is ProfileUiState.Error) {
-                showShortToast(it.message)
+                if (uiState is ProfileUiState.Error) {
+                    showShortToast(uiState.message)
+                }
             }
         }
 
@@ -99,11 +103,11 @@ class ProfileFragment : FullScreenDialogFragment(), ProfileAdapter.ProfileAdapte
         })
     }
 
-    override fun onProfileAvatarClicked() {
+    override fun onChangeProfilePhoto() {
         mainViewModel.onPickUserPhoto()
     }
 
-    override fun onProfileEditItemClicked(editItemModel: ProfileEditItemModel) {
+    override fun onEditProfileItem(editItemModel: ProfileEditItemModel) {
         profileViewModel.onNavigateToTextInput(editItemModel)
     }
 

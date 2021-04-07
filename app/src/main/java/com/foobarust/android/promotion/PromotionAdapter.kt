@@ -10,11 +10,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.foobarust.android.R
 import com.foobarust.android.databinding.PromotionAdvertiseSectionBinding
-import com.foobarust.android.databinding.SubtitleLargeItemBinding
 import com.foobarust.android.promotion.PromotionListModel.PromotionAdvertiseModel
-import com.foobarust.android.promotion.PromotionListModel.PromotionSubtitleModel
 import com.foobarust.android.promotion.PromotionViewHolder.PromotionAdvertiseViewHolder
-import com.foobarust.android.promotion.PromotionViewHolder.PromotionSubtitleViewHolder
 import com.foobarust.domain.models.promotion.AdvertiseBasic
 
 /**
@@ -32,11 +29,6 @@ class PromotionAdapter(
             R.layout.promotion_advertise_section -> PromotionAdvertiseViewHolder(
                 PromotionAdvertiseSectionBinding.inflate(inflater, parent, false)
             )
-
-            R.layout.subtitle_large_item -> PromotionSubtitleViewHolder(
-                SubtitleLargeItemBinding.inflate(inflater, parent, false)
-            )
-
             else -> throw IllegalStateException("Unknown view type $viewType")
         }
     }
@@ -47,11 +39,6 @@ class PromotionAdapter(
                 binding = holder.binding,
                 advertiseModel = getItem(position) as PromotionAdvertiseModel
             )
-
-            is PromotionSubtitleViewHolder -> holder.binding.run {
-                subtitle = (getItem(position) as PromotionSubtitleModel).subtitle
-                executePendingBindings()
-            }
         }
     }
 
@@ -82,14 +69,11 @@ class PromotionAdapter(
 
         // Hide indicator view when there is only one item
         scrollIndicator.isVisible = advertiseModel.advertiseBasics.size > 1
-
-        executePendingBindings()
     }
 
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
             is PromotionAdvertiseModel -> R.layout.promotion_advertise_section
-            is PromotionSubtitleModel -> R.layout.subtitle_large_item
             else -> throw IllegalStateException("Unknown view type at: $position")
         }
     }
@@ -99,19 +83,11 @@ sealed class PromotionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemV
     class PromotionAdvertiseViewHolder(
         val binding: PromotionAdvertiseSectionBinding
     ) : PromotionViewHolder(binding.root)
-
-    class PromotionSubtitleViewHolder(
-        val binding: SubtitleLargeItemBinding
-    ) : PromotionViewHolder(binding.root)
 }
 
 sealed class PromotionListModel {
     data class PromotionAdvertiseModel(
         val advertiseBasics: List<AdvertiseBasic>
-    ) : PromotionListModel()
-
-    data class PromotionSubtitleModel(
-        val subtitle: String
     ) : PromotionListModel()
 }
 
@@ -121,9 +97,7 @@ object PromotionListModelDiff : DiffUtil.ItemCallback<PromotionListModel>() {
         newItem: PromotionListModel
     ): Boolean {
         return when {
-            oldItem is PromotionAdvertiseModel && newItem is PromotionAdvertiseModel -> true  // Single row of banner
-            oldItem is PromotionSubtitleModel && newItem is PromotionSubtitleModel ->
-                oldItem.subtitle == newItem.subtitle
+            oldItem is PromotionAdvertiseModel && newItem is PromotionAdvertiseModel -> true
             else -> false
         }
     }
@@ -135,8 +109,6 @@ object PromotionListModelDiff : DiffUtil.ItemCallback<PromotionListModel>() {
         return when {
             oldItem is PromotionAdvertiseModel && newItem is PromotionAdvertiseModel ->
                 oldItem.advertiseBasics == newItem.advertiseBasics
-            oldItem is PromotionSubtitleModel && newItem is PromotionSubtitleModel ->
-                oldItem.subtitle == newItem.subtitle
             else -> false
         }
     }

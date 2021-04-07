@@ -1,120 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/spacing_xlarge"
+    android:paddingHorizontal="@dimen/spacing_large">
 
-    <data>
-        <variable
-            name="infoItemModel"
-            type="com.foobarust.android.order.OrderDetailListModel.OrderDetailInfoItemModel" />
-        <import type="com.foobarust.android.R"/>
-    </data>
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/order_image_view"
+        android:layout_width="76dp"
+        android:layout_height="76dp"
+        android:layout_marginTop="@dimen/spacing_xmedium"
+        android:scaleType="centerCrop"
+        app:shapeAppearance="@style/ShapeAppearance.Foobar.SmallComponent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@sample/sample_image_5"/>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/identifier_title_text_view"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/spacing_xlarge"
-        android:paddingHorizontal="@dimen/spacing_large">
+        android:textAppearance="?attr/textAppearanceHeadline5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Order #A58D8" />
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/seller_image_view"
-            android:layout_width="76dp"
-            android:layout_height="76dp"
-            android:layout_marginTop="@dimen/spacing_xmedium"
-            android:scaleType="centerCrop"
-            app:glideUrl="@{infoItemModel.orderItemImageUrl}"
-            app:glideCenterCrop="@{true}"
-            app:glidePlaceholder="@{R.drawable.placeholder_card}"
-            app:shapeAppearance="@style/ShapeAppearance.Foobar.SmallComponent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:goneIf="@{infoItemModel.orderItemImageUrl == null}"
-            tools:src="@sample/sample_image_5"/>
+    <TextView
+        android:id="@+id/order_title_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_xmedium"
+        android:layout_marginEnd="@dimen/spacing_large"
+        android:textAppearance="?attr/textAppearanceBody1"
+        android:textColor="@color/material_on_surface_emphasis_medium"
+        app:layout_constraintTop_toBottomOf="@id/identifier_title_text_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/order_image_view"
+        tools:text="(1/2 @ 4:30AM) Lunch Order 午餐訂單"/>
 
-        <TextView
-            android:id="@+id/identifier_title_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{infoItemModel.orderIdentifierTitle}"
-            android:textAppearance="?attr/textAppearanceHeadline5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Order #A58D8" />
+    <TextView
+        android:id="@+id/created_at_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_xmedium"
+        android:layout_marginEnd="@dimen/spacing_large"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:textColor="@color/material_on_surface_emphasis_medium"
+        app:layout_constraintTop_toBottomOf="@id/order_title_text_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/order_image_view"
+        tools:text="· Ordered on 2021-01-24"/>
 
-        <TextView
-            android:id="@+id/order_title_text_view"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_xmedium"
-            android:layout_marginEnd="@dimen/spacing_large"
-            android:text="@{infoItemModel.orderTitle}"
-            android:textAppearance="?attr/textAppearanceBody1"
-            android:textColor="@color/material_on_surface_emphasis_medium"
-            app:layout_constraintTop_toBottomOf="@id/identifier_title_text_view"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/seller_image_view"
-            tools:text="(1/2 @ 4:30AM) Lunch Order 午餐訂單"/>
+    <TextView
+        android:id="@+id/message_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_xmedium"
+        android:layout_marginEnd="@dimen/spacing_large"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:textColor="@color/material_on_surface_emphasis_medium"
+        app:layout_constraintTop_toBottomOf="@id/created_at_text_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/order_image_view"
+        tools:text="· Add more sauce, plz!"/>
 
-        <TextView
-            android:id="@+id/created_at_text_view"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_xmedium"
-            android:layout_marginEnd="@dimen/spacing_large"
-            android:text="@{`· ` + infoItemModel.orderCreatedDate}"
-            android:textAppearance="?attr/textAppearanceBody2"
-            android:textColor="@color/material_on_surface_emphasis_medium"
-            app:layout_constraintTop_toBottomOf="@id/order_title_text_view"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/seller_image_view"
-            tools:text="· Ordered on 2021-01-24"/>
+    <TextView
+        android:id="@+id/total_cost_title_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_large"
+        android:layout_marginEnd="@dimen/spacing_large"
+        android:text="@string/order_detail_info_item_total_cost_title"
+        android:textAppearance="?attr/textAppearanceHeadline6"
+        app:layout_constraintTop_toBottomOf="@id/message_text_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/total_cost_text_view" />
 
-        <TextView
-            android:id="@+id/message_text_view"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_xmedium"
-            android:layout_marginEnd="@dimen/spacing_large"
-            android:text="@{`· ` + infoItemModel.orderMessage}"
-            android:textAppearance="?attr/textAppearanceBody2"
-            android:textColor="@color/material_on_surface_emphasis_medium"
-            app:layout_constraintTop_toBottomOf="@id/created_at_text_view"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/seller_image_view"
-            app:goneIf="@{infoItemModel.orderMessage == null}"
-            tools:text="· Add more sauce, plz!"/>
+    <TextView
+        android:id="@+id/total_cost_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_large"
+        android:textAppearance="?attr/textAppearanceHeadline6"
+        app:layout_constraintTop_toBottomOf="@id/message_text_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="HKD $149.0"/>
 
-        <TextView
-            android:id="@+id/total_cost_title_text_view"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_large"
-            android:layout_marginEnd="@dimen/spacing_large"
-            android:text="@string/order_detail_info_item_total_cost_title"
-            android:textAppearance="?attr/textAppearanceHeadline6"
-            app:layout_constraintTop_toBottomOf="@id/message_text_view"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/total_cost_text_view" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/spacing_xmedium"
+        android:background="?attr/colorOnSurface"
+        android:alpha="?attr/dividerAlphaRatio"
+        app:layout_constraintTop_toBottomOf="@id/total_cost_title_text_view"/>
 
-        <TextView
-            android:id="@+id/total_cost_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_large"
-            android:text="@{infoItemModel.orderTotalCost}"
-            android:textAppearance="?attr/textAppearanceHeadline6"
-            app:layout_constraintTop_toBottomOf="@id/message_text_view"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="HKD $149.0"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="@dimen/spacing_xmedium"
-            android:background="?attr/colorOnSurface"
-            android:alpha="?attr/dividerAlphaRatio"
-            app:layout_constraintTop_toBottomOf="@id/total_cost_title_text_view"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</layout>
+</androidx.constraintlayout.widget.ConstraintLayout>

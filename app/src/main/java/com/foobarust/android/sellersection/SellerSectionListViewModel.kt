@@ -70,10 +70,7 @@ class SellerSectionListViewModel @Inject constructor(
         after: SellerSectionsItemModel?
     ): SellerSectionsListModel? {
         return if (before == null && after == null) {
-            SellerSectionsEmptyModel(
-                drawableRes = R.drawable.undraw_empty,
-                emptyMessage = context.getString(R.string.seller_section_empty_message)
-            )
+            SellerSectionsEmptyModel
         } else if (
             before == null &&
             after?.sellerSectionBasic?.isRecentSection() == true

@@ -17,6 +17,7 @@ import com.foobarust.android.sellersection.SellerSectionDetailViewHolder.*
 import com.foobarust.android.utils.ScrollStatesManager
 import com.foobarust.domain.models.user.UserPublic
 import com.foobarust.domain.utils.format
+import com.foobarust.domain.utils.getTimeBy12Hour
 import kotlinx.coroutines.launch
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -51,9 +52,6 @@ class SellerSectionDetailAdapter(
             R.layout.seller_section_detail_related_item -> SellerSectionDetailRelatedItemViewHolder(
                 SellerSectionDetailRelatedItemBinding.inflate(inflater, parent, false)
             )
-            R.layout.subtitle_large_item -> SellerSectionDetailSubtitleItemViewHolder(
-                SubtitleLargeItemBinding.inflate(inflater, parent, false)
-            )
             else -> throw IllegalStateException("Unknown view type $viewType")
         }
     }
@@ -65,27 +63,19 @@ class SellerSectionDetailAdapter(
                 participantsItemModel = getItem(position) as SellerSectionDetailParticipantsItemModel,
                 layoutPosition = holder.layoutPosition
             )
-
             is SellerSectionDetailCounterItemViewHolder -> bindCounterItem(
                 binding = holder.binding,
                 counterItemModel = getItem(position) as SellerSectionDetailCounterItemModel
             )
-
-            is SellerSectionDetailSectionInfoItemViewHolder -> holder.binding.run {
+            is SellerSectionDetailSectionInfoItemViewHolder -> bindSectionInfo(
+                binding = holder.binding,
                 sectionInfoItemModel = getItem(position) as SellerSectionDetailSectionInfoItemModel
-                executePendingBindings()
-            }
-
+            )
             is SellerSectionDetailRelatedItemViewHolder -> bindRelatedItem(
                 binding = holder.binding,
                 relatedItemModel = getItem(position) as SellerSectionDetailRelatedItemModel,
                 layoutPosition = holder.layoutPosition
             )
-
-            is SellerSectionDetailSubtitleItemViewHolder -> holder.binding.run {
-                subtitle = (getItem(position) as SellerSectionDetailSubtitleItemModel).subtitle
-                executePendingBindings()
-            }
         }
     }
 
@@ -95,7 +85,22 @@ class SellerSectionDetailAdapter(
             is SellerSectionDetailCounterItemModel -> R.layout.seller_section_detail_counter_item
             is SellerSectionDetailSectionInfoItemModel -> R.layout.seller_section_detail_section_info_item
             is SellerSectionDetailRelatedItemModel -> R.layout.seller_section_detail_related_item
-            is SellerSectionDetailSubtitleItemModel -> R.layout.subtitle_large_item
+        }
+    }
+
+    override fun onViewRecycled(holder: SellerSectionDetailViewHolder) {
+        super.onViewRecycled(holder)
+
+        if (holder is SellerSectionDetailParticipantsItemViewHolder) {
+            scrollStatesManager.saveScrollState(
+                layoutPosition = holder.layoutPosition,
+                recyclerView = holder.binding.participantsRecyclerView
+            )
+        } else if (holder is SellerSectionDetailRelatedItemViewHolder) {
+            scrollStatesManager.saveScrollState(
+                layoutPosition = holder.layoutPosition,
+                recyclerView = holder.binding.sectionsRecyclerView
+            )
         }
     }
 
@@ -116,76 +121,48 @@ class SellerSectionDetailAdapter(
         )
     }
 
-    override fun onViewRecycled(holder: SellerSectionDetailViewHolder) {
-        super.onViewRecycled(holder)
-
-        if (holder is SellerSectionDetailParticipantsItemViewHolder) {
-            scrollStatesManager.saveScrollState(
-                layoutPosition = holder.layoutPosition,
-                recyclerView = holder.binding.participantsRecyclerView
-            )
-        } else if (holder is SellerSectionDetailRelatedItemViewHolder) {
-            scrollStatesManager.saveScrollState(
-                layoutPosition = holder.layoutPosition,
-                recyclerView = holder.binding.sectionsRecyclerView
-            )
-        }
-    }
-
     private fun bindParticipantsItem(
         binding: SellerSectionDetailParticipantsItemBinding,
         participantsItemModel: SellerSectionDetailParticipantsItemModel,
         layoutPosition: Int
     ) = binding.run {
-        val context = root.context
-
-        // Setup recycler view
-        val adapter = ParticipantsAdapter(
+        val participantsAdapter = ParticipantsAdapter(
             sectionId = participantsItemModel.sectionId,
             listener = sellerSectionDetailFragment
         ).apply {
-            submitList(
-                participantsItemModel.usersPublics.map {
-                    ParticipantsItemModel(userPublic = it)
-                }
-            )
+            submitList(participantsItemModel.usersPublics.map {
+                ParticipantsItemModel(userPublic = it)
+            })
         }
 
         participantsRecyclerView.run {
-            this.adapter = adapter
-            setHasFixedSize(true)
+            adapter = participantsAdapter
             scrollStatesManager.restoreScrollState(
                 layoutPosition = layoutPosition,
                 recyclerView = this
             )
+            setHasFixedSize(true)
         }
 
-        // Setup subtitle
         participantsSubtitleTextView.text = if (participantsItemModel.usersCount > 0) {
-            context.getString(
+            root.context.getString(
                 R.string.seller_section_detail_users_subtitle,
                 participantsItemModel.usersCount,
                 participantsItemModel.maxUsers
             )
         } else {
-            context.getString(R.string.seller_section_detail_users_subtitle_empty)
+            root.context.getString(R.string.seller_section_detail_users_subtitle_empty)
         }
-
-        executePendingBindings()
     }
 
     private fun bindCounterItem(
         binding: SellerSectionDetailCounterItemBinding,
         counterItemModel: SellerSectionDetailCounterItemModel
     ) = binding.run {
-        val context = root.context
-
         if (counterItemModel.isRecentSection) {
-            // Setup subtitle
-            counterSubtitleTextView.text = context.getString(
+            counterSubtitleTextView.text = root.context.getString(
                 R.string.seller_section_detail_counter_on_subtitle
             )
-
             // Setup countdown timer for recent section
             sellerSectionDetailFragment.viewLifecycleOwner.lifecycleScope.launch {
                 val timeMills = counterItemModel.cutoffTime.time - Date().time
@@ -201,20 +178,25 @@ class SellerSectionDetailAdapter(
                     }
                     override fun onFinish() { cancel() }
                 }
-
                 timer.start()
             }
         } else {
-            // Setup subtitle
-            counterSubtitleTextView.text = context.getString(
+            counterSubtitleTextView.text = root.context.getString(
                 R.string.seller_section_detail_counter_off_subtitle
             )
-
-            // Show date for non-recent section
             counterValueTextView.text = counterItemModel.cutoffTime.format("yyyy-MM-dd")
         }
+    }
 
-        executePendingBindings()
+    private fun bindSectionInfo(
+        binding: SellerSectionDetailSectionInfoItemBinding,
+        sectionInfoItemModel: SellerSectionDetailSectionInfoItemModel
+    ) = binding.run {
+        descriptionTextView.text = sectionInfoItemModel.description
+        deliveryDateTextView.text = sectionInfoItemModel.deliveryTime.format("yyyy-MM-dd")
+        cutoffTimeTextView.text = sectionInfoItemModel.cutoffTime.getTimeBy12Hour()
+        deliveryTimeTextView.text = sectionInfoItemModel.deliveryTime.getTimeBy12Hour()
+        pickUpLocationTextView.text = sectionInfoItemModel.deliveryLocation
     }
 
     private fun bindRelatedItem(
@@ -238,8 +220,6 @@ class SellerSectionDetailAdapter(
                 recyclerView = this
             )
         }
-
-        executePendingBindings()
     }
 
     private data class CounterRemainTime(val hours: Int, val minutes: Int, val seconds: Int)
@@ -265,10 +245,6 @@ sealed class SellerSectionDetailViewHolder(itemView: View) : RecyclerView.ViewHo
     data class SellerSectionDetailRelatedItemViewHolder(
         val binding: SellerSectionDetailRelatedItemBinding
     ) : SellerSectionDetailViewHolder(binding.root)
-
-    data class SellerSectionDetailSubtitleItemViewHolder(
-        val binding: SubtitleLargeItemBinding
-    ) : SellerSectionDetailViewHolder(binding.root)
 }
 
 sealed class SellerSectionDetailListModel {
@@ -286,19 +262,14 @@ sealed class SellerSectionDetailListModel {
 
     data class SellerSectionDetailSectionInfoItemModel(
         val description: String,
-        val cutoffTime: String,
-        val deliveryDate: String,
-        val deliveryTime: String,
+        val cutoffTime: Date,
+        val deliveryTime: Date,
         val deliveryLocation: String
     ) : SellerSectionDetailListModel()
 
     data class SellerSectionDetailRelatedItemModel(
         val sellerId: String,
         val itemModels: List<RelatedSectionsItemModel>
-    ) : SellerSectionDetailListModel()
-
-    data class SellerSectionDetailSubtitleItemModel(
-        val subtitle: String
     ) : SellerSectionDetailListModel()
 }
 
@@ -315,9 +286,8 @@ object SellerSectionDetailListModelDiff : DiffUtil.ItemCallback<SellerSectionDet
             oldItem is SellerSectionDetailSectionInfoItemModel &&
                 newItem is SellerSectionDetailSectionInfoItemModel ||
             oldItem is SellerSectionDetailRelatedItemModel &&
-                newItem is SellerSectionDetailRelatedItemModel||
-            oldItem is SellerSectionDetailSubtitleItemModel &&
-                newItem is SellerSectionDetailSubtitleItemModel -> true
+                newItem is SellerSectionDetailRelatedItemModel ->
+                true
             else -> false
         }
     }
@@ -334,9 +304,8 @@ object SellerSectionDetailListModelDiff : DiffUtil.ItemCallback<SellerSectionDet
             oldItem is SellerSectionDetailSectionInfoItemModel &&
                 newItem is SellerSectionDetailSectionInfoItemModel ||
             oldItem is SellerSectionDetailRelatedItemModel &&
-                newItem is SellerSectionDetailRelatedItemModel||
-            oldItem is SellerSectionDetailSubtitleItemModel &&
-                newItem is SellerSectionDetailSubtitleItemModel -> oldItem == newItem
+                newItem is SellerSectionDetailRelatedItemModel ->
+                oldItem == newItem
             else -> false
         }
     }

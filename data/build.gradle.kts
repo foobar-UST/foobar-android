@@ -7,6 +7,7 @@ plugins {
     id(Plugins.HILT_ANDROID)
     id(Plugins.GOOGLE_SERVICES)
     id(Plugins.CHECK_DEPENDENCY_UPDATES) version Versions.CHECK_DEPENDENCY_UPDATES
+    id(Plugins.LICENSE)
 }
 
 android {
@@ -27,7 +28,7 @@ android {
         }
         val mapsApiKey = localProperties.getProperty("MAPS_API_KEY", null)
 
-        buildConfigField("Boolean", "USE_FIREBASE_EMULATOR", "true")
+        buildConfigField("Boolean", "USE_FIREBASE_EMULATOR", "false")
         buildConfigField("String", "EMULATOR_HOST", "\"192.168.128.66\"")
         buildConfigField("String", "EMULATOR_FIRESTORE_PORT", "\"8080\"")
         buildConfigField("String", "EMULATOR_FUNCTIONS_PORT", "\"5001\"")
@@ -99,7 +100,6 @@ dependencies {
     testImplementation(Dependencies.COROUTINE_TEST)
     testImplementation(Dependencies.JUNIT)
     testImplementation(Dependencies.MOCKITO_CORE)
-    testImplementation(Dependencies.MOCKITO_CORE)
 
     // Android Test
     //androidTestImplementation(Dependencies.TEST_CORE)
@@ -108,7 +108,6 @@ dependencies {
     androidTestImplementation(Dependencies.TEST_EXT_JUNIT_KTX)
     androidTestImplementation(Dependencies.TEST_ESPRESSO_CORE)
     androidTestImplementation(Dependencies.HILT_TESTING)
-
 
     // Android Test Annotation Processors
     androidTestAnnotationProcessor(Annotation.HILT_ANDROID_COMPILER)

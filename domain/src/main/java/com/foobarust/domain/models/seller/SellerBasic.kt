@@ -26,10 +26,6 @@ fun SellerBasic.getNormalizedOrderRating(): String {
     return if (orderRating == 0.0) "n.a." else String.format("%.1f", orderRating)
 }
 
-fun SellerBasic.getNormalizedMinSpendString(): String {
-    return String.format("%.1f", minSpend)
-}
-
 fun SellerBasic.getNormalizedTags(): String {
     return tags.joinToString(separator = " · ") { it.capitalize(Locale.US) }
 }

@@ -1,42 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-    
-    <data>
-        <variable
-            name="drawableRes"
-            type="Integer" />
-        <variable
-            name="emptyMessage"
-            type="String" />
-    </data>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:ignore="UseCompoundDrawables">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center"
-        tools:ignore="UseCompoundDrawables">
+    <ImageView
+        android:id="@+id/empty_image_view"
+        android:layout_width="@dimen/empty_icon_size"
+        android:layout_height="@dimen/empty_icon_size"
+        tools:src="@drawable/undraw_empty"/>
 
-        <ImageView
-            android:layout_width="@dimen/empty_icon_size"
-            android:layout_height="@dimen/empty_icon_size"
-            android:contentDescription="@{emptyMessage}"
-            app:src="@{drawableRes}"
-            tools:src="@drawable/undraw_empty"/>
+    <TextView
+        android:id="@+id/empty_message_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_xlarge"
+        android:gravity="center_horizontal"
+        android:lineSpacingMultiplier="1.2"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        android:textColor="@color/material_on_surface_emphasis_medium"
+        tools:text="No Item Found"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_xlarge"
-            android:gravity="center_horizontal"
-            android:lineSpacingMultiplier="1.2"
-            android:text="@{emptyMessage}"
-            android:textAppearance="?attr/textAppearanceSubtitle1"
-            android:textColor="@color/material_on_surface_emphasis_medium"
-            tools:text="No Item Found"/>
-
-    </LinearLayout>
-
-</layout>
+</LinearLayout>

@@ -1,66 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
-    <ScrollView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:layout_height="wrap_content">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/rating_image_view"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:contentDescription="@string/rating_completed_title"
+            android:src="@drawable/undraw_completed"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/rating_title_text_view"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-            <ImageView
-                android:id="@+id/rating_image_view"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:contentDescription="@string/rating_completed_title"
-                android:src="@drawable/undraw_completed"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/rating_title_text_view"
-                app:layout_constraintEnd_toEndOf="parent" />
+        <TextView
+            android:id="@+id/rating_title_text_view"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/rating_completed_title"
+            android:textAppearance="?attr/textAppearanceHeadline6"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rating_image_view"
+            app:layout_constraintBottom_toTopOf="@id/complete_button"/>
 
-            <TextView
-                android:id="@+id/rating_title_text_view"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:text="@string/rating_completed_title"
-                android:textAppearance="?attr/textAppearanceHeadline6"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/rating_image_view"
-                app:layout_constraintBottom_toTopOf="@id/complete_button"/>
+        <TextView
+            android:id="@+id/rating_description_text_view"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:gravity="center_horizontal"
+            android:text="@string/rating_completed_description"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="@color/material_on_surface_emphasis_medium"
+            android:lineSpacingMultiplier="1.3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rating_title_text_view" />
 
-            <TextView
-                android:id="@+id/rating_description_text_view"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_large"
-                android:gravity="center_horizontal"
-                android:text="@string/rating_completed_description"
-                android:textAppearance="?attr/textAppearanceBody2"
-                android:textColor="@color/material_on_surface_emphasis_medium"
-                android:lineSpacingMultiplier="1.3"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/rating_title_text_view" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/complete_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/rating_navigate_complete"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rating_description_text_view"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/complete_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/rating_navigate_complete"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/rating_description_text_view"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </ScrollView>
-
-</layout>
+</ScrollView>

@@ -7,88 +7,42 @@ import android.view.View
 import android.view.View.*
 import android.view.ViewGroup
 import android.view.WindowInsets
-import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
-import androidx.annotation.AnimRes
+import androidx.annotation.DimenRes
 import androidx.annotation.DrawableRes
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
-import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.button.MaterialButton
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
+import com.google.android.material.chip.Chip
 import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.progressindicator.LinearProgressIndicator
 
 /**
- * Expand the [AppBarLayout].
- * @param expand the expand condition.
- */
-@BindingAdapter("expandIf")
-fun AppBarLayout.bindExpandIf(expand: Boolean) {
-    setExpanded(expand)
-}
-
-/**
- * Start view animation when the view is loaded.
- * @param animRes the resource id of the animation.
- */
-@BindingAdapter("startAnim")
-fun View.bindStartAnimation(@AnimRes animRes: Int?) {
-    if (animRes == null) return
-    val animation = AnimationUtils.loadAnimation(context, animRes)
-    startAnimation(animation)
-}
-
-@BindingAdapter("goneAfterHide")
-fun LinearProgressIndicator.bindGoneAfterHide(gone: Boolean) {
-    if (gone) setVisibilityAfterHide(GONE)
-}
-
-/**
  * Hide progress indicator in a given condition.
  * @param hide the hide condition.
  */
-@BindingAdapter("progressHideIf")
-fun LinearProgressIndicator.bindProgressHideIf(hide: Boolean) {
+fun LinearProgressIndicator.hideIf(hide: Boolean) {
     if (hide) hide() else show()
-}
-
-/**
- * Set the [MaterialButton] icon from a given [Drawable] resource.
- * @param iconRes the resource id of the drawable.
- */
-@BindingAdapter("iconRes")
-fun MaterialButton.bindIconRes(@DrawableRes iconRes: Int?) {
-    if (iconRes == null) return
-    setIconResource(iconRes)
 }
 
 /**
  * Control the visibility of the [FloatingActionButton].
  * @param show the condition for showing the button.
  */
-@BindingAdapter("showIf")
 fun FloatingActionButton.showIf(show: Boolean) {
     if (show) show() else hide()
 }
 
-/**
- * Request focus for a specific view.
- * @param focus the condition for requesting focus.
- */
-@BindingAdapter("requestFocus")
-fun View.bindRequestFocus(focus: Boolean) {
-    if (focus) requestFocus()
-}
-
-@BindingAdapter("popupElevationOverlay")
-fun Spinner.bindPopupElevationOverlay(popupElevationOverlay: Float) {
+fun Spinner.setPopupElevationOverlay(popupElevationOverlay: Float) {
     setPopupBackgroundDrawable(
         ColorDrawable(
             ElevationOverlayProvider(context)
@@ -104,14 +58,7 @@ fun Spinner.bindPopupElevationOverlay(popupElevationOverlay: Float) {
  * @param drawableRight the resource id of the right drawable.
  * @param drawableBottom the resource id of the bottom drawable.
  */
-@BindingAdapter(
-    "drawableLeft",
-    "drawableTop",
-    "drawableRight",
-    "drawableBottom",
-    requireAll = false
-)
-fun TextView.bindDrawables(
+fun TextView.setDrawables(
     @DrawableRes drawableLeft: Int? = null,
     @DrawableRes drawableTop: Int? = null,
     @DrawableRes drawableRight: Int? = null,
@@ -125,19 +72,14 @@ fun TextView.bindDrawables(
     )
 }
 
-@BindingAdapter(
-    "drawableFitVertical"
-)
-fun TextView.bindDrawableFitVertical(fitVertical: Boolean) {
-    if (!fitVertical) return
-
+fun TextView.drawableFitVertical() {
     val drawableSize = lineHeight
     val updatedDrawables = compoundDrawablesRelative.map { drawable: Drawable? ->
         drawable?.setBounds(0, 0, drawableSize, drawableSize)
         drawable
     }
 
-    setCompoundDrawables(
+    setCompoundDrawablesRelative(
         updatedDrawables[0],        /* left */
         updatedDrawables[1],        /* top */
         updatedDrawables[2],        /* right */
@@ -145,19 +87,25 @@ fun TextView.bindDrawableFitVertical(fitVertical: Boolean) {
     )
 }
 
-/*
+/**
+ * Set the [ImageView] using a [Drawable] resource.
+ * @param drawableRes the resource id of the drawable.
+ */
+fun ImageView.setSrc(
+    @DrawableRes drawableRes: Int?
+) {
+    if (drawableRes == null) return
+    val drawable = context.getDrawableOrNull(drawableRes)
+    drawable?.let { setImageDrawable(it) }
+}
+
 /**
  * Set a Chip's leading icon using Glide.
  * Optionally set the image to be center cropped and/or cropped to a circle.
  */
-@BindingAdapter(
-    "glideChipIcon",
-    "glideChipIconCenterCrop",
-    "glideChipIconCircularCrop",
-    requireAll = false
-)
-fun Chip.bindGlideChipSrc(
+fun Chip.loadGlideChipSrc(
     @DrawableRes drawableRes: Int?,
+    @DimenRes iconDiameter: Int,
     centerCrop: Boolean = false,
     circularCrop: Boolean = false
 ) {
@@ -187,26 +135,9 @@ fun Chip.bindGlideChipSrc(
             return true
         }
     }).submit(
-        resources.getDimensionPixelSize(R.dimen.chip_icon_diameter),
-        resources.getDimensionPixelSize(R.dimen.chip_icon_diameter)
+        resources.getDimensionPixelSize(iconDiameter),
+        resources.getDimensionPixelSize(iconDiameter)
     )
-}
-
- */
-
-/**
- * Set the [ImageView] using a [Drawable] resource.
- * @param drawableRes the resource id of the drawable.
- */
-@BindingAdapter(
-    "src"
-)
-fun ImageView.bindSrc(
-    @DrawableRes drawableRes: Int?
-) {
-    if (drawableRes == null) return
-    val drawable = context.getDrawableOrNull(drawableRes)
-    drawable?.let { setImageDrawable(it) }
 }
 
 /**
@@ -217,25 +148,12 @@ fun ImageView.bindSrc(
  * @param placeholder the resource id of the fallback drawable if there is
  * network error.
  */
-@BindingAdapter(
-    "glideUrl",
-    "glideCenterCrop",
-    "glideCircularCrop",
-    "glidePlaceholder",
-    requireAll = false
-)
-fun ImageView.bindGlideUrl(
+fun ImageView.loadGlideUrl(
     imageUrl: String?,
     centerCrop: Boolean = false,
     circularCrop: Boolean = false,
     @DrawableRes placeholder: Int? = null
 ) {
-    // Use local drawable if the given url is null.
-    if (imageUrl == null) {
-        bindGlideSrc(placeholder, centerCrop, circularCrop)
-        return
-    }
-
     createGlideRequest(
         context,
         imageUrl,
@@ -245,31 +163,22 @@ fun ImageView.bindGlideUrl(
     ).into(this)
 }
 
-/**
- * Set the [ImageView] by loading an image using a [Drawable] resource.
- * @param drawableRes the resource id of the drawable.
- * @param centerCrop whether to apply center cropping the image.
- * @param circularCrop whether to apply circular cropping to the image.
- */
-@BindingAdapter(
-    "glideSrc",
-    "glideCenterCrop",
-    "glideCircularCrop",
-    requireAll = false
-)
-fun ImageView.bindGlideSrc(
-    @DrawableRes drawableRes: Int?,
-    centerCrop: Boolean = false,
-    circularCrop: Boolean = false
-) {
-    if (drawableRes == null) return
+private fun createGlideRequest(
+    context: Context,
+    imageUrl: String?,
+    centerCrop: Boolean,
+    circularCrop: Boolean,
+    placeholder: Int?
+): RequestBuilder<Drawable> {
+    val req = Glide.with(context)
+        .load(imageUrl)
+        .transition(DrawableTransitionOptions.withCrossFade())
 
-    createGlideRequest(
-        context,
-        drawableRes,
-        centerCrop,
-        circularCrop
-    ).into(this)
+    if (placeholder != null) req.placeholder(context.getDrawableOrNull(placeholder))
+    if (centerCrop) req.centerCrop()
+    if (circularCrop) req.circleCrop()
+
+    return req
 }
 
 private fun createGlideRequest(
@@ -287,67 +196,17 @@ private fun createGlideRequest(
     return req
 }
 
-private fun createGlideRequest(
-    context: Context,
-    imageUrl: String,
-    centerCrop: Boolean,
-    circularCrop: Boolean,
-    placeholder: Int?
-): RequestBuilder<Drawable> {
-    val req = Glide.with(context).load(imageUrl)
-        .transition(DrawableTransitionOptions.withCrossFade())
-
-    if (placeholder != null) req.placeholder(context.getDrawableOrNull(placeholder))
-    if (centerCrop) req.centerCrop()
-    if (circularCrop) req.circleCrop()
-
-    return req
+fun View.applyLayoutFullscreen() {
+    systemUiVisibility = SYSTEM_UI_FLAG_LAYOUT_STABLE or SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+    // SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
 }
 
-@BindingAdapter("goneIf")
-fun View.bindGoneIf(gone: Boolean) {
-    visibility = if (gone) GONE else VISIBLE
-}
-
-@BindingAdapter("hideIf")
-fun View.bindHideIf(hide: Boolean) {
-    visibility = if (hide) INVISIBLE else VISIBLE
-}
-
-@BindingAdapter("layoutFullscreen")
-fun View.bindLayoutFullscreen(previousFullscreen: Boolean, fullscreen: Boolean) {
-    if (previousFullscreen != fullscreen && fullscreen) {
-        systemUiVisibility = SYSTEM_UI_FLAG_LAYOUT_STABLE or
-                SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                /* SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION transparent navigation bar */
-    }
-}
-
-@BindingAdapter(
-    "paddingLeftSystemWindowInsets",
-    "paddingTopSystemWindowInsets",
-    "paddingRightSystemWindowInsets",
-    "paddingBottomSystemWindowInsets",
-    requireAll = false
-)
 fun View.applySystemWindowInsetsPadding(
-    previousApplyLeft: Boolean,
-    previousApplyTop: Boolean,
-    previousApplyRight: Boolean,
-    previousApplyBottom: Boolean,
-    applyLeft: Boolean,
-    applyTop: Boolean,
-    applyRight: Boolean,
-    applyBottom: Boolean
+    applyLeft: Boolean = false,
+    applyTop: Boolean = false,
+    applyRight: Boolean = false,
+    applyBottom: Boolean = false
 ) {
-    if (previousApplyLeft == applyLeft &&
-        previousApplyTop == applyTop &&
-        previousApplyRight == applyRight &&
-        previousApplyBottom == applyBottom
-    ) {
-        return
-    }
-
     doOnApplyWindowInsets { view, insets, padding, _, _ ->
         val systemWindowInsets = WindowInsetsCompat.toWindowInsetsCompat(insets)
             .getInsets(WindowInsetsCompat.Type.systemBars())
@@ -366,31 +225,12 @@ fun View.applySystemWindowInsetsPadding(
     }
 }
 
-@BindingAdapter(
-    "marginLeftSystemWindowInsets",
-    "marginTopSystemWindowInsets",
-    "marginRightSystemWindowInsets",
-    "marginBottomSystemWindowInsets",
-    requireAll = false
-)
 fun View.applySystemWindowInsetsMargin(
-    previousApplyLeft: Boolean,
-    previousApplyTop: Boolean,
-    previousApplyRight: Boolean,
-    previousApplyBottom: Boolean,
-    applyLeft: Boolean,
-    applyTop: Boolean,
-    applyRight: Boolean,
-    applyBottom: Boolean
+    applyLeft: Boolean = false,
+    applyTop: Boolean = false,
+    applyRight: Boolean = false,
+    applyBottom: Boolean = false
 ) {
-    if (previousApplyLeft == applyLeft &&
-        previousApplyTop == applyTop &&
-        previousApplyRight == applyRight &&
-        previousApplyBottom == applyBottom
-    ) {
-        return
-    }
-
     doOnApplyWindowInsets { view, insets, _, margin, _ ->
         val systemWindowInsets = WindowInsetsCompat.toWindowInsetsCompat(insets)
             .getInsets(WindowInsetsCompat.Type.systemBars())
@@ -427,24 +267,6 @@ fun View.doOnApplyWindowInsets(
     requestApplyInsetsWhenAttached()
 }
 
-class InitialPadding(val left: Int, val top: Int, val right: Int, val bottom: Int)
-
-class InitialMargin(val left: Int, val top: Int, val right: Int, val bottom: Int)
-
-private fun recordInitialPaddingForView(view: View) = InitialPadding(
-    view.paddingLeft, view.paddingTop, view.paddingRight, view.paddingBottom
-)
-
-private fun recordInitialMarginForView(view: View): InitialMargin {
-    val lp = view.layoutParams as? ViewGroup.MarginLayoutParams
-        ?: throw IllegalArgumentException("Invalid view layout params")
-    return InitialMargin(lp.leftMargin, lp.topMargin, lp.rightMargin, lp.bottomMargin)
-}
-
-private fun recordInitialHeightForView(view: View): Int {
-    return view.layoutParams.height
-}
-
 fun View.requestApplyInsetsWhenAttached() {
     if (isAttachedToWindow) {
         // We're already attached, just request as normal
@@ -461,4 +283,22 @@ fun View.requestApplyInsetsWhenAttached() {
             override fun onViewDetachedFromWindow(v: View) = Unit
         })
     }
+}
+
+class InitialPadding(val left: Int, val top: Int, val right: Int, val bottom: Int)
+
+class InitialMargin(val left: Int, val top: Int, val right: Int, val bottom: Int)
+
+private fun recordInitialPaddingForView(view: View) = InitialPadding(
+    view.paddingLeft, view.paddingTop, view.paddingRight, view.paddingBottom
+)
+
+private fun recordInitialMarginForView(view: View): InitialMargin {
+    val lp = view.layoutParams as? ViewGroup.MarginLayoutParams
+        ?: throw IllegalArgumentException("Invalid view layout params")
+    return InitialMargin(lp.leftMargin, lp.topMargin, lp.rightMargin, lp.bottomMargin)
+}
+
+private fun recordInitialHeightForView(view: View): Int {
+    return view.layoutParams.height
 }

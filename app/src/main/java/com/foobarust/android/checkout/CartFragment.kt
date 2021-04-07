@@ -15,6 +15,7 @@ import com.foobarust.android.utils.findNavController
 import com.foobarust.android.utils.scrollToTopWhenFirstItemInserted
 import com.foobarust.android.utils.showShortToast
 import com.foobarust.domain.models.cart.UserCartItem
+import com.foobarust.domain.models.cart.getNormalizedTitle
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -40,11 +41,6 @@ class CartFragment : Fragment(), CartAdapter.CartAdapterListener {
     ): View {
         binding = FragmentCartBinding.inflate(inflater, container, false)
 
-        // Set toolbar title
-        cartViewModel.toolbarTitle.observe(viewLifecycleOwner) {
-            checkoutViewModel.onUpdateToolbarTitle(title = it)
-        }
-
         // Set submit button title
         checkoutViewModel.onUpdateSubmitButtonTitle(
             title = getString(R.string.checkout_submit_button_title_cart)
@@ -58,29 +54,6 @@ class CartFragment : Fragment(), CartAdapter.CartAdapterListener {
             setHasFixedSize(true)
         }
 
-        cartViewModel.cartListModels.observe(viewLifecycleOwner) {
-            cartAdapter.submitList(it)
-        }
-
-        // Ui state
-        cartViewModel.cartUiState.observe(viewLifecycleOwner) {
-            checkoutViewModel.showLoadingProgressBar(it is CartUiState.Loading)
-
-            if (it is CartUiState.Error) {
-                showShortToast(it.message)
-            }
-        }
-
-        // Update state
-        cartViewModel.cartUpdateState.observe(viewLifecycleOwner) {
-            checkoutViewModel.showLoadingProgressBar(it is CartUpdateState.Loading)
-            checkoutViewModel.onShowSubmitButton(it !is CartUpdateState.Disabled)
-
-            if (it is CartUpdateState.Error) {
-                showShortToast(it.message)
-            }
-        }
-
         // Swipe to refresh layout
         binding.swipeRefreshLayout.setOnRefreshListener {
             cartViewModel.onFetchCart(isSwipeRefresh = true)
@@ -91,28 +64,68 @@ class CartFragment : Fragment(), CartAdapter.CartAdapterListener {
             cartViewModel.onRestoreOrderNotes(notes = it)
         }
 
+        // User cart
+        viewLifecycleOwner.lifecycleScope.launch {
+            cartViewModel.userCart.collect { userCart ->
+                val toolbarTitle = userCart?.getNormalizedTitle() ?:
+                    getString(R.string.checkout_toolbar_title_cart)
+                checkoutViewModel.onUpdateToolbarTitle(toolbarTitle)
+
+                if (userCart?.syncRequired == true) {
+                    showSyncRequiredSnackBar()
+                } else {
+                    hideSyncRequiredSnackBar()
+                }
+            }
+        }
+
+        // Cart items count
+        viewLifecycleOwner.lifecycleScope.launch {
+            cartViewModel.cartItems.collect {
+                checkoutViewModel.onUpdateCartItemsCount(it.size)
+            }
+        }
+
+        // Cart list models
+        viewLifecycleOwner.lifecycleScope.launch {
+            cartViewModel.cartListModels.collect {
+                cartAdapter.submitList(it)
+            }
+        }
+
+        // Ui state
+        viewLifecycleOwner.lifecycleScope.launch {
+            cartViewModel.cartUiState.collect {
+                checkoutViewModel.showLoadingProgressBar(it is CartUiState.Loading)
+
+                if (it is CartUiState.Error) {
+                    showShortToast(it.message)
+                }
+            }
+        }
+
+        // Update state
+        viewLifecycleOwner.lifecycleScope.launch {
+            cartViewModel.cartUpdateState.collect {
+                checkoutViewModel.showLoadingProgressBar(it is CartUpdateState.Loading)
+                checkoutViewModel.onShowSubmitButton(it !is CartUpdateState.Disabled)
+
+                if (it is CartUpdateState.Error) {
+                    showShortToast(it.message)
+                }
+            }
+        }
+
         // Scroll to top when item inserted
         viewLifecycleOwner.lifecycleScope.launch {
             cartAdapter.scrollToTopWhenFirstItemInserted(binding.recyclerView)
         }
 
-        // Show action snack bar
-        cartViewModel.showSyncRequired.observe(viewLifecycleOwner) { isShow ->
-            if (isShow) {
-                showSyncRequiredSnackBar()
-            } else {
-                hideSyncRequiredSnackBar()
-            }
-        }
-
         // Show updating progress bar
-        cartViewModel.cartUiState.observe(viewLifecycleOwner) {
-            checkoutViewModel.showLoadingProgressBar(isShow = it is CartUiState.Loading)
-        }
-
-        // Set cart items count in app bar
-        cartViewModel.cartItemsCount.observe(viewLifecycleOwner) {
-            checkoutViewModel.onUpdateCartItemsCount(cartItemsCount = it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            cartViewModel.cartUiState.collect {
+                checkoutViewModel.showLoadingProgressBar(isShow = it is CartUiState.Loading)
+            }
         }
 
         // Navigate to payment when submit button is clicked

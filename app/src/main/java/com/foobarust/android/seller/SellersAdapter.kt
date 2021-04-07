@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewOutlineProvider
-import androidx.annotation.DrawableRes
+import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -15,8 +15,7 @@ import com.foobarust.android.databinding.SellerItemBinding
 import com.foobarust.android.databinding.SubtitleLargeItemBinding
 import com.foobarust.android.seller.SellersListModel.*
 import com.foobarust.android.seller.SellersViewHolder.*
-import com.foobarust.android.utils.getColorCompat
-import com.foobarust.android.utils.themeColor
+import com.foobarust.android.utils.*
 
 /**
  * Created by kevin on 9/28/20
@@ -44,33 +43,28 @@ class SellersAdapter(
 
     override fun onBindViewHolder(holder: SellersViewHolder, position: Int) {
         when (holder) {
-            is SellersItemViewHolder -> bindOnCampusItem(
+            is SellersItemViewHolder -> bindSellerItem(
                 binding = holder.binding,
-                onCampusItemModel = getItem(position) as? SellersItemModel
+                itemModel = getItem(position) as? SellersItemModel
             )
-            is SellersSubtitleViewHolder -> holder.binding.run {
-                subtitle = (getItem(position) as? SellersSubtitleModel)?.subtitle
-                executePendingBindings()
-            }
-            is SellersEmptyViewHolder -> holder.binding.run {
-                val currentItem = getItem(position) as? SellersEmptyModel
-                drawableRes = currentItem?.drawableRes
-                emptyMessage = currentItem?.emptyMessage
-                executePendingBindings()
-            }
+            is SellersSubtitleViewHolder -> bindSellerSubtitle(
+                binding = holder.binding
+            )
+            is SellersEmptyViewHolder -> bindSellerEmpty(
+                binding = holder.binding
+            )
         }
     }
 
-    private fun bindOnCampusItem(
+    private fun bindSellerItem(
         binding: SellerItemBinding,
-        onCampusItemModel: SellersItemModel?
+        itemModel: SellersItemModel?
     ) = binding.run {
-        if (onCampusItemModel == null) return@run
+        if (itemModel == null) return@run
 
-        val context = root.context
-
-        this.onCampusItemModel = onCampusItemModel
-        listener = this@SellersAdapter.listener
+        root.setOnClickListener {
+            listener.onSellerClicked(itemModel.sellerId)
+        }
 
         // Setup photo layout round corner
         with(sellerImageLayout) {
@@ -86,12 +80,22 @@ class SellersAdapter(
             clipToOutline = true
         }
 
-        // Set tags
-        tagsTextView.text = context.getString(R.string.seller_item_info)
+        sellerOfflineTextView.isVisible = !itemModel.sellerOnline
 
-        // Set online status
+        with(sellerImageView) {
+            contentDescription = itemModel.sellerName
+            loadGlideUrl(
+                imageUrl = itemModel.sellerImageUrl,
+                centerCrop = true,
+                placeholder = R.drawable.placeholder_card
+            )
+        }
+
+        nameTextView.text = itemModel.sellerName
+        tagsTextView.text = itemModel.sellerTags
+
         with(statusTextView) {
-            val statusColor = if (onCampusItemModel.sellerOnline) {
+            val statusColor = if (itemModel.sellerOnline) {
                 context.themeColor(R.attr.colorSecondary)
             } else {
                 context.getColorCompat(R.color.material_on_surface_disabled)
@@ -99,14 +103,35 @@ class SellersAdapter(
 
             setTextColor(statusColor)
 
-            text = if (onCampusItemModel.sellerOnline) {
+            text = if (itemModel.sellerOnline) {
                 context.getString(R.string.seller_status_online)
             } else {
                 context.getString(R.string.seller_status_offline)
             }
         }
 
-        executePendingBindings()
+        with(ratingTextView) {
+            text = itemModel.sellerRating
+            drawableFitVertical()
+        }
+
+        minSpendTextView.text = root.context.getString(
+            R.string.seller_on_campus_item_min_spend,
+            itemModel.sellerMinSpend
+        )
+    }
+
+    private fun bindSellerSubtitle(
+        binding: SubtitleLargeItemBinding
+    ) = binding.run {
+        subtitleTextView.text = root.context.getString(R.string.seller_subtitle)
+    }
+
+    private fun bindSellerEmpty(
+        binding: EmptyListItemBinding
+    ) = binding.run {
+        emptyImageView.setSrc(R.drawable.undraw_empty)
+        emptyMessageTextView.text = root.context.getString(R.string.seller_empty_message)
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -143,19 +168,14 @@ sealed class SellersListModel {
         val sellerName: String,
         val sellerImageUrl: String?,
         val sellerRating: String,
-        val sellerMinSpend: String,
+        val sellerMinSpend: Double,
         val sellerOnline: Boolean,
         val sellerTags: String,
     ) : SellersListModel()
 
-    data class SellersSubtitleModel(
-        val subtitle: String
-    ) : SellersListModel()
+    object SellersSubtitleModel : SellersListModel()
 
-    data class SellersEmptyModel(
-        @DrawableRes val drawableRes: Int,
-        val emptyMessage: String
-    ) : SellersListModel()
+    object SellersEmptyModel : SellersListModel()
 }
 
 object SellersListModelDiff : DiffUtil.ItemCallback<SellersListModel>() {
@@ -164,7 +184,7 @@ object SellersListModelDiff : DiffUtil.ItemCallback<SellersListModel>() {
             oldItem is SellersItemModel && newItem is SellersItemModel ->
                 oldItem.sellerId == newItem.sellerId
             oldItem is SellersSubtitleModel && newItem is SellersSubtitleModel ->
-                oldItem.subtitle == newItem.subtitle
+                true
             oldItem is SellersEmptyModel && newItem is SellersEmptyModel ->
                 true
             else -> false
@@ -176,7 +196,7 @@ object SellersListModelDiff : DiffUtil.ItemCallback<SellersListModel>() {
             oldItem is SellersItemModel && newItem is SellersItemModel ->
                 oldItem == newItem
             oldItem is SellersSubtitleModel && newItem is SellersSubtitleModel ->
-                oldItem == newItem
+                true
             oldItem is SellersEmptyModel && newItem is SellersEmptyModel ->
                 true
             else -> false

@@ -87,11 +87,11 @@ class OrderHistoryFragment : Fragment(), OrderHistoryAdapter.OrderHistoryAdapter
         return binding.root
     }
 
-    override fun onOrderArchivedClicked(orderId: String) {
+    override fun onArchivedOrderClicked(orderId: String) {
         orderViewModel.onNavigateToOrderDetail(orderId)
     }
 
-    override fun onOrderDeliveredClicked(orderId: String) {
+    override fun onDeliveredOrderClickedClicked(orderId: String) {
         orderViewModel.onNavigateToRating(orderId)
     }
 }

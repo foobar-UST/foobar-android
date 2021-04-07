@@ -9,8 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.foobarust.android.R
 import com.foobarust.android.databinding.ParticipantsExpandBinding
 import com.foobarust.android.databinding.ParticipantsItemBinding
-import com.foobarust.android.sellersection.ParticipantsListModel.*
-import com.foobarust.android.sellersection.ParticipantsViewHolder.*
+import com.foobarust.android.sellersection.ParticipantsListModel.ParticipantsExpandModel
+import com.foobarust.android.sellersection.ParticipantsListModel.ParticipantsItemModel
+import com.foobarust.android.sellersection.ParticipantsViewHolder.ParticipantsExpandViewHolder
+import com.foobarust.android.sellersection.ParticipantsViewHolder.ParticipantsItemViewHolder
+import com.foobarust.android.utils.loadGlideUrl
 import com.foobarust.domain.models.user.UserPublic
 
 /**
@@ -39,17 +42,14 @@ class ParticipantsAdapter(
 
     override fun onBindViewHolder(holder: ParticipantsViewHolder, position: Int) {
         when (holder) {
-            is ParticipantsItemViewHolder -> holder.binding.run {
-                userItem = getItem(position) as ParticipantsItemModel
-                listener = this@ParticipantsAdapter.listener
-                executePendingBindings()
-            }
+            is ParticipantsItemViewHolder -> bindParticipantsItem(
+                binding = holder.binding,
+                itemModel = getItem(position) as ParticipantsItemModel
+            )
 
-            is ParticipantsExpandViewHolder -> holder.binding.run {
-                sectionId = this@ParticipantsAdapter.sectionId
-                listener = this@ParticipantsAdapter.listener
-                executePendingBindings()
-            }
+            is ParticipantsExpandViewHolder -> bindParticipantsExpand(
+                binding = holder.binding
+            )
         }
     }
 
@@ -63,6 +63,31 @@ class ParticipantsAdapter(
     override fun submitList(list: List<ParticipantsListModel>?) {
         val mergedList = if (!list.isNullOrEmpty()) list + ParticipantsExpandModel else list
         super.submitList(mergedList)
+    }
+
+    private fun bindParticipantsItem(
+        binding: ParticipantsItemBinding,
+        itemModel: ParticipantsItemModel
+    ) = binding.run {
+        root.setOnClickListener {
+            listener.onParticipantItemClicked(itemModel.userPublic.id)
+        }
+
+        userPublicImageView.loadGlideUrl(
+            imageUrl = itemModel.userPublic.photoUrl,
+            centerCrop = true,
+            placeholder = R.drawable.ic_user
+        )
+
+        userPublicUsernameTextView.text = itemModel.userPublic.username
+    }
+
+    private fun bindParticipantsExpand(
+        binding: ParticipantsExpandBinding
+    ) = binding.run {
+        showMoreButton.setOnClickListener {
+            listener.onParticipantsExpandClicked(sectionId)
+        }
     }
 
     interface ParticipantsAdapterListener {

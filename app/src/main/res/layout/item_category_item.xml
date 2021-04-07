@@ -1,55 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="140dp"
+    android:layout_margin="@dimen/spacing_medium"
+    android:focusable="true"
+    android:clickable="true"
+    app:rippleColor="?attr/colorSurface">
 
-    <data>
-        <variable
-            name="categoryItemModel"
-            type="com.foobarust.android.explore.ExploreListModel.ExploreItemCategoryItemModel" />
-        <variable
-            name="listener"
-            type="com.foobarust.android.explore.ExploreAdapter.ExploreAdapterListener" />
-        <import type="com.foobarust.android.R" />
-    </data>
-
-    <com.google.android.material.card.MaterialCardView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="140dp"
-        android:layout_margin="@dimen/spacing_medium"
-        android:focusable="true"
-        android:clickable="true"
-        android:onClick="@{() -> listener.onItemCategoryClicked(categoryItemModel.categoryId)}"
-        app:rippleColor="?attr/colorSurface">
+        android:layout_height="match_parent">
 
-        <FrameLayout
+        <ImageView
+            android:id="@+id/item_category_image_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:foreground="@drawable/scrim_fade"
+            tools:src="@sample/sample_image_1"/>
 
-            <ImageView
-                android:id="@+id/item_category_image_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:contentDescription="@{categoryItemModel.categoryTitle}"
-                android:scaleType="centerCrop"
-                android:foreground="@drawable/scrim_fade"
-                app:glideUrl="@{categoryItemModel.categoryImageUrl}"
-                app:glideCenterCrop="@{true}"
-                app:glidePlaceholder="@{R.drawable.placeholder_card}"
-                tools:src="@sample/sample_image_1"/>
+        <TextView
+            android:id="@+id/item_category_title_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:textColor="@color/white"
+            tools:text="Chinese 中式"/>
 
-            <TextView
-                android:id="@+id/item_category_title_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@{categoryItemModel.categoryTitle}"
-                android:textAppearance="?attr/textAppearanceSubtitle1"
-                android:textColor="@color/white"
-                tools:text="Chinese 中式"/>
+    </FrameLayout>
 
-        </FrameLayout>
-
-    </com.google.android.material.card.MaterialCardView>
-
-</layout>
+</com.google.android.material.card.MaterialCardView>

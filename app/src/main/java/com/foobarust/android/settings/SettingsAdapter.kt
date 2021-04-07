@@ -14,7 +14,9 @@ import com.foobarust.android.settings.SettingsListModel.SettingsAccountItemModel
 import com.foobarust.android.settings.SettingsListModel.SettingsSectionItemModel
 import com.foobarust.android.settings.SettingsViewHolder.SettingsAccountViewHolder
 import com.foobarust.android.settings.SettingsViewHolder.SettingsSectionViewHolder
-import com.foobarust.android.utils.*
+import com.foobarust.android.utils.loadGlideUrl
+import com.foobarust.android.utils.setDrawables
+import com.foobarust.android.utils.setSrc
 
 class SettingsAdapter(
     private val listener: SettingsAdapterListener
@@ -41,12 +43,10 @@ class SettingsAdapter(
                 binding = holder.binding,
                 accountItemModel = getItem(position) as SettingsAccountItemModel
             )
-
-            is SettingsSectionViewHolder -> holder.binding.run {
-                section = getItem(position) as SettingsSectionItemModel
-                listener = this@SettingsAdapter.listener
-                executePendingBindings()
-            }
+            is SettingsSectionViewHolder -> bindSectionItem(
+                binding = holder.binding,
+                sectionItemModel = getItem(position) as SettingsSectionItemModel
+            )
         }
     }
 
@@ -58,15 +58,12 @@ class SettingsAdapter(
 
         // Profile image
         if (accountItemModel.signedIn && accountItemModel.photoUrl != null) {
-            avatarImageView.bindGlideUrl(
+            avatarImageView.loadGlideUrl(
                 imageUrl = accountItemModel.photoUrl,
                 centerCrop = true
             )
         } else {
-            avatarImageView.bindGlideSrc(
-                drawableRes = R.drawable.ic_user,
-                centerCrop = true
-            )
+            avatarImageView.setSrc(R.drawable.ic_user)
         }
 
         // Username
@@ -86,8 +83,19 @@ class SettingsAdapter(
         accountItemLayout.setOnClickListener {
             listener.onProfileClicked(accountItemModel.signedIn)
         }
+    }
 
-        executePendingBindings()
+    private fun bindSectionItem(
+        binding: SettingsSectionItemBinding,
+        sectionItemModel: SettingsSectionItemModel
+    ) = binding.run {
+        with(sectionTextView) {
+            text = sectionItemModel.title
+            setDrawables(drawableLeft = sectionItemModel.drawableRes)
+            setOnClickListener {
+                listener.onSectionItemClicked(sectionItemModel.id)
+            }
+        }
     }
 
     override fun getItemViewType(position: Int): Int {

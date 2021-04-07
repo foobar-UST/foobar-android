@@ -7,7 +7,6 @@ import androidx.viewpager2.widget.ViewPager2
 import com.foobarust.android.R
 import com.foobarust.android.sellerdetail.SellerDetailChipAction.*
 import com.foobarust.android.selleritem.SellerItemDetailProperty
-import com.foobarust.android.sellerrating.SellerRatingDetailProperty
 import com.foobarust.android.utils.AppBarLayoutState
 import com.foobarust.domain.models.seller.*
 import com.foobarust.domain.states.Resource
@@ -55,9 +54,6 @@ class SellerDetailViewModel @Inject constructor(
 
     private val _navigateToItemDetail = Channel<SellerItemDetailProperty>()
     val navigateToItemDetail: Flow<SellerItemDetailProperty> = _navigateToItemDetail.receiveAsFlow()
-
-    private val _navigateToRatingDetail = Channel<SellerRatingDetailProperty>()
-    val navigateToRatingDetail: Flow<SellerRatingDetailProperty> = _navigateToRatingDetail.receiveAsFlow()
 
     private val _snackBarMessage = Channel<String>()
     val snackBarMessage: Flow<String> = _snackBarMessage.receiveAsFlow()
@@ -113,8 +109,7 @@ class SellerDetailViewModel @Inject constructor(
     }
 
     fun onNavigateToSellerItemDetail(itemId: String) = viewModelScope.launch {
-        val sellerDetail = _sellerDetail.firstOrNull() ?: return@launch
-
+        val sellerDetail = _sellerDetail.value ?: return@launch
         if (sellerDetail.online) {
             _navigateToItemDetail.offer(
                 SellerItemDetailProperty(
@@ -124,21 +119,10 @@ class SellerDetailViewModel @Inject constructor(
                 )
             )
         } else {
-            _snackBarMessage.offer(context.getString(R.string.seller_detail_offline_message))
-        }
-    }
-
-    fun onNavigateToSellerRatingDetail() = viewModelScope.launch {
-        val sellerDetail = _sellerDetail.firstOrNull() ?: return@launch
-
-        _navigateToRatingDetail.offer(
-            SellerRatingDetailProperty(
-                sellerId = sellerDetail.id,
-                orderRating = sellerDetail.orderRating,
-                deliveryRating = sellerDetail.deliveryRating,
-                ratingCount = sellerDetail.ratingCount
+            _snackBarMessage.offer(
+                context.getString(R.string.seller_detail_offline_message)
             )
-        )
+        }
     }
 
     private fun fetchSellerDetailWithCatalogs(

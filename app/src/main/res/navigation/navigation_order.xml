@@ -22,7 +22,7 @@
     <!-- OrderDetailFragment -->
     <dialog
         android:id="@+id/orderDetailFragment"
-        android:name="com.foobarust.android.order.OrderDetailFragment"
+        android:name="com.foobarust.android.orderdetail.OrderDetailFragment"
         tools:layout="@layout/fragment_order_detail">
         <argument
             android:name="orderId"
@@ -34,6 +34,12 @@
         <action
             android:id="@+id/action_orderDetailFragment_to_sellerMiscFragment"
             app:destination="@id/sellerMiscFragment" />
+        <action
+            android:id="@+id/action_orderDetailFragment_to_verifyOrderFragment"
+            app:destination="@id/verifyOrderFragment" />
+        <action
+            android:id="@+id/action_orderDetailFragment_to_delivererInfoFragment"
+            app:destination="@id/delivererInfoFragment" />
     </dialog>
 
     <!-- SellerMiscFragment -->
@@ -57,6 +63,29 @@
         <action
             android:id="@+id/action_ratingFragment_to_orderDetailFragment"
             app:destination="@id/orderDetailFragment" />
+    </dialog>
+
+    <!-- VerifyOrderFragment -->
+    <dialog
+        android:id="@+id/verifyOrderFragment"
+        android:name="com.foobarust.android.orderdetail.VerifyOrderFragment"
+        tools:layout="@layout/fragment_verify_order">
+        <argument
+            android:name="orderId"
+            app:argType="string"/>
+        <argument
+            android:name="verifyCode"
+            app:argType="string"/>
+    </dialog>
+
+    <!-- DelivererInfoFragment-->
+    <dialog
+        android:id="@+id/delivererInfoFragment"
+        android:name="com.foobarust.android.orderdetail.DelivererInfoFragment"
+        tools:layout="@layout/fragment_deliverer_info">
+        <argument
+            android:name="delivererId"
+            app:argType="string"/>
     </dialog>
 
 </navigation>

@@ -6,6 +6,7 @@ import androidx.core.content.edit
 import com.foobarust.data.api.RemoteService
 import com.foobarust.data.cache.networkCacheResource
 import com.foobarust.data.constants.Constants.USERS_COLLECTION
+import com.foobarust.data.constants.Constants.USERS_DELIVERY_COLLECTION
 import com.foobarust.data.constants.Constants.USERS_PUBLIC_COLLECTION
 import com.foobarust.data.constants.Constants.USER_PHOTOS_STORAGE_FOLDER
 import com.foobarust.data.constants.PreferencesKeys.ONBOARDING_COMPLETED
@@ -15,6 +16,7 @@ import com.foobarust.data.models.user.UpdateUserDetailRequest
 import com.foobarust.data.utils.getAwaitResult
 import com.foobarust.data.utils.putFileFlow
 import com.foobarust.data.utils.snapshotFlow
+import com.foobarust.domain.models.user.UserDelivery
 import com.foobarust.domain.models.user.UserDetail
 import com.foobarust.domain.models.user.UserPublic
 import com.foobarust.domain.repositories.UserRepository
@@ -87,5 +89,10 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun getUserPublicProfile(userId: String): UserPublic {
         return firestore.document("$USERS_PUBLIC_COLLECTION/$userId")
             .getAwaitResult(userMapper::toUserPublic)
+    }
+
+    override suspend fun getUserDeliveryProfile(userId: String): UserDelivery {
+        return firestore.document("$USERS_DELIVERY_COLLECTION/$userId")
+            .getAwaitResult(userMapper::toUserDelivery)
     }
 }

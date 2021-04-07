@@ -2,7 +2,7 @@ package com.foobarust.domain.models.order
 
 import com.foobarust.domain.models.common.Geolocation
 import com.foobarust.domain.models.common.GeolocationPoint
-import com.foobarust.domain.utils.format
+import com.foobarust.domain.models.map.TravelMode
 import java.util.*
 
 /**
@@ -21,6 +21,7 @@ data class OrderDetail(
     val sectionTitleZh: String?,
     val delivererId: String?,
     val delivererLocation: GeolocationPoint?,
+    val delivererTravelMode: TravelMode?,
     val identifier: String,
     val imageUrl: String?,
     val type: OrderType,
@@ -34,8 +35,9 @@ data class OrderDetail(
     val subtotalCost: Double,
     val deliveryCost: Double,
     val totalCost: Double,
+    val verifyCode: String,
     val createdAt: Date,
-    val updatedAt: Date
+    val updatedAt: Date,
 )
 
 fun OrderDetail.getNormalizedTitle(): String {
@@ -46,18 +48,6 @@ fun OrderDetail.getNormalizedSellerName(): String {
     return if (sellerNameZh != null) "$sellerName $sellerNameZh" else sellerName
 }
 
-fun OrderDetail.getNormalizedSectionTitle(): String? {
-    return if (sectionTitleZh != null) "$sectionTitle $sectionTitleZh" else sectionTitle
-}
-
-fun OrderDetail.getNormalizedTotalCost(): String {
-    return String.format("%.1f", totalCost)
-}
-
 fun OrderDetail.getNormalizedDeliveryAddress(): String {
     return "${deliveryLocation.address} ${deliveryLocation.addressZh}"
 }
-
-fun OrderDetail.getCreatedAtString(): String = createdAt.format("yyyy-MM-dd HH:mm")
-
-fun OrderDetail.getUpdatedAtString(): String = updatedAt.format( "yyyy-MM-dd HH:mm")

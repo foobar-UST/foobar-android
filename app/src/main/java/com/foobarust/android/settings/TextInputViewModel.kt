@@ -2,7 +2,7 @@ package com.foobarust.android.settings
 
 import android.os.Parcelable
 import androidx.lifecycle.ViewModel
-import com.foobarust.domain.usecases.shared.GetFormattedPhoneNumUseCase
+import com.foobarust.android.shared.AppConfig.PHONE_NUM_LENGTH
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.parcelize.Parcelize
 import javax.inject.Inject
@@ -21,7 +21,7 @@ class TextInputViewModel @Inject constructor() : ViewModel() {
         return when (_textInputProperty?.type) {
             TextInputType.NORMAL -> inputValue.isNotBlank()
             TextInputType.NAME -> inputValue.isNotBlank()
-            TextInputType.PHONE_NUM -> inputValue.length == GetFormattedPhoneNumUseCase.LENGTH
+            TextInputType.PHONE_NUM -> inputValue.length == PHONE_NUM_LENGTH
             null -> false
         }
     }

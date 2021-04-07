@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -35,10 +36,7 @@ class PaymentFragment : Fragment(), PaymentAdapter.PaymentAdapterListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentPaymentBinding.inflate(inflater, container, false).apply {
-            viewModel = this@PaymentFragment.paymentViewModel
-            lifecycleOwner = viewLifecycleOwner
-        }
+        binding = FragmentPaymentBinding.inflate(inflater, container, false)
 
         // Setup payment list
         val paymentAdapter = PaymentAdapter(this)
@@ -50,16 +48,22 @@ class PaymentFragment : Fragment(), PaymentAdapter.PaymentAdapterListener {
             setHasFixedSize(true)
         }
 
-        paymentViewModel.paymentItemModels.observe(viewLifecycleOwner) {
-            paymentAdapter.submitList(it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            paymentViewModel.paymentItemModels.collect {
+                paymentAdapter.submitList(it)
+            }
         }
 
-        paymentViewModel.paymentUiState.observe(viewLifecycleOwner) {
-            checkoutViewModel.showLoadingProgressBar(it is PaymentUiState.Loading)
-            checkoutViewModel.onShowSubmitButton(it is PaymentUiState.Ready)
+        viewLifecycleOwner.lifecycleScope.launch {
+            paymentViewModel.paymentUiState.collect { uiState ->
+                binding.loadErrorLayout.root.isVisible = uiState is PaymentUiState.Error
 
-            if (it is PaymentUiState.Error) {
-                showShortToast(it.message)
+                checkoutViewModel.showLoadingProgressBar(uiState is PaymentUiState.Loading)
+                checkoutViewModel.onShowSubmitButton(uiState is PaymentUiState.Ready)
+
+                if (uiState is PaymentUiState.Error) {
+                    showShortToast(uiState.message)
+                }
             }
         }
 

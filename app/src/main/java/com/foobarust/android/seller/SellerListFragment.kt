@@ -4,8 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.ViewCompat
-import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -47,8 +45,6 @@ class SellerListFragment : FullScreenDialogFragment(), SellersAdapter.SellersAda
     ): View {
         binding = FragmentSellerListBinding.inflate(inflater, container, false)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.collapsingToolbarLayout, null)
-
         // Setup toolbar
         binding.toolbar.setNavigationOnClickListener {
             findNavController(R.id.sellerListFragment)?.navigateUp()
@@ -73,14 +69,7 @@ class SellerListFragment : FullScreenDialogFragment(), SellersAdapter.SellersAda
         // Observe view model property
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.sellerListProperty.collect { property ->
-                with(binding) {
-                    toolbar.title = property?.categoryTitle
-                    sellerImageView.bindGlideUrl(
-                        imageUrl = property?.categoryImageUrl,
-                        centerCrop = true,
-                        placeholder = R.drawable.placeholder_card
-                    )
-                }
+                binding.toolbar.title = property?.categoryTitle
             }
         }
 
@@ -88,7 +77,6 @@ class SellerListFragment : FullScreenDialogFragment(), SellersAdapter.SellersAda
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.sellerListFetchUiState.collect {
                 with(binding) {
-                    sellerImageView.isGone = it is SellerListFetchUiState.Error
                     loadingProgressBar.isVisible = it is SellerListFetchUiState.Loading
                     loadErrorLayout.root.isVisible = it is SellerListFetchUiState.Error
                 }
@@ -126,7 +114,6 @@ class SellerListFragment : FullScreenDialogFragment(), SellersAdapter.SellersAda
     }
 
     override fun onSellerClicked(sellerId: String) {
-        // Navigate to seller detail
         findNavController(R.id.sellerListFragment)?.navigate(
             SellerListFragmentDirections.actionSellerListFragmentToSellerDetailFragment(
                 SellerDetailProperty(sellerId = sellerId)

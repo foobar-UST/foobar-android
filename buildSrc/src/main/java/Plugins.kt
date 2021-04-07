@@ -12,4 +12,5 @@ object Plugins {
     const val GOOGLE_SERVICES = "com.google.gms.google-services"
     const val NAVIGATION_SAFEARGS = "androidx.navigation.safeargs.kotlin"
     const val FIREBASE_CRASHLYTICS = "com.google.firebase.crashlytics"
+    const val LICENSE = "com.jaredsburrows.license"
 }

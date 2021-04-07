@@ -1,38 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/load_error_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center">
 
-    <LinearLayout
-        android:id="@+id/load_error_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/loading_error_title"
+        android:textStyle="bold"
+        android:textAppearance="?attr/textAppearanceSubtitle1" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/loading_error_title"
-            android:textStyle="bold"
-            android:textAppearance="?attr/textAppearanceSubtitle1" />
+    <TextView
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_large"
+        android:text="@string/loading_error_content"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:textColor="@color/material_on_background_emphasis_medium"
+        android:lineSpacingMultiplier="1.2"
+        android:gravity="center" />
 
-        <TextView
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_large"
-            android:text="@string/loading_error_content"
-            android:textAppearance="?attr/textAppearanceBody2"
-            android:textColor="@color/material_on_background_emphasis_medium"
-            android:lineSpacingMultiplier="1.2"
-            android:gravity="center" />
+    <Button
+        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+        android:id="@+id/retry_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_xlarge"
+        android:text="@string/load_error_retry"/>
 
-        <Button
-            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-            android:id="@+id/retry_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_xlarge"
-            android:text="@string/load_error_retry"/>
-
-    </LinearLayout>
-
-</layout>
+</LinearLayout>

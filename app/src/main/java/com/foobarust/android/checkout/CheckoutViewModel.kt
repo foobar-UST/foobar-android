@@ -27,8 +27,8 @@ class CheckoutViewModel @Inject constructor() : ViewModel() {
     private val _showSubmitButton = MutableStateFlow(false)
     val showSubmitButton: StateFlow<Boolean> = _showSubmitButton.asStateFlow()
 
-    private val _showLoadingProgressBar = MutableStateFlow(false)
-    val showLoadingProgressBar: StateFlow<Boolean> = _showLoadingProgressBar.asStateFlow()
+    private val _showLoading = MutableStateFlow(false)
+    val showLoading: StateFlow<Boolean> = _showLoading.asStateFlow()
 
     // Handle submit button click event, will be observed by multiple child fragments
     private val _onClickSubmitButton = MutableSharedFlow<Unit>()
@@ -73,7 +73,7 @@ class CheckoutViewModel @Inject constructor() : ViewModel() {
     }
 
     fun showLoadingProgressBar(isShow: Boolean) {
-        _showLoadingProgressBar.value = isShow
+        _showLoading.value = isShow
     }
 
     fun onBackPressed() {

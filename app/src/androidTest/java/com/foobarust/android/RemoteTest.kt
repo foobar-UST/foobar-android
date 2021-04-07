@@ -35,6 +35,4 @@ class RemoteTest {
     fun init() {
         hiltRule.inject()
     }
-
-
 }

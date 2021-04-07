@@ -1,34 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/colorSurface"
+    android:padding="@dimen/spacing_large"
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/counter_value_text_view"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="?attr/colorSurface"
-        android:padding="@dimen/spacing_large"
-        android:orientation="vertical">
+        android:layout_gravity="center_horizontal"
+        android:textColor="?attr/colorPrimary"
+        android:textAppearance="?attr/textAppearanceHeadline4"
+        tools:text="01 : 12 : 20"/>
 
-        <TextView
-            android:id="@+id/counter_value_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:textColor="?attr/colorPrimary"
-            android:textAppearance="?attr/textAppearanceHeadline4"
-            tools:text="01 : 12 : 20"/>
+    <TextView
+        android:id="@+id/counter_subtitle_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_medium"
+        android:layout_gravity="center_horizontal"
+        android:textAppearance="?attr/textAppearanceCaption"
+        android:textColor="@color/material_on_surface_emphasis_medium"
+        tools:text="@string/seller_section_detail_counter_on_subtitle"/>
 
-        <TextView
-            android:id="@+id/counter_subtitle_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_medium"
-            android:layout_gravity="center_horizontal"
-            android:textAppearance="?attr/textAppearanceCaption"
-            android:textColor="@color/material_on_surface_emphasis_medium"
-            tools:text="@string/seller_section_detail_counter_on_subtitle"/>
-
-    </LinearLayout>
-
-</layout>
+</LinearLayout>

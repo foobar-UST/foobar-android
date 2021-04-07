@@ -18,6 +18,8 @@ import com.foobarust.android.databinding.FragmentSellerDetailBinding
 import com.foobarust.android.main.MainViewModel
 import com.foobarust.android.seller.SellerListProperty
 import com.foobarust.android.sellerdetail.SellerDetailChipAction.*
+import com.foobarust.android.selleritem.SellerItemDetailProperty
+import com.foobarust.android.sellerrating.SellerRatingDetailProperty
 import com.foobarust.android.shared.FullScreenDialogFragment
 import com.foobarust.android.utils.*
 import com.foobarust.domain.models.cart.hasItems
@@ -55,7 +57,10 @@ class SellerDetailFragment : FullScreenDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentSellerDetailBinding.inflate(inflater, container, false)
+        binding = FragmentSellerDetailBinding.inflate(inflater, container, false).apply {
+            root.applyLayoutFullscreen()
+            toolbar.applySystemWindowInsetsPadding(applyTop = true)
+        }
 
         // Remove listener on CollapsingToolbarLayout, so that toolbar top padding can work properly
         // Issue: https://github.com/material-components/material-components-android/issues/1310
@@ -90,6 +95,9 @@ class SellerDetailFragment : FullScreenDialogFragment() {
             )
         }
 
+        binding.sellerInfoTextView.drawableFitVertical()
+        binding.sectionInfoTextView.drawableFitVertical()
+
         // Retry
         binding.loadErrorLayout.retryButton.setOnClickListener {
             sellerDetailViewModel.onFetchSellerDetail(navArgs.property)
@@ -104,7 +112,7 @@ class SellerDetailFragment : FullScreenDialogFragment() {
                     nameTextView.text = sellerDetail.getNormalizedName()
                     sectionInfoTextView.isVisible = sellerDetail.type == SellerType.OFF_CAMPUS
                     
-                    sellerImageView.bindGlideUrl(
+                    sellerImageView.loadGlideUrl(
                         imageUrl = sellerDetail.imageUrl,
                         centerCrop = true,
                         placeholder = R.drawable.placeholder_card
@@ -168,13 +176,6 @@ class SellerDetailFragment : FullScreenDialogFragment() {
                 binding.toolbar.title = it
             }
         }
-        
-        // Show snack bar
-        viewLifecycleOwner.lifecycleScope.launch {
-            sellerDetailViewModel.snackBarMessage.collect {
-                showMessageSnackBar(message = it)
-            }
-        }
 
         // Finish swipe to refresh
         viewLifecycleOwner.lifecycleScope.launch {
@@ -226,21 +227,25 @@ class SellerDetailFragment : FullScreenDialogFragment() {
             }
         }
 
-        // Navigate to SellerItemDetailFragment
+        // Navigate to SellerItemDetail
         viewLifecycleOwner.lifecycleScope.launch {
             sellerDetailViewModel.navigateToItemDetail.collect {
                 findNavController(R.id.sellerDetailFragment)?.navigate(
-                    SellerDetailFragmentDirections.actionSellerDetailFragmentToSellerItemDetailFragment(it)
+                    SellerDetailFragmentDirections.actionSellerDetailFragmentToSellerItemDetailFragment(
+                        SellerItemDetailProperty(
+                            sellerId = it.sellerId,
+                            itemId = it.itemId,
+                            sectionId = navArgs.property.sectionId
+                        )
+                    )
                 )
             }
         }
 
-        // Navigate to SellerRatingDetailFragment
+        // Snackbar
         viewLifecycleOwner.lifecycleScope.launch {
-            sellerDetailViewModel.navigateToRatingDetail.collect {
-                findNavController(R.id.sellerDetailFragment)?.navigate(
-                    SellerDetailFragmentDirections.actionSellerDetailFragmentToSellerRatingDetailFragment(it)
-                )
+            sellerDetailViewModel.snackBarMessage.collect {
+                showMessageSnackBar(it)
             }
         }
 
@@ -321,18 +326,35 @@ class SellerDetailFragment : FullScreenDialogFragment() {
 
     private fun performChipAction(sellerDetailChipAction: SellerDetailChipAction) {
         when (sellerDetailChipAction) {
-            is SellerDetailChipRating -> {
-                sellerDetailViewModel.onNavigateToSellerRatingDetail()
-            }
-            is SellerDetailChipCategory -> findNavController(R.id.sellerDetailFragment)?.navigate(
-                SellerDetailFragmentDirections.actionSellerDetailFragmentToSellerListFragment(
-                    SellerListProperty(categoryTag = sellerDetailChipAction.categoryTag)
-                )
-            )
+            is SellerDetailChipRating -> navigateToSellerDetail()
+            is SellerDetailChipCategory -> navigateToSellerList(sellerDetailChipAction.categoryTag)
         }
     }
 
     private fun showMessageSnackBar(message: String) {
         Snackbar.make(binding.coordinatorLayout, message, Snackbar.LENGTH_SHORT).show()
+    }
+
+    private fun navigateToSellerDetail() {
+        val sellerDetail = sellerDetailViewModel.sellerDetail.value ?: return
+        findNavController(R.id.sellerDetailFragment)?.navigate(
+            SellerDetailFragmentDirections.actionSellerDetailFragmentToSellerRatingDetailFragment(
+                SellerRatingDetailProperty(
+                    sellerId = sellerDetail.id,
+                    sellerName = sellerDetail.getNormalizedName(),
+                    orderRating = sellerDetail.orderRating,
+                    deliveryRating = sellerDetail.deliveryRating,
+                    ratingCount = sellerDetail.ratingCount
+                )
+            )
+        )
+    }
+
+    private fun navigateToSellerList(categoryTag: String) {
+        findNavController(R.id.sellerDetailFragment)?.navigate(
+            SellerDetailFragmentDirections.actionSellerDetailFragmentToSellerListFragment(
+                SellerListProperty(categoryTag)
+            )
+        )
     }
 }

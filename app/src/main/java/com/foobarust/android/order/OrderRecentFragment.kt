@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -32,10 +33,7 @@ class OrderRecentFragment : Fragment(), OrderRecentAdapter.OrderRecentAdapterLis
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentOrderRecentBinding.inflate(inflater, container, false).apply {
-            viewModel = orderRecentViewModel
-            lifecycleOwner = viewLifecycleOwner
-        }
+        binding = FragmentOrderRecentBinding.inflate(inflater, container, false)
 
         // Setup recycler view
         val recentAdapter = OrderRecentAdapter(this)
@@ -45,19 +43,28 @@ class OrderRecentFragment : Fragment(), OrderRecentAdapter.OrderRecentAdapterLis
             setHasFixedSize(true)
         }
 
-        orderRecentViewModel.orderRecentListModels.observe(viewLifecycleOwner) {
-            recentAdapter.submitList(it)
-        }
-
-        orderRecentViewModel.orderRecentUiState.observe(viewLifecycleOwner) {
-            if (it is OrderRecentUiState.Error) {
-                showShortToast(it.message)
-            }
-        }
 
         // Setup swipe to refresh
         binding.swipeRefreshLayout.setOnRefreshListener {
             orderRecentViewModel.onFetchOrderItems(true)
+        }
+
+        // List models
+        viewLifecycleOwner.lifecycleScope.launch {
+            orderRecentViewModel.orderRecentListModels.collect {
+                recentAdapter.submitList(it)
+            }
+        }
+
+
+        // Ui state
+        viewLifecycleOwner.lifecycleScope.launch {
+            orderRecentViewModel.orderRecentUiState.collect { uiState ->
+                binding.loadingProgressBar.isVisible = uiState is OrderRecentUiState.Loading
+                if (uiState is OrderRecentUiState.Error) {
+                    showShortToast(uiState.message)
+                }
+            }
         }
 
         // Scroll to top when the tab is reselected
@@ -70,14 +77,16 @@ class OrderRecentFragment : Fragment(), OrderRecentAdapter.OrderRecentAdapterLis
         }
 
         // Finish swipe to refresh
-        orderRecentViewModel.finishSwipeRefresh.observe(viewLifecycleOwner) {
-            binding.swipeRefreshLayout.isRefreshing = false
+        viewLifecycleOwner.lifecycleScope.launch {
+            orderRecentViewModel.finishSwipeRefresh.collect {
+                binding.swipeRefreshLayout.isRefreshing = false
+            }
         }
 
         return binding.root
     }
 
-    override fun onOrderClicked(orderId: String) {
+    override fun onActiveOrderClicked(orderId: String) {
         orderViewModel.onNavigateToOrderDetail(orderId)
     }
 }

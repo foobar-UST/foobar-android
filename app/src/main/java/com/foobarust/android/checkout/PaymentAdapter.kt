@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.foobarust.android.databinding.PaymentMethodItemBinding
+import com.foobarust.android.utils.setSrc
 
 /**
  * Created by kevin on 1/9/21
@@ -40,13 +41,21 @@ class PaymentAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(itemModel: PaymentMethodItemModel, newPosition: Int) = binding.run {
-            paymentMethodItemModel = itemModel
             // Save new selected item position and deselect the previous one
-            linearLayout.setOnClickListener {
+            root.setOnClickListener {
                 submitList(buildNewSelectedList(newPosition))
                 listener.onPaymentMethodClicked(identifier = itemModel.paymentMethodItem.identifier)
             }
-            executePendingBindings()
+
+            itemRadioButton.isChecked = itemModel.isSelected
+
+            with(itemImageView) {
+                contentDescription = itemModel.paymentMethodItem.title
+                setSrc(itemModel.paymentMethodItem.drawable)
+            }
+
+            itemTitleTextView.text = itemModel.paymentMethodItem.title
+            itemDescriptionTextView.text = itemModel.paymentMethodItem.description
         }
     }
 

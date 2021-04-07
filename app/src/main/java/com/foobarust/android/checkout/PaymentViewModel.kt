@@ -1,7 +1,5 @@
 package com.foobarust.android.checkout
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.shared.BaseViewModel
 import com.foobarust.domain.models.checkout.PaymentMethod
@@ -28,12 +26,10 @@ class PaymentViewModel @Inject constructor(
     private val _paymentMethods = MutableStateFlow<List<PaymentMethod>>(emptyList())
 
     private val _paymentItemModels = MutableStateFlow<List<PaymentMethodItemModel>>(emptyList())
-    val paymentItemModels: LiveData<List<PaymentMethodItemModel>> = _paymentItemModels
-        .asLiveData(viewModelScope.coroutineContext)
+    val paymentItemModels: StateFlow<List<PaymentMethodItemModel>> = _paymentItemModels.asStateFlow()
 
     private val _paymentUiState = MutableStateFlow<PaymentUiState>(PaymentUiState.Loading)
-    val paymentUiState: LiveData<PaymentUiState> = _paymentUiState
-        .asLiveData(viewModelScope.coroutineContext)
+    val paymentUiState: StateFlow<PaymentUiState> = _paymentUiState.asStateFlow()
 
     private val _finishSwipeRefresh = Channel<Unit>()
     val finishSwipeRefresh: Flow<Unit> = _finishSwipeRefresh.receiveAsFlow()

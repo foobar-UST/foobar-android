@@ -45,7 +45,12 @@ class SellerSectionListFragment : FullScreenDialogFragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentSellerSectionListBinding.inflate(inflater, container, false)
+        binding = FragmentSellerSectionListBinding.inflate(
+            inflater, container, false
+        ).apply {
+            root.applyLayoutFullscreen()
+            toolbar.applySystemWindowInsetsPadding(applyTop = true)
+        }
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.collapsingToolbarLayout, null)
 
@@ -73,7 +78,7 @@ class SellerSectionListFragment : FullScreenDialogFragment(),
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.sellerDetail.collect { sellerDetail ->
                 sellerDetail?.let {
-                    binding.sellerImageView.bindGlideUrl(
+                    binding.sellerImageView.loadGlideUrl(
                         imageUrl = it.imageUrl,
                         centerCrop = true,
                         placeholder = R.drawable.placeholder_card
@@ -115,12 +120,5 @@ class SellerSectionListFragment : FullScreenDialogFragment(),
                 sectionId = sectionBasic.id
             )
         )
-    }
-
-    override fun onSellerSectionItemLongClicked(
-        view: View,
-        sectionBasic: SellerSectionBasic
-    ): Boolean {
-        return true
     }
 }
