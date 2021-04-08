@@ -53,7 +53,7 @@ android {
             addManifestPlaceholders(
                 mapOf(
                     "clearTextTraffic" to true,
-                    "disableAnalytics" to true
+                    "disableAnalytics" to false
                 )
             )
         }
