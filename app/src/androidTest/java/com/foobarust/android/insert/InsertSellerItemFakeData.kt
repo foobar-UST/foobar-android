@@ -44,7 +44,29 @@ class InsertSellerItemFakeData {
 
     @Test
     fun insert_seller_items_fake_data() = runBlocking(Dispatchers.IO) {
-        val serializedListSeller: List<SellerItemSerialized> = Json.decodeFromString(decodeJson())
+        val serializedListSeller: List<SellerItemSerialized> = Json.decodeFromString(
+            decodeJson("seller_items_fake_data.json")
+        )
+
+        serializedListSeller.forEach {
+            val sellerId = it.seller_id
+            val sellerItemDetailEntity = it.toSellerItemDetailEntity()
+
+            firestore.document(
+                "$SELLERS_COLLECTION/$sellerId/$SELLER_ITEMS_SUB_COLLECTION/${it.id}"
+            )
+                .set(sellerItemDetailEntity)
+                .await()
+        }
+
+        assertTrue(true)
+    }
+
+    @Test
+    fun insert_seller_items_extra_fake_data() = runBlocking(Dispatchers.IO) {
+        val serializedListSeller: List<SellerItemSerialized> = Json.decodeFromString(
+            decodeJson("seller_items_extra_fake_data.json")
+        )
 
         serializedListSeller.forEach {
             val sellerId = it.seller_id
@@ -81,10 +103,10 @@ class InsertSellerItemFakeData {
 
      */
 
-    private fun decodeJson(): String {
+    private fun decodeJson(file: String): String {
         val jsonInputStream = InstrumentationRegistry.getInstrumentation()
             .context.assets
-            .open("seller_items_fake_data.json")
+            .open(file)
 
         return jsonInputStream.bufferedReader().use { it.readText() }
     }

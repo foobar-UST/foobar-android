@@ -34,7 +34,11 @@
     <fragment
         android:id="@+id/sellerSectionParticipantsFragment"
         android:name="com.foobarust.android.sellersection.SellerSectionParticipantsFragment"
-        tools:layout="@layout/fragment_seller_section_participants"/>
+        tools:layout="@layout/fragment_seller_section_participants">
+        <argument
+            android:name="userIds"
+            app:argType="string[]"/>
+    </fragment>
 
     <!-- SellerSectionRelatedFragment -->
     <fragment

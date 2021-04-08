@@ -7,12 +7,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.foobarust.android.R
+import com.foobarust.android.databinding.ParticipantsAvatarItemBinding
 import com.foobarust.android.databinding.ParticipantsExpandBinding
-import com.foobarust.android.databinding.ParticipantsItemBinding
-import com.foobarust.android.sellersection.ParticipantsListModel.ParticipantsExpandModel
-import com.foobarust.android.sellersection.ParticipantsListModel.ParticipantsItemModel
-import com.foobarust.android.sellersection.ParticipantsViewHolder.ParticipantsExpandViewHolder
-import com.foobarust.android.sellersection.ParticipantsViewHolder.ParticipantsItemViewHolder
+import com.foobarust.android.databinding.ParticipantsListItemBinding
+import com.foobarust.android.sellersection.ParticipantsListModel.*
+import com.foobarust.android.sellersection.ParticipantsViewHolder.*
 import com.foobarust.android.utils.loadGlideUrl
 import com.foobarust.domain.models.user.UserPublic
 
@@ -21,32 +20,35 @@ import com.foobarust.domain.models.user.UserPublic
  */
 
 class ParticipantsAdapter(
-    private val sectionId: String,
-    private val listener: ParticipantsAdapterListener
+    private val listener: ParticipantsAdapterListener? = null
 ) : ListAdapter<ParticipantsListModel, ParticipantsViewHolder>(ParticipantsListModelDiff) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ParticipantsViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
-            R.layout.participants_item -> ParticipantsItemViewHolder(
-                ParticipantsItemBinding.inflate(inflater, parent, false)
+            R.layout.participants_avatar_item -> ParticipantsAvatarItemViewHolder(
+                ParticipantsAvatarItemBinding.inflate(inflater, parent, false)
             )
-
+            R.layout.participants_list_item -> ParticipantsListItemVieHolder(
+                ParticipantsListItemBinding.inflate(inflater, parent, false)
+            )
             R.layout.participants_expand -> ParticipantsExpandViewHolder(
                 ParticipantsExpandBinding.inflate(inflater, parent, false)
             )
-
             else -> throw IllegalStateException("Unknown view type $viewType")
         }
     }
 
     override fun onBindViewHolder(holder: ParticipantsViewHolder, position: Int) {
         when (holder) {
-            is ParticipantsItemViewHolder -> bindParticipantsItem(
+            is ParticipantsAvatarItemViewHolder -> bindParticipantsAvatarItem(
                 binding = holder.binding,
-                itemModel = getItem(position) as ParticipantsItemModel
+                avatarItemModel = getItem(position) as ParticipantsAvatarItemModel
             )
-
+            is ParticipantsListItemVieHolder -> bindParticipantsListItem(
+                binding = holder.binding,
+                listItemModel = getItem(position) as ParticipantsListItemModel
+            )
             is ParticipantsExpandViewHolder -> bindParticipantsExpand(
                 binding = holder.binding
             )
@@ -55,7 +57,8 @@ class ParticipantsAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
-            is ParticipantsItemModel -> R.layout.participants_item
+            is ParticipantsAvatarItemModel -> R.layout.participants_avatar_item
+            is ParticipantsListItemModel -> R.layout.participants_list_item
             is ParticipantsExpandModel -> R.layout.participants_expand
         }
     }
@@ -65,40 +68,52 @@ class ParticipantsAdapter(
         super.submitList(mergedList)
     }
 
-    private fun bindParticipantsItem(
-        binding: ParticipantsItemBinding,
-        itemModel: ParticipantsItemModel
+    private fun bindParticipantsAvatarItem(
+        binding: ParticipantsAvatarItemBinding,
+        avatarItemModel: ParticipantsAvatarItemModel
     ) = binding.run {
-        root.setOnClickListener {
-            listener.onParticipantItemClicked(itemModel.userPublic.id)
-        }
-
-        userPublicImageView.loadGlideUrl(
-            imageUrl = itemModel.userPublic.photoUrl,
+        userPhotoImageView.loadGlideUrl(
+            imageUrl = avatarItemModel.userPublic.photoUrl,
             centerCrop = true,
             placeholder = R.drawable.ic_user
         )
 
-        userPublicUsernameTextView.text = itemModel.userPublic.username
+        userUsernameTextView.text = avatarItemModel.userPublic.username
+    }
+
+    private fun bindParticipantsListItem(
+        binding: ParticipantsListItemBinding,
+        listItemModel: ParticipantsListItemModel
+    ) = binding.run {
+        userPhotoImageView.loadGlideUrl(
+            imageUrl = listItemModel.userPublic.photoUrl,
+            centerCrop = true,
+            placeholder = R.drawable.ic_user
+        )
+
+        userUsernameTextView.text = listItemModel.userPublic.username
     }
 
     private fun bindParticipantsExpand(
         binding: ParticipantsExpandBinding
     ) = binding.run {
-        showMoreButton.setOnClickListener {
-            listener.onParticipantsExpandClicked(sectionId)
+        listener?.let { listener ->
+            showMoreButton.setOnClickListener { listener.onExpandParticipants() }
         }
     }
 
     interface ParticipantsAdapterListener {
-        fun onParticipantItemClicked(userId: String)
-        fun onParticipantsExpandClicked(sectionId: String)
+        fun onExpandParticipants()
     }
 }
 
 sealed class ParticipantsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    data class ParticipantsItemViewHolder(
-        val binding: ParticipantsItemBinding
+    data class ParticipantsAvatarItemViewHolder(
+        val binding: ParticipantsAvatarItemBinding
+    ) : ParticipantsViewHolder(binding.root)
+
+    data class ParticipantsListItemVieHolder(
+        val binding: ParticipantsListItemBinding
     ) : ParticipantsViewHolder(binding.root)
 
     data class ParticipantsExpandViewHolder(
@@ -107,7 +122,11 @@ sealed class ParticipantsViewHolder(itemView: View) : RecyclerView.ViewHolder(it
 }
 
 sealed class ParticipantsListModel {
-    data class ParticipantsItemModel(
+    data class ParticipantsAvatarItemModel(
+        val userPublic: UserPublic
+    ) : ParticipantsListModel()
+
+    data class ParticipantsListItemModel(
         val userPublic: UserPublic
     ) : ParticipantsListModel()
 
@@ -120,8 +139,10 @@ object ParticipantsListModelDiff : DiffUtil.ItemCallback<ParticipantsListModel>(
         newItem: ParticipantsListModel
     ): Boolean {
         return when {
-            oldItem is ParticipantsItemModel && newItem is ParticipantsItemModel ->
-                oldItem.userPublic.username == newItem.userPublic.username
+            oldItem is ParticipantsAvatarItemModel && newItem is ParticipantsAvatarItemModel ->
+                oldItem.userPublic.id == newItem.userPublic.id
+            oldItem is ParticipantsListItemModel && newItem is ParticipantsListItemModel ->
+                oldItem.userPublic.id == newItem.userPublic.id
             oldItem is ParticipantsExpandModel && newItem is ParticipantsExpandModel ->
                 true
             else -> false
@@ -133,8 +154,10 @@ object ParticipantsListModelDiff : DiffUtil.ItemCallback<ParticipantsListModel>(
         newItem: ParticipantsListModel
     ): Boolean {
         return when {
-            oldItem is ParticipantsItemModel && newItem is ParticipantsItemModel ->
-                oldItem.userPublic == newItem.userPublic
+            oldItem is ParticipantsAvatarItemModel && newItem is ParticipantsAvatarItemModel ->
+                oldItem == newItem
+            oldItem is ParticipantsListItemModel && newItem is ParticipantsListItemModel ->
+                oldItem == newItem
             oldItem is ParticipantsExpandModel && newItem is ParticipantsExpandModel ->
                 true
             else -> false

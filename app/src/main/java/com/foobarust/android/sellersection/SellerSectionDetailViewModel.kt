@@ -60,6 +60,8 @@ class SellerSectionDetailViewModel @Inject constructor(
     val finishSwipeRefresh: Flow<Unit> = _finishSwipeRefresh.receiveAsFlow()
 
     private val _sectionDetail = MutableStateFlow<SellerSectionDetail?>(null)
+    val sectionDetail: StateFlow<SellerSectionDetail?> = _sectionDetail.asStateFlow()
+
     private val _participants = MutableStateFlow<List<UserPublic>>(emptyList())
     private val _relatedSections = MutableStateFlow<List<SellerSectionBasic>>(emptyList())
 

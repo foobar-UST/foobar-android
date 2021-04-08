@@ -1,0 +1,72 @@
+[
+  {
+    "id": "cc1b440f-bdb2-41c1-97e9-4764986534f3",
+    "seller_id": "wSZ8J9bvyfwMXd50EISD",
+    "title": "Boneless Chicken",
+    "title_zh": "無骨雞",
+    "available": true
+  },
+  {
+    "id": "a8b2d76e-fa65-4b1a-86a3-079b13c87a75",
+    "seller_id": "wSZ8J9bvyfwMXd50EISD",
+    "title": "Fresh Aged Chicken",
+    "title_zh": "新鮮炸雞",
+    "available": true
+  },
+  {
+    "id": "cde498c1-d7e0-4ad8-ba51-fee7020ce68b",
+    "seller_id": "wSZ8J9bvyfwMXd50EISD",
+    "title": "Yadllie Dish",
+    "title_zh": "Yadllie菜",
+    "available": true
+  },
+  {
+    "id": "fac6972b-cd12-4f78-99a6-dea3314c0284",
+    "seller_id": "wSZ8J9bvyfwMXd50EISD",
+    "title": "Rice & Noodles",
+    "title_zh": "飯和麵",
+    "available": true
+  },
+  {
+    "id": "35f9a8ab-83a9-446e-87f0-3aab546e17e2",
+    "seller_id": "wSZ8J9bvyfwMXd50EISD",
+    "title": "Yadllie Salad",
+    "title_zh": "Yadllie沙拉",
+    "available": true
+  },
+  {
+    "id": "641a9783-92b2-4063-a1be-528c889a448f",
+    "seller_id": "QCZt49SRFI4txw4rBUIQ",
+    "title": "Thai Hot and Sour Salad",
+    "title_zh": "泰式酸辣沙律",
+    "available": true
+  },
+  {
+    "id": "71645bc2-b590-4369-92ee-e8a309f62687",
+    "seller_id": "QCZt49SRFI4txw4rBUIQ",
+    "title": "Thai BBQ",
+    "title_zh": "泰式燒烤",
+    "available": true
+  },
+  {
+    "id": "4b290cc8-bcaa-4ce1-a2d5-e239393d8166",
+    "seller_id": "QCZt49SRFI4txw4rBUIQ",
+    "title": "Crispy snack",
+    "title_zh": "香脆小吃",
+    "available": true
+  },
+  {
+    "id": "2fd621a4-fb4a-4fc8-8aab-a6d4ad426019",
+    "seller_id": "QCZt49SRFI4txw4rBUIQ",
+    "title": "Ming furnace pot",
+    "title_zh": "明爐鍋",
+    "available": true
+  },
+  {
+    "id": "6ac05c06-1a4d-4612-9b9b-8a1fb43b8c28",
+    "seller_id": "QCZt49SRFI4txw4rBUIQ",
+    "title": "Seafood",
+    "title_zh": "海鮮",
+    "available": true
+  }
+]

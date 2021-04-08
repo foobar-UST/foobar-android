@@ -10,9 +10,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.foobarust.android.R
-import com.foobarust.android.databinding.*
-import com.foobarust.android.sellersection.ParticipantsListModel.*
-import com.foobarust.android.sellersection.RelatedSectionsListModel.*
+import com.foobarust.android.databinding.SellerSectionDetailCounterItemBinding
+import com.foobarust.android.databinding.SellerSectionDetailParticipantsItemBinding
+import com.foobarust.android.databinding.SellerSectionDetailRelatedItemBinding
+import com.foobarust.android.databinding.SellerSectionDetailSectionInfoItemBinding
+import com.foobarust.android.sellersection.ParticipantsListModel.ParticipantsAvatarItemModel
+import com.foobarust.android.sellersection.RelatedSectionsListModel.RelatedSectionsItemModel
 import com.foobarust.android.sellersection.SellerSectionDetailListModel.*
 import com.foobarust.android.sellersection.SellerSectionDetailViewHolder.*
 import com.foobarust.android.utils.ScrollStatesManager
@@ -32,7 +35,6 @@ class SellerSectionDetailAdapter(
 ) : ListAdapter<SellerSectionDetailListModel, SellerSectionDetailViewHolder>(
     SellerSectionDetailListModelDiff
 ) {
-
     private val scrollStatesManager = ScrollStatesManager()
 
     override fun onCreateViewHolder(
@@ -127,12 +129,9 @@ class SellerSectionDetailAdapter(
         participantsItemModel: SellerSectionDetailParticipantsItemModel,
         layoutPosition: Int
     ) = binding.run {
-        val participantsAdapter = ParticipantsAdapter(
-            sectionId = participantsItemModel.sectionId,
-            listener = sellerSectionDetailFragment
-        ).apply {
+        val participantsAdapter = ParticipantsAdapter(sellerSectionDetailFragment).apply {
             submitList(participantsItemModel.usersPublics.map {
-                ParticipantsItemModel(userPublic = it)
+                ParticipantsAvatarItemModel(userPublic = it)
             })
         }
 
@@ -211,7 +210,7 @@ class SellerSectionDetailAdapter(
         // Setup more sections recycler view
         val adapter = RelatedSectionsAdapter(
             sellerId = relatedItemModel.sellerId,
-            listener = this@SellerSectionDetailAdapter.sellerSectionDetailFragment
+            listener = sellerSectionDetailFragment
         ).apply {
             submitList(relatedItemModel.itemModels)
         }
@@ -229,7 +228,8 @@ class SellerSectionDetailAdapter(
     private data class CounterRemainTime(val hours: Int, val minutes: Int, val seconds: Int)
 
     interface SellerSectionDetailAdapterListener {
-        fun onSellerInfoItemClicked(sellerId: String)
+        fun onShowSellerInfo(sellerId: String)
+        fun onExpandParticipants()
     }
 }
 

@@ -1,0 +1,62 @@
+[
+  {
+    "id": "wSZ8J9bvyfwMXd50EISD",
+    "name": "Yadllie Plate",
+    "description": "The essence of Yadllie's handmade fried chicken lies in the secret sauce made from a mixture of various fresh vegetables grown in Jeju Island, South Korea and more than 20 natural materials.\nWe put fresh Korean chicken in a secret sauce using Yadlie's unique patented marinating technology, and fermented for more than 72 hours.\nThe secret sauce and our unique technology that has improved on the traditional Korean soaking method is the secret of the unique taste and tender texture of Yadlie fried chicken. ",
+    "description_zh": "Yadllie 手工炸雞的精髓在於採用韓國濟州島栽培的各種新鮮蔬菜和 20 多種天然材料混合而成的秘製醬料。\n我們將韓國新鮮雞肉放入秘製醬料以Yadllie 獨有的專利腌製技術，發酵 72 小時以上。\n秘製醬料加上我們在韓國傳統浸泡腌製法上加以改良的獨有技術，就是Yadllie 炸雞的獨特味道和鮮嫩口感的秘訣。",
+    "location": {
+      "address": "11/F, CTMA Centre, 1 Sai Yeung Choi Street, Mong Kok",
+      "address_zh": "旺角西洋菜街1號兆萬中心11樓",
+      "geopoint": {
+        "lat": 22.31579814493785,
+        "long": 114.17058441705075
+      }
+    },
+    "website": null,
+    "phone_num": "+852 12345678",
+    "image_url": "https://static6.orstatic.com/userphoto2/photo/1C/11ZX/07I7ILFC69820133E08416px.jpg",
+    "order_rating": 0.0,
+    "rating_count": {
+      "excellent": 0,
+      "very_good": 0,
+      "good": 0,
+      "fair": 0,
+      "poor": 0
+    },
+    "min_spend": 0,
+    "opening_hours": "Sunday - Saturday 12:30 - 22:00",
+    "type": 0,
+    "online": true,
+    "tags": ["korean"]
+  },
+  {
+    "id": "QCZt49SRFI4txw4rBUIQ",
+    "name": "Cambo ขุนทอง (The ONE)",
+    "description": "Signature dishes, new style and tradition\nTwo innovative signature dishes bring a refreshing taste experience. Thai Green Curry Soft Shell Crab Pot, fried crispy soft shell crab, dipped in green curry, slightly spicy aroma, refreshing and pleasant. Thai style open stove big clam pot, thick and elastic clams, sweet and delicious, sour and spicy Thai soup is appetizing. As for traditional dishes, of course there are Thai-style raw shrimp, and Thai-style barbecue is also recommended.",
+    "description_zh": "招牌菜新派傳統兼備\n兩款創新招牌菜，帶來清新嚐鮮體驗。泰式青咖喱軟殼蟹鍋，炸得酥脆惹味的軟殼蟹，蘸點青咖喱，微辣香氣，清新怡人。泰式明爐大蜆鍋，蜆肉厚彈牙，鮮甜味美，酸辣泰式湯汁令人開胃。至於傳統菜式，當然有泰式生蝦，而泰式燒烤亦屬推介。",
+    "location": {
+      "address": "Shop L403, 4/F, The ONE, 100 Nathan Road, Tsim Sha Tsui",
+      "address_zh": "尖沙咀彌敦道100號The ONE 4樓L403舖",
+      "geopoint": {
+        "lat": 22.29974047141192,
+        "long": 114.1725104079245
+      }
+    },
+    "website": null,
+    "phone_num": "+852 12345678",
+    "image_url": "https://static7.orstatic.com/userphoto2/photo/Z/RVQ/05I9LM7F9D141323DA9E22px.jpg",
+    "order_rating": 0.0,
+    "rating_count": {
+      "excellent": 0,
+      "very_good": 0,
+      "good": 0,
+      "fair": 0,
+      "poor": 0
+    },
+    "min_spend": 0,
+    "opening_hours": "Sunday - Saturday 12:30 - 22:00",
+    "type": 0,
+    "online": true,
+    "tags": ["indian"]
+  }
+]

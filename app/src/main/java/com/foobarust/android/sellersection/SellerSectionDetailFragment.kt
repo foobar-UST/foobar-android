@@ -145,20 +145,19 @@ class SellerSectionDetailFragment : Fragment(),
         return binding.root
     }
 
-    override fun onSellerInfoItemClicked(sellerId: String) {
-        // Show ship from location map route
+    override fun onShowSellerInfo(sellerId: String) {
         sectionViewModel.onNavigateToSellerMisc(sellerId)
     }
 
-    override fun onParticipantItemClicked(userId: String) {
-
-    }
-
-    override fun onParticipantsExpandClicked(sectionId: String) {
-        findNavController().navigate(
-            SellerSectionDetailFragmentDirections
-                .actionSellerSectionDetailFragmentToSellerSectionParticipantsFragment()
-        )
+    override fun onExpandParticipants() {
+        sectionDetailViewModel.sectionDetail.value?.let {
+            findNavController().navigate(
+                SellerSectionDetailFragmentDirections
+                    .actionSellerSectionDetailFragmentToSellerSectionParticipantsFragment(
+                        userIds = it.joinedUsersIds.toTypedArray()
+                    )
+            )
+        }
     }
 
     override fun onRelatedSectionClicked(sectionId: String) {

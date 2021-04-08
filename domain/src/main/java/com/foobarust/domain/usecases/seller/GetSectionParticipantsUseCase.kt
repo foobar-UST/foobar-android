@@ -14,6 +14,8 @@ import javax.inject.Inject
  * Created by kevin on 12/27/20
  */
 
+private const val DISPLAY_ALL_USERS = -1
+
 class GetSectionParticipantsUseCase @Inject constructor(
     private val userRepository: UserRepository,
     @IoDispatcher coroutineDispatcher: CoroutineDispatcher
@@ -22,9 +24,15 @@ class GetSectionParticipantsUseCase @Inject constructor(
     override fun execute(
         parameters: GetSectionParticipantsParameters
     ): Flow<Resource<List<UserPublic>>> = flow {
-        val usersPublicInfo = parameters.userIds
-            .take(parameters.displayUsersCount)
-            .map { userId -> userRepository.getUserPublicProfile(userId = userId) }
+        val userIds = if (parameters.displayUsersCount == DISPLAY_ALL_USERS) {
+            parameters.userIds
+        } else {
+            parameters.userIds.take(parameters.displayUsersCount)
+        }
+
+        val usersPublicInfo = userIds.map { userId ->
+            userRepository.getUserPublicProfile(userId = userId)
+        }
 
         emit(Resource.Success(usersPublicInfo))
     }
@@ -32,5 +40,5 @@ class GetSectionParticipantsUseCase @Inject constructor(
 
 data class GetSectionParticipantsParameters(
     val userIds: List<String>,
-    val displayUsersCount: Int
+    val displayUsersCount: Int = DISPLAY_ALL_USERS
 )

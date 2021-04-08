@@ -28,7 +28,7 @@ android {
         }
         val mapsApiKey = localProperties.getProperty("MAPS_API_KEY", null)
 
-        buildConfigField("Boolean", "USE_FIREBASE_EMULATOR", "false")
+        buildConfigField("Boolean", "USE_FIREBASE_EMULATOR", "true")
         buildConfigField("String", "EMULATOR_HOST", "\"192.168.128.66\"")
         buildConfigField("String", "EMULATOR_FIRESTORE_PORT", "\"8080\"")
         buildConfigField("String", "EMULATOR_FUNCTIONS_PORT", "\"5001\"")

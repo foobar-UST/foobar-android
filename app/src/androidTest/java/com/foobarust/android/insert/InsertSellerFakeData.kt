@@ -57,6 +57,21 @@ class InsertSellerFakeData {
         assertTrue(true)
     }
 
+    @Test
+    fun insert_sellers_extra_fake_data() = runBlocking(Dispatchers.IO) {
+        val serializedList: List<SellerSerialized> = Json.decodeFromString(
+            decodeJson(file = "sellers_extra_fake_data.json")
+        )
+
+        serializedList.map { it.toSellerDetailEntity() }
+            .forEach {
+                firestore.document("$SELLERS_COLLECTION/${it.id!!}")
+                    .set(it).await()
+            }
+
+        assertTrue(true)
+    }
+
     /*
     @Test
     fun insert_sellers_basic_fake_data() = runBlocking(Dispatchers.IO) {
@@ -81,6 +96,22 @@ class InsertSellerFakeData {
     fun insert_seller_catalogs_fake_data() = runBlocking(Dispatchers.IO) {
         val serializedList: List<SellerCatalogSerialized> = Json.decodeFromString(
             decodeJson(file = "seller_catalogs_fake_data.json")
+        )
+
+        serializedList.forEach {
+            val sellerId = it.seller_id
+            val sellerCatalogEntity = it.toSellerCatalogEntity()
+
+            firestore.document(
+                "$SELLERS_COLLECTION/$sellerId/$SELLERS_CATALOGS_SUB_COLLECTION/${it.id}"
+            ).set(sellerCatalogEntity).await()
+        }
+    }
+
+    @Test
+    fun insert_seller_catalogs_extra_fake_data() = runBlocking(Dispatchers.IO) {
+        val serializedList: List<SellerCatalogSerialized> = Json.decodeFromString(
+            decodeJson(file = "seller_catalogs_extra_fake_data.json")
         )
 
         serializedList.forEach {

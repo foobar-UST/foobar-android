@@ -29,6 +29,6 @@
         android:orientation="horizontal"
         android:clipToPadding="false"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/participants_item"/>
+        tools:listitem="@layout/participants_avatar_item"/>
 
 </LinearLayout>
