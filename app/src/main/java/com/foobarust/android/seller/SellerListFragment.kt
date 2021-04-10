@@ -14,6 +14,7 @@ import com.foobarust.android.sellerdetail.SellerDetailProperty
 import com.foobarust.android.shared.FullScreenDialogFragment
 import com.foobarust.android.shared.PagingLoadStateAdapter
 import com.foobarust.android.utils.*
+import com.foobarust.domain.models.seller.SellerType
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
@@ -113,11 +114,18 @@ class SellerListFragment : FullScreenDialogFragment(), SellersAdapter.SellersAda
         return binding.root
     }
 
-    override fun onSellerClicked(sellerId: String) {
-        findNavController(R.id.sellerListFragment)?.navigate(
-            SellerListFragmentDirections.actionSellerListFragmentToSellerDetailFragment(
-                SellerDetailProperty(sellerId = sellerId)
+    override fun onSellerClicked(sellerId: String, sellerType: SellerType) {
+        when (sellerType) {
+            SellerType.ON_CAMPUS -> findNavController(R.id.sellerListFragment)?.navigate(
+                SellerListFragmentDirections.actionSellerListFragmentToSellerDetailFragment(
+                    SellerDetailProperty(sellerId = sellerId)
+                )
             )
-        )
+            SellerType.OFF_CAMPUS -> findNavController(R.id.sellerListFragment)?.navigate(
+                SellerListFragmentDirections.actionSellerListFragmentToSellerSectionListFragment(
+                    sellerId
+                )
+            )
+        }
     }
 }

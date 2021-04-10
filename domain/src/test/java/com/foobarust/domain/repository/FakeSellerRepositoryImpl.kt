@@ -1,15 +1,7 @@
 package com.foobarust.domain.repository
 
-import androidx.paging.PagingData
-import com.foobarust.domain.models.seller.*
-import com.foobarust.domain.repositories.SellerRepository
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
 
-/**
- * Created by kevin on 2/7/21
- */
-
+/*
 class FakeSellerRepositoryImpl: SellerRepository {
 
     private data class SellerCatalogWrapper(
@@ -190,3 +182,4 @@ class FakeSellerRepositoryImpl: SellerRepository {
         return flowOf(PagingData.from(result))
     }
 }
+ */

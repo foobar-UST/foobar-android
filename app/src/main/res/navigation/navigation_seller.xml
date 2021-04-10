@@ -151,6 +151,9 @@
         <action
             android:id="@+id/action_sellerListFragment_to_sellerDetailFragment"
             app:destination="@id/sellerDetailFragment" />
+        <action
+            android:id="@+id/action_sellerListFragment_to_sellerSectionListFragment"
+            app:destination="@id/sellerSectionListFragment" />
     </dialog>
 
     <!-- SellerRatingDetailFragment -->

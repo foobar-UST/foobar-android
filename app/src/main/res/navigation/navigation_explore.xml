@@ -28,6 +28,9 @@
         <action
             android:id="@+id/action_sellerListFragment_to_sellerDetailFragment"
             app:destination="@id/sellerDetailFragment" />
+        <action
+            android:id="@+id/action_sellerListFragment_to_sellerSectionListFragment"
+            app:destination="@id/sellerSectionListFragment" />
     </dialog>
 
     <!-- SellerDetailFragment -->
@@ -124,6 +127,19 @@
         <argument
             android:name="property"
             app:argType="com.foobarust.android.sellerrating.SellerRatingDetailProperty"/>
+    </dialog>
+
+    <!-- SellerSectionListFragment-->
+    <dialog
+        android:id="@+id/sellerSectionListFragment"
+        android:name="com.foobarust.android.sellersection.SellerSectionListFragment"
+        tools:layout="@layout/fragment_seller_section_list">
+        <argument
+            android:name="sellerId"
+            app:argType="string"/>
+        <action
+            android:id="@+id/action_sellerSectionListFragment_to_sellerSectionFragment"
+            app:destination="@id/sellerSectionFragment" />
     </dialog>
 
 </navigation>

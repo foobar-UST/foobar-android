@@ -34,7 +34,7 @@
             app:shapeAppearance="@style/ShapeAppearance.Foobar.SmallComponent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/seller_name_text_view"
-            tools:src="@sample/sample_image_5"/>
+            tools:src="@tools:sample/backgrounds/scenic"/>
 
         <TextView
             android:id="@+id/title_text_view"
@@ -54,6 +54,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_large"
+            android:layout_marginTop="@dimen/spacing_xmedium"
             android:textColor="@color/material_on_surface_emphasis_medium"
             android:textAppearance="?attr/textAppearanceCaption"
             app:layout_constraintStart_toEndOf="@id/section_image_view"
@@ -67,11 +68,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_large"
+            android:layout_marginTop="@dimen/spacing_xmedium"
             android:text="@string/seller_section_upcoming"
             android:textColor="@color/material_on_surface_emphasis_medium"
             android:textAppearance="?attr/textAppearanceOverline"
             app:layout_constraintStart_toEndOf="@id/section_image_view"
-            app:layout_constraintBottom_toBottomOf="@id/section_image_view"/>
+            app:layout_constraintTop_toBottomOf="@id/date_text_view"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

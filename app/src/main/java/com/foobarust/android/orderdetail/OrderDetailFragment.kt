@@ -255,8 +255,7 @@ class OrderDetailFragment : FullScreenDialogFragment(),
         attachBottomSheetBehavior()
 
         // Update toolbar based on bottom sheet state
-        bottomSheetBehavior.addBottomSheetCallback(object :
-            BottomSheetBehavior.BottomSheetCallback() {
+        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 // TODO: fix toolbar flicker when changing color
                 if (newState == BottomSheetBehavior.STATE_EXPANDED) {

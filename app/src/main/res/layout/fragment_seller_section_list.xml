@@ -14,45 +14,15 @@
         android:background="?android:attr/colorBackground"
         app:elevation="@dimen/elevation_none">
 
-        <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/collapsing_toolbar_layout"
+        <com.google.android.material.appbar.MaterialToolbar
+            style="@style/Widget.MaterialComponents.Toolbar.Surface"
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="210dp"
-            app:contentScrim="?android:attr/colorBackground"
-            app:collapsedTitleTextAppearance="?attr/textAppearanceHeadline6"
-            app:expandedTitleGravity="bottom"
-            app:expandedTitleMarginTop="?attr/actionBarSize"
-            app:expandedTitleTextAppearance="?attr/textAppearanceHeadline5"
-            app:maxLines="2"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <ImageView
-                    android:id="@+id/seller_image_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:alpha="0.25"
-                    android:importantForAccessibility="no"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
-
-            </FrameLayout>
-
-            <com.google.android.material.appbar.MaterialToolbar
-                style="@style/Widget.MaterialComponents.Toolbar.Surface"
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="@android:color/transparent"
-                app:layout_collapseMode="pin"
-                app:navigationIcon="@drawable/ic_arrow_back"
-                app:navigationIconTint="@color/material_on_surface_emphasis_medium" />
-
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
+            android:layout_height="?attr/actionBarSize"
+            android:background="@android:color/transparent"
+            app:layout_scrollFlags="noScroll"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:navigationIconTint="@color/material_on_surface_emphasis_medium" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

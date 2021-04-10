@@ -18,6 +18,7 @@ import com.foobarust.android.promotion.PromotionAdapter
 import com.foobarust.android.shared.PagingLoadStateAdapter
 import com.foobarust.android.utils.*
 import com.foobarust.domain.models.promotion.AdvertiseBasic
+import com.foobarust.domain.models.seller.SellerType
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
@@ -130,7 +131,7 @@ class SellerOnCampusFragment : Fragment(),
         sellerViewModel.onNavigateToPromotionDetail(advertiseBasic.url)
     }
 
-    override fun onSellerClicked(sellerId: String) {
+    override fun onSellerClicked(sellerId: String, sellerType: SellerType) {
         sellerViewModel.onNavigateToSellerDetail(sellerId)
     }
 

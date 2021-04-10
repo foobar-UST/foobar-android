@@ -1,24 +1,9 @@
 package com.foobarust.domain.usecases.seller
 
-import com.foobarust.domain.models.common.Geolocation
-import com.foobarust.domain.models.common.GeolocationPoint
-import com.foobarust.domain.models.seller.SellerDetail
-import com.foobarust.domain.models.seller.SellerType
-import com.foobarust.domain.repository.FakeSellerRepositoryImpl
-import com.foobarust.domain.states.Resource
-import com.foobarust.domain.utils.TestCoroutineRule
-import com.foobarust.domain.utils.runBlockingTest
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
-import java.util.*
-
 /**
  * Created by kevin on 2/8/21
  */
-
+/*
 class TestGetSellerDetailUseCase {
 
     // System in test
@@ -92,3 +77,5 @@ class TestGetSellerDetailUseCase {
         )
     }
 }
+
+ */

@@ -53,6 +53,7 @@ class SellerOnCampusViewModel @Inject constructor(
                 SellersItemModel(
                     sellerId = sellerBasic.id,
                     sellerName = sellerBasic.getNormalizedName(),
+                    sellerType = sellerBasic.type,
                     sellerImageUrl = sellerBasic.imageUrl,
                     sellerRating = sellerBasic.getNormalizedOrderRating(),
                     sellerMinSpend = sellerBasic.minSpend,

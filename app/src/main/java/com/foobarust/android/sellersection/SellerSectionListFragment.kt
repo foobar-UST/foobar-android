@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.ViewCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
@@ -49,10 +48,8 @@ class SellerSectionListFragment : FullScreenDialogFragment(),
             inflater, container, false
         ).apply {
             root.applyLayoutFullscreen()
-            toolbar.applySystemWindowInsetsPadding(applyTop = true)
+            appBarLayout.applySystemWindowInsetsPadding(applyTop = true)
         }
-
-        ViewCompat.setOnApplyWindowInsetsListener(binding.collapsingToolbarLayout, null)
 
         // Navigation back arrow button
         binding.toolbar.setNavigationOnClickListener {
@@ -75,18 +72,13 @@ class SellerSectionListFragment : FullScreenDialogFragment(),
             }
         }
 
+        // Seller detail
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.sellerDetail.collect { sellerDetail ->
                 sellerDetail?.let {
-                    binding.sellerImageView.loadGlideUrl(
-                        imageUrl = it.imageUrl,
-                        centerCrop = true,
-                        placeholder = R.drawable.placeholder_card
-                    )
-
-                    binding.collapsingToolbarLayout.title = getString(
+                    binding.toolbar.title = getString(
                         R.string.seller_section_list_toolbar_title,
-                        sellerDetail.getNormalizedName()
+                        it.getNormalizedName()
                     )
                 }
             }

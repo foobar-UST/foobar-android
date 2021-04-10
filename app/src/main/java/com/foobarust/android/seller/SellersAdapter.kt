@@ -16,6 +16,7 @@ import com.foobarust.android.databinding.SubtitleLargeItemBinding
 import com.foobarust.android.seller.SellersListModel.*
 import com.foobarust.android.seller.SellersViewHolder.*
 import com.foobarust.android.utils.*
+import com.foobarust.domain.models.seller.SellerType
 
 /**
  * Created by kevin on 9/28/20
@@ -63,7 +64,7 @@ class SellersAdapter(
         if (itemModel == null) return@run
 
         root.setOnClickListener {
-            listener.onSellerClicked(itemModel.sellerId)
+            listener.onSellerClicked(itemModel.sellerId, itemModel.sellerType)
         }
 
         // Setup photo layout round corner
@@ -144,7 +145,7 @@ class SellersAdapter(
     }
 
     interface SellersAdapterListener {
-        fun onSellerClicked(sellerId: String)
+        fun onSellerClicked(sellerId: String, sellerType: SellerType)
     }
 }
 
@@ -166,6 +167,7 @@ sealed class SellersListModel {
     data class SellersItemModel(
         val sellerId: String,
         val sellerName: String,
+        val sellerType: SellerType,
         val sellerImageUrl: String?,
         val sellerRating: String,
         val sellerMinSpend: Double,

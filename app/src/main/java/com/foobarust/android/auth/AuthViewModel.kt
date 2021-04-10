@@ -171,11 +171,7 @@ class AuthViewModel @Inject constructor(
 
         resendEmailTimerJob = viewModelScope.launch {
             countDownTimerUseCase(RESEND_BUFFER).collect {
-                isResendEmailTimerActive = when (it) {
-                    is Resource.Success -> it.data
-                    is Resource.Error -> false
-                    is Resource.Loading -> true
-                }
+                isResendEmailTimerActive = it
             }
         }
     }
