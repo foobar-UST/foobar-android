@@ -22,7 +22,8 @@
             app:shapeAppearance="@style/ShapeAppearance.Foobar.SmallComponent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@sample/sample_image_5"/>
+            tools:visibility="gone"
+            tools:src="@tools:sample/backgrounds/scenic"/>
 
         <TextView
             android:id="@+id/title_text_view"
@@ -36,6 +37,7 @@
             app:layout_constraintStart_toEndOf="@id/section_image_view"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_goneMarginStart="@dimen/spacing_none"
             tools:text="[26/11] Lunch Order - 午餐訂單"/>
 
         <TextView
@@ -50,6 +52,7 @@
             app:layout_constraintStart_toEndOf="@id/section_image_view"
             app:layout_constraintTop_toBottomOf="@id/title_text_view"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_goneMarginStart="@dimen/spacing_none"
             tools:text="Deliver 12:30PM"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
