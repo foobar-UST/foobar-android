@@ -58,7 +58,7 @@
         android:layout_marginTop="@dimen/spacing_large"
         android:text="@string/seller_section_detail_title_due_time"
         android:textAppearance="?attr/textAppearanceBody2"
-        app:layout_constraintTop_toBottomOf="@id/delivery_date_title_text_view"
+        app:layout_constraintTop_toBottomOf="@id/delivery_date_text_view"
         app:layout_constraintStart_toStartOf="parent"/>
 
     <TextView
@@ -79,7 +79,7 @@
         android:layout_marginTop="@dimen/spacing_large"
         android:text="@string/seller_section_detail_title_delivery_time"
         android:textAppearance="?attr/textAppearanceBody2"
-        app:layout_constraintTop_toBottomOf="@id/cutoff_time_title_text_view"
+        app:layout_constraintTop_toBottomOf="@id/cutoff_time_text_view"
         app:layout_constraintStart_toStartOf="parent"/>
 
     <TextView
@@ -100,7 +100,7 @@
         android:layout_marginTop="@dimen/spacing_large"
         android:text="@string/seller_section_detail_pick_up_location"
         android:textAppearance="?attr/textAppearanceBody2"
-        app:layout_constraintTop_toBottomOf="@id/delivery_time_title_text_view"
+        app:layout_constraintTop_toBottomOf="@id/delivery_time_text_view"
         app:layout_constraintStart_toStartOf="parent"/>
 
     <TextView
