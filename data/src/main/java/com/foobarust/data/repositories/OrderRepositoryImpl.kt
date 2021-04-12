@@ -75,7 +75,7 @@ class OrderRepositoryImpl @Inject constructor(
                 pageSize = ARCHIVED_ORDERS_PAGE_SIZE,
                 enablePlaceholders = false
             ),
-            pagingSourceFactory = { HistoryOrderBasicsPagingSource(firestore) }
+            pagingSourceFactory = { HistoryOrderBasicsPagingSource(firestore, userId) }
         )
             .flow
             .map { pagingData ->

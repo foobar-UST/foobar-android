@@ -46,6 +46,7 @@ class OrderDetailFragment : FullScreenDialogFragment(),
     private var binding: FragmentOrderDetailBinding by AutoClearedValue(this)
     private val viewModel: OrderDetailViewModel by viewModels()
     private val navArgs: OrderDetailFragmentArgs by navArgs()
+
     private var bottomSheetBehavior: BottomSheetBehavior<*> by AutoClearedValue(this)
 
     private var sellerMarker: Marker? = null
@@ -68,7 +69,16 @@ class OrderDetailFragment : FullScreenDialogFragment(),
             root.applyLayoutFullscreen()
             toolbar.applySystemWindowInsetsPadding(applyTop = true)
             loadingProgressBar.setVisibilityAfterHide(View.GONE)
-            bottomSheet.isGone = true         // Hide bottom sheet at start
+
+            // Attach bottom sheet behavior
+            bottomSheetBehavior = BottomSheetBehavior<FrameLayout>().also {
+                it.state = BottomSheetBehavior.STATE_HIDDEN         // Hide bottom sheet at start
+                with(bottomSheet) {
+                    (layoutParams as CoordinatorLayout.LayoutParams).behavior = it
+                    requestLayout()
+                    bottomSheet.isGone = true
+                }
+            }
         }
 
         // Setup order detail list
@@ -246,22 +256,21 @@ class OrderDetailFragment : FullScreenDialogFragment(),
     }
 
     private fun setupBottomSheetFullScreen() {
-        attachBottomSheetBehavior()
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         bottomSheetBehavior.isDraggable = false
     }
 
     private fun setupBottomSheetCollapsed() {
-        attachBottomSheetBehavior()
-
         // Update toolbar based on bottom sheet state
         bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-                // TODO: fix toolbar flicker when changing color
-                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-                    updateToolbarColor(requireContext().themeColor(R.attr.colorSurface))
-                } else {
-                    updateToolbarColor(requireContext().getColorCompat(android.R.color.transparent))
+                when (newState) {
+                    BottomSheetBehavior.STATE_EXPANDED -> updateToolbarColor(
+                        requireContext().themeColor(R.attr.colorSurface)
+                    )
+                    else -> updateToolbarColor(
+                        requireContext().getColorCompat(android.R.color.transparent)
+                    )
                 }
             }
 
@@ -283,16 +292,6 @@ class OrderDetailFragment : FullScreenDialogFragment(),
                     bottomSheetBehavior.setPeekHeight(lastStateItemView.bottom, true)
                 }
             }
-        }
-    }
-
-    private fun attachBottomSheetBehavior() {
-        bottomSheetBehavior = BottomSheetBehavior<FrameLayout>()
-
-        // Set bottom sheet behavior
-        binding.bottomSheet.run {
-            (layoutParams as CoordinatorLayout.LayoutParams).behavior = bottomSheetBehavior
-            requestLayout()
         }
     }
 

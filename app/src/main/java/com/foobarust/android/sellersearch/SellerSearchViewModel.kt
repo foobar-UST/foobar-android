@@ -1,6 +1,5 @@
 package com.foobarust.android.sellersearch
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.sellersearch.SellerSearchListModel.SellerSearchItemModel
@@ -43,7 +42,6 @@ class SellerSearchViewModel @Inject constructor(
                         searchQuery = query,
                         numOfSellers = NUM_OF_RESULTS,
                     )
-                    Log.d("SellerSearch", "request")
                     searchSellersUseCase(params)
                 } else {
                     // Clear list if the input is blank

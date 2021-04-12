@@ -7,6 +7,7 @@ import com.foobarust.data.constants.Constants.ORDER_CREATED_AT_FIELD
 import com.foobarust.data.constants.Constants.ORDER_STATE_ARCHIVED
 import com.foobarust.data.constants.Constants.ORDER_STATE_DELIVERED
 import com.foobarust.data.constants.Constants.ORDER_STATE_FIELD
+import com.foobarust.data.constants.Constants.ORDER_USER_ID_FIELD
 import com.foobarust.data.models.order.OrderBasicNetworkDto
 import com.foobarust.data.utils.isNetworkData
 import com.google.firebase.firestore.FirebaseFirestore
@@ -18,7 +19,8 @@ import kotlinx.coroutines.tasks.await
  */
 
 class HistoryOrderBasicsPagingSource(
-    private val firestore: FirebaseFirestore
+    private val firestore: FirebaseFirestore,
+    private val userId: String
 ) : PagingSource<Query, OrderBasicNetworkDto>() {
 
     private var initialPageQuery: Query? = null
@@ -30,6 +32,7 @@ class HistoryOrderBasicsPagingSource(
                     ORDER_STATE_FIELD,
                     listOf(ORDER_STATE_ARCHIVED, ORDER_STATE_DELIVERED)
                 )
+                .whereEqualTo(ORDER_USER_ID_FIELD, userId)
                 //.orderBy(ORDER_STATE_FIELD, Query.Direction.DESCENDING) // show delivered items first
                 .orderBy(ORDER_CREATED_AT_FIELD, Query.Direction.DESCENDING)
                 .limit(params.loadSize.toLong())
