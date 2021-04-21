@@ -29,8 +29,7 @@ class SignInWithEmailLinkUseCase @Inject constructor(
         )
 
         messagingRepository.linkDeviceTokenToUser(
-            idToken = authRepository.getUserIdToken(),
-            deviceToken = messagingRepository.getDeviceToken()
+            idToken = authRepository.getUserIdToken()
         )
 
         authRepository.removeSavedAuthEmail()

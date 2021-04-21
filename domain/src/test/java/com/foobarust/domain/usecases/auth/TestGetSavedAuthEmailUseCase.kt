@@ -5,18 +5,19 @@ import com.foobarust.domain.repository.FakeAuthRepositoryImpl
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.utils.TestCoroutineRule
 import com.foobarust.domain.utils.runBlockingTest
+import kotlinx.coroutines.flow.toList
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import java.util.*
 
 /**
- * Created by kevin on 4/9/21
+ * Created by kevin on 4/21/21
  */
 
-class TestGetIsUserSignedInUseCase {
+class TestGetSavedAuthEmailUseCase {
 
-    private lateinit var getIsUserSignedInUseCase: GetIsUserSignedInUseCase
+    private lateinit var getSavedAuthEmailUseCase: GetSavedAuthEmailUseCase
     private lateinit var fakeAuthRepositoryImpl: FakeAuthRepositoryImpl
 
     @get:Rule
@@ -28,29 +29,34 @@ class TestGetIsUserSignedInUseCase {
             idToken = UUID.randomUUID().toString(),
             defaultAuthProfile = AuthProfile(
                 id = UUID.randomUUID().toString(),
-                email = "test@test.com",
+                email = FAKE_AUTH_EMAIL,
                 username = "hello_world"
             ),
             isSignedIn = false
         )
 
-        getIsUserSignedInUseCase = GetIsUserSignedInUseCase(
+        getSavedAuthEmailUseCase = GetSavedAuthEmailUseCase(
             authRepository = fakeAuthRepositoryImpl,
             coroutineDispatcher = coroutineRule.testDispatcher
         )
     }
 
     @Test
-    fun `test user signed in`() = coroutineRule.runBlockingTest {
-        fakeAuthRepositoryImpl.setUserSignedIn(true)
-        val result = getIsUserSignedInUseCase(Unit)
-        assert(result is Resource.Success && result.data)
+    fun `test get saved auth email success`() = coroutineRule.runBlockingTest {
+        fakeAuthRepositoryImpl.setIOError(false)
+        fakeAuthRepositoryImpl.updateSavedAuthEmail(FAKE_AUTH_EMAIL)
+        val result = getSavedAuthEmailUseCase(Unit).toList().last()
+        assert(result is Resource.Success && result.data == FAKE_AUTH_EMAIL)
     }
 
     @Test
-    fun `test user signed out`() = coroutineRule.runBlockingTest {
-        fakeAuthRepositoryImpl.setUserSignedIn(false)
-        val result = getIsUserSignedInUseCase(Unit)
-        assert(result is Resource.Success && !result.data)
+    fun `test get saved auth email failed`() = coroutineRule.runBlockingTest {
+        fakeAuthRepositoryImpl.setIOError(true)
+        val result = getSavedAuthEmailUseCase(Unit).toList().last()
+        assert(result is Resource.Error)
+    }
+
+    companion object {
+        private const val FAKE_AUTH_EMAIL = "test@test.com"
     }
 }

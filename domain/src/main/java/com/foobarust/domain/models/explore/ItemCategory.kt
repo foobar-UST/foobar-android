@@ -4,7 +4,7 @@ package com.foobarust.domain.models.explore
  * Created by kevin on 2/26/21
  */
 
-data class SellerItemCategory(
+data class ItemCategory(
     val id: String,
     val tag: String,
     val title: String,
@@ -12,6 +12,6 @@ data class SellerItemCategory(
     val imageUrl: String?
 )
 
-fun SellerItemCategory.getNormalizedTitle(): String {
+fun ItemCategory.getNormalizedTitle(): String {
     return if (titleZh != null) "$title $titleZh" else title
 }

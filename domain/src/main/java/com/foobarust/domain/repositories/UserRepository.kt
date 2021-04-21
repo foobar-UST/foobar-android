@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
 
-    /* User detail */
     fun getUserDetailObservable(userId: String): Flow<Resource<UserDetail>>
 
     suspend fun updateUserDetail(idToken: String, name: String?, phoneNum: String?)
@@ -21,12 +20,10 @@ interface UserRepository {
 
     fun uploadUserPhoto(userId: String, uri: String, extension: String): Flow<Resource<Unit>>
 
-    /* Tutorial */
     suspend fun getUserCompleteTutorial(): Boolean
 
     suspend fun updateHasUserCompleteTutorial(completed: Boolean)
 
-    /* Public */
     suspend fun getUserPublicProfile(userId: String): UserPublic
 
     suspend fun getUserDeliveryProfile(userId: String): UserDelivery

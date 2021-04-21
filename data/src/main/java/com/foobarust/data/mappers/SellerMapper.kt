@@ -9,7 +9,7 @@ import com.foobarust.data.constants.Constants.SELLER_SECTION_STATE_SHIPPED
 import com.foobarust.data.models.explore.ItemCategoryDto
 import com.foobarust.data.models.seller.*
 import com.foobarust.domain.models.common.GeolocationPoint
-import com.foobarust.domain.models.explore.SellerItemCategory
+import com.foobarust.domain.models.explore.ItemCategory
 import com.foobarust.domain.models.seller.*
 import javax.inject.Inject
 
@@ -149,8 +149,8 @@ class SellerMapper @Inject constructor() {
         )
     }
 
-    fun toSellerItemCategory(dto: ItemCategoryDto): SellerItemCategory {
-        return SellerItemCategory(
+    fun toSellerItemCategory(dto: ItemCategoryDto): ItemCategory {
+        return ItemCategory(
             id = dto.id!!,
             tag = dto.tag!!,
             title = dto.title!!,

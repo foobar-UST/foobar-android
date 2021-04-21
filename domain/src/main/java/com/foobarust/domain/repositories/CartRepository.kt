@@ -9,18 +9,12 @@ import kotlinx.coroutines.flow.Flow
 
 interface CartRepository {
 
-    /*
-        User cart
-     */
     fun getUserCartObservable(userId: String): Flow<Resource<UserCart>>
 
     suspend fun clearUserCart(idToken: String)
 
     suspend fun syncUserCart(idToken: String)
 
-    /*
-        Cart items
-     */
     fun getUserCartItemsObservable(userId: String): Flow<Resource<List<UserCartItem>>>
 
     suspend fun addUserCartItem(idToken: String, addUserCartItem: AddUserCartItem)

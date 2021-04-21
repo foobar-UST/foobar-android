@@ -1,7 +1,7 @@
 package com.foobarust.domain.usecases.seller
 
 import com.foobarust.domain.di.IoDispatcher
-import com.foobarust.domain.models.explore.SellerItemCategory
+import com.foobarust.domain.models.explore.ItemCategory
 import com.foobarust.domain.repositories.SellerRepository
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.FlowUseCase
@@ -17,10 +17,10 @@ import javax.inject.Inject
 class GetSellerItemCategoriesUseCase @Inject constructor(
     private val sellerRepository: SellerRepository,
     @IoDispatcher coroutineDispatcher: CoroutineDispatcher
-) : FlowUseCase<Unit, List<SellerItemCategory>>(coroutineDispatcher) {
+) : FlowUseCase<Unit, List<ItemCategory>>(coroutineDispatcher) {
 
-    override fun execute(parameters: Unit): Flow<Resource<List<SellerItemCategory>>> = flow {
-        val itemCategories = sellerRepository.getSellerItemCategories()
+    override fun execute(parameters: Unit): Flow<Resource<List<ItemCategory>>> = flow {
+        val itemCategories = sellerRepository.getItemCategories()
         emit(Resource.Success(itemCategories))
     }
 }

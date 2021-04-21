@@ -1,13 +1,11 @@
 package com.foobarust.domain.usecases.auth
 
-import com.foobarust.domain.utils.TestCoroutineRule
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.runBlockingTest
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 
 /**
@@ -18,9 +16,6 @@ class TestCountDownTimerUseCase {
 
     private lateinit var countDownTimerUseCase: CountDownTimerUseCase
 
-    @get:Rule
-    var coroutineRule = TestCoroutineRule()
-
     @Before
     fun init() {
         countDownTimerUseCase = CountDownTimerUseCase(
@@ -29,38 +24,14 @@ class TestCountDownTimerUseCase {
     }
 
     @Test
-    fun `timer active before delay`() = runBlockingTest {
-        val delay = 100L
-        val results = mutableListOf<Boolean>()
-
-        val timerJob = launch {
-            countDownTimerUseCase(delay).collect {
-                results.add(it)
-            }
-        }
-
-        delay(80L)
-
-        timerJob.cancel()
-
-        assert(results.size == 1 && results[0])
+    fun `timer is active when started`() = runBlocking {
+        val results = countDownTimerUseCase(100L).toList()
+        assertTrue(results.first())
     }
 
     @Test
-    fun `timer inactive after delay`() = runBlockingTest {
-        val delay = 100L
-        val results = mutableListOf<Pair<Boolean, Long>>()
-
-        countDownTimerUseCase(delay).collect {
-            results.add(Pair(it, System.currentTimeMillis()))
-        }
-
-        delay(delay + 10L)
-
-        assert(
-            results.size == 2 &&
-            results[0].first && !results[1].first &&
-            (results[1].second - results[0].second) >= delay
-        )
+    fun `timer is inactive when ended`() = runBlocking {
+        val results = countDownTimerUseCase(100L).toList()
+        assertFalse(results.last())
     }
 }

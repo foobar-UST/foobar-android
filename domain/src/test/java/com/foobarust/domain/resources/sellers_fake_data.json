@@ -16,12 +16,18 @@
     "phone_num": "+852 2358-0271",
     "image_url": "https://cso.ust.hk/sites/cso862-prod.sites2.ust.hk/files/2018-09/lg5-01_0.jpg",
     "order_rating": 0.0,
-    "rating_count":  0,
+    "rating_count": {
+	"excellent": 0,
+	"very_good": 0,
+	"good": 0,
+	"fair": 0,
+	"poor": 0
+},
     "min_spend": 0,
     "opening_hours": "Sunday - Saturday 07:00 - 24:00",
     "type": 0,
     "online": true,
-    "tags": ["Western", "Chinese", "Japanese"]
+    "tags": ["western", "chinese", "japanese"]
   },
   {
     "id": "5f71cda23827f5d483374c96",
@@ -41,12 +47,18 @@
     "phone_num": "+852 2868-5100",
     "image_url": "https://cso.ust.hk/sites/cso862-prod.sites2.ust.hk/files/2018-09/lskc_04_0.jpg",
     "order_rating": 0.0,
-    "rating_count":  0,
+    "rating_count": {
+	"excellent": 0,
+	"very_good": 0,
+	"good": 0,
+	"fair": 0,
+	"poor": 0
+},
     "min_spend": 0,
     "opening_hours": "Monday - Friday 08:00 - 20:00\nSaturday 08:00 - 17:00",
     "type": 0,
     "online": true,
-    "tags": ["Western", "Chinese", "Japanese"]
+    "tags": ["western", "chinese", "japanese"]
   },
   {
     "id": "5f71cda235eada3204009966",
@@ -66,12 +78,18 @@
     "phone_num": "+852 2358-1080",
     "image_url": "https://cso.ust.hk/sites/cso862-prod.sites2.ust.hk/files/2018-09/starbucks-03.jpg",
     "order_rating": 0.0,
-    "rating_count":  0,
+    "rating_count": {
+	"excellent": 0,
+	"very_good": 0,
+	"good": 0,
+	"fair": 0,
+	"poor": 0
+},
     "min_spend": 0,
     "opening_hours": "Mon - Fri: 08:00 - 20:00\nSat, Sun & PH: 08:30 - 20:00",
     "type": 0,
     "online": true,
-    "tags": ["Western", "Chinese", "Japanese"]
+    "tags": ["western", "chinese", "japanese"]
   },
   {
     "id": "5f71cda28cd84b7fcdb0f5d6",
@@ -89,12 +107,18 @@
     "phone_num": "+852 2358-1133",
     "image_url": "https://cso.ust.hk/sites/cso862-prod.sites2.ust.hk/files/2018-07/_dsc2929.jpg",
     "order_rating": 0.0,
-    "rating_count":  0,
+    "rating_count": {
+	"excellent": 0,
+	"very_good": 0,
+	"good": 0,
+	"fair": 0,
+	"poor": 0
+},
     "min_spend": 0,
     "opening_hours": "Monday - Saturday 11:00 - 22:00\nSunday 10:00 - 22:00",
     "type": 0,
     "online": true,
-    "tags": ["Western", "Chinese", "Japanese"]
+    "tags": ["western", "chinese", "japanese"]
   },
   {
     "id": "5f71cda20110962a4b772122",
@@ -111,12 +135,18 @@
     "phone_num": "+852 2363-6638",
     "image_url": "https://cso.ust.hk/sites/cso862-prod.sites2.ust.hk/files/2019-02/ucb_03.jpg",
     "order_rating": 0.0,
-    "rating_count":  0,
+    "rating_count": {
+	"excellent": 0,
+	"very_good": 0,
+	"good": 0,
+	"fair": 0,
+	"poor": 0
+},
     "min_spend": 0,
     "opening_hours": "Sunday - Saturday 12:00 - 21:00\nPH : 12:00 - 21:00",
     "type": 0,
     "online": true,
-    "tags": ["Western", "Chinese", "Japanese"]
+    "tags": ["western", "chinese", "japanese"]
   },
   {
     "id": "5f71cda2a4151ec8471231a2",
@@ -134,12 +164,18 @@
     "phone_num": "+852 3701-8822",
     "image_url": "https://cso.ust.hk/sites/cso862-prod.sites2.ust.hk/files/2018-12/unq_03.jpg",
     "order_rating": 0.0,
-    "rating_count":  0,
+    "rating_count": {
+	"excellent": 0,
+	"very_good": 0,
+	"good": 0,
+	"fair": 0,
+	"poor": 0
+},
     "min_spend": 0,
     "opening_hours": "Sunday - Saturday 07:30 - 23:00\nPH : 07:30 - 23:00",
     "type": 0,
     "online": true,
-    "tags": ["Western", "Chinese", "Japanese"]
+    "tags": ["western", "chinese", "japanese"]
   },
   {
     "id": "5f71cda2ea9622b4abd52afc",
@@ -155,12 +191,18 @@
     "phone_num": "+852 2335-1875",
     "image_url": "https://cso.ust.hk/sites/cso862-prod.sites2.ust.hk/files/styles/location_tu/public/2019-09/ad_01.png?itok=tRrGMDxE",
     "order_rating": 0.0,
-    "rating_count":  0,
+    "rating_count": {
+	"excellent": 0,
+	"very_good": 0,
+	"good": 0,
+	"fair": 0,
+	"poor": 0
+},
     "min_spend": 0,
     "opening_hours": "Monday - Saturday 07:30 - 21:00\nSunday & PH : 10:00 - 18:00",
     "type": 0,
     "online": true,
-    "tags": ["Western", "Chinese", "Japanese"]
+    "tags": ["western", "chinese", "japanese"]
   },
   {
     "id": "5f71cda2d25b70d3d1951e68",
@@ -180,12 +222,18 @@
     "phone_num": "+852 2358-0271",
     "image_url": "https://cso.ust.hk/sites/cso862-prod.sites2.ust.hk/files/2018-08/IMG_2005.jpg",
     "order_rating": 0.0,
-    "rating_count":  0,
+    "rating_count": {
+	"excellent": 0,
+	"very_good": 0,
+	"good": 0,
+	"fair": 0,
+	"poor": 0
+},
     "min_spend": 0,
     "opening_hours": "Sunday - Saturday 07:00 - 24:00",
     "type": 0,
     "online": true,
-    "tags": ["Western", "Chinese", "Japanese"]
+    "tags": ["western", "chinese", "japanese"]
   },
   {
     "id": "5f71cda24103e172af59bf83",
@@ -203,12 +251,18 @@
     "phone_num": "+852 2811-1243",
     "image_url": "https://cso.ust.hk/sites/cso862-prod.sites2.ust.hk/files/2019-01/cc_05_0.jpg",
     "order_rating": 0.0,
-    "rating_count":  0,
+    "rating_count": {
+	"excellent": 0,
+	"very_good": 0,
+	"good": 0,
+	"fair": 0,
+	"poor": 0
+},
     "min_spend": 0,
     "opening_hours": "Monday - Friday 08:00 - 21:00\nSaturday 09:00 - 18:00\nSun & PH : 09:00 - 18:00",
     "type": 0,
     "online": true,
-    "tags": ["Western", "Chinese", "Japanese"]
+    "tags": ["western", "chinese", "japanese"]
   },
   {
     "id": "5f71cda239b8bfbda7b0c9d1",
@@ -226,12 +280,18 @@
     "phone_num": "+852 2324-3600",
     "image_url": "https://cso.ust.hk/sites/cso862-prod.sites2.ust.hk/files/2018-09/subway-03_0.jpg",
     "order_rating": 0.0,
-    "rating_count":  0,
+    "rating_count": {
+	"excellent": 0,
+	"very_good": 0,
+	"good": 0,
+	"fair": 0,
+	"poor": 0
+},
     "min_spend": 0,
     "opening_hours": "Monday - Saturday 08:00 - 21:00\nSunday 10:00 - 20:00",
     "type": 0,
     "online": true,
-    "tags": ["Western", "Chinese", "Japanese"]
+    "tags": ["western", "chinese", "japanese"]
   },
   {
     "id": "5f71cda260374f08da50d5b4",
@@ -249,12 +309,18 @@
     "phone_num": "+852 2358-3123",
     "image_url": "https://cso.ust.hk/sites/cso862-prod.sites2.ust.hk/files/2018-09/lg1-01_2.jpg",
     "order_rating": 0.0,
-    "rating_count":  0,
+    "rating_count": {
+	"excellent": 0,
+	"very_good": 0,
+	"good": 0,
+	"fair": 0,
+	"poor": 0
+},
     "min_spend": 0,
     "opening_hours": "Monday - Saturday 07:30 - 21:00\nSun & PH: 07:30 - 21:00",
     "type": 0,
     "online": true,
-    "tags": ["Western", "Chinese", "Japanese"]
+    "tags": ["western", "chinese", "japanese"]
   },
   {
     "id": "5f71cda2394fa9f3b352c70a",
@@ -271,12 +337,18 @@
     "phone_num": "+852 2980-3900",
     "image_url": "https://static7.orstatic.com/userphoto2/photo/15/WMH/06FZTA74DB0DEAABDBDF90px.jpg",
     "order_rating": 0.0,
-    "rating_count":  0,
+    "rating_count": {
+	"excellent": 0,
+	"very_good": 0,
+	"good": 0,
+	"fair": 0,
+	"poor": 0
+},
     "min_spend": 0,
     "opening_hours": " Monday - Saturday 09:00 - 20:00 (Last Order - 19:30)\nSunday & PH : Closed",
     "type": 0,
     "online": true,
-    "tags": ["Western", "Chinese", "Japanese"]
+    "tags": ["western", "chinese", "japanese"]
   },
   {
     "id": "5f71cda2c73306c591dc9b36",
@@ -295,17 +367,23 @@
     "phone_num": "+852 2325-2533",
     "image_url": "https://cso.ust.hk/sites/cso862-prod.sites2.ust.hk/files/2018-09/lg7-k2-02.jpg",
     "order_rating": 0.0,
-    "rating_count":  0,
+    "rating_count": {
+	"excellent": 0,
+	"very_good": 0,
+	"good": 0,
+	"fair": 0,
+	"poor": 0
+},
     "min_spend": 0,
     "opening_hours": "Sunday - Saturday 11:00 - 21:00\nPH : 11:00 - 21:00",
     "type": 0,
     "online": true,
-    "tags": ["Western", "Chinese", "Japanese"]
+    "tags": ["western", "chinese", "japanese"]
   },
   {
     "id": "5f71cda2fd430da3509d6f2b",
     "name": "Diners@LSKBB",
-    "description": "The restaurant features a variety of Asian and Western food includes pasta and rice dishes, daily set meals at reasonable prices serving breakfast till afternoon tea daily. Vegetarian food, snacks, coffee, tea, and soda will also be available.",
+    "description": "The restaurant features a variety of Asian and western food includes pasta and rice dishes, daily set meals at reasonable prices serving breakfast till afternoon tea daily. Vegetarian food, snacks, coffee, tea, and soda will also be available.",
     "location": {
       "address": "G/F, Lee Shau Kee Business Building, LSK Campus, Hong Kong University of Science and Technology, Clear Water Bay, Sai Kung",
       "address_zh": "西貢清水灣道香港科技大學李兆基校園李兆基商學大樓地下",
@@ -317,12 +395,18 @@
     "phone_num": "+852 2701-1821",
     "image_url": "https://cso.ust.hk/sites/cso862-prod.sites2.ust.hk/files/2018-09/lskr_01_0.jpg",
     "order_rating": 0.0,
-    "rating_count":  0,
+    "rating_count": {
+	"excellent": 0,
+	"very_good": 0,
+	"good": 0,
+	"fair": 0,
+	"poor": 0
+},
     "min_spend": 0,
     "opening_hours": "Monday - Saturday 07:30 - 18:00\nSun & PH : Closed",
     "type": 0,
     "online": true,
-    "tags": ["Western", "Chinese", "Japanese"]
+    "tags": ["western", "chinese", "japanese"]
   },
   {
     "id": "5f71cda2707b81823b4f80d8",
@@ -341,13 +425,19 @@
     "phone_num": "+852 2243-1087",
     "image_url": "https://cso.ust.hk/sites/cso862-prod.sites2.ust.hk/files/2018-07/IMG_4068_0.JPG",
     "order_rating": 0.0,
-    "rating_count":  0,
+    "rating_count": {
+	"excellent": 0,
+	"very_good": 0,
+	"good": 0,
+	"fair": 0,
+	"poor": 0
+},
     "min_spend": 0,
     "opening_hours": "Monday - Saturday 07:30 - 21:00\nSunday & PH 09:00 - 21:00",
     "type": 0,
     "online": true,
     "notice": "\uD83C\uDF89 This Kitchen offers a menu which is highly adopted to local's taste with some dishes changed from time to time according to season & occasion.",
-    "tags": ["Western", "Chinese", "Japanese"]
+    "tags": ["western", "chinese", "japanese"]
   },
   {
     "id": "5f71cda2900682efb519d4f4",
@@ -364,12 +454,18 @@
     "phone_num": "+852 9055-9306 / +852 9487-0417",
     "image_url": "https://cso.ust.hk/sites/cso862-prod.sites2.ust.hk/files/2019-03/sf_03.jpg",
     "order_rating": 0.0,
-    "rating_count":  0,
+    "rating_count": {
+	"excellent": 0,
+	"very_good": 0,
+	"good": 0,
+	"fair": 0,
+	"poor": 0
+},
     "min_spend": 0,
     "opening_hours": "Sunday - Saturday 18:00 - 02:00\nClosed on Saturdays during Summer Holidays",
     "type": 0,
     "online": true,
-    "tags": ["Western", "Chinese", "Japanese"]
+    "tags": ["western", "chinese", "japanese"]
   },
   {
     "id": "5f71cda27c5f68f46baca054",
@@ -387,12 +483,18 @@
     "phone_num": "+852 3188-5550",
     "image_url": "https://cso.ust.hk/sites/cso862-prod.sites2.ust.hk/files/2018-09/lsk-hl-02_0.jpg",
     "order_rating": 0.0,
-    "rating_count":  0,
+    "rating_count": {
+	"excellent": 0,
+	"very_good": 0,
+	"good": 0,
+	"fair": 0,
+	"poor": 0
+},
     "min_spend": 0,
     "opening_hours": "Monday - Saturday 10:00 - 21:00 (Last Order - 20:30)\nSun & PH : Closed",
     "type": 0,
     "online": true,
-    "tags": ["Western", "Chinese", "Japanese"]
+    "tags": ["western", "chinese", "japanese"]
   },
   {
     "id": "5f71cda2aac29ca91a37e3e4",
@@ -409,12 +511,18 @@
     "phone_num": "+852 2426-1838",
     "image_url": "https://cso.ust.hk/sites/cso862-prod.sites2.ust.hk/files/images/ann_cat_all_open_lg7_k3.png",
     "order_rating": 0.0,
-    "rating_count":  0,
+    "rating_count": {
+	"excellent": 0,
+	"very_good": 0,
+	"good": 0,
+	"fair": 0,
+	"poor": 0
+},
     "min_spend": 0,
     "opening_hours": "Monday - Saturday 11:00 - 21:00\nPH : 11:00 - 21:00\nSunday Closed",
     "type": 0,
     "online": true,
-    "tags": ["Western", "Chinese", "Japanese"]
+    "tags": ["western", "chinese", "japanese"]
   },
   {
     "id": "5f71cda210cb0cc92321987e",
@@ -431,12 +539,18 @@
     "phone_num": "+852 2335-1875",
     "image_url": "https://cso.ust.hk/sites/cso862-prod.sites2.ust.hk/files/2019-02/unb_02_0.jpg",
     "order_rating": 0.0,
-    "rating_count":  0,
+    "rating_count": {
+	"excellent": 0,
+	"very_good": 0,
+	"good": 0,
+	"fair": 0,
+	"poor": 0
+},
     "min_spend": 0,
     "opening_hours": "Sunday - Thursday 16:00 - 23:00\nFriday - Saturday 16:00 - 24:00\nPH : 16:00 - 23:00\nPH Eve : 16:00 - 24:00",
     "type": 0,
     "online": true,
-    "tags": ["Western", "Chinese", "Japanese"]
+    "tags": ["western", "chinese", "japanese"]
   },
   {
     "id": "kZr4pBjju7gQniYGS0kN",
@@ -453,11 +567,17 @@
     "phone_num": "+852 1234-5678",
     "image_url": "https://media-cdn.tripadvisor.com/media/photo-s/11/fa/54/9c/cbd.jpg",
     "order_rating": 0.0,
-    "rating_count":  0,
+    "rating_count": {
+	"excellent": 0,
+	"very_good": 0,
+	"good": 0,
+	"fair": 0,
+	"poor": 0
+},
     "min_spend": 0,
     "opening_hours": "Sunday - Thursday 16:00 - 23:00\nFriday - Saturday 16:00 - 24:00\nPH : 16:00 - 23:00\nPH Eve : 16:00 - 24:00",
     "type": 1,
     "online": true,
-    "tags": ["Western", "Chinese", "Japanese"]
+    "tags": ["western", "chinese", "japanese"]
   }
 ]

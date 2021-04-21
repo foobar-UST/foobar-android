@@ -24,8 +24,6 @@ import javax.inject.Singleton
  * Created by kevin on 2/6/21
  */
 
-private const val TAG = "GetUserAuthStateUseCase"
-
 @Singleton
 class GetUserAuthStateUseCase @Inject constructor(
     private val authRepository: AuthRepository,
@@ -41,15 +39,15 @@ class GetUserAuthStateUseCase @Inject constructor(
             stopObserveUserDetail()
             when (authState) {
                 is AuthState.Authenticated -> {
-                    println("[$TAG]: User is signed in. Start observe UserDetail.")
+                    // User is signed in. Start observe UserDetail.
                     startObserveUserDetail(authProfile = authState.data)
                 }
                 AuthState.Unauthenticated -> {
-                    println("[$TAG]: User is signed out.")
+                    // User is signed out.
                     channel.offer(AuthState.Unauthenticated)
                 }
                 AuthState.Loading -> {
-                    println("[$TAG]: Loading auth profile...")
+                    // Loading auth profile.
                     channel.offer(AuthState.Loading)
                 }
             }
@@ -69,15 +67,14 @@ class GetUserAuthStateUseCase @Inject constructor(
             userRepository.getUserDetailObservable(authProfile.id).collect {
                 when (it) {
                     is Resource.Success -> {
-                        // Offer user detail data from network db or local cache.
-                        println("[$TAG]: Network available, offered UserDetail.")
+                        // Network available, offered UserDetail.
                         channel.offer(AuthState.Authenticated(it.data))
                     }
                     is Resource.Error -> {
                         // Offer auth profile if there is network error or the user detail
                         // document is not created yet. The snapshot observable should keep alive
                         // all the time, it will only be detached once the user is signed out.
-                        println("[$TAG]: Network unavailable, offered AuthProfile.")
+                        // Network unavailable, offered AuthProfile.
                         channel.offer(AuthState.Authenticated(authProfile.asUserDetail()))
                     }
                     is Resource.Loading -> Unit
@@ -87,7 +84,6 @@ class GetUserAuthStateUseCase @Inject constructor(
     }
 
     private fun stopObserveUserDetail() {
-        println("[$TAG]: Stop observing UserDetail.")
         observeUserDetailJob.cancelIfActive()
     }
 }

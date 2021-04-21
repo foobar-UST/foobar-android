@@ -1,185 +1,152 @@
 package com.foobarust.domain.repository
 
+import androidx.paging.PagingData
+import com.foobarust.domain.models.explore.ItemCategory
+import com.foobarust.domain.models.seller.*
+import com.foobarust.domain.repositories.SellerRepository
+import com.foobarust.domain.serialize.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 
-/*
-class FakeSellerRepositoryImpl: SellerRepository {
-
-    private data class SellerCatalogWrapper(
-        val sellerId: String,
-        val sellerCatalog: SellerCatalog
-    )
-
-    private data class SellerItemBasicWrapper(
-        val sellerId: String,
-        val catalogId: String,
-        val sellerItemBasic: SellerItemBasic
-    )
-
-    private data class SellerItemDetailWrapper(
-        val sellerId: String,
-        val sellerItemDetail: SellerItemDetail
-    )
-
-    private data class SellerSectionBasicWrapper(
-        val sellerId: String,
-        val sellerSectionBasic: SellerSectionBasic
-    )
-
-    private data class SellerSectionDetailWrapper(
-        val sellerId: String,
-        val sellerSectionDetail: SellerSectionDetail
-    )
-
-    private val sellers = mutableListOf<SellerBasic>()
-    private val sellerDetails = mutableListOf<SellerDetail>()
-    private val sellerCatalogs = mutableListOf<SellerCatalogWrapper>()
-    private val sellerItems = mutableListOf<SellerItemBasicWrapper>()
-    private val sellerItemDetails = mutableListOf<SellerItemDetailWrapper>()
-    private val sellerSections = mutableListOf<SellerSectionBasicWrapper>()
-    private val sellerSectionDetails = mutableListOf<SellerSectionDetailWrapper>()
+class FakeSellerRepositoryImpl : SellerRepository {
 
     private var shouldReturnNetworkError = false
 
-    fun setShouldReturnNetworkError(value: Boolean) {
-        shouldReturnNetworkError = value
+    internal val sellerList: List<SellerSerialized> by lazy {
+        deserializeJsonList("sellers_fake_data.json")
     }
 
-    fun addSeller(sellerBasic: SellerBasic) {
-        sellers.add(sellerBasic)
+    internal val sellerCatalogList: List<SellerCatalogSerialized> by lazy {
+        deserializeJsonList("seller_catalogs_fake_data.json")
     }
 
-    fun removeAllSellers() {
-        sellers.clear()
+    internal val sellerItemList: List<SellerItemSerialized> by lazy {
+        deserializeJsonList("seller_items_fake_data.json")
     }
 
-    fun addSellerDetail(sellerDetail: SellerDetail) {
-        sellerDetails.add(sellerDetail)
+    internal val sellerSectionList: List<SellerSectionSerialized> by lazy {
+        deserializeJsonList("seller_sections_fake_data.json")
     }
 
-    fun removeAllSellerDetail() {
-        sellerDetails.clear()
+    internal val itemCategoryList: List<ItemCategorySerialized> by lazy {
+        deserializeJsonList("item_categories_fake_data.json")
     }
 
-    fun addSellerCatalogs(sellerId: String, sellerCatalog: SellerCatalog) {
-        sellerCatalogs.add(SellerCatalogWrapper(sellerId, sellerCatalog))
-    }
-
-    fun addSellerItem(sellerId: String, catalogId: String, itemBasic: SellerItemBasic) {
-        sellerItems.add(SellerItemBasicWrapper(sellerId, catalogId, itemBasic))
-    }
-
-    fun addSellerItemDetail(sellerId: String, itemDetail: SellerItemDetail) {
-        sellerItemDetails.add(SellerItemDetailWrapper(sellerId, itemDetail))
-    }
-
-    fun addSellerSection(sellerId: String, sectionBasic: SellerSectionBasic) {
-        sellerSections.add(SellerSectionBasicWrapper(sellerId, sectionBasic))
-    }
-
-    fun addSellerSectionDetail(sellerId: String, sectionDetail: SellerSectionDetail) {
-        sellerSectionDetails.add(SellerSectionDetailWrapper(sellerId, sectionDetail))
-    }
-
-    override suspend fun getSeller(sellerId: String): SellerBasic {
-        if (shouldReturnNetworkError) throw Exception("Network error.")
-        return sellers.find { it.id == sellerId } ?: throw Exception("Not found.")
+    internal val sellerRatingList: List<SellerRatingSerialized> by lazy {
+        deserializeJsonList("seller_ratings_fake_data.json")
     }
 
     override suspend fun getSellerDetail(sellerId: String): SellerDetail {
-        if (shouldReturnNetworkError) throw Exception("Network error.")
-        return sellerDetails.find { it.id == sellerId } ?: throw Exception("Not found.")
+        if (shouldReturnNetworkError) throw Exception("IO error.")
+        return sellerList.first { it.id == sellerId }.toSellerDetail()
     }
 
     override suspend fun getSellerCatalogs(sellerId: String): List<SellerCatalog> {
-        if (shouldReturnNetworkError) throw Exception("Network error.")
-        return sellerCatalogs.filter { it.sellerId == sellerId }
-            .map { it.sellerCatalog }
+        if (shouldReturnNetworkError) throw Exception("IO error.")
+        return sellerCatalogList.filter { it.seller_id == sellerId }
+            .map { it.toSellerCatalog() }
     }
 
-    override fun getSellerBasicsPagingData(sellerType: SellerType): Flow<PagingData<SellerBasic>> {
-        if (shouldReturnNetworkError) throw Exception("Network error.")
-        val result = sellers.filter { it.type == sellerType }
-        return flowOf(PagingData.from(result))
+    override fun getSellerBasicsPagingData(
+        sellerBasicsFilter: SellerBasicsFilter
+    ): Flow<PagingData<SellerBasic>> {
+        return sellerList.filter {
+            it.type == sellerBasicsFilter.sellerType?.ordinal &&
+            it.tags.contains(sellerBasicsFilter.categoryTag)
+        }.map {
+            it.toSellerBasic()
+        }.let {
+            flowOf(PagingData.from(it))
+        }
     }
 
     override suspend fun searchSellers(searchQuery: String, numOfSellers: Int): List<SellerBasic> {
-        TODO("Not yet implemented")
+        return sellerList.filter {
+            "${it.name}${it.name_zh}".contains(searchQuery)
+        }.take(numOfSellers).map {
+            it.toSellerBasic()
+        }
     }
 
     override suspend fun getSellerItemDetail(itemId: String): SellerItemDetail {
-        if (shouldReturnNetworkError) throw Exception("Network error.")
-        return sellerItemDetails.find {
-            it.sellerId == sellerId && it.sellerItemDetail.id == itemId
-        }
-            ?.sellerItemDetail ?: throw Exception("Not found.")
+        if (shouldReturnNetworkError) throw Exception("IO error.")
+        return sellerItemList.first { it.id == itemId }.toSellerItemDetail()
     }
 
     override fun getSellerItemsPagingData(
         sellerId: String,
         catalogId: String
     ): Flow<PagingData<SellerItemBasic>> {
-        if (shouldReturnNetworkError) throw Exception("Network error.")
-        val result = sellerItems.filter { it.sellerId == sellerId && it.catalogId == catalogId }
-            .map { it.sellerItemBasic }
-        return flowOf(PagingData.from(result))
+        return sellerItemList.filter {
+            it.seller_id == sellerId &&
+            it.catalog_id == catalogId
+        }.map {
+            it.toSellerItemBasic()
+        }.let {
+            flowOf(PagingData.from(it))
+        }
     }
 
     override suspend fun getRecentSellerItems(sellerId: String, limit: Int): List<SellerItemBasic> {
-        if (shouldReturnNetworkError) throw Exception("Network error.")
-        return sellerItems.filter { it.sellerId == sellerId }
+        if (shouldReturnNetworkError) throw Exception("IO error.")
+        return sellerItemList.filter { it.seller_id == sellerId }
             .take(limit)
-            .map { it.sellerItemBasic }
+            .map { it.toSellerItemBasic() }
     }
 
     override suspend fun getSellerSectionDetail(sectionId: String): SellerSectionDetail {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getSellerSection(sellerId: String, sectionId: String): SellerSectionBasic {
-        if (shouldReturnNetworkError) throw Exception("Network error.")
-        return sellerSections.find {
-            it.sellerId == sellerId && it.sellerSectionBasic.id == sectionId
-        }
-            ?.sellerSectionBasic
-            ?: throw Exception("Not found.")
-    }
-
-    override suspend fun getSellerSectionDetail(
-        sellerId: String,
-        sectionId: String
-    ): SellerSectionDetail {
-        if (shouldReturnNetworkError) throw Exception("Network error.")
-        return sellerSectionDetails.find {
-            it.sellerId == sellerId && it.sellerSectionDetail.id == sectionId
-        }
-            ?.sellerSectionDetail
-            ?: throw Exception("Not found.")
+        if (shouldReturnNetworkError) throw Exception("IO error.")
+        return sellerSectionList.first { it.id == sectionId }.toSellerSectionDetail()
     }
 
     override suspend fun getSellerSectionBasics(
         sellerId: String,
         numOfSections: Int
     ): List<SellerSectionBasic> {
-        if (shouldReturnNetworkError) throw Exception("Network error.")
-        return sellerSections.filter {
-            it.sellerId == sellerId
-        }
+        if (shouldReturnNetworkError) throw Exception("IO error.")
+        return sellerSectionList.filter { it.seller_id == sellerId }
             .take(numOfSections)
-            .map { it.sellerSectionBasic }
+            .map { it.toSellerSectionBasic() }
     }
 
     override fun getAllSellerSectionBasicsPagingData(): Flow<PagingData<SellerSectionBasic>> {
-        if (shouldReturnNetworkError) throw Exception("Network error.")
-        return flowOf(
-            PagingData.from(sellerSections.map { it.sellerSectionBasic })
-        )
+        return flowOf(PagingData.from(sellerSectionList.map { it.toSellerSectionBasic() }))
     }
 
     override fun getSellerSectionBasicsPagingData(sellerId: String): Flow<PagingData<SellerSectionBasic>> {
-        if (shouldReturnNetworkError) throw Exception("Network error.")
-        val result = sellerSections.filter { it.sellerId == sellerId }
-            .map { it.sellerSectionBasic }
-        return flowOf(PagingData.from(result))
+        return sellerSectionList.filter { it.seller_id == sellerId }
+            .map { it.toSellerSectionBasic() }
+            .let { flowOf(PagingData.from(it)) }
+    }
+
+    override suspend fun getItemCategories(): List<ItemCategory> {
+        if (shouldReturnNetworkError) throw Exception("IO error.")
+        return itemCategoryList.map { it.toItemCategory() }
+    }
+
+    override suspend fun getItemCategory(categoryTag: String): ItemCategory {
+        if (shouldReturnNetworkError) throw Exception("IO error.")
+        return itemCategoryList.first { it.tag == categoryTag }.toItemCategory()
+    }
+
+    override fun getSellerRatingsPagingData(
+        sellerId: String,
+        sortOption: SellerRatingSortOption
+    ): Flow<PagingData<SellerRatingBasic>> {
+        return sellerRatingList.filter { it.seller_id == sellerId }
+            .map { it.toSellerRatingBasic() }
+            .let { flowOf(PagingData.from(it)) }
+    }
+
+    fun setNetworkError(value: Boolean) {
+        shouldReturnNetworkError = value
+    }
+
+    private inline fun<reified T> deserializeJsonList(file: String): List<T> {
+        val inputStream = javaClass.classLoader.getResourceAsStream(file)!!
+        val jsonString = inputStream.bufferedReader().use { it.readText() }
+        return Json.decodeFromString(jsonString)
     }
 }
- */

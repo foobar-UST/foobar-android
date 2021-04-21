@@ -27,7 +27,7 @@ import com.foobarust.data.paging.SellerItemBasicsPagingSource
 import com.foobarust.data.paging.SellerRatingBasicsPagingSource
 import com.foobarust.data.paging.SellerSectionsBasicPagingSource
 import com.foobarust.data.utils.getAwaitResult
-import com.foobarust.domain.models.explore.SellerItemCategory
+import com.foobarust.domain.models.explore.ItemCategory
 import com.foobarust.domain.models.seller.*
 import com.foobarust.domain.repositories.SellerRepository
 import com.google.firebase.firestore.FirebaseFirestore
@@ -175,12 +175,12 @@ class SellerRepositoryImpl @Inject constructor(
             .map { pagingData -> pagingData.map { sellerMapper.toSellerSectionBasic(it) } }
     }
 
-    override suspend fun getSellerItemCategories(): List<SellerItemCategory> {
+    override suspend fun getItemCategories(): List<ItemCategory> {
         return firestore.collection(ITEM_CATEGORIES_COLLECTION)
             .getAwaitResult(sellerMapper::toSellerItemCategory)
     }
 
-    override suspend fun getSellerItemCategory(categoryTag: String): SellerItemCategory {
+    override suspend fun getItemCategory(categoryTag: String): ItemCategory {
         return firestore.collection(ITEM_CATEGORIES_COLLECTION)
             .whereEqualTo(ITEM_CATEGORY_TAG_FIELD, categoryTag)
             .getAwaitResult(sellerMapper::toSellerItemCategory)

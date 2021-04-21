@@ -28,7 +28,8 @@ class MessagingRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun linkDeviceTokenToUser(idToken: String, deviceToken: String) {
+    override suspend fun linkDeviceTokenToUser(idToken: String) {
+        val deviceToken = firebaseMessaging.token.await()
         remoteService.linkDeviceToken(
             idToken = idToken,
             linkDeviceTokenRequest = LinkDeviceTokenRequest(deviceToken)

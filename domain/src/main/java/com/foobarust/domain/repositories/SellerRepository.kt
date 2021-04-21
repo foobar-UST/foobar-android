@@ -1,7 +1,7 @@
 package com.foobarust.domain.repositories
 
 import androidx.paging.PagingData
-import com.foobarust.domain.models.explore.SellerItemCategory
+import com.foobarust.domain.models.explore.ItemCategory
 import com.foobarust.domain.models.seller.*
 import kotlinx.coroutines.flow.Flow
 
@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface SellerRepository {
 
-    /* Sellers */
     suspend fun getSellerDetail(sellerId: String): SellerDetail
 
     suspend fun getSellerCatalogs(sellerId: String): List<SellerCatalog>
@@ -20,14 +19,12 @@ interface SellerRepository {
 
     suspend fun searchSellers(searchQuery: String, numOfSellers: Int): List<SellerBasic>
 
-    /* Items */
     suspend fun getSellerItemDetail(itemId: String): SellerItemDetail
 
     fun getSellerItemsPagingData(sellerId: String, catalogId: String): Flow<PagingData<SellerItemBasic>>
 
     suspend fun getRecentSellerItems(sellerId: String, limit: Int): List<SellerItemBasic>
 
-    /* Sections */
     suspend fun getSellerSectionDetail(sectionId: String): SellerSectionDetail
 
     suspend fun getSellerSectionBasics(sellerId: String, numOfSections: Int): List<SellerSectionBasic>
@@ -36,12 +33,10 @@ interface SellerRepository {
 
     fun getSellerSectionBasicsPagingData(sellerId: String) : Flow<PagingData<SellerSectionBasic>>
 
-    /* Categories */
-    suspend fun getSellerItemCategories(): List<SellerItemCategory>
+    suspend fun getItemCategories(): List<ItemCategory>
 
-    suspend fun getSellerItemCategory(categoryTag: String): SellerItemCategory
+    suspend fun getItemCategory(categoryTag: String): ItemCategory
 
-    /* Rating */
     fun getSellerRatingsPagingData(
         sellerId: String,
         sortOption: SellerRatingSortOption

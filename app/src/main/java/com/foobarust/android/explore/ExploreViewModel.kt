@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.foobarust.android.explore.ExploreListModel.ExploreItemCategoryItemModel
 import com.foobarust.android.explore.ExploreListModel.ExploreSubtitleItemModel
 import com.foobarust.android.seller.SellerListProperty
-import com.foobarust.domain.models.explore.SellerItemCategory
+import com.foobarust.domain.models.explore.ItemCategory
 import com.foobarust.domain.models.explore.getNormalizedTitle
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.seller.GetSellerItemCategoriesUseCase
@@ -79,7 +79,7 @@ class ExploreViewModel @Inject constructor(
     }
 
     private fun buildExploreListModels(
-        itemCategories: List<SellerItemCategory>
+        itemCategories: List<ItemCategory>
     ): List<ExploreListModel> = buildList {
         if (itemCategories.isNotEmpty()) {
             add(ExploreSubtitleItemModel)

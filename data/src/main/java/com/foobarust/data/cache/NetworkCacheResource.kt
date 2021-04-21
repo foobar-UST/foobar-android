@@ -1,6 +1,5 @@
 package com.foobarust.data.cache
 
-import android.util.Log
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.utils.cancelIfActive
 import kotlinx.coroutines.Job
@@ -25,10 +24,9 @@ internal inline fun <T> networkCacheResource(
     networkSource().collect { resource ->
         when (resource) {
             is Resource.Success -> {
-                // Cancel cache flow when the network is restored.
+                // Cancel caching when the network is restored.
                 observeCacheJob?.cancelIfActive()
                 channel.offer(resource)
-                Log.d(TAG, "Offer network resource.")
                 startUpdateCache(updateCache, resource.data)
             }
             is Resource.Error -> {
@@ -47,7 +45,6 @@ private fun<T> ProducerScope<Resource<T>>.startFetchCacheSource(
 ): Job = launch {
     channel.offer(Resource.Loading())
     try {
-        Log.d(TAG, "Offer cache resource.")
         val result = cacheSource()
         channel.offer(Resource.Success(result))
     } catch (e: Exception) {
@@ -59,6 +56,5 @@ private fun<T> ProducerScope<Resource<T>>.startUpdateCache(
     updateLocal: suspend (T) -> Unit,
     networkData: T
 ): Job = launch {
-    Log.d(TAG, "Update cache.")
     updateLocal(networkData)
 }

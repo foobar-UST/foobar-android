@@ -10,7 +10,7 @@ interface MessagingRepository {
 
     suspend fun uploadDeviceToken(deviceToken: String)
 
-    suspend fun linkDeviceTokenToUser(idToken:String, deviceToken: String)
+    suspend fun linkDeviceTokenToUser(idToken:String)
 
     suspend fun unlinkDeviceTokenFromUser(deviceToken: String)
 }

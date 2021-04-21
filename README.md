@@ -23,8 +23,6 @@ See all the changes here [CHANGELOG.md](CHANGELOG.md).
 
 ## Libraries Used
 
-* **Data Binding** - Bind UI components in layouts to data sources using a declarative format.
-
 * **Fragment** - Segment your app into multiple, independent screens that are hosted within an Activity.
 
 * **Hilt** - Extend the functionality of Dagger Hilt to enable dependency injection of certain classes from the androidx libraries.
