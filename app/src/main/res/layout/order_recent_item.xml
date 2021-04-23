@@ -46,8 +46,7 @@
                 android:layout_height="match_parent"
                 android:foreground="@drawable/scrim_fade"
                 android:scaleType="centerCrop"
-                app:shapeAppearance="@style/ShapeAppearance.Foobar.SmallComponent"
-                tools:src="@sample/sample_image_1"/>
+                app:shapeAppearance="@style/ShapeAppearance.Foobar.SmallComponent" />
 
         </com.google.android.material.card.MaterialCardView>
 
@@ -119,7 +118,7 @@
             android:textColor="@color/material_on_surface_emphasis_medium"
             app:layout_constraintTop_toBottomOf="@id/order_state_progress_bar"
             app:layout_constraintStart_toEndOf="@id/order_state_processing_text_view"
-            app:layout_constraintEnd_toStartOf="@id/order_state_in_transit_text_view"/>
+            app:layout_constraintEnd_toStartOf="@id/order_state_in_transit_text_view" />
 
         <TextView
             android:id="@+id/order_state_in_transit_text_view"
@@ -131,7 +130,8 @@
             android:textColor="@color/material_on_surface_emphasis_medium"
             app:layout_constraintTop_toBottomOf="@id/order_state_progress_bar"
             app:layout_constraintStart_toEndOf="@id/order_state_preparing_text_view"
-            app:layout_constraintEnd_toStartOf="@id/order_state_ready_for_pick_up_text_view"/>
+            app:layout_constraintEnd_toStartOf="@id/order_state_ready_for_pick_up_text_view"
+            tools:visibility="gone"/>
 
         <TextView
             android:id="@+id/order_state_ready_for_pick_up_text_view"

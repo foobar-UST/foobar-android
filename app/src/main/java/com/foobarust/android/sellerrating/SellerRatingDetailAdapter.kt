@@ -1,5 +1,6 @@
 package com.foobarust.android.sellerrating
 
+import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,10 +15,8 @@ import com.foobarust.android.databinding.SellerRatingDetailInfoItemBinding
 import com.foobarust.android.databinding.SellerRatingDetailRatingItemBinding
 import com.foobarust.android.sellerrating.SellerRatingDetailListModel.*
 import com.foobarust.android.sellerrating.SellerRatingDetailViewHolder.*
-import com.foobarust.android.utils.drawableFitVertical
-import com.foobarust.android.utils.loadGlideUrl
-import com.foobarust.android.utils.round
-import com.foobarust.android.utils.setSrc
+import com.foobarust.android.utils.*
+import com.foobarust.domain.models.seller.SellerRatingBasic
 import com.foobarust.domain.models.seller.SellerRatingCount
 import com.foobarust.domain.models.seller.SellerRatingSortOption
 import com.foobarust.domain.models.seller.sum
@@ -192,16 +191,37 @@ class SellerRatingDetailAdapter(
         ratingItem: SellerRatingDetailRatingItem?
     ) = binding.run {
         if (ratingItem == null) return@run
+        val ratingBasic = ratingItem.sellerRatingBasic
 
         ratingItemUserImageView.loadGlideUrl(
-            imageUrl = ratingItem.userPhotoUrl,
+            imageUrl = ratingBasic.userPhotoUrl,
             centerCrop = true,
             placeholder = R.drawable.ic_user
         )
 
-        ratingItemUsernameTextView.text = ratingItem.username
-        ratingItemRatingBar.rating = ratingItem.orderRating.toFloat()
-        ratingItemCreatedAtTextView.text = ratingItem.createdAt.format("dd/MM/yyyy")
+        ratingItemUsernameTextView.text = ratingBasic.username
+
+        ratingItemRatingBar.rating = ratingBasic.orderRating.toFloat()
+
+        with(ratingItemCommentTextView) {
+            text = ratingBasic.comment ?: root.context.getString(
+                R.string.seller_rating_detail_rating_no_comment
+            )
+
+            // Set disabled text color for no comment
+            val commentColorRes = if (ratingBasic.comment != null)
+                R.color.material_on_surface_emphasis_medium else
+                R.color.material_on_surface_disabled
+
+            setTextColor(root.context.getColorCompat(commentColorRes))
+
+            // Set text to italic for no comment
+            if (ratingBasic.comment == null) {
+                setTypeface(typeface, Typeface.ITALIC)
+            }
+        }
+
+        ratingItemCreatedAtTextView.text = ratingBasic.createdAt.format("dd/MM/yyyy")
     }
 
     private fun bindEmptyItem(
@@ -241,11 +261,7 @@ sealed class SellerRatingDetailListModel {
     ) : SellerRatingDetailListModel()
 
     data class SellerRatingDetailRatingItem(
-        val ratingId: String,
-        val username: String,
-        val userPhotoUrl: String?,
-        val orderRating: Double,
-        val createdAt: Date
+        val sellerRatingBasic: SellerRatingBasic
     ) : SellerRatingDetailListModel()
 
     object SellerRatingDetailEmptyItem : SellerRatingDetailListModel()
@@ -260,7 +276,7 @@ object SellerRatingDetailListModelDiff : DiffUtil.ItemCallback<SellerRatingDetai
             oldItem is SellerRatingDetailInfoItem && newItem is SellerRatingDetailInfoItem ->
                 true
             oldItem is SellerRatingDetailRatingItem && newItem is SellerRatingDetailRatingItem ->
-                oldItem.ratingId == newItem.ratingId
+                oldItem.sellerRatingBasic.id == newItem.sellerRatingBasic.id
             oldItem is SellerRatingDetailEmptyItem && newItem is SellerRatingDetailEmptyItem ->
                 true
             else -> false

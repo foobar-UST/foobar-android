@@ -12,5 +12,6 @@ data class SellerRatingBasic(
     val userPhotoUrl: String?,
     val orderRating: Double,
     val deliveryRating: Boolean?,
+    val comment: String?,
     val createdAt: Date
 )

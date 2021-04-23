@@ -22,12 +22,12 @@
             android:id="@+id/rating_image_view"
             android:layout_width="150dp"
             android:layout_height="150dp"
+            android:scaleType="centerCrop"
             app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Foobar.Circle"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/rating_seller_name_text_view"
-            tools:src="@sample/sample_image_1" />
+            app:layout_constraintBottom_toTopOf="@id/rating_seller_name_text_view" />
 
         <TextView
             android:id="@+id/rating_seller_name_text_view"

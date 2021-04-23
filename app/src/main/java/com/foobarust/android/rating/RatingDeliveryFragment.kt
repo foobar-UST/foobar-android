@@ -47,39 +47,35 @@ class RatingDeliveryFragment : Fragment() {
         // Thumb up button
         binding.thumbUpButton.setOnClickListener {
             ratingViewModel.onUpdateDeliveryRating(true)
-            ratingViewModel.onSubmitRating()
+            navigateToRatingComment()
         }
 
         // Thumb down button
         binding.thumbDownButton.setOnClickListener {
             ratingViewModel.onUpdateDeliveryRating(false)
-            ratingViewModel.onSubmitRating()
+            navigateToRatingComment()
         }
 
         // Order detail
         viewLifecycleOwner.lifecycleScope.launch {
             ratingViewModel.orderDetail.collect { orderDetail ->
-                binding.ratingSellerNameTextView.text = orderDetail.getNormalizedSellerName()
-                binding.ratingImageView.loadGlideUrl(
-                    imageUrl = orderDetail.imageUrl,
-                    centerCrop = true,
-                    placeholder = R.drawable.placeholder_card
-                )
-            }
-        }
-
-        // Navigate to complete screen if rating is successfully submitted
-        viewLifecycleOwner.lifecycleScope.launch {
-            ratingViewModel.ratingUiSubmitState.collect {
-                if (it is RatingUiState.Success) {
-                    findNavController(R.id.ratingDeliveryFragment)?.navigate(
-                        RatingDeliveryFragmentDirections
-                            .actionRatingDeliveryFragmentToRatingCompleteFragment()
+                orderDetail?.let {
+                    binding.ratingSellerNameTextView.text = it.getNormalizedSellerName()
+                    binding.ratingImageView.loadGlideUrl(
+                        imageUrl = it.imageUrl,
+                        circularCrop = true,
+                        placeholder = R.drawable.placeholder_card
                     )
                 }
             }
         }
 
         return binding.root
+    }
+
+    private fun navigateToRatingComment() {
+        findNavController(R.id.ratingDeliveryFragment)?.navigate(
+            RatingDeliveryFragmentDirections.actionRatingDeliveryFragmentToRatingCommentFragment()
+        )
     }
 }

@@ -284,11 +284,13 @@
     <string name="rating_toolbar_title">Order #%s</string>
     <string name="rating_order_title">How\'s the food quality?</string>
     <string name="rating_delivery_title">How\'s the delivery service?</string>
+    <string name="rating_comment_title">Leave your comment.</string>
     <string name="rating_completed_title">Thank You!</string>
     <string name="rating_completed_description">Your feedback has been recorded.</string>
     <string name="rating_order_detail_button">Order Detail</string>
     <string name="rating_navigate_button">Next</string>
     <string name="rating_navigate_complete">Complete</string>
+    <string name="rating_comment_hint">Comment</string>
 
     <!-- Seller Rating Detail -->
     <string name="seller_rating_detail_info_item_rating_count">(%d)</string>
@@ -305,6 +307,7 @@
     <string name="seller_rating_detail_sort_option_order_desc">Best</string>
     <string name="seller_rating_detail_sort_option_order_asc">Poor</string>
     <string name="seller_rating_detail_sort_option_latest">Latest</string>
+    <string name="seller_rating_detail_rating_no_comment">No Comment</string>
 
     <!-- Deliverer Info -->
     <string name="deliverer_info_description">is delivering your order.</string>

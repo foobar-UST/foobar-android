@@ -5,6 +5,7 @@
     android:id="@+id/navigation_rating"
     app:startDestination="@id/ratingOrderFragment">
 
+    <!-- RatingOrderFragment -->
     <fragment
         android:id="@+id/ratingOrderFragment"
         android:name="com.foobarust.android.rating.RatingOrderFragment"
@@ -13,19 +14,31 @@
             android:id="@+id/action_ratingOrderFragment_to_ratingDeliveryFragment"
             app:destination="@id/ratingDeliveryFragment" />
         <action
-            android:id="@+id/action_ratingOrderFragment_to_ratingCompleteFragment"
-            app:destination="@id/ratingCompleteFragment" />
+            android:id="@+id/action_ratingOrderFragment_to_ratingCommentFragment"
+            app:destination="@id/ratingCommentFragment" />
     </fragment>
 
+    <!-- RatingDeliveryFragment -->
     <fragment
         android:id="@+id/ratingDeliveryFragment"
         android:name="com.foobarust.android.rating.RatingDeliveryFragment"
         tools:layout="@layout/fragment_rating_delivery">
         <action
-            android:id="@+id/action_ratingDeliveryFragment_to_ratingCompleteFragment"
+            android:id="@+id/action_ratingDeliveryFragment_to_ratingCommentFragment"
+            app:destination="@id/ratingCommentFragment" />
+    </fragment>
+
+    <!-- RatingCommentFragment -->
+    <fragment
+        android:id="@+id/ratingCommentFragment"
+        android:name="com.foobarust.android.rating.RatingCommentFragment"
+        tools:layout="@layout/fragment_rating_comment">
+        <action
+            android:id="@+id/action_ratingCommentFragment_to_ratingCompleteFragment"
             app:destination="@id/ratingCompleteFragment" />
     </fragment>
 
+    <!-- RatingCompleteFragment -->
     <fragment
         android:id="@+id/ratingCompleteFragment"
         android:name="com.foobarust.android.rating.RatingCompleteFragment"

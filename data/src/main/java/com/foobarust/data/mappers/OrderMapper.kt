@@ -238,7 +238,8 @@ class OrderMapper @Inject constructor() {
         return SubmitOrderRatingRequest(
             orderId = orderRating.orderId,
             orderRating = orderRating.orderRating,
-            deliveryRating = orderRating.deliveryRating
+            deliveryRating = orderRating.deliveryRating,
+            comment = orderRating.comment
         )
     }
 

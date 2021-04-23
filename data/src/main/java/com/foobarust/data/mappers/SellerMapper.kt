@@ -166,6 +166,7 @@ class SellerMapper @Inject constructor() {
             userPhotoUrl = dto.userPhotoUrl,
             orderRating = dto.orderRating!!,
             deliveryRating = dto.deliveryRating,
+            comment = dto.comment,
             createdAt = dto.createdAt!!.toDate()
         )
     }

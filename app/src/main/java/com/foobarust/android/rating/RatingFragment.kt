@@ -72,17 +72,26 @@ class RatingFragment : FullScreenDialogFragment(),
             viewModel.onFetchOrderDetail(navArgs.orderId)
         }
 
+        // Set toolbar title
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.orderDetail.collect { orderDetail ->
+                orderDetail?.let {
+                    binding.toolbar.title = getString(R.string.rating_toolbar_title, it.identifier)
+                }
+            }
+        }
+
         // Load ui state
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.ratingUiLoadState.collect {
+            viewModel.ratingUiLoadState.collect { uiLoadState ->
                 with(binding) {
-                    fragmentContainer.isVisible = it !is RatingUiState.Error
-                    loadingProgressBar.isVisible = it is RatingUiState.Loading
-                    loadErrorLayout.loadErrorLayout.isVisible = it is RatingUiState.Error
+                    fragmentContainer.isVisible = uiLoadState !is RatingUiState.Error
+                    loadingProgressBar.isVisible = uiLoadState is RatingUiState.Loading
+                    loadErrorLayout.loadErrorLayout.isVisible = uiLoadState is RatingUiState.Error
                 }
 
-                if (it is RatingUiState.Error) {
-                    showShortToast(it.message)
+                if (uiLoadState is RatingUiState.Error) {
+                    showShortToast(uiLoadState.message)
                 }
             }
         }
@@ -95,24 +104,13 @@ class RatingFragment : FullScreenDialogFragment(),
                 binding.loadingProgressBar.isVisible = uiState is RatingUiState.Loading
 
                 when (uiState) {
-                    RatingUiState.Success -> {
-                        findNavController(R.id.ratingFragment)
-                            ?.previousBackStackEntry?.savedStateHandle?.set(
-                                SAVED_STATE_KEY_RATING_COMPLETED, true
-                            )
-                    }
-                    is RatingUiState.Error -> {
-                        showShortToast(uiState.message)
-                    }
+                    RatingUiState.Success -> findNavController(R.id.ratingFragment)
+                        ?.previousBackStackEntry?.savedStateHandle?.set(
+                            SAVED_STATE_KEY_RATING_COMPLETED, true
+                        )
+                    is RatingUiState.Error -> showShortToast(uiState.message)
                     RatingUiState.Loading -> Unit
                 }
-            }
-        }
-
-        // Set toolbar title
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.toolbarTitle.collect {
-                binding.toolbar.title = it
             }
         }
 

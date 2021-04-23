@@ -7,5 +7,6 @@ package com.foobarust.domain.models.order
 data class OrderRating(
     val orderId: String,
     val orderRating: Int,
-    val deliveryRating: Boolean?
+    val deliveryRating: Boolean?,
+    val comment: String?
 )

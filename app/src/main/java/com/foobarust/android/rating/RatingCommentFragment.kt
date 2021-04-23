@@ -4,15 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.lifecycleScope
 import com.foobarust.android.R
-import com.foobarust.android.databinding.FragmentRatingOrderBinding
+import com.foobarust.android.databinding.FragmentRatingCommentBinding
 import com.foobarust.android.utils.AutoClearedValue
 import com.foobarust.android.utils.findNavController
 import com.foobarust.android.utils.loadGlideUrl
-import com.foobarust.domain.models.order.OrderType
 import com.foobarust.domain.models.order.getNormalizedSellerName
 import com.google.android.material.transition.MaterialSharedAxis
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,13 +20,13 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 /**
- * Created by kevin on 2/25/21
+ * Created by kevin on 4/24/21
  */
 
 @AndroidEntryPoint
-class RatingOrderFragment : Fragment() {
+class RatingCommentFragment : Fragment() {
 
-    private var binding: FragmentRatingOrderBinding by AutoClearedValue(this)
+    private var binding: FragmentRatingCommentBinding by AutoClearedValue(this)
     private val ratingViewModel: RatingViewModel by hiltNavGraphViewModels(R.id.navigation_rating)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,32 +43,19 @@ class RatingOrderFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentRatingOrderBinding.inflate(inflater, container, false)
+        binding = FragmentRatingCommentBinding.inflate(inflater, container,false)
 
-        // Restore saved rating
-        ratingViewModel.orderRatingInput?.let {
-            binding.ratingBar.rating = it.toFloat()
+        // Restore comment
+        binding.ratingCommentEditText.setText(ratingViewModel.commentInput)
+
+        // Comment input
+        binding.ratingCommentEditText.doOnTextChanged { text, _, _, _ ->
+            ratingViewModel.onUpdateComment(comment = text?.toString())
         }
 
-        // For on-campus order, navigate to comment screen.
-        // For off-campus order, navigate to delivery screen.
+        // Submit rating
         binding.navigateButton.setOnClickListener {
-            val orderType = ratingViewModel.orderDetail.value?.type ?: return@setOnClickListener
-            when (orderType) {
-                OrderType.ON_CAMPUS -> findNavController(R.id.ratingOrderFragment)?.navigate(
-                    RatingOrderFragmentDirections.actionRatingOrderFragmentToRatingCommentFragment()
-                )
-                OrderType.OFF_CAMPUS -> findNavController(R.id.ratingOrderFragment)?.navigate(
-                    RatingOrderFragmentDirections.actionRatingOrderFragmentToRatingDeliveryFragment()
-                )
-            }
-        }
-
-        // Store rating
-        binding.ratingBar.setOnRatingBarChangeListener { _, rating, fromUser ->
-            if (fromUser) {
-                ratingViewModel.onUpdateOrderRating(rating.toInt())
-            }
+            ratingViewModel.onSubmitRating()
         }
 
         // Order detail
@@ -80,6 +67,18 @@ class RatingOrderFragment : Fragment() {
                         imageUrl = it.imageUrl,
                         circularCrop = true,
                         placeholder = R.drawable.placeholder_card
+                    )
+                }
+            }
+        }
+
+        // Navigate to complete screen if rating is successfully submitted.
+        viewLifecycleOwner.lifecycleScope.launch {
+            ratingViewModel.ratingUiSubmitState.collect { uiSubmitState ->
+                if (uiSubmitState is RatingUiState.Success) {
+                    findNavController(R.id.ratingCommentFragment)?.navigate(
+                        RatingCommentFragmentDirections
+                            .actionRatingCommentFragmentToRatingCompleteFragment()
                     )
                 }
             }

@@ -318,4 +318,5 @@ object Constants {
     const val SUBMIT_ORDER_RATING_ORDER_ID = "order_id"
     const val SUBMIT_ORDER_RATING_ORDER_RATING = "order_rating"
     const val SUBMIT_ORDER_RATING_DELIVERY_RATING = "delivery_rating"
+    const val SUBMIT_ORDER_RATING_COMMENT = "comment"
 }

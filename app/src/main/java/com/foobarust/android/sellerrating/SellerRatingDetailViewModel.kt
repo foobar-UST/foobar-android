@@ -45,15 +45,7 @@ class SellerRatingDetailViewModel @Inject constructor(
             getSellerRatingsPagingUseCase(it)
         }
         .map { pagingData ->
-            pagingData.map { sellerRatingBasic ->
-                SellerRatingDetailRatingItem(
-                    ratingId = sellerRatingBasic.id,
-                    username = sellerRatingBasic.username,
-                    userPhotoUrl = sellerRatingBasic.userPhotoUrl,
-                    orderRating = sellerRatingBasic.orderRating,
-                    createdAt = sellerRatingBasic.createdAt
-                )
-            }
+            pagingData.map { SellerRatingDetailRatingItem(it) }
         }
         .map { pagingData ->
             pagingData.insertSeparators { before, after ->

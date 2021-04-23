@@ -218,7 +218,7 @@ class SellerItemDetailFragment : FullScreenDialogFragment(),
 
     override fun onSuggestedItemClicked(itemBasic: SellerItemBasic) {
         findNavController(R.id.sellerItemDetailFragment)?.navigate(
-            SellerItemDetailFragmentDirections.actionSellerItemDetailFragmentSelf(
+            SellerItemDetailFragmentDirections.actionItemDetailFragmentSelf(
                 SellerItemDetailProperty(
                     sellerId = navArgs.property.sellerId,
                     itemId = itemBasic.id
@@ -258,7 +258,7 @@ class SellerItemDetailFragment : FullScreenDialogFragment(),
 
     private fun navigateToProfile() {
         findNavController(R.id.sellerItemDetailFragment)?.navigate(
-            SellerItemDetailFragmentDirections.actionSellerItemDetailFragmentToProfileFragment()
+            SellerItemDetailFragmentDirections.actionItemDetailFragmentToProfileFragment()
         )
     }
 }

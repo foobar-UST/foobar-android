@@ -59,11 +59,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_large"
-        android:text="No Comment"
         android:textAppearance="?attr/textAppearanceBody2"
-        android:textColor="@color/material_on_surface_disabled"
-        android:textStyle="italic"
         android:lineSpacingMultiplier="1.2"
-        app:layout_constraintTop_toBottomOf="@id/rating_item_rating_bar"/>
+        app:layout_constraintTop_toBottomOf="@id/rating_item_rating_bar"
+        tools:text="@string/seller_rating_detail_rating_no_comment"
+        tools:textColor="@color/material_on_surface_disabled"
+        tools:textStyle="italic" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

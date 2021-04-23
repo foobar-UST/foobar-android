@@ -1,5 +1,6 @@
 package com.foobarust.data.models.order
 
+import com.foobarust.data.constants.Constants.SUBMIT_ORDER_RATING_COMMENT
 import com.foobarust.data.constants.Constants.SUBMIT_ORDER_RATING_DELIVERY_RATING
 import com.foobarust.data.constants.Constants.SUBMIT_ORDER_RATING_ORDER_ID
 import com.foobarust.data.constants.Constants.SUBMIT_ORDER_RATING_ORDER_RATING
@@ -17,5 +18,8 @@ data class SubmitOrderRatingRequest(
     val orderRating: Int,
 
     @SerializedName(SUBMIT_ORDER_RATING_DELIVERY_RATING)
-    val deliveryRating: Boolean?
+    val deliveryRating: Boolean?,
+
+    @SerializedName(SUBMIT_ORDER_RATING_COMMENT)
+    val comment: String?
 )

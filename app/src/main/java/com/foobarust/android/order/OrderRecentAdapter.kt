@@ -92,6 +92,9 @@ class OrderRecentAdapter(
             }
         }
 
+        // Show in-transit stepper
+        orderStateInTransitTextView.isVisible = activeItemModel.orderType == OrderType.OFF_CAMPUS
+
         orderStateTitleTextView.text = root.context.getString(
             R.string.order_item_identifier_title,
             activeItemModel.orderIdentifier,
@@ -111,8 +114,13 @@ class OrderRecentAdapter(
         )
 
         // Active states: PROCESSING, PROCESSING, IN_TRANSIT, READY_FOR_PICK_UP
+        val stateStep = when (activeItemModel.orderType) {
+            OrderType.ON_CAMPUS -> 50
+            OrderType.OFF_CAMPUS -> 34
+        }
+
         orderStateProgressBar.setProgressCompat(
-            activeItemModel.orderState.precedence * 33 + 1,
+            activeItemModel.orderState.precedence * stateStep,
             true
         )
     }
