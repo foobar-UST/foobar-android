@@ -2,6 +2,8 @@ package com.foobarust.domain.utils
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.setMain
@@ -33,4 +35,8 @@ fun TestCoroutineRule.runBlockingTest(block: suspend() -> Unit) {
 
 fun TestCoroutineRule.coroutineScope(): CoroutineScope {
     return CoroutineScope(testDispatcher)
+}
+
+fun TestCoroutineRule.launch(block: suspend() -> Unit): Job {
+    return coroutineScope().launch { block() }
 }

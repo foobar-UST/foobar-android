@@ -25,9 +25,8 @@ import java.util.*
 class RelatedSectionsAdapter(
     private val sellerId: String,
     private val listener: RelatedSectionsAdapterListener
-): ListAdapter<RelatedSectionsListModel, RelatedSectionsViewHolder>(
-    RelatedSectionsListModelDiff
-) {
+): ListAdapter<RelatedSectionsListModel, RelatedSectionsViewHolder>(RelatedSectionsListModelDiff) {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RelatedSectionsViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
@@ -64,7 +63,7 @@ class RelatedSectionsAdapter(
 
     override fun submitList(list: List<RelatedSectionsListModel>?) {
         // Add show more button
-        val mergedList = if (list != null) list + RelatedSectionsExpandModel else list
+        val mergedList = if (!list.isNullOrEmpty()) list + RelatedSectionsExpandModel else list
         super.submitList(mergedList)
     }
 

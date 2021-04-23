@@ -1,7 +1,5 @@
 package com.foobarust.domain.serialize
 
-import com.foobarust.domain.models.common.Geolocation
-import com.foobarust.domain.models.common.GeolocationPoint
 import com.foobarust.domain.models.seller.SellerSectionBasic
 import com.foobarust.domain.models.seller.SellerSectionDetail
 import com.foobarust.domain.models.seller.SellerSectionState
@@ -41,14 +39,7 @@ internal fun SellerSectionSerialized.toSellerSectionDetail(): SellerSectionDetai
         id = id, title = title, titleZh = title_zh, groupId = group_id, sellerId = seller_id,
         sellerName = seller_name, sellerNameZh = seller_name_zh, deliveryCost = delivery_cost,
         deliveryTime = parseTimestamp(delivery_time),
-        deliveryLocation = Geolocation(
-            address = delivery_location.address,
-            addressZh = delivery_location.address_zh,
-            locationPoint = GeolocationPoint(
-                latitude = delivery_location.geopoint.lat,
-                longitude = delivery_location.geopoint.long
-            )
-        ),
+        deliveryLocation = delivery_location.toGeolocation(),
         description = description, descriptionZh = description_zh,
         cutoffTime = parseTimestamp(cutoff_time),
         maxUsers = max_users, joinedUsersCount = joined_users_count ?: 0,

@@ -1,16 +1,20 @@
 package com.foobarust.domain.repository
 
 import androidx.paging.PagingData
-import com.foobarust.domain.models.common.Geolocation
-import com.foobarust.domain.models.common.GeolocationPoint
-import com.foobarust.domain.models.order.*
+import com.foobarust.domain.models.order.OrderBasic
+import com.foobarust.domain.models.order.OrderDetail
+import com.foobarust.domain.models.order.OrderRating
 import com.foobarust.domain.repositories.OrderRepository
+import com.foobarust.domain.serialize.OrderSerialized
+import com.foobarust.domain.serialize.toOrderBasic
+import com.foobarust.domain.serialize.toOrderDetail
 import com.foobarust.domain.states.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
-import java.util.*
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 
 /**
  * Created by kevin on 4/9/21
@@ -19,123 +23,70 @@ import java.util.*
 @ExperimentalStdlibApi
 class FakeOrderRepositoryImpl : OrderRepository {
 
-    val activeOrderItems: List<OrderBasic> = buildActiveOrderItems()
-    val historyOrderItems: List<OrderBasic> = buildHistoryOrderItems()
+    internal val allOrderList: List<OrderSerialized> by lazy {
+        deserializeJsonList("orders_fake_data.json")
+    }
 
-    val allOrderItems: List<OrderBasic> = activeOrderItems + historyOrderItems
+    internal val activeOrderList: List<OrderSerialized> by lazy {
+        allOrderList.filter { it.state !in ORDER_HISTORY_STATES }
+    }
 
-    private val orderDetailList: MutableList<OrderDetail> = mutableListOf()
+    internal val historyOrderList: List<OrderSerialized> by lazy {
+        allOrderList.filter { it.state in ORDER_HISTORY_STATES }
+    }
 
     private var shouldReturnNetworkError = false
+    private var shouldReturnIOError = false
 
     override fun getActiveOrderItemsObservable(userId: String): Flow<Resource<List<OrderBasic>>> = flow {
-        if (shouldReturnNetworkError) throw Exception("Network error.")
-        emit(Resource.Success(activeOrderItems))
+        if (shouldReturnNetworkError) {
+            emit(Resource.Error("Network error."))
+        } else {
+            emit(Resource.Success(activeOrderList.map { it.toOrderBasic() }))
+        }
     }
 
     override fun getHistoryOrderItemsPagingData(userId: String): Flow<PagingData<OrderBasic>> = flow {
-        emitAll(flowOf(PagingData.from(historyOrderItems)))
+        emitAll(flowOf(PagingData.from(historyOrderList.map { it.toOrderBasic() })))
     }
 
     override fun getOrderDetailObservable(orderId: String): Flow<Resource<OrderDetail>> = flow {
-        if (shouldReturnNetworkError) throw Exception("Network error.")
-        emit(Resource.Success(orderDetailList.first { it.id == orderId }))
+        if (shouldReturnNetworkError) {
+            emit(Resource.Error("Network error."))
+        } else {
+            emit(Resource.Success(
+                allOrderList.first { it.id == orderId }.toOrderDetail()
+            ))
+        }
     }
 
     override suspend fun submitOrderRating(idToken: String, orderRating: OrderRating) {
-        TODO("Not yet implemented")
+        if (shouldReturnNetworkError) throw Exception("Network error.")
     }
 
     override suspend fun removeOrderItemsCache() {
-        if (shouldReturnNetworkError)
-            throw Exception("Network error.")
+        if (shouldReturnIOError) throw Exception("IO error.")
     }
 
     override suspend fun removeOrderDetailsCache() {
-        if (shouldReturnNetworkError)
-            throw Exception("Network error.")
+        if (shouldReturnIOError) throw Exception("IO error.")
     }
 
     fun setNetworkError(value: Boolean) {
         shouldReturnNetworkError = value
     }
 
-    fun setExpectedOrderDetail(orderId: String) {
-        orderDetailList.add(buildDefaultOrderDetail(orderId))
-        orderDetailList.add(buildDefaultOrderDetail(UUID.randomUUID().toString()))
-        orderDetailList.add(buildDefaultOrderDetail(UUID.randomUUID().toString()))
-        orderDetailList.add(buildDefaultOrderDetail(UUID.randomUUID().toString()))
+    fun setIOError(value: Boolean) {
+        shouldReturnIOError = value
     }
 
-    private fun buildActiveOrderItems(): List<OrderBasic> = buildList {
-        add(buildDefaultOrderBasic().copy(state = OrderState.PROCESSING))
-        add(buildDefaultOrderBasic().copy(state = OrderState.PREPARING))
-        add(buildDefaultOrderBasic().copy(state = OrderState.IN_TRANSIT))
-        add(buildDefaultOrderBasic().copy(state = OrderState.READY_FOR_PICK_UP))
+    private inline fun<reified T> deserializeJsonList(file: String): List<T> {
+        val inputStream = javaClass.classLoader.getResourceAsStream(file)!!
+        val jsonString = inputStream.bufferedReader().use { it.readText() }
+        return Json.decodeFromString(jsonString)
     }
 
-    private fun buildHistoryOrderItems(): List<OrderBasic> = buildList {
-        add(buildDefaultOrderBasic().copy(state = OrderState.DELIVERED))
-        add(buildDefaultOrderBasic().copy(state = OrderState.ARCHIVED))
-        add(buildDefaultOrderBasic().copy(state = OrderState.CANCELLED))
-    }
-
-    private fun buildDefaultOrderBasic(): OrderBasic {
-        return OrderBasic(
-            id = UUID.randomUUID().toString(),
-            title = "Order Title",
-            titleZh = "Order Title",
-            sellerId = UUID.randomUUID().toString(),
-            sellerName = "Order Name",
-            sellerNameZh = "Order name",
-            sectionId = UUID.randomUUID().toString(),
-            identifier = UUID.randomUUID().toString(),
-            imageUrl = "about:blank",
-            type = OrderType.ON_CAMPUS,
-            orderItemsCount = 5,
-            state = OrderState.PROCESSING,
-            deliveryAddress = "address",
-            deliveryAddressZh = "address",
-            totalCost = 24.5,
-            createdAt = Date(),
-            updatedAt = Date()
-        )
-    }
-
-    private fun buildDefaultOrderDetail(orderId: String): OrderDetail {
-        return OrderDetail(
-            id = orderId,
-            title = "Order Title",
-            titleZh = "Order Title",
-            sellerId = UUID.randomUUID().toString(),
-            sellerName = "Order Name",
-            sellerNameZh = "Order name",
-            sectionId = UUID.randomUUID().toString(),
-            sectionTitle = "Section Title",
-            sectionTitleZh = "Section Title",
-            delivererId = null,
-            delivererLocation = null,
-            delivererTravelMode = null,
-            identifier = UUID.randomUUID().toString(),
-            imageUrl = "about:blank",
-            type = OrderType.ON_CAMPUS,
-            orderItems = emptyList(),
-            orderItemsCount = 0,
-            state = OrderState.PROCESSING,
-            isPaid = false,
-            paymentMethod = "Payment Method",
-            message = null,
-            deliveryLocation = Geolocation(
-                address = "address",
-                addressZh = "address_zh",
-                locationPoint = GeolocationPoint(0.01, 0.02),
-            ),
-            subtotalCost = 20.4,
-            deliveryCost = 10.0,
-            totalCost = 30.4,
-            verifyCode = UUID.randomUUID().toString(),
-            createdAt = Date(),
-            updatedAt = Date()
-        )
+    companion object {
+        private val ORDER_HISTORY_STATES = listOf("4_delivered", "5_archived", "6_cancelled")
     }
 }

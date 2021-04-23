@@ -32,7 +32,8 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         jvmTarget = "1.8"
         freeCompilerArgs = listOf(
             "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi",
-            "-Xuse-experimental=kotlinx.coroutines.FlowPreview"
+            "-Xuse-experimental=kotlinx.coroutines.FlowPreview",
+            "-Xuse-experimental=kotlin.ExperimentalStdlibApi"
         )
     }
 }

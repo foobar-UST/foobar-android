@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val TAG = "AuthViewModel"
-private const val RESEND_BUFFER = 5000L
+private const val AUTH_EMAIL_RESEND_INTERVAL = 5000L
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
@@ -26,7 +26,7 @@ class AuthViewModel @Inject constructor(
     private val signInWithEmailLinkUseCase: SignInWithEmailLinkUseCase,
     private val getSavedAuthEmailUseCase: GetSavedAuthEmailUseCase,
     private val updateSavedAuthEmailUseCase: UpdateSavedAuthEmailUseCase,
-    private val countDownTimerUseCase: CountDownTimerUseCase,
+    private val oneShotTimerUseCase: OneShotTimerUseCase,
     private val getIsUserSignedInUseCase: GetIsUserSignedInUseCase,
     authEmailUtil: AuthEmailUtil
 ) : BaseViewModel() {
@@ -170,7 +170,7 @@ class AuthViewModel @Inject constructor(
         }
 
         resendEmailTimerJob = viewModelScope.launch {
-            countDownTimerUseCase(RESEND_BUFFER).collect {
+            oneShotTimerUseCase(AUTH_EMAIL_RESEND_INTERVAL).collect {
                 isResendEmailTimerActive = it
             }
         }

@@ -1,74 +1,59 @@
 package com.foobarust.domain.usecases.auth
 
-import com.foobarust.domain.models.auth.AuthProfile
-import com.foobarust.domain.models.user.UserDetail
 import com.foobarust.domain.repository.FakeAuthRepositoryImpl
 import com.foobarust.domain.repository.FakeUserRepositoryImpl
 import com.foobarust.domain.usecases.AuthState
 import com.foobarust.domain.utils.TestCoroutineRule
 import com.foobarust.domain.utils.coroutineScope
-import com.foobarust.domain.utils.runBlockingTest
 import com.foobarust.domain.utils.toListUntil
+import di.DependencyContainer
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import java.util.*
 
 /**
  * Created by kevin on 4/21/21
  */
 
-class TestGetUserAuthStateUseCase {
+class GetUserAuthStateUseCaseTest {
 
-    private lateinit var getUserAuthStateUseCase: GetUserAuthStateUseCase
     private lateinit var fakeAuthRepositoryImpl: FakeAuthRepositoryImpl
     private lateinit var fakeUserRepositoryImpl: FakeUserRepositoryImpl
+
+    private lateinit var dependencyContainer: DependencyContainer
 
     @get:Rule
     var coroutineRule = TestCoroutineRule()
 
     @Before
     fun init() {
-        val fakeUserDetail = UserDetail(
-            id =  UUID.randomUUID().toString(),
-            username = DETAIL_USERNAME,
-            email = "test@test.com",
-            name = "Hello World",
-            phoneNum = "+852 12345678",
-            photoUrl = "about:blank",
-            updatedAt = Date()
-        )
-        val fakeIdToken = UUID.randomUUID().toString()
+        dependencyContainer = DependencyContainer()
 
         fakeAuthRepositoryImpl = FakeAuthRepositoryImpl(
-            idToken = fakeIdToken,
-            defaultAuthProfile = AuthProfile(
-                id = UUID.randomUUID().toString(),
-                email = "test@test.com",
+            idToken = dependencyContainer.fakeIdToken,
+            defaultAuthProfile = dependencyContainer.fakeAuthProfile.copy(
                 username = PROFILE_USERNAME
             ),
             isSignedIn = false
         )
 
         fakeUserRepositoryImpl = FakeUserRepositoryImpl(
-            idToken = fakeIdToken,
-            defaultUserDetail = fakeUserDetail,
+            idToken = dependencyContainer.fakeIdToken,
+            defaultUserDetail = dependencyContainer.fakeUserDetail.copy(
+                username = DETAIL_USERNAME
+            ),
             hasCompletedTutorial = false
-        )
-
-        getUserAuthStateUseCase = GetUserAuthStateUseCase(
-            authRepository = fakeAuthRepositoryImpl,
-            userRepository = fakeUserRepositoryImpl,
-            externalScope = coroutineRule.coroutineScope(),
-            coroutineDispatcher = coroutineRule.testDispatcher
         )
     }
 
     @Test
-    fun `test user signed out`() = coroutineRule.runBlockingTest {
+    fun `test user signed out`() = runBlocking {
         fakeAuthRepositoryImpl.setUserSignedIn(false)
+
+        val getUserAuthStateUseCase = buildGetUserAuthStateUseCase()
         val results = getUserAuthStateUseCase(Unit).toListUntil { it is AuthState.Unauthenticated }
+
         assert(results[0] is AuthState.Loading)
         assert(results[1] is AuthState.Unauthenticated)
     }
@@ -78,6 +63,7 @@ class TestGetUserAuthStateUseCase {
         fakeAuthRepositoryImpl.setUserSignedIn(true)
         fakeUserRepositoryImpl.setNetworkError(false)
 
+        val getUserAuthStateUseCase = buildGetUserAuthStateUseCase()
         val results = getUserAuthStateUseCase(Unit).toListUntil { it is AuthState.Authenticated }
 
         assert(results[0] is AuthState.Loading)
@@ -94,6 +80,7 @@ class TestGetUserAuthStateUseCase {
         fakeAuthRepositoryImpl.setUserSignedIn(true)
         fakeUserRepositoryImpl.setNetworkError(true)
 
+        val getUserAuthStateUseCase = buildGetUserAuthStateUseCase()
         val results = getUserAuthStateUseCase(Unit).toListUntil { it is AuthState.Authenticated }
 
         assert(results[0] is AuthState.Loading)
@@ -102,6 +89,15 @@ class TestGetUserAuthStateUseCase {
         assert(
             authenticated is AuthState.Authenticated &&
             authenticated.data.username == PROFILE_USERNAME
+        )
+    }
+
+    private fun buildGetUserAuthStateUseCase(): GetUserAuthStateUseCase {
+        return GetUserAuthStateUseCase(
+            authRepository = fakeAuthRepositoryImpl,
+            userRepository = fakeUserRepositoryImpl,
+            externalScope = coroutineRule.coroutineScope(),
+            coroutineDispatcher = coroutineRule.testDispatcher
         )
     }
 

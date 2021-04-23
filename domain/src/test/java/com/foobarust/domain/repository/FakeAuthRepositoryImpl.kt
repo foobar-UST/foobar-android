@@ -71,6 +71,7 @@ class FakeAuthRepositoryImpl(
     }
 
     override fun signOut() {
+        if (!_signedInFlow.value) throw Exception("Not signed in.")
         _signedInFlow.value = false
     }
 

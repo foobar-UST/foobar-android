@@ -36,7 +36,6 @@ class PagingLoadStateViewHolder(
 
     fun bind(loadState: LoadState) = binding.run {
         progressBar.isVisible = loadState is LoadState.Loading
-
         retryButton.isVisible = loadState !is LoadState.Loading
         retryButton.setOnClickListener { retryAction() }
     }
