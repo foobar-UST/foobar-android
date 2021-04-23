@@ -42,7 +42,6 @@
                         android:scaleType="centerCrop"
                         android:foreground="@drawable/scrim_fade_top"
                         app:layout_constraintTop_toTopOf="parent"
-                        tools:src="@sample/sample_image_5"
                         tools:ignore="ContentDescription" />
 
                     <include

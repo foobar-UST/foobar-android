@@ -278,11 +278,13 @@ class SellerDetailFragment : FullScreenDialogFragment() {
     }
 
     private fun setupChipActions(chipActions: List<SellerDetailChipAction>) {
+        // Clear existing chips
+        binding.actionChipGroup.removeAllViews()
+
         chipActions.forEach { action ->
             Chip(requireContext(), null, R.attr.actionChipStyle).apply {
                 // Hide the chip on start
                 isGone = true
-
                 when (action) {
                     is SellerDetailChipRating -> {
                         text = action.ratingTitle
