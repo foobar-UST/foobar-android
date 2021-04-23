@@ -32,7 +32,7 @@ object Versions {
     const val LIFECYCLE = "2.3.1"
     const val MAPS_KTX = "3.0.0"
     const val MAPS_UTILS = "2.2.2"
-    const val MATERIAL = "1.4.0-alpha01"
+    const val MATERIAL = "1.4.0-alpha02"
     const val MOCKITO_CORE = "3.8.0"
     const val NAVIGATION = "2.3.4"
     const val OKHTTP_LOGGING_INTERCEPTOR = "4.9.1"

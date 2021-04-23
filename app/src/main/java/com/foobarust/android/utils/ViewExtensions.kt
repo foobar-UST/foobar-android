@@ -12,6 +12,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.annotation.DimenRes
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
 import com.bumptech.glide.Glide
@@ -21,10 +22,23 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.foobarust.android.R
 import com.google.android.material.chip.Chip
 import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.progressindicator.LinearProgressIndicator
+import com.google.android.material.snackbar.Snackbar
+
+/**
+ * Prevent dismissing [Snackbar] after calling [Snackbar.setAction]
+ */
+fun Snackbar.setActionPersist(@StringRes resId: Int, listener: View.OnClickListener): Snackbar {
+    return setAction(resId) { /* Do nothing */ }.addCallback(object : Snackbar.Callback() {
+        override fun onShown(sb: Snackbar?) {
+            sb?.view?.findViewById<View>(R.id.snackbar_action)?.setOnClickListener(listener)
+        }
+    })
+}
 
 /**
  * Hide progress indicator in a given condition.

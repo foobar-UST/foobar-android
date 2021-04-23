@@ -123,6 +123,7 @@
     <string name="seller_item_detail_subtitle_more_items">Suggest Items (+$ %.1f)</string>
     <string name="seller_item_detail_toolbar_title_add">Add Item</string>
     <string name="seller_item_detail_toolbar_title_update">Update Item</string>
+    <string name="seller_item_detail_profile_action">Profile</string>
 
     <!-- Seller Section -->
     <string name="seller_section_date">Order opens at %s</string>

@@ -41,8 +41,7 @@
                     android:id="@+id/item_image_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    tools:src="@sample/sample_image_2"/>
+                    android:scaleType="centerCrop" />
 
             </FrameLayout>
 
@@ -85,6 +84,7 @@
         android:layout_gravity="center" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/item_submit_layout"
         android:layout_width="match_parent"
         android:layout_height="160dp"
         android:paddingTop="20dp"

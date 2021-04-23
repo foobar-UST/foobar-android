@@ -20,6 +20,7 @@ import com.foobarust.android.utils.*
 import com.foobarust.domain.models.seller.SellerItemBasic
 import com.foobarust.domain.models.seller.getNormalizedTitle
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -36,6 +37,8 @@ class SellerItemDetailFragment : FullScreenDialogFragment(),
     private val mainViewModel: MainViewModel by activityViewModels()
     private val itemDetailViewModel: SellerItemDetailViewModel by viewModels()
     private val navArgs: SellerItemDetailFragmentArgs by navArgs()
+
+    private var profileIncompleteSnackbar: Snackbar? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -197,7 +200,20 @@ class SellerItemDetailFragment : FullScreenDialogFragment(),
             }
         }
 
+        // Check if user profile is completed
+        viewLifecycleOwner.lifecycleScope.launch {
+            itemDetailViewModel.isProfileCompleted.collect { isCompleted ->
+                binding.itemSubmitLayout.isVisible = isCompleted
+                showProfileIncompleteSnackbar(isShow = !isCompleted)
+            }
+        }
+
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        profileIncompleteSnackbar = null
+        super.onDestroyView()
     }
 
     override fun onSuggestedItemClicked(itemBasic: SellerItemBasic) {
@@ -221,5 +237,28 @@ class SellerItemDetailFragment : FullScreenDialogFragment(),
             .setMessage(message)
             .setPositiveButton(android.R.string.ok) { dialog, _ -> dialog.dismiss() }
             .show()
+    }
+
+    private fun showProfileIncompleteSnackbar(isShow: Boolean) {
+        profileIncompleteSnackbar = if (isShow) {
+            Snackbar.make(
+                binding.coordinatorLayout,
+                R.string.profile_require_data_for_ordering,
+                Snackbar.LENGTH_INDEFINITE
+            ).setActionPersist(R.string.seller_item_detail_profile_action) {
+                navigateToProfile()
+            }.apply {
+                show()
+            }
+        } else {
+            profileIncompleteSnackbar?.dismiss()
+            null
+        }
+    }
+
+    private fun navigateToProfile() {
+        findNavController(R.id.sellerItemDetailFragment)?.navigate(
+            SellerItemDetailFragmentDirections.actionSellerItemDetailFragmentToProfileFragment()
+        )
     }
 }

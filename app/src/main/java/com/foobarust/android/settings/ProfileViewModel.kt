@@ -9,7 +9,7 @@ import com.foobarust.android.settings.TextInputType.NAME
 import com.foobarust.android.settings.TextInputType.PHONE_NUM
 import com.foobarust.android.shared.AppConfig.PHONE_NUM_PREFIX
 import com.foobarust.domain.models.user.UserDetail
-import com.foobarust.domain.models.user.isDataCompleted
+import com.foobarust.domain.models.user.isProfileCompleted
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.AuthState
 import com.foobarust.domain.usecases.auth.GetUserAuthStateUseCase
@@ -119,7 +119,7 @@ class ProfileViewModel @Inject constructor(
 
         return buildList {
             // Add warning message section
-            if (!userDetail.isDataCompleted()) {
+            if (!userDetail.isProfileCompleted()) {
                 add(ProfileNoticeItemModel(
                     message = context.getString(R.string.profile_require_data_for_ordering)
                 ))

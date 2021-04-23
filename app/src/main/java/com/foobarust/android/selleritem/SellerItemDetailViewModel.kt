@@ -10,7 +10,11 @@ import com.foobarust.android.utils.AppBarLayoutState
 import com.foobarust.domain.models.cart.AddUserCartItem
 import com.foobarust.domain.models.cart.UpdateUserCartItem
 import com.foobarust.domain.models.seller.*
+import com.foobarust.domain.models.user.UserDetail
+import com.foobarust.domain.models.user.isProfileCompleted
 import com.foobarust.domain.states.Resource
+import com.foobarust.domain.usecases.AuthState
+import com.foobarust.domain.usecases.auth.GetUserAuthStateUseCase
 import com.foobarust.domain.usecases.cart.*
 import com.foobarust.domain.usecases.seller.*
 import com.foobarust.domain.utils.cancelIfActive
@@ -31,6 +35,7 @@ private const val NUM_OF_SUGGESTED_ITEM = 5
 @HiltViewModel
 class SellerItemDetailViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
+    private val getUserAuthStateUseCase: GetUserAuthStateUseCase,
     private val getSellerItemDetailUseCase: GetSellerItemDetailUseCase,
     private val getSuggestedItemsUseCase: GetSuggestedItemsUseCase,
     private val addUserCartItemUseCase: AddUserCartItemUseCase,
@@ -74,6 +79,12 @@ class SellerItemDetailViewModel @Inject constructor(
     private val _itemProperty = MutableStateFlow<SellerItemDetailProperty?>(null)
 
     private val _toolbarScrollState = MutableStateFlow(AppBarLayoutState.IDLE)
+
+    val isProfileCompleted: Flow<Boolean> = getUserAuthStateUseCase(Unit)
+        .filterIsInstance<AuthState.Authenticated<UserDetail>>()
+        .mapLatest { authState ->
+            authState.data.isProfileCompleted()
+        }
 
     val toolbarTitle: StateFlow<String?> = combine(
         _toolbarScrollState.map { it == AppBarLayoutState.COLLAPSED },
@@ -184,11 +195,12 @@ class SellerItemDetailViewModel @Inject constructor(
     fun onSubmitItem(cartSellerId: String?) = viewModelScope.launch {
         val property = _itemProperty.value ?: return@launch
 
-        property.cartItemId?.let {
-            updateUserCartItem(cartItemId = it)
-        } ?:
+        if (property.cartItemId != null) {
+            updateUserCartItem(cartItemId = property.cartItemId)
+        } else {
             // Require cart seller id for comparison with item's seller id
             addUserCartItem(cartSellerId = cartSellerId)
+        }
     }
 
     fun onSuggestedItemChecked(itemBasic: SellerItemBasic, isChecked: Boolean) {
