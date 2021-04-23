@@ -63,11 +63,6 @@ class ParticipantsAdapter(
         }
     }
 
-    override fun submitList(list: List<ParticipantsListModel>?) {
-        val mergedList = if (!list.isNullOrEmpty()) list + ParticipantsExpandModel else list
-        super.submitList(mergedList)
-    }
-
     private fun bindParticipantsAvatarItem(
         binding: ParticipantsAvatarItemBinding,
         avatarItemModel: ParticipantsAvatarItemModel

@@ -15,6 +15,7 @@ import com.foobarust.android.databinding.SellerSectionDetailParticipantsItemBind
 import com.foobarust.android.databinding.SellerSectionDetailRelatedItemBinding
 import com.foobarust.android.databinding.SellerSectionDetailSectionInfoItemBinding
 import com.foobarust.android.sellersection.ParticipantsListModel.ParticipantsAvatarItemModel
+import com.foobarust.android.sellersection.ParticipantsListModel.ParticipantsExpandModel
 import com.foobarust.android.sellersection.RelatedSectionsListModel.RelatedSectionsItemModel
 import com.foobarust.android.sellersection.SellerSectionDetailListModel.*
 import com.foobarust.android.sellersection.SellerSectionDetailViewHolder.*
@@ -129,11 +130,14 @@ class SellerSectionDetailAdapter(
         participantsItemModel: SellerSectionDetailParticipantsItemModel,
         layoutPosition: Int
     ) = binding.run {
-        val participantsAdapter = ParticipantsAdapter(sellerSectionDetailFragment).apply {
-            submitList(participantsItemModel.usersPublics.map {
-                ParticipantsAvatarItemModel(userPublic = it)
-            })
-        }
+        val participantsAdapter = ParticipantsAdapter(sellerSectionDetailFragment)
+
+        // Add participants expand button
+        val participantsItemModels = participantsItemModel.usersPublics.map {
+            ParticipantsAvatarItemModel(userPublic = it)
+        } + ParticipantsExpandModel
+
+        participantsAdapter.submitList(participantsItemModels)
 
         participantsRecyclerView.run {
             adapter = participantsAdapter
