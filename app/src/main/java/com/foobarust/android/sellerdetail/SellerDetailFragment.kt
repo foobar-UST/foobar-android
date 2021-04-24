@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
-import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -17,7 +16,6 @@ import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentSellerDetailBinding
 import com.foobarust.android.main.MainViewModel
 import com.foobarust.android.seller.SellerListProperty
-import com.foobarust.android.sellerdetail.SellerDetailChipAction.*
 import com.foobarust.android.selleritem.SellerItemDetailProperty
 import com.foobarust.android.sellerrating.SellerRatingDetailProperty
 import com.foobarust.android.shared.FullScreenDialogFragment
@@ -186,8 +184,15 @@ class SellerDetailFragment : FullScreenDialogFragment() {
 
         // Setup action chips
         viewLifecycleOwner.lifecycleScope.launch {
-            sellerDetailViewModel.chipActions.collect {
-                setupChipActions(it)
+            sellerDetailViewModel.actions.collect { actions ->
+                val chips = actions.map {
+                    when (it) {
+                        is SellerDetailAction.Rating -> buildRatingChip(it)
+                        is SellerDetailAction.Category -> buildCategoryChip(it)
+                    }
+                }
+
+                binding.actionChipGroup.replaceChips(chips)
             }
         }
 
@@ -276,35 +281,34 @@ class SellerDetailFragment : FullScreenDialogFragment() {
             tab.text = catalogs[position].getNormalizedTitle()
         }.attach()
     }
+    
+    private fun buildRatingChip(ratingAction: SellerDetailAction.Rating): Chip {
+        return Chip(
+            requireContext(), null, R.attr.actionChipStyle
+        ).apply {
+            isVisible = false
+            text = ratingAction.ratingTitle
+            chipIconTint = requireContext().buildColorStateListWith(R.color.yellow)
+            chipIcon = requireContext().getDrawableOrNull(R.drawable.ic_star)
 
-    private fun setupChipActions(chipActions: List<SellerDetailChipAction>) {
-        // Clear existing chips
-        binding.actionChipGroup.removeAllViews()
+            setOnClickListener { navigateToSellerRating() }
 
-        chipActions.forEach { action ->
-            Chip(requireContext(), null, R.attr.actionChipStyle).apply {
-                // Hide the chip on start
-                isGone = true
-                when (action) {
-                    is SellerDetailChipRating -> {
-                        text = action.ratingTitle
-                        chipIconTint = requireContext().buildColorStateListWith(R.color.yellow)
-                        chipIcon = requireContext().getDrawableOrNull(R.drawable.ic_star)
-                    }
+            // Fix chip flicker when changing typeface
+            // See: https://github.com/material-components/material-components-android/issues/675
+            post { isVisible = true }
+        }
+    }
 
-                    is SellerDetailChipCategory -> {
-                        text = action.categoryTag.capitalize(Locale.US)
-                    }
-                }
+    private fun buildCategoryChip(categoryAction: SellerDetailAction.Category): Chip {
+        return Chip(
+            requireContext(), null, R.attr.actionChipStyle
+        ).apply {
+            isVisible = false
+            text = categoryAction.categoryTag.capitalize(Locale.US)
 
-                setOnClickListener { performChipAction(action) }
+            setOnClickListener { navigateToSellerList(categoryAction.categoryTag) }
 
-                // Fix chip flicker when changing typeface
-                // See: https://github.com/material-components/material-components-android/issues/675
-                post { isVisible = true }
-            }.also {
-                binding.actionChipGroup.addView(it)
-            }
+            post { isVisible = true }
         }
     }
 
@@ -326,18 +330,11 @@ class SellerDetailFragment : FullScreenDialogFragment() {
         }
     }
 
-    private fun performChipAction(sellerDetailChipAction: SellerDetailChipAction) {
-        when (sellerDetailChipAction) {
-            is SellerDetailChipRating -> navigateToSellerDetail()
-            is SellerDetailChipCategory -> navigateToSellerList(sellerDetailChipAction.categoryTag)
-        }
-    }
-
     private fun showMessageSnackBar(message: String) {
         Snackbar.make(binding.coordinatorLayout, message, Snackbar.LENGTH_SHORT).show()
     }
 
-    private fun navigateToSellerDetail() {
+    private fun navigateToSellerRating() {
         val sellerDetail = sellerDetailViewModel.sellerDetail.value ?: return
         findNavController(R.id.sellerDetailFragment)?.navigate(
             SellerDetailFragmentDirections.actionSellerDetailFragmentToSellerRatingDetailFragment(

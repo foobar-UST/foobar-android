@@ -24,10 +24,19 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.foobarust.android.R
 import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.snackbar.Snackbar
+
+/**
+ * Add multiple [Chip] to a [ChipGroup]
+ */
+fun ChipGroup.replaceChips(chips: List<Chip>) {
+    removeAllViews()
+    chips.forEach { addView(it) }
+}
 
 /**
  * Prevent dismissing [Snackbar] after calling [Snackbar.setAction]

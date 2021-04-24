@@ -5,7 +5,7 @@ import android.os.Parcelable
 import androidx.lifecycle.*
 import androidx.viewpager2.widget.ViewPager2
 import com.foobarust.android.R
-import com.foobarust.android.sellerdetail.SellerDetailChipAction.*
+import com.foobarust.android.sellerdetail.SellerDetailAction.*
 import com.foobarust.android.selleritem.SellerItemDetailProperty
 import com.foobarust.android.utils.AppBarLayoutState
 import com.foobarust.domain.models.seller.*
@@ -67,7 +67,7 @@ class SellerDetailViewModel @Inject constructor(
         .filterNotNull()
         .map { buildSellerInfoSpan(it) }
 
-    val chipActions: Flow<List<SellerDetailChipAction>> = _sellerDetail
+    val actions: Flow<List<SellerDetailAction>> = _sellerDetail
         .filterNotNull()
         .map { buildChipActionsList(it) }
 
@@ -178,29 +178,20 @@ class SellerDetailViewModel @Inject constructor(
         // Delivery type
         if (sellerDetail.type == SellerType.ON_CAMPUS) {
             add(context.getString(R.string.seller_detail_deliver_type_pick_up))
-        } else {
-            // TODO: buildSellerInfoSpan
-            /*
-            add(getString(
-                R.string.seller_detail_format_delivery_cost,
-                sellerDetail.getNormalizedDeliveryCostString()
-            ))
-
-             */
         }
     }.joinToString("  ·  ")
 
     private fun buildChipActionsList(
         sellerDetail: SellerDetail
-    ): List<SellerDetailChipAction> = buildList {
+    ): List<SellerDetailAction> = buildList {
         // Rating chip
-        add(SellerDetailChipRating(
+        add(Rating(
             ratingTitle = sellerDetail.getNormalizedOrderRating()
         ))
 
         // Tags chips
         addAll(sellerDetail.tags.map { tag ->
-            SellerDetailChipCategory(categoryTag = tag)
+            Category(categoryTag = tag)
         })
     }
 }
@@ -211,14 +202,14 @@ data class SellerDetailProperty(
     val sectionId: String? = null
 ) : Parcelable
 
-sealed class SellerDetailChipAction {
-    data class SellerDetailChipRating(
+sealed class SellerDetailAction {
+    data class Rating(
         val ratingTitle: String
-    ) : SellerDetailChipAction()
+    ) : SellerDetailAction()
 
-    data class SellerDetailChipCategory(
+    data class Category(
         val categoryTag: String
-    ) : SellerDetailChipAction()
+    ) : SellerDetailAction()
 }
 
 sealed class SellerDetailUiState {
