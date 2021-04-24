@@ -21,5 +21,5 @@ data class GeolocationDto(
 
     @JvmField
     @PropertyName(GEO_LOCATION_GEOPOINT_FIELD)
-    val geoPoint: GeoPoint? = null
+    val geopoint: GeoPoint? = null
 )

@@ -14,8 +14,8 @@ internal fun GeolocationDto.toGeolocation(): Geolocation {
         address = address!!,
         addressZh = addressZh,
         locationPoint = GeolocationPoint(
-            latitude = geoPoint?.latitude ?: 0.toDouble(),
-            longitude = geoPoint?.longitude ?: 0.toDouble()
+            latitude = geopoint?.latitude ?: 0.toDouble(),
+            longitude = geopoint?.longitude ?: 0.toDouble()
         )
     )
 }
