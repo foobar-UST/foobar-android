@@ -77,8 +77,11 @@
             android:name="property"
             app:argType="com.foobarust.android.selleritem.SellerItemDetailProperty" />
         <action
-            android:id="@+id/action_sellerItemDetailFragment_self"
+            android:id="@+id/action_itemDetailFragment_self"
             app:destination="@id/sellerItemDetailFragment" />
+        <action
+            android:id="@+id/action_itemDetailFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </dialog>
 
     <!-- CheckoutFragment -->

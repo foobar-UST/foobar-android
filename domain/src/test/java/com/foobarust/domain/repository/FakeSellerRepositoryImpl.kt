@@ -12,8 +12,6 @@ import kotlinx.serialization.json.Json
 
 class FakeSellerRepositoryImpl : SellerRepository {
 
-    private var shouldReturnNetworkError = false
-
     internal val sellerList: List<SellerSerialized> by lazy {
         deserializeJsonList("sellers_fake_data.json")
     }
@@ -38,13 +36,15 @@ class FakeSellerRepositoryImpl : SellerRepository {
         deserializeJsonList("seller_ratings_fake_data.json")
     }
 
+    private var shouldReturnNetworkError = false
+
     override suspend fun getSellerDetail(sellerId: String): SellerDetail {
-        if (shouldReturnNetworkError) throw Exception("IO error.")
+        if (shouldReturnNetworkError) throw Exception("Network error.")
         return sellerList.first { it.id == sellerId }.toSellerDetail()
     }
 
     override suspend fun getSellerCatalogs(sellerId: String): List<SellerCatalog> {
-        if (shouldReturnNetworkError) throw Exception("IO error.")
+        if (shouldReturnNetworkError) throw Exception("Network error.")
         return sellerCatalogList.filter { it.seller_id == sellerId }
             .map { it.toSellerCatalog() }
     }
@@ -71,7 +71,7 @@ class FakeSellerRepositoryImpl : SellerRepository {
     }
 
     override suspend fun getSellerItemDetail(itemId: String): SellerItemDetail {
-        if (shouldReturnNetworkError) throw Exception("IO error.")
+        if (shouldReturnNetworkError) throw Exception("Network error.")
         return sellerItemList.first { it.id == itemId }.toSellerItemDetail()
     }
 
@@ -90,14 +90,14 @@ class FakeSellerRepositoryImpl : SellerRepository {
     }
 
     override suspend fun getRecentSellerItems(sellerId: String, limit: Int): List<SellerItemBasic> {
-        if (shouldReturnNetworkError) throw Exception("IO error.")
+        if (shouldReturnNetworkError) throw Exception("Network error.")
         return sellerItemList.filter { it.seller_id == sellerId }
             .take(limit)
             .map { it.toSellerItemBasic() }
     }
 
     override suspend fun getSellerSectionDetail(sectionId: String): SellerSectionDetail {
-        if (shouldReturnNetworkError) throw Exception("IO error.")
+        if (shouldReturnNetworkError) throw Exception("Network error.")
         return sellerSectionList.first { it.id == sectionId }.toSellerSectionDetail()
     }
 
@@ -105,7 +105,7 @@ class FakeSellerRepositoryImpl : SellerRepository {
         sellerId: String,
         numOfSections: Int
     ): List<SellerSectionBasic> {
-        if (shouldReturnNetworkError) throw Exception("IO error.")
+        if (shouldReturnNetworkError) throw Exception("Network error.")
         return sellerSectionList.filter { it.seller_id == sellerId }
             .take(numOfSections)
             .map { it.toSellerSectionBasic() }
@@ -122,12 +122,12 @@ class FakeSellerRepositoryImpl : SellerRepository {
     }
 
     override suspend fun getItemCategories(): List<ItemCategory> {
-        if (shouldReturnNetworkError) throw Exception("IO error.")
+        if (shouldReturnNetworkError) throw Exception("Network error.")
         return itemCategoryList.map { it.toItemCategory() }
     }
 
     override suspend fun getItemCategory(categoryTag: String): ItemCategory {
-        if (shouldReturnNetworkError) throw Exception("IO error.")
+        if (shouldReturnNetworkError) throw Exception("Network error.")
         return itemCategoryList.first { it.tag == categoryTag }.toItemCategory()
     }
 

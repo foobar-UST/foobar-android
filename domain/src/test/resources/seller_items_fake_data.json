@@ -15786,5 +15786,23 @@
     "price": 44,
     "count": 50,
     "available": true
+  },
+  {
+    "id": "dfbce3d8-399e-4f3e-ab30-f092dbe57223",
+    "seller_id": "kZr4pBjju7gQniYGS0kN",
+    "title": "Test Item 1",
+    "catalog_id": "26885837-fa0e-4b6c-8b85-0872448cf02e",
+    "price": 44,
+    "count": 50,
+    "available": true
+  },
+  {
+    "id": "1c23c1c3-43ef-4f55-a0cb-315e6658b785",
+    "seller_id": "kZr4pBjju7gQniYGS0kN",
+    "title": "Test Item 2",
+    "catalog_id": "26885837-fa0e-4b6c-8b85-0872448cf02e",
+    "price": 44,
+    "count": 50,
+    "available": true
   }
 ]

@@ -50,12 +50,12 @@ class GetUserAuthStateUseCaseTest {
     @Test
     fun `test user signed out`() = runBlocking {
         fakeAuthRepositoryImpl.setUserSignedIn(false)
+        fakeUserRepositoryImpl.setNetworkError(false)
 
         val getUserAuthStateUseCase = buildGetUserAuthStateUseCase()
         val results = getUserAuthStateUseCase(Unit).toListUntil { it is AuthState.Unauthenticated }
 
-        assert(results[0] is AuthState.Loading)
-        assert(results[1] is AuthState.Unauthenticated)
+        assert(results.last() is AuthState.Unauthenticated)
     }
 
     @Test

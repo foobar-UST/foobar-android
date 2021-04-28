@@ -5,6 +5,7 @@ import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.R
+import com.foobarust.android.shared.AppConfig
 import com.foobarust.android.shared.BaseViewModel
 import com.foobarust.android.utils.DynamicLinksUtils
 import com.foobarust.android.utils.ProgressNotification
@@ -14,7 +15,8 @@ import com.foobarust.domain.models.cart.UserCart
 import com.foobarust.domain.models.cart.hasItems
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.states.getSuccessDataOr
-import com.foobarust.domain.usecases.cart.CheckCartTimeOutUseCase
+import com.foobarust.domain.usecases.cart.CheckCartTimeoutParameters
+import com.foobarust.domain.usecases.cart.CheckCartTimeoutUseCase
 import com.foobarust.domain.usecases.cart.ClearUserCartUseCase
 import com.foobarust.domain.usecases.cart.GetUserCartUseCase
 import com.foobarust.domain.usecases.onboarding.GetUserCompleteTutorialUseCase
@@ -41,7 +43,7 @@ class MainViewModel @Inject constructor(
     private val notificationManager: NotificationManager,
     private val dynamicLinksUtils: DynamicLinksUtils,
     private val clearUserCartUseCase: ClearUserCartUseCase,
-    private val checkCartTimeOutUseCase: CheckCartTimeOutUseCase,
+    private val checkCartTimeoutUseCase: CheckCartTimeoutUseCase,
     private val getUserCompleteTutorialUseCase: GetUserCompleteTutorialUseCase,
     private val getUserCartUseCase: GetUserCartUseCase,
     private val uploadUserPhotoUseCase: UploadUserPhotoUseCase
@@ -179,7 +181,12 @@ class MainViewModel @Inject constructor(
     private fun navigateToCartTimeout() = viewModelScope.launch {
         if (!checkedCartTimeout) {
             val userCart = _userCart.filterNotNull().first()
-            if (checkCartTimeOutUseCase(userCart).getSuccessDataOr(false)) {
+            val params = CheckCartTimeoutParameters(
+                userCart = userCart,
+                timeoutMills = AppConfig.CART_TIMEOUT
+            )
+
+            if (checkCartTimeoutUseCase(params).getSuccessDataOr(false)) {
                 _navigateToCartTimeout.offer(userCart.itemsCount)
             }
             checkedCartTimeout = true

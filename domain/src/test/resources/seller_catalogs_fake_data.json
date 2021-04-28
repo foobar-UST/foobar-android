@@ -1258,5 +1258,11 @@
     "title": "Rum",
     "title_zh": "朗姆酒",
     "available": true
+  },
+  {
+    "id": "26885837-fa0e-4b6c-8b85-0872448cf02e",
+    "seller_id": "kZr4pBjju7gQniYGS0kN",
+    "title": "Test Catalog",
+    "available": true
   }
 ]

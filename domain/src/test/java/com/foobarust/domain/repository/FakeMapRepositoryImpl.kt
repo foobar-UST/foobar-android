@@ -10,11 +10,15 @@ import com.foobarust.domain.repositories.MapRepository
 
 class FakeMapRepositoryImpl : MapRepository {
 
+    private var shouldReturnNetworkError = false
+
     override suspend fun getDirectionsPath(
         currentLocation: GeolocationPoint,
         destination: GeolocationPoint,
         travelMode: TravelMode
     ): List<GeolocationPoint> {
+        if (shouldReturnNetworkError) throw Exception("IO error.")
+
         return listOf(
             GeolocationPoint(1.0, 2.0),
             GeolocationPoint(2.0, 3.0)
@@ -23,5 +27,9 @@ class FakeMapRepositoryImpl : MapRepository {
 
     override fun getStaticMapImageUrl(centerLocation: GeolocationPoint): String {
         return "about:blank"
+    }
+
+    fun setNetworkError(value: Boolean) {
+        shouldReturnNetworkError = value
     }
 }

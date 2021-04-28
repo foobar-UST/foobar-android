@@ -1,5 +1,6 @@
 package com.foobarust.domain.usecases.checkout
 
+import com.foobarust.domain.common.UseCaseExceptions.ERROR_USER_NOT_SIGNED_IN
 import com.foobarust.domain.di.IoDispatcher
 import com.foobarust.domain.models.checkout.PlaceOrderResult
 import com.foobarust.domain.repositories.AuthRepository
@@ -22,6 +23,10 @@ class PlaceOrderUseCase @Inject constructor(
 ) : FlowUseCase<PlaceOrderParameters, PlaceOrderResult>(coroutineDispatcher) {
 
     override fun execute(parameters: PlaceOrderParameters): Flow<Resource<PlaceOrderResult>> = flow {
+        if (!authRepository.isUserSignedIn()) {
+            throw Exception(ERROR_USER_NOT_SIGNED_IN)
+        }
+
         val result = checkoutRepository.placeOrder(
             idToken = authRepository.getUserIdToken(),
             message = parameters.orderMessage,

@@ -6,7 +6,8 @@
     "seller_id": "5f71cda284299999cbbdf6e8",
     "order_id": "99158973-0202-428e-bc8b-91c4d96eee29",
     "order_rating": "2.0",
-    "delivery_rating": true
+    "delivery_rating": true,
+    "comment": "good taste"
   },
   {
     "id": "02eb15a9-0b7a-4e67-9430-af2a17f64a1d",
@@ -15,8 +16,8 @@
     "seller_id": "5f71cda284299999cbbdf6e8",
     "order_id": "fe986f29-d52e-4602-93eb-95333a3693e4",
     "order_rating": "2.0",
-    "delivery_rating": true
-
+    "delivery_rating": true,
+    "comment": "good taste"
   },
   {
     "id": "5d9022c7-bbac-4449-89ba-58eba601b2b6",
@@ -25,7 +26,8 @@
     "seller_id": "5f71cda284299999cbbdf6e8",
     "order_id": "0628ea3c-93b0-4625-bc30-f5b4d79fa80f",
     "order_rating": "2.0",
-    "delivery_rating": true
+    "delivery_rating": true,
+    "comment": "good taste"
   },
   {
     "id": "a2ae2048-76d0-4bce-82d8-6d29d512a719",
@@ -34,7 +36,8 @@
     "seller_id": "5f71cda235eada3204009966",
     "order_id": "f17d1df1-cbf3-44d7-98ed-1d1d01df13ce",
     "order_rating": "2.0",
-    "delivery_rating": true
+    "delivery_rating": true,
+    "comment": "good taste"
   },
   {
     "id": "6e1772a6-0480-44bb-bec4-1eb3a1660bcf",
@@ -43,7 +46,8 @@
     "seller_id": "5f71cda284299999cbbdf6e8",
     "order_id": "0d6e348f-3296-42b8-98fc-189a51882b76",
     "order_rating": "2.0",
-    "delivery_rating": true
+    "delivery_rating": true,
+    "comment": "good taste"
   },
   {
     "id": "10192cb6-cd1d-4a2b-b13e-0acc8c35ea95",
@@ -52,6 +56,7 @@
     "seller_id": "5f71cda23827f5d483374c96",
     "order_id": "f20f4c9d-66fd-4ed2-aa8a-60551c039323",
     "order_rating": "2.0",
-    "delivery_rating": true
+    "delivery_rating": true,
+    "comment": "good taste"
   }
 ]

@@ -16,12 +16,13 @@ internal data class SellerRatingSerialized(
     val seller_id: String,
     val order_id: String,
     val order_rating: Double,
-    val delivery_rating: Boolean
+    val delivery_rating: Boolean,
+    val comment: String? = null
 )
 
 internal fun SellerRatingSerialized.toSellerRatingBasic(): SellerRatingBasic {
     return SellerRatingBasic(
         id = id, username = username, userPhotoUrl = user_photo_url, orderRating = order_rating,
-        deliveryRating = delivery_rating, createdAt = Date()
+        deliveryRating = delivery_rating, createdAt = Date(), comment = comment
     )
 }

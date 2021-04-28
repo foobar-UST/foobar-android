@@ -1,11 +1,13 @@
 package com.foobarust.domain.serialize
 
 import com.foobarust.domain.models.order.OrderItem
+import kotlinx.serialization.Serializable
 
 /**
  * Created by kevin on 4/22/21
  */
 
+@Serializable
 internal data class OrderItemSerialized(
     val id: String,
     val item_id: String,

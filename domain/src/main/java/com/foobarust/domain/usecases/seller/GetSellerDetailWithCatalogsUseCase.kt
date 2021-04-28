@@ -17,11 +17,11 @@ class GetSellerDetailWithCatalogsUseCase @Inject constructor(
 
     override fun execute(parameters: String): Flow<Resource<SellerDetailWithCatalogs>> = flow {
         val sellerDetail = sellerRepository.getSellerDetail(sellerId = parameters)
-        val sellerCatalog = sellerRepository.getSellerCatalogs(sellerId = parameters)
+        val sellerCatalogs = sellerRepository.getSellerCatalogs(sellerId = parameters)
 
         val sellerDetailWithCatalogs = SellerDetailWithCatalogs(
             sellerDetail = sellerDetail,
-            sellerCatalogs = sellerCatalog
+            sellerCatalogs = sellerCatalogs
         )
 
         emit(Resource.Success(sellerDetailWithCatalogs))

@@ -26,7 +26,10 @@ class FakeCheckoutRepositoryImpl(
         )
     )
 
+    private var shouldReturnNetworkError = false
+
     override suspend fun getPaymentMethods(): List<PaymentMethod> {
+        if (shouldReturnNetworkError) throw Exception("IO error.")
         return fakePaymentMethods.filter { it.enabled }
     }
 
@@ -36,6 +39,7 @@ class FakeCheckoutRepositoryImpl(
         paymentMethodIdentifier: String
     ): PlaceOrderResult {
         if (this.idToken != idToken) throw Exception("Invalid id token.")
+        if (shouldReturnNetworkError) throw Exception("IO error.")
 
         fakePaymentMethods.firstOrNull {
             it.identifier == paymentMethodIdentifier
@@ -45,5 +49,9 @@ class FakeCheckoutRepositoryImpl(
             orderId = UUID.randomUUID().toString(),
             orderIdentifier = UUID.randomUUID().toString()
         )
+    }
+
+    fun setNetworkError(value: Boolean) {
+        shouldReturnNetworkError = value
     }
 }

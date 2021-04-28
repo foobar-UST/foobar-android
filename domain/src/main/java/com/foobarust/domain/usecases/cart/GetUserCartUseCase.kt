@@ -30,18 +30,18 @@ class GetUserCartUseCase @Inject constructor(
             stopObserveUserCart()
             when (it) {
                 is AuthState.Authenticated -> {
-                    println("[$TAG]: User is signed in. Start observe UserCart.")
+                    // User is signed in. Start observe UserCart.
                     startObserveUserCart(
                         coroutineScope = CoroutineScope(currentCoroutineContext()),
                         userId = it.data.id
                     )
                 }
                 AuthState.Unauthenticated -> {
-                    println("[$TAG]: User is signed out.")
+                    // User is signed out.
                     channel.offer(Resource.Error(null))
                 }
                 AuthState.Loading -> {
-                    println("[$TAG]: Loading auth profile...")
+                    // Loading auth profile.
                     channel.offer(Resource.Loading())
                 }
             }
@@ -58,11 +58,11 @@ class GetUserCartUseCase @Inject constructor(
             cartRepository.getUserCartObservable(userId).collect {
                 when (it) {
                     is Resource.Success -> {
-                        println("[$TAG]: Offered UserCart.")
+                        // Offered UserCart.
                         channel.offer(Resource.Success(it.data))
                     }
                     is Resource.Error -> {
-                        println("[$TAG]: Error getting UserCart: ${it.message}.")
+                        // Error getting UserCart.
                         channel.offer(Resource.Error(it.message))
                     }
                     is Resource.Loading -> Unit
@@ -72,7 +72,7 @@ class GetUserCartUseCase @Inject constructor(
     }
 
     private fun stopObserveUserCart() {
-        println("[$TAG]: Stop observing UserCart.")
+        // Stop observing UserCart.
         observeUserCartJob.cancelIfActive()
     }
 }
