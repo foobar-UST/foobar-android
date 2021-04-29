@@ -7,6 +7,7 @@ import com.foobarust.android.R
 import com.foobarust.android.settings.ProfileListModel.*
 import com.foobarust.android.settings.TextInputType.NAME
 import com.foobarust.android.settings.TextInputType.PHONE_NUM
+import com.foobarust.android.shared.AppConfig
 import com.foobarust.android.shared.AppConfig.PHONE_NUM_PREFIX
 import com.foobarust.domain.models.user.UserDetail
 import com.foobarust.domain.models.user.isProfileCompleted
@@ -67,7 +68,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun updateUserName(name: String) = viewModelScope.launch {
-        val params = UpdateUserDetailParameters(name = name)
+        val params = UpdateUserDetailParameters.UpdateName(name)
         updateUserDetailUseCase(params).collect {
             when (it) {
                 is Resource.Success -> _snackBarMessage.offer(
@@ -80,7 +81,10 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun updateUserPhoneNum(phoneNum: String) = viewModelScope.launch {
-        val params = UpdateUserDetailParameters(phoneNum = phoneNum)
+        val params = UpdateUserDetailParameters.UpdatePhoneNum(
+            phoneNum = phoneNum,
+            defaultPhoneNumLength = AppConfig.PHONE_NUM_LENGTH
+        )
         updateUserDetailUseCase(params).collect {
             when (it) {
                 is Resource.Success ->_snackBarMessage.offer(
@@ -112,7 +116,7 @@ class ProfileViewModel @Inject constructor(
         )
     }
 
-    private suspend fun buildProfileListModels(userDetail: UserDetail?): List<ProfileListModel> {
+    private fun buildProfileListModels(userDetail: UserDetail?): List<ProfileListModel> {
         if (userDetail == null) {
             return emptyList()
         }

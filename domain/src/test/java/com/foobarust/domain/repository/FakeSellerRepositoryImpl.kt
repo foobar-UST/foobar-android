@@ -63,6 +63,7 @@ class FakeSellerRepositoryImpl : SellerRepository {
     }
 
     override suspend fun searchSellers(searchQuery: String, numOfSellers: Int): List<SellerBasic> {
+        if (shouldReturnNetworkError) throw Exception("Network error.")
         return sellerList.filter {
             "${it.name}${it.name_zh}".contains(searchQuery)
         }.take(numOfSellers).map {

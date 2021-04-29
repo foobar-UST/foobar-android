@@ -46,8 +46,11 @@ class FakeUserRepositoryImpl(
         extension: String
     ): Flow<Resource<Unit>> = flow {
         emit(Resource.Loading())
-        if (shouldReturnNetworkError) emit(Resource.Error("Network error."))
-        emit(Resource.Success(Unit))
+        if (shouldReturnNetworkError) {
+            emit(Resource.Error("Network error."))
+        } else {
+            emit(Resource.Success(Unit))
+        }
     }
 
     override suspend fun getUserCompleteTutorial(): Boolean {

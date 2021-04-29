@@ -1,4 +1,4 @@
-package di
+package com.foobarust.domain.di
 
 import com.foobarust.domain.models.auth.AuthProfile
 import com.foobarust.domain.models.cart.UserCart

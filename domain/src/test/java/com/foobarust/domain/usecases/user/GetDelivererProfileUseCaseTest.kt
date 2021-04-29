@@ -1,27 +1,25 @@
-package com.foobarust.domain.usecases.cart
+package com.foobarust.domain.usecases.user
 
 import com.foobarust.domain.di.DependencyContainer
 import com.foobarust.domain.repository.FakeAuthRepositoryImpl
-import com.foobarust.domain.repository.FakeCartRepositoryImpl
+import com.foobarust.domain.repository.FakeUserRepositoryImpl
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.utils.TestCoroutineRule
 import com.foobarust.domain.utils.runBlockingTest
-import com.foobarust.domain.utils.toListUntil
 import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
 /**
- * Created by kevin on 4/28/21
+ * Created by kevin on 4/29/21
  */
 
-class GetUserCartItemsUseCaseTest {
+class GetDelivererProfileUseCaseTest {
 
-    private lateinit var getUserCartItemsUseCase: GetUserCartItemsUseCase
+    private lateinit var getDelivererProfileUseCase: GetDelivererProfileUseCase
     private lateinit var fakeAuthRepositoryImpl: FakeAuthRepositoryImpl
-    private lateinit var fakeCartRepositoryImpl: FakeCartRepositoryImpl
+    private lateinit var fakeUserRepositoryImpl: FakeUserRepositoryImpl
     private lateinit var dependencyContainer: DependencyContainer
 
     @get:Rule
@@ -37,43 +35,43 @@ class GetUserCartItemsUseCaseTest {
             isSignedIn = true
         )
 
-        fakeCartRepositoryImpl = FakeCartRepositoryImpl(
+        fakeUserRepositoryImpl = FakeUserRepositoryImpl(
             idToken = dependencyContainer.fakeIdToken,
-            defaultUserCart = dependencyContainer.fakeUserCart,
-            defaultCartItems = dependencyContainer.fakeUserCartItems
+            defaultUserDetail = dependencyContainer.fakeUserDetail,
+            hasCompletedTutorial = true
         )
 
-        getUserCartItemsUseCase = GetUserCartItemsUseCase(
+        getDelivererProfileUseCase = GetDelivererProfileUseCase(
             authRepository = fakeAuthRepositoryImpl,
-            cartRepository = fakeCartRepositoryImpl,
+            userRepository = fakeUserRepositoryImpl,
             coroutineDispatcher = coroutineRule.testDispatcher
         )
     }
 
     @Test
-    fun `test get cart items success`() = runBlocking {
+    fun `test get profile success`() = coroutineRule.runBlockingTest {
         fakeAuthRepositoryImpl.setUserSignedIn(true)
-        fakeCartRepositoryImpl.setNetworkError(false)
+        fakeUserRepositoryImpl.setNetworkError(false)
 
-        val result = getUserCartItemsUseCase(Unit).toListUntil { it is Resource.Success }
-        assert(result.last() is Resource.Success)
+        val result = getDelivererProfileUseCase(dependencyContainer.fakeAuthProfile.id).toList().last()
+        assert(result is Resource.Success)
     }
 
     @Test
-    fun `test not signed in error`() = coroutineRule.runBlockingTest {
+    fun `test not signed in, error`() = coroutineRule.runBlockingTest {
         fakeAuthRepositoryImpl.setUserSignedIn(false)
-        fakeCartRepositoryImpl.setNetworkError(false)
+        fakeUserRepositoryImpl.setNetworkError(false)
 
-        val result = getUserCartItemsUseCase(Unit).toList()
-        assert(result.last() is Resource.Error)
+        val result = getDelivererProfileUseCase(dependencyContainer.fakeAuthProfile.id).toList().last()
+        assert(result is Resource.Error)
     }
 
     @Test
     fun `test network error`() = coroutineRule.runBlockingTest {
         fakeAuthRepositoryImpl.setUserSignedIn(true)
-        fakeCartRepositoryImpl.setNetworkError(true)
+        fakeUserRepositoryImpl.setNetworkError(true)
 
-        val result = getUserCartItemsUseCase(Unit).toList()
-        assert(result.last() is Resource.Error)
+        val result = getDelivererProfileUseCase(dependencyContainer.fakeAuthProfile.id).toList().last()
+        assert(result is Resource.Error)
     }
 }

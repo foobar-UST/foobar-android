@@ -23,8 +23,7 @@ class SearchSellersUseCase @Inject constructor(
         val searchQuery = parameters.searchQuery
 
         if (searchQuery.isBlank()) {
-            emit(Resource.Success(emptyList()))
-            return@flow
+            emit(Resource.Success(emptyList<SellerBasic>()))
         } else {
             val sellerBasics = sellerRepository.searchSellers(
                 searchQuery = searchQuery,

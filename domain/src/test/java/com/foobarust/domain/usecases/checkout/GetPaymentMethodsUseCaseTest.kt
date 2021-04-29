@@ -1,10 +1,10 @@
 package com.foobarust.domain.usecases.checkout
 
+import com.foobarust.domain.di.DependencyContainer
 import com.foobarust.domain.repository.FakeCheckoutRepositoryImpl
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.utils.TestCoroutineRule
 import com.foobarust.domain.utils.runBlockingTest
-import di.DependencyContainer
 import kotlinx.coroutines.flow.toList
 import org.junit.Before
 import org.junit.Rule

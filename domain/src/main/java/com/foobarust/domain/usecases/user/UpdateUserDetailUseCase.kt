@@ -28,17 +28,47 @@ class UpdateUserDetailUseCase @Inject constructor(
             authRepository.getUserIdToken()
         }
 
-        userRepository.updateUserDetail(
-            idToken = idToken,
-            name = parameters.name,
-            phoneNum = parameters.phoneNum
-        )
+        when (parameters) {
+            is UpdateUserDetailParameters.UpdateName -> {
+                // Check for empty name
+                val name = parameters.name
+
+                if (name.isBlank()) {
+                    throw Exception("Name is empty.")
+                }
+
+                userRepository.updateUserDetail(
+                    idToken = idToken,
+                    name = name,
+                    phoneNum = null
+                )
+
+            }
+            is UpdateUserDetailParameters.UpdatePhoneNum -> {
+                // Check for invalid phone number length
+                val phoneNum = parameters.phoneNum
+
+                if (phoneNum.isBlank() ||
+                    phoneNum.length != parameters.defaultPhoneNumLength) {
+                    throw Exception("Invalid phone num length.")
+                }
+
+                userRepository.updateUserDetail(
+                    idToken = idToken,
+                    name = null,
+                    phoneNum = phoneNum
+                )
+            }
+        }
 
         emit(Resource.Success(Unit))
     }
 }
 
-data class UpdateUserDetailParameters(
-    val name: String? = null,
-    val phoneNum: String? = null
-)
+sealed class UpdateUserDetailParameters {
+    data class UpdateName(val name: String) : UpdateUserDetailParameters()
+    data class UpdatePhoneNum(
+        val phoneNum: String,
+        val defaultPhoneNumLength: Int
+    ) : UpdateUserDetailParameters()
+}

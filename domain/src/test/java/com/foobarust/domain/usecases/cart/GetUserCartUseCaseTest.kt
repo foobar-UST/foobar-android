@@ -1,11 +1,11 @@
 package com.foobarust.domain.usecases.cart
 
+import com.foobarust.domain.di.DependencyContainer
 import com.foobarust.domain.repository.FakeAuthRepositoryImpl
 import com.foobarust.domain.repository.FakeCartRepositoryImpl
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.utils.TestCoroutineRule
 import com.foobarust.domain.utils.toListUntil
-import di.DependencyContainer
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule

@@ -1,5 +1,6 @@
 package com.foobarust.domain.usecases.seller
 
+import com.foobarust.domain.di.DependencyContainer
 import com.foobarust.domain.repository.FakeSellerRepositoryImpl
 import com.foobarust.domain.serialize.toSellerItemBasic
 import com.foobarust.domain.states.Resource
@@ -18,12 +19,14 @@ class GetSuggestedItemsUseCaseTest {
 
     private lateinit var getSuggestedItemsUseCase: GetSuggestedItemsUseCase
     private lateinit var fakeSellerRepositoryImpl: FakeSellerRepositoryImpl
+    private lateinit var dependencyContainer: DependencyContainer
 
     @get:Rule
     var coroutineRule = TestCoroutineRule()
 
     @Before
     fun init() {
+        dependencyContainer = DependencyContainer()
         fakeSellerRepositoryImpl = FakeSellerRepositoryImpl()
         getSuggestedItemsUseCase = GetSuggestedItemsUseCase(
             sellerRepository = fakeSellerRepositoryImpl,
@@ -35,28 +38,36 @@ class GetSuggestedItemsUseCaseTest {
     fun `test get items success, ignore current`() = coroutineRule.runBlockingTest {
         fakeSellerRepositoryImpl.setNetworkError(false)
 
-        val firstItem = fakeSellerRepositoryImpl.sellerItemList.first()
-        val lastItem = fakeSellerRepositoryImpl.sellerItemList.last()
+        val currentItem = fakeSellerRepositoryImpl.sellerItemList.first().toSellerItemBasic()
 
         val params = GetSuggestedItemsParameters(
-            sellerId = firstItem.seller_id,
-            ignoreItemId = lastItem.id,
+            sellerId = dependencyContainer.fakeUserCart.sellerId,
+            ignoreItemId = currentItem.id,
             numOfItems = Int.MAX_VALUE
         )
-        val firstResult = getSuggestedItemsUseCase(params).toList().last()
-        val secondResult = getSuggestedItemsUseCase(params).toList().last()
+
+        val result = getSuggestedItemsUseCase(params).toList().last()
 
         assert(
-            firstResult is Resource.Success &&
-            secondResult is Resource.Success &&
-            firstResult.data.containsAll(secondResult.data) &&
-            lastItem.toSellerItemBasic() !in firstResult.data &&
-            lastItem.toSellerItemBasic() !in secondResult.data
+            result is Resource.Success &&
+            currentItem !in result.data
         )
     }
 
     @Test
     fun `test network error`() = coroutineRule.runBlockingTest {
         fakeSellerRepositoryImpl.setNetworkError(true)
+
+        val currentItem = fakeSellerRepositoryImpl.sellerItemList.first().toSellerItemBasic()
+
+        val params = GetSuggestedItemsParameters(
+            sellerId = dependencyContainer.fakeUserCart.sellerId,
+            ignoreItemId = currentItem.id,
+            numOfItems = Int.MAX_VALUE
+        )
+
+        val result = getSuggestedItemsUseCase(params).toList().last()
+
+        assert(result is Resource.Error)
     }
 }

@@ -1,12 +1,12 @@
 package com.foobarust.domain.usecases.auth
 
+import com.foobarust.domain.di.DependencyContainer
 import com.foobarust.domain.repository.FakeAuthRepositoryImpl
 import com.foobarust.domain.repository.FakeUserRepositoryImpl
 import com.foobarust.domain.usecases.AuthState
 import com.foobarust.domain.utils.TestCoroutineRule
 import com.foobarust.domain.utils.coroutineScope
 import com.foobarust.domain.utils.toListUntil
-import di.DependencyContainer
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
