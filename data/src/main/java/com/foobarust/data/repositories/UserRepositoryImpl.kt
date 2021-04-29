@@ -4,7 +4,6 @@ import android.content.SharedPreferences
 import android.net.Uri
 import androidx.core.content.edit
 import com.foobarust.data.api.RemoteService
-import com.foobarust.data.cache.networkCacheResource
 import com.foobarust.data.constants.Constants.USERS_COLLECTION
 import com.foobarust.data.constants.Constants.USERS_DELIVERY_COLLECTION
 import com.foobarust.data.constants.Constants.USERS_PUBLIC_COLLECTION
@@ -16,6 +15,7 @@ import com.foobarust.data.models.user.UpdateUserDetailRequest
 import com.foobarust.data.utils.getAwaitResult
 import com.foobarust.data.utils.putFileFlow
 import com.foobarust.data.utils.snapshotFlow
+import com.foobarust.domain.cache.networkCacheResource
 import com.foobarust.domain.models.user.UserDelivery
 import com.foobarust.domain.models.user.UserDetail
 import com.foobarust.domain.models.user.UserPublic

@@ -1,4 +1,4 @@
-package com.foobarust.data.cache
+package com.foobarust.domain.cache
 
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.utils.cancelIfActive
@@ -13,9 +13,7 @@ import kotlinx.coroutines.launch
  * Created by kevin on 1/23/21
  */
 
-private const val TAG = "NetworkCacheResource"
-
-internal inline fun <T> networkCacheResource(
+inline fun <T> networkCacheResource(
     noinline cacheSource: suspend () -> T,
     crossinline networkSource: () -> Flow<Resource<T>>,
     noinline updateCache: suspend (T) -> Unit
@@ -40,7 +38,7 @@ internal inline fun <T> networkCacheResource(
     }
 }
 
-private fun<T> ProducerScope<Resource<T>>.startFetchCacheSource(
+@PublishedApi internal fun<T> ProducerScope<Resource<T>>.startFetchCacheSource(
     cacheSource: suspend () -> T
 ): Job = launch {
     channel.offer(Resource.Loading())
@@ -52,7 +50,7 @@ private fun<T> ProducerScope<Resource<T>>.startFetchCacheSource(
     }
 }
 
-private fun<T> ProducerScope<Resource<T>>.startUpdateCache(
+@PublishedApi internal fun<T> ProducerScope<Resource<T>>.startUpdateCache(
     updateLocal: suspend (T) -> Unit,
     networkData: T
 ): Job = launch {

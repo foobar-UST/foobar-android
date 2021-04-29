@@ -5,7 +5,6 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.foobarust.data.api.RemoteService
-import com.foobarust.data.cache.networkCacheResource
 import com.foobarust.data.constants.Constants.ORDERS_BASIC_COLLECTION
 import com.foobarust.data.constants.Constants.ORDERS_COLLECTION
 import com.foobarust.data.constants.Constants.ORDER_STATE_ARCHIVED
@@ -18,6 +17,7 @@ import com.foobarust.data.db.OrdersDetailDao
 import com.foobarust.data.mappers.OrderMapper
 import com.foobarust.data.paging.HistoryOrderBasicsPagingSource
 import com.foobarust.data.utils.snapshotFlow
+import com.foobarust.domain.cache.networkCacheResource
 import com.foobarust.domain.models.order.OrderBasic
 import com.foobarust.domain.models.order.OrderDetail
 import com.foobarust.domain.models.order.OrderRating
