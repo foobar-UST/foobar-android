@@ -6,12 +6,6 @@ Foobar++ is a group ordering and delivery application.
 
 Food ordering and delivery services such as FoodPanda serve individual customers. Many restaurants do not deliver to the UST area. This project will create a mobile app that supports group orders to individual vendors.
 
-
-## Changelog
-
-See all the changes here [CHANGELOG.md](CHANGELOG.md).
-
-
 ## Architecture
 
 * **App** -  A layer that interacts with the UI. Contains of UI-related elements such as Activities, Fragments, ViewModels. It depends on both data and domain module.
@@ -43,7 +37,7 @@ See all the changes here [CHANGELOG.md](CHANGELOG.md).
 
 ## Device Requirements
 
-* Android 5.0+ (API level 21).
+* Android 6.0+ (API level 23).
 * Google Play Service installed.
 
 
