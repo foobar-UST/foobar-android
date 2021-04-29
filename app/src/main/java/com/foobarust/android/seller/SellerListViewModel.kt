@@ -12,7 +12,7 @@ import com.foobarust.domain.models.explore.getNormalizedTitle
 import com.foobarust.domain.models.seller.*
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.seller.GetSellerItemCategoryUseCase
-import com.foobarust.domain.usecases.seller.GetSellersPagingUseCase
+import com.foobarust.domain.usecases.seller.GetSellersUseCase
 import com.foobarust.domain.utils.cancelIfActive
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -28,7 +28,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SellerListViewModel @Inject constructor(
-    getSellersPagingUseCase: GetSellersPagingUseCase,
+    getSellersUseCase: GetSellersUseCase,
     private val getSellerItemCategoryUseCase: GetSellerItemCategoryUseCase
 ) : ViewModel() {
 
@@ -51,7 +51,7 @@ class SellerListViewModel @Inject constructor(
         .asFlow()
         .flatMapLatest {
             val filter = SellerBasicsFilter(categoryTag = it.categoryTag)
-            getSellersPagingUseCase(filter)
+            getSellersUseCase(filter)
         }
         .map { pagingData ->
             pagingData.map { sellerBasic ->

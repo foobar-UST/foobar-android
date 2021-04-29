@@ -15,7 +15,6 @@ private const val AUTH_DYNAMIC_LINK_DOMAIN = "foobarust2.page.link"
 class DynamicLinksUtils @Inject constructor(
     private val firebaseDynamicLinks: FirebaseDynamicLinks
 ) {
-
     suspend fun extractDeepLink(link: Uri): Uri? {
         if (!isAppNavigationLink(link)) {
             return null

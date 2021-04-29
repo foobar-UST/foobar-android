@@ -55,8 +55,9 @@ class SellerMiscFragment : FullScreenDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        setLayoutFullscreen()
+
         binding = FragmentSellerMiscBinding.inflate(inflater, container, false).apply {
-            root.applyLayoutFullscreen()
             toolbarLayout.applySystemWindowInsetsPadding(applyTop = true)
             bottomSheet.applySystemWindowInsetsMargin(applyTop = true)
             miscLayout.applySystemWindowInsetsPadding(applyBottom = true)

@@ -35,8 +35,9 @@ class ProfileFragment : FullScreenDialogFragment(), ProfileAdapter.ProfileAdapte
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        setLayoutFullscreen()
+
         binding = FragmentProfileBinding.inflate(inflater, container, false).apply {
-            root.applyLayoutFullscreen()
             appBarLayout.applySystemWindowInsetsPadding(applyTop = true)
         }
 

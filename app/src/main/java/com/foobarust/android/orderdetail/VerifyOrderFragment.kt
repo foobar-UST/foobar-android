@@ -14,9 +14,9 @@ import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentVerifyOrderBinding
 import com.foobarust.android.shared.FullScreenDialogFragment
 import com.foobarust.android.utils.AutoClearedValue
-import com.foobarust.android.utils.applyLayoutFullscreen
 import com.foobarust.android.utils.applySystemWindowInsetsPadding
 import com.foobarust.android.utils.findNavController
+import com.foobarust.android.utils.setLayoutFullscreen
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
 import dagger.hilt.android.AndroidEntryPoint
@@ -49,8 +49,9 @@ class VerifyOrderFragment : FullScreenDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        setLayoutFullscreen()
+
         binding = FragmentVerifyOrderBinding.inflate(inflater, container, false).apply {
-            root.applyLayoutFullscreen()
             appBarLayout.applySystemWindowInsetsPadding(applyTop = true)
         }
 

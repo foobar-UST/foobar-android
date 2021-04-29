@@ -65,8 +65,9 @@ class OrderDetailFragment : FullScreenDialogFragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        setLayoutFullscreen()
+
         binding = FragmentOrderDetailBinding.inflate(inflater, container, false).apply {
-            root.applyLayoutFullscreen()
             toolbar.applySystemWindowInsetsPadding(applyTop = true)
             loadingProgressBar.setVisibilityAfterHide(View.GONE)
 

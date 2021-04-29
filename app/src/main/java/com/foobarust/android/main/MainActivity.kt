@@ -51,9 +51,10 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
         setTheme(R.style.Theme_Foobar_DayNight)
         super.onCreate(savedInstanceState)
 
+        setLayoutFullscreen()
+
         binding = ActivityMainBinding.inflate(layoutInflater).apply {
             setContentView(root)
-            root.applyLayoutFullscreen()
             appBarLayout.applySystemWindowInsetsPadding(applyTop = true)
         }
 

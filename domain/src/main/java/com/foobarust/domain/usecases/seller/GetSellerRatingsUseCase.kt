@@ -14,13 +14,13 @@ import javax.inject.Inject
  * Created by kevin on 3/4/21
  */
 
-class GetSellerRatingsPagingUseCase @Inject constructor(
+class GetSellerRatingsUseCase @Inject constructor(
     private val sellerRepository: SellerRepository,
     @IoDispatcher coroutineDispatcher: CoroutineDispatcher
-) : PagingUseCase<GetSellerRatingsPagingParameter, SellerRatingBasic>(coroutineDispatcher) {
+) : PagingUseCase<GetSellerRatingsParameter, SellerRatingBasic>(coroutineDispatcher) {
 
     override fun execute(
-        parameters: GetSellerRatingsPagingParameter
+        parameters: GetSellerRatingsParameter
     ): Flow<PagingData<SellerRatingBasic>> {
         return sellerRepository.getSellerRatingsPagingData(
             sellerId = parameters.sellerId,
@@ -29,7 +29,7 @@ class GetSellerRatingsPagingUseCase @Inject constructor(
     }
 }
 
-data class GetSellerRatingsPagingParameter(
+data class GetSellerRatingsParameter(
     val sellerId: String,
     val sortOption: SellerRatingSortOption
 )

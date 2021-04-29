@@ -55,8 +55,9 @@ class SellerDetailFragment : FullScreenDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        setLayoutFullscreen()
+
         binding = FragmentSellerDetailBinding.inflate(inflater, container, false).apply {
-            root.applyLayoutFullscreen()
             toolbar.applySystemWindowInsetsPadding(applyTop = true)
         }
 

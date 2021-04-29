@@ -14,7 +14,7 @@ import javax.inject.Inject
  * Created by kevin on 9/28/20
  */
 
-class GetSellersPagingUseCase @Inject constructor(
+class GetSellersUseCase @Inject constructor(
     private val sellerRepository: SellerRepository,
     @IoDispatcher coroutineDispatcher: CoroutineDispatcher
 ) : PagingUseCase<SellerBasicsFilter, SellerBasic>(coroutineDispatcher) {

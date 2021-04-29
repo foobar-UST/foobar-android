@@ -37,9 +37,9 @@ class SellerSearchFragment : DialogFragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentSellerSearchBinding.inflate(inflater, container, false).apply {
-            root.applyLayoutFullscreen()
+        setLayoutFullscreen()
 
+        binding = FragmentSellerSearchBinding.inflate(inflater, container, false).apply {
             with(searchEditText) {
                 applySystemWindowInsetsMargin(applyTop = true)
                 requestFocus()

@@ -44,10 +44,11 @@ class SellerSectionListFragment : FullScreenDialogFragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        setLayoutFullscreen()
+
         binding = FragmentSellerSectionListBinding.inflate(
             inflater, container, false
         ).apply {
-            root.applyLayoutFullscreen()
             appBarLayout.applySystemWindowInsetsPadding(applyTop = true)
         }
 

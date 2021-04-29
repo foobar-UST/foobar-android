@@ -8,7 +8,7 @@ import com.foobarust.domain.models.seller.*
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.promotion.GetAdvertiseBasicsParameters
 import com.foobarust.domain.usecases.promotion.GetAdvertiseBasicsUseCase
-import com.foobarust.domain.usecases.seller.GetSellersPagingUseCase
+import com.foobarust.domain.usecases.seller.GetSellersUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.*
@@ -19,7 +19,7 @@ private const val NUM_OF_ADVERTISES = 5
 @HiltViewModel
 class SellerOnCampusViewModel @Inject constructor(
     getAdvertiseBasicsUseCase: GetAdvertiseBasicsUseCase,
-    getSellersPagingUseCase: GetSellersPagingUseCase
+    getSellersUseCase: GetSellersUseCase
 ) : ViewModel() {
 
     private val _fetchPromotion = ConflatedBroadcastChannel(Unit)
@@ -43,7 +43,7 @@ class SellerOnCampusViewModel @Inject constructor(
         .filter { it.isNotEmpty() }
         .asLiveData(viewModelScope.coroutineContext)
 
-    val sellersListModels: Flow<PagingData<SellersListModel>> = getSellersPagingUseCase(
+    val sellersListModels: Flow<PagingData<SellersListModel>> = getSellersUseCase(
         SellerBasicsFilter(
             sellerType = SellerType.ON_CAMPUS
         )

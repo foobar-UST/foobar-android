@@ -10,8 +10,8 @@ import androidx.paging.map
 import com.foobarust.android.sellerrating.SellerRatingDetailListModel.*
 import com.foobarust.domain.models.seller.SellerRatingCount
 import com.foobarust.domain.models.seller.SellerRatingSortOption
-import com.foobarust.domain.usecases.seller.GetSellerRatingsPagingParameter
-import com.foobarust.domain.usecases.seller.GetSellerRatingsPagingUseCase
+import com.foobarust.domain.usecases.seller.GetSellerRatingsParameter
+import com.foobarust.domain.usecases.seller.GetSellerRatingsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.*
@@ -25,7 +25,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SellerRatingDetailViewModel @Inject constructor(
-    private val getSellerRatingsPagingUseCase: GetSellerRatingsPagingUseCase
+    private val getSellerRatingsUseCase: GetSellerRatingsUseCase
 ) : ViewModel() {
 
     private val _ratingDetailProperty = ConflatedBroadcastChannel<SellerRatingDetailProperty>()
@@ -36,13 +36,13 @@ class SellerRatingDetailViewModel @Inject constructor(
     val ratingDetailListModels: Flow<PagingData<SellerRatingDetailListModel>> = _ratingDetailProperty
         .asFlow()
         .combine(_ratingSortOption) { property, sortOption ->
-            GetSellerRatingsPagingParameter(
+            GetSellerRatingsParameter(
                 sellerId = property.sellerId,
                 sortOption = sortOption
             )
         }
         .flatMapLatest {
-            getSellerRatingsPagingUseCase(it)
+            getSellerRatingsUseCase(it)
         }
         .map { pagingData ->
             pagingData.map { SellerRatingDetailRatingItem(it) }

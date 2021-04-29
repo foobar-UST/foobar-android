@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.view.View
-import android.view.View.*
+import android.view.View.OnAttachStateChangeListener
 import android.view.ViewGroup
 import android.view.WindowInsets
 import android.widget.ImageView
@@ -29,6 +29,20 @@ import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.snackbar.Snackbar
+
+fun View.slideUp(duration: Int = resources.getInteger(R.integer.motion_duration_default)) {
+    animate()
+        .withStartAction { visibility = View.VISIBLE }
+        .translationY(0f)
+        .duration = duration.toLong()
+}
+
+fun View.slideDown(duration: Int = resources.getInteger(R.integer.motion_duration_default)) {
+    animate()
+        .translationY(height.toFloat())
+        .setDuration(duration.toLong())
+        .withEndAction { visibility = View.GONE }
+}
 
 /**
  * Add multiple [Chip] to a [ChipGroup]
@@ -217,11 +231,6 @@ private fun createGlideRequest(
     if (circularCrop) req.circleCrop()
 
     return req
-}
-
-fun View.applyLayoutFullscreen() {
-    systemUiVisibility = SYSTEM_UI_FLAG_LAYOUT_STABLE or SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-    // SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
 }
 
 fun View.applySystemWindowInsetsPadding(
