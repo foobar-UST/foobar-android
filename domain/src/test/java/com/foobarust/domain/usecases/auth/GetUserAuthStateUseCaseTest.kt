@@ -1,13 +1,13 @@
 package com.foobarust.domain.usecases.auth
 
 import com.foobarust.domain.usecases.AuthState
-import com.foobarust.domain.utils.toListUntil
 import com.foobarust.testshared.di.DependencyContainer
 import com.foobarust.testshared.repositories.FakeAuthRepositoryImpl
 import com.foobarust.testshared.repositories.FakeUserRepositoryImpl
 import com.foobarust.testshared.utils.TestCoroutineRule
 import com.foobarust.testshared.utils.coroutineScope
 import com.foobarust.testshared.utils.runBlockingTest
+import com.foobarust.testshared.utils.toListUntil
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test

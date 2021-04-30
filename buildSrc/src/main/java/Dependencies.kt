@@ -67,6 +67,7 @@ object Dependencies {
     const val OKHTTP_LOGGING_INTERCEPTOR = "com.squareup.okhttp3:logging-interceptor:${Versions.OKHTTP_LOGGING_INTERCEPTOR}"
     const val ZXING_CORE = "com.google.zxing:core:${Versions.ZXING_CORE}"
     const val ZXING_EMBEDDED = "com.journeyapps:zxing-android-embedded:${Versions.ZXING_EMBEDDED}"
+    const val LICENSE = "com.jaredsburrows:gradle-license-plugin:0.8.90"
 
     // Test
     const val ARCH_CORE_TESTING = "androidx.arch.core:core-testing:${Versions.ARCH}"
@@ -77,6 +78,7 @@ object Dependencies {
     const val KOTLIN_TEST = "org.jetbrains.kotlin:kotlin-test-junit:${Versions.KOTLIN}"
     const val MOCKITO_CORE = "org.mockito:mockito-core:${Versions.MOCKITO_CORE}"
     const val MOCKK = "io.mockk:mockk:${Versions.MOCKK}"
+    const val TURBINE = "app.cash.turbine:turbine:${Versions.TURBINE}"
 
     // Android Test
     const val TEST_CORE = "androidx.test:core:${Versions.TEST_CORE}"

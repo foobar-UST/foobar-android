@@ -24,7 +24,7 @@ class SellerOnCampusViewModel @Inject constructor(
 
     private val _fetchPromotion = ConflatedBroadcastChannel(Unit)
 
-    val promotionListModels: LiveData<List<PromotionListModel>> = _fetchPromotion
+    val promotionListModels: StateFlow<List<PromotionListModel>> = _fetchPromotion
         .asFlow()
         .flatMapLatest {
             val params = GetAdvertiseBasicsParameters(
@@ -41,7 +41,11 @@ class SellerOnCampusViewModel @Inject constructor(
             }
         }
         .filter { it.isNotEmpty() }
-        .asLiveData(viewModelScope.coroutineContext)
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = emptyList()
+        )
 
     val sellersListModels: Flow<PagingData<SellersListModel>> = getSellersUseCase(
         SellerBasicsFilter(

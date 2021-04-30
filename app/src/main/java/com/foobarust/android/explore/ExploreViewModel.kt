@@ -1,6 +1,5 @@
 package com.foobarust.android.explore
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.explore.ExploreListModel.ExploreItemCategoryItemModel
@@ -11,7 +10,6 @@ import com.foobarust.domain.models.explore.getNormalizedTitle
 import com.foobarust.domain.states.Resource
 import com.foobarust.domain.usecases.seller.GetSellerItemCategoriesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.*
@@ -24,7 +22,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ExploreViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
     getSellerItemCategoriesUseCase: GetSellerItemCategoriesUseCase
 ) : ViewModel() {
 

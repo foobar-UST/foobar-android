@@ -1,7 +1,6 @@
 package com.foobarust.android.auth
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.foobarust.android.R
 import com.foobarust.android.shared.BaseViewModel
@@ -16,7 +15,6 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-private const val TAG = "AuthViewModel"
 private const val AUTH_EMAIL_RESEND_INTERVAL = 5000L
 
 @HiltViewModel
@@ -150,7 +148,6 @@ class AuthViewModel @Inject constructor(
     }
 
     fun onEmailVerificationCancelled() = viewModelScope.launch {
-        // Condition 4: cancel email verification
         _authUiState.value = AuthUiState.INPUT
     }
 
@@ -164,10 +161,7 @@ class AuthViewModel @Inject constructor(
     }
 
     private fun startResendEmailTimer() {
-        if (resendEmailTimerJob?.isActive == true) {
-            Log.d(TAG, "Email resend timer is still active.")
-            return
-        }
+        if (resendEmailTimerJob?.isActive == true) return
 
         resendEmailTimerJob = viewModelScope.launch {
             oneShotTimerUseCase(AUTH_EMAIL_RESEND_INTERVAL).collect {

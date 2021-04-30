@@ -104,7 +104,7 @@ class SellerDetailViewModel @Inject constructor(
         _appBarLayoutState.value = state
     }
 
-    fun onViewPagerStateChanged(state: Int) {
+    fun onViewPagerScrollStateChanged(state: Int) {
         _viewPagerState.value = state
     }
 

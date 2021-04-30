@@ -62,8 +62,10 @@ class SellerOnCampusFragment : Fragment(),
         }
 
         // Submit promotion items
-        sellerOnCampusViewModel.promotionListModels.observe(viewLifecycleOwner) {
-            promotionAdapter.submitList(it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            sellerOnCampusViewModel.promotionListModels.collect {
+                promotionAdapter.submitList(it)
+            }
         }
 
         normalizeListPosition(promotionAdapter)

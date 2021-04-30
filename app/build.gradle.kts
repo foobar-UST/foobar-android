@@ -74,7 +74,8 @@ android {
                 "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi",
                 "-Xuse-experimental=kotlinx.coroutines.FlowPreview",
                 "-Xuse-experimental=kotlin.ExperimentalStdlibApi",
-                "-Xuse-experimental=androidx.paging.ExperimentalPagingApi"
+                "-Xuse-experimental=androidx.paging.ExperimentalPagingApi",
+                "-Xopt-in=kotlin.time.ExperimentalTime"
             )
         }
     }
@@ -138,6 +139,7 @@ dependencies {
     testImplementation(Dependencies.ARCH_CORE_TESTING)
     testImplementation(Dependencies.JUNIT)
     testImplementation(Dependencies.MOCKK)
+    testImplementation(Dependencies.TURBINE)
 
     // Android Test
     androidTestImplementation(Dependencies.HILT_TESTING)

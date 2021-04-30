@@ -18,14 +18,12 @@ class NetworkCacheResourceTest {
     @get:Rule
     var coroutineRule = TestCoroutineRule()
 
-    private var fakeCacheData: String = ""
-
     @Test
     fun `test first result is loading`() = coroutineRule.runBlockingTest {
         val ncr = networkCacheResource(
             cacheSource = { getFakeCacheData() },
             networkSource = { getFakeNetworkData() },
-            updateCache = { networkData -> updateFakeCacheData(networkData) }
+            updateCache = { }
         )
         val firstResult = ncr.toList().first()
 
@@ -37,7 +35,7 @@ class NetworkCacheResourceTest {
         val ncr = networkCacheResource(
             cacheSource = { getFakeCacheData() },
             networkSource = { getFakeNetworkData() },
-            updateCache = { networkData -> updateFakeCacheData(networkData) }
+            updateCache = { }
         )
         val dataResult = ncr.toList().last()
 
@@ -46,10 +44,11 @@ class NetworkCacheResourceTest {
 
     @Test
     fun `test network success, confirm cache updated`() = coroutineRule.runBlockingTest {
+        var newCache: String? = null
         val ncr = networkCacheResource(
             cacheSource = { getFakeCacheData() },
             networkSource = { getFakeNetworkData() },
-            updateCache = { networkData -> updateFakeCacheData(networkData) }
+            updateCache = { newCache = it }
         )
 
         val dataResult = ncr.toList().last()
@@ -57,7 +56,7 @@ class NetworkCacheResourceTest {
         assert(
             dataResult is Resource.Success &&
             dataResult.data == FAKE_NETWORK_DATA &&
-            fakeCacheData == FAKE_NETWORK_DATA
+            newCache == FAKE_NETWORK_DATA
         )
     }
 
@@ -66,15 +65,17 @@ class NetworkCacheResourceTest {
         val ncr = networkCacheResource(
             cacheSource = { getFakeCacheData() },
             networkSource = { getFakeNetworkData(true) },
-            updateCache = { networkData -> updateFakeCacheData(networkData) }
+            updateCache = { }
         )
         val dataResult = ncr.toList().last()
+
+        println(dataResult)
 
         assert(dataResult is Resource.Success && dataResult.data == FAKE_CACHE_DATA)
     }
 
     @Suppress("RedundantSuspendModifier")
-    private suspend fun getFakeCacheData(): String = fakeCacheData
+    private suspend fun getFakeCacheData(): String = FAKE_CACHE_DATA
 
     private fun getFakeNetworkData(
         hasNetworkError: Boolean = false
@@ -85,11 +86,6 @@ class NetworkCacheResourceTest {
         } else {
             emit(Resource.Success(FAKE_NETWORK_DATA))
         }
-    }
-
-    @Suppress("RedundantSuspendModifier")
-    private suspend fun updateFakeCacheData(data: String) {
-        fakeCacheData = data
     }
 
     companion object {

@@ -1,6 +1,5 @@
 package com.foobarust.android.di
 
-import com.foobarust.domain.repositories.*
 import com.foobarust.testshared.di.DependencyContainer
 import com.foobarust.testshared.repositories.*
 import kotlinx.coroutines.CoroutineScope
@@ -13,38 +12,53 @@ class RepositoryContainer(coroutineScope: CoroutineScope) {
 
     private val dependencyContainer = DependencyContainer()
 
-    val authRepository: AuthRepository = FakeAuthRepositoryImpl(
+    val authRepository: FakeAuthRepositoryImpl = FakeAuthRepositoryImpl(
         idToken = dependencyContainer.fakeIdToken,
         defaultAuthProfile = dependencyContainer.fakeAuthProfile,
         isSignedIn = true,
         coroutineScope = coroutineScope
     )
 
-    val cartRepository: CartRepository = FakeCartRepositoryImpl(
+    val cartRepository: FakeCartRepositoryImpl = FakeCartRepositoryImpl(
         idToken = dependencyContainer.fakeIdToken,
         defaultUserCart = dependencyContainer.fakeUserCart,
         defaultCartItems = dependencyContainer.fakeUserCartItems
     )
 
-    val checkoutRepository: CheckoutRepository = FakeCheckoutRepositoryImpl(
+    val checkoutRepository: FakeCheckoutRepositoryImpl = FakeCheckoutRepositoryImpl(
         idToken = dependencyContainer.fakeIdToken
     )
 
-    val mapRepository: MapRepository = FakeMapRepositoryImpl()
+    val mapRepository: FakeMapRepositoryImpl = FakeMapRepositoryImpl()
 
-    val messagingRepository: MessagingRepository = FakeMessagingRepositoryImpl(
+    val messagingRepository: FakeMessagingRepositoryImpl = FakeMessagingRepositoryImpl(
         idToken = dependencyContainer.fakeIdToken
     )
 
-    val orderRepository: OrderRepository = FakeOrderRepositoryImpl()
+    val orderRepository: FakeOrderRepositoryImpl = FakeOrderRepositoryImpl()
 
-    val promotionRepository: PromotionRepository = FakePromotionRepositoryImpl()
+    val promotionRepository: FakePromotionRepositoryImpl = FakePromotionRepositoryImpl()
 
-    val sellerRepository: SellerRepository = FakeSellerRepositoryImpl()
+    val sellerRepository: FakeSellerRepositoryImpl = FakeSellerRepositoryImpl()
 
-    val userRepository: UserRepository = FakeUserRepositoryImpl(
+    val userRepository: FakeUserRepositoryImpl = FakeUserRepositoryImpl(
         idToken = dependencyContainer.fakeIdToken,
         defaultUserDetail = dependencyContainer.fakeUserDetail,
         hasCompletedTutorial = true
     )
+
+    fun setUserSignedIn(value: Boolean) {
+        authRepository.setUserSignedIn(value)
+    }
+
+    fun setNetworkError(value: Boolean) {
+        authRepository.setNetworkError(value)
+        cartRepository.setNetworkError(value)
+        checkoutRepository.setNetworkError(value)
+        mapRepository.setNetworkError(value)
+        orderRepository.setNetworkError(value)
+        promotionRepository.setNetworkError(value)
+        sellerRepository.setNetworkError(value)
+        userRepository.setNetworkError(value)
+    }
 }

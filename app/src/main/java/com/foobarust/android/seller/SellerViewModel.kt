@@ -37,7 +37,6 @@ class SellerViewModel @Inject constructor(
     private val _navigateToSellerSection = Channel<String>()
     val navigateToSellerSection: Flow<String> = _navigateToSellerSection.receiveAsFlow()
 
-
     private val _navigateToPromotionDetail = Channel<String>()
     val navigateToPromotionDetail: Flow<String> = _navigateToPromotionDetail.receiveAsFlow()
 

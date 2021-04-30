@@ -273,7 +273,7 @@ class SellerDetailFragment : FullScreenDialogFragment() {
             // Disable swipe refresh when view pager is being scrolled
             registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageScrollStateChanged(state: Int) {
-                    sellerDetailViewModel.onViewPagerStateChanged(state)
+                    sellerDetailViewModel.onViewPagerScrollStateChanged(state)
                 }
             })
         }
