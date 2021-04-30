@@ -191,13 +191,12 @@
                 android:id="@+id/description_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_large"
-                android:layout_marginStart="@dimen/spacing_large"
-                android:layout_marginEnd="@dimen/spacing_large"
+                android:layout_margin="@dimen/spacing_large"
                 android:textAppearance="?attr/textAppearanceBody2"
                 android:textColor="@color/material_on_surface_emphasis_medium"
                 android:lineSpacingMultiplier="1.2"
                 app:layout_constraintTop_toBottomOf="@id/description_subtitle_text_view"
+                app:layout_constraintBottom_toBottomOf="parent"
                 tools:text="Starbucks offers a range of exceptional products that customers enjoy in our stores, at home, and on the go. Coffee: More than 30 blends and single-origin premium coffees. Handcrafted Beverages: Fresh-brewed coffee, hot and iced espresso beverages, Frappuccino® coffee and non-coffee blended beverages, Starbucks Refreshers® beverages, smoothies and teas. Merchandise: Coffee- and tea-brewing equipment, Verismo® System by Starbucks, mugs and accessories, packaged goods, books and gifts. Fresh Food: Baked pastries, sandwiches, salads, salad and grain bowls, oatmeal, yogurt parfaits and fruit cups.\n\n星巴克提供了一系列出色的產品，客戶可以在我們的商店，家中和旅途中享用。咖啡：30多種混合咖啡和單源優質咖啡。手工飲料：現煮咖啡，冷熱特濃咖啡，星冰樂®咖啡和非咖啡混合飲料，星巴克Refreshers®飲料，冰沙和茶。商品：咖啡和茶釀造設備，星巴克的Verismo®System，杯子和配件，包裝的商品，書籍和禮品。新鮮食品：烘焙糕點，三明治，色拉，色拉和穀物碗，燕麥片，酸奶凍糕和水果杯。"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

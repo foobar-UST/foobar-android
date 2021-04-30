@@ -59,6 +59,7 @@ class SellerDetailFragment : FullScreenDialogFragment() {
 
         binding = FragmentSellerDetailBinding.inflate(inflater, container, false).apply {
             toolbar.applySystemWindowInsetsPadding(applyTop = true)
+            itemsViewPager.applySystemWindowInsetsPadding(applyBottom = true)
         }
 
         // Remove listener on CollapsingToolbarLayout, so that toolbar top padding can work properly

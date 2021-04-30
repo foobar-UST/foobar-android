@@ -29,9 +29,15 @@ class AuthViewModelTest {
     }
 
     @Test
-    fun `test email domains loaded`() = coroutineRule.runBlockingTest {
+    fun `test email domains loaded`() {
         val authViewModel = createAuthViewModel()
         assertEquals(authViewModel.emailDomains, AuthEmailUtil().emailDomains)
+    }
+
+    @Test
+    fun `test initial auth state is input`() = coroutineRule.runBlockingTest {
+        val authViewModel = createAuthViewModel()
+        assertEquals(authViewModel.authUiState, AuthEmailUtil().emailDomains)
     }
 
     private fun createAuthViewModel(): AuthViewModel = AuthViewModel(

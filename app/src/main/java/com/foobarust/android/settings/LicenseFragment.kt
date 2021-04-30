@@ -8,6 +8,7 @@ import androidx.navigation.fragment.findNavController
 import com.foobarust.android.databinding.FragmentLicenseBinding
 import com.foobarust.android.shared.FullScreenDialogFragment
 import com.foobarust.android.utils.AutoClearedValue
+import com.foobarust.android.utils.applySystemWindowInsetsMargin
 import com.foobarust.android.utils.applySystemWindowInsetsPadding
 import com.foobarust.android.utils.setLayoutFullscreen
 
@@ -24,6 +25,7 @@ class LicenseFragment : FullScreenDialogFragment() {
 
         binding = FragmentLicenseBinding.inflate(inflater, container, false).apply {
             appBarLayout.applySystemWindowInsetsPadding(applyTop = true)
+            licenseWebView.applySystemWindowInsetsMargin(applyBottom = true)
         }
 
         // Dismiss dialog

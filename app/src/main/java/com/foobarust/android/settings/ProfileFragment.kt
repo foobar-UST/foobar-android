@@ -39,6 +39,7 @@ class ProfileFragment : FullScreenDialogFragment(), ProfileAdapter.ProfileAdapte
 
         binding = FragmentProfileBinding.inflate(inflater, container, false).apply {
             appBarLayout.applySystemWindowInsetsPadding(applyTop = true)
+            profileRecyclerView.applySystemWindowInsetsPadding(applyBottom = true)
         }
 
         // Setup recycler view

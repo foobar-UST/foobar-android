@@ -46,26 +46,28 @@ class AuthInputFragment : Fragment() {
             authViewModel.onSignInSkipped()
         }
 
-        // Setup email domains drop down menu
-        val emailDomainsAdapter = ArrayAdapter(
-            requireContext(),
-            R.layout.auth_email_domain_item,
-            authViewModel.emailDomains.map { it.title }
-        )
-
-        binding.emailDomainsTextView.run {
-            setAdapter(emailDomainsAdapter)
-            setOnItemClickListener { _, _, position, _ ->
-                authViewModel.onEmailDomainSelected(authViewModel.emailDomains[position])
-            }
-            // Select first item
-            //setText(emailDomainsAdapter.getItem(0), false)
-        }
-
         // Restore saved input values
         with(binding) {
-            usernameEditText.setText(authViewModel.getSavedUsername())
-            emailDomainsTextView.setText(authViewModel.getSavedEmailDomain().title, false)
+            usernameEditText.setText(authViewModel.getSavedUsernameInput())
+            emailDomainsTextView.setText(authViewModel.getSavedEmailDomainInput().title, false)
+        }
+
+        // Setup email domains list
+        viewLifecycleOwner.lifecycleScope.launch {
+            authViewModel.emailDomains.collect { domains ->
+                val emailDomainsAdapter = ArrayAdapter(
+                    requireContext(),
+                    R.layout.auth_email_domain_item,
+                    domains.map { it.title }
+                )
+
+                with(binding.emailDomainsTextView) {
+                    setAdapter(emailDomainsAdapter)
+                    setOnItemClickListener { _, _, position, _ ->
+                        authViewModel.onEmailDomainUpdated(domains[position])
+                    }
+                }
+            }
         }
 
         // Ui state
@@ -76,16 +78,14 @@ class AuthInputFragment : Fragment() {
                     signInButtonsGroup.isVisible = uiState == AuthUiState.INPUT
                 }
 
-                when (uiState) {
-                    // Proceed to email verify state
-                    AuthUiState.VERIFYING -> findNavController(R.id.authInputFragment)?.navigate(
+                if (uiState == AuthUiState.VERIFYING) {
+                    findNavController(R.id.authInputFragment)?.navigate(
                         AuthInputFragmentDirections.actionAuthInputFragmentToAuthVerifyFragment()
                     )
-                    // Skip sign in
-                    AuthUiState.COMPLETED -> findNavController(R.id.authInputFragment)?.navigate(
+                } else if (uiState == AuthUiState.COMPLETED) {
+                    findNavController(R.id.authInputFragment)?.navigate(
                         AuthInputFragmentDirections.actionAuthInputFragmentToMainActivity()
                     )
-                    else -> Unit
                 }
             }
         }

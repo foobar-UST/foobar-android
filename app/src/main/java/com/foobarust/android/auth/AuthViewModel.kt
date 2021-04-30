@@ -28,7 +28,7 @@ class AuthViewModel @Inject constructor(
     private val updateSavedAuthEmailUseCase: UpdateSavedAuthEmailUseCase,
     private val oneShotTimerUseCase: OneShotTimerUseCase,
     private val getIsUserSignedInUseCase: GetIsUserSignedInUseCase,
-    authEmailUtil: AuthEmailUtil
+    private val authEmailUtil: AuthEmailUtil
 ) : BaseViewModel() {
 
     private val _username = MutableStateFlow("")
@@ -47,11 +47,12 @@ class AuthViewModel @Inject constructor(
     private val _isUserSignedIn = Channel<Unit>()
     val isUserSignedIn: Flow<Unit> = _isUserSignedIn.receiveAsFlow()
 
-    val emailDomains: List<AuthEmailDomain> = authEmailUtil.emailDomains
+    val emailDomains: StateFlow<List<AuthEmailDomain>> = MutableStateFlow(authEmailUtil.emailDomains)
+        .asStateFlow()
 
-    fun getSavedUsername(): String = _username.value
+    fun getSavedUsernameInput(): String = _username.value
 
-    fun getSavedEmailDomain(): AuthEmailDomain = _emailDomain.value
+    fun getSavedEmailDomainInput(): AuthEmailDomain = _emailDomain.value
 
     fun onRequestAuthEmail() = viewModelScope.launch {
         val signInEmail = signInEmail.first()
@@ -72,7 +73,7 @@ class AuthViewModel @Inject constructor(
         startResendEmailTimer()
 
         // Clear input fields after leaving input fragment
-        clearAuthInputFields()
+        clearInputFields()
 
         // Request authentication email
         requestAuthEmailUseCase(signInEmail).collect {
@@ -142,10 +143,9 @@ class AuthViewModel @Inject constructor(
 
     fun onUsernameUpdated(username: String) {
         _username.value = username
-        _emailDomain.value = emailDomains.first()
     }
 
-    fun onEmailDomainSelected(domain: AuthEmailDomain) {
+    fun onEmailDomainUpdated(domain: AuthEmailDomain) {
         _emailDomain.value = domain
     }
 
@@ -158,9 +158,9 @@ class AuthViewModel @Inject constructor(
         _authUiState.value = AuthUiState.COMPLETED
     }
 
-    private fun clearAuthInputFields() {
+    private fun clearInputFields() {
         _username.value = ""
-        _emailDomain.value = emailDomains.first()
+        _emailDomain.value = authEmailUtil.emailDomains.first()
     }
 
     private fun startResendEmailTimer() {

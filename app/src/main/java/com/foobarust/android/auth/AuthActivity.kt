@@ -9,6 +9,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.foobarust.android.R
 import com.foobarust.android.databinding.ActivityAuthBinding
+import com.foobarust.android.utils.applySystemWindowInsetsPadding
 import com.foobarust.android.utils.setLayoutFullscreen
 import com.foobarust.android.utils.showShortToast
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,6 +28,7 @@ class AuthActivity : AppCompatActivity() {
 
         binding = ActivityAuthBinding.inflate(layoutInflater).apply {
             setContentView(root)
+            fragmentContainer.applySystemWindowInsetsPadding(applyBottom = true)
         }
 
         // Setup Navigation

@@ -53,6 +53,7 @@ class VerifyOrderFragment : FullScreenDialogFragment() {
 
         binding = FragmentVerifyOrderBinding.inflate(inflater, container, false).apply {
             appBarLayout.applySystemWindowInsetsPadding(applyTop = true)
+            constraintLayout.applySystemWindowInsetsPadding(applyBottom = true)
         }
 
         binding.toolbar.setNavigationOnClickListener {
