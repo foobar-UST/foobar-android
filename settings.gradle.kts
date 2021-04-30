@@ -1,5 +1,6 @@
 include(
     ":app",
     ":domain",
-    ":data"
+    ":data",
+    ":test-shared"
 )

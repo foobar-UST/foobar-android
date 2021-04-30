@@ -1,8 +1,8 @@
 package com.foobarust.domain.cache
 
 import com.foobarust.domain.states.Resource
-import com.foobarust.domain.utils.TestCoroutineRule
-import com.foobarust.domain.utils.runBlockingTest
+import com.foobarust.testshared.utils.TestCoroutineRule
+import com.foobarust.testshared.utils.runBlockingTest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.toList

@@ -1,13 +1,13 @@
 package com.foobarust.domain.usecases.auth
 
-import com.foobarust.domain.di.DependencyContainer
-import com.foobarust.domain.repository.FakeAuthRepositoryImpl
-import com.foobarust.domain.repository.FakeUserRepositoryImpl
 import com.foobarust.domain.usecases.AuthState
-import com.foobarust.domain.utils.TestCoroutineRule
-import com.foobarust.domain.utils.coroutineScope
 import com.foobarust.domain.utils.toListUntil
-import kotlinx.coroutines.runBlocking
+import com.foobarust.testshared.di.DependencyContainer
+import com.foobarust.testshared.repositories.FakeAuthRepositoryImpl
+import com.foobarust.testshared.repositories.FakeUserRepositoryImpl
+import com.foobarust.testshared.utils.TestCoroutineRule
+import com.foobarust.testshared.utils.coroutineScope
+import com.foobarust.testshared.utils.runBlockingTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -35,7 +35,8 @@ class GetUserAuthStateUseCaseTest {
             defaultAuthProfile = dependencyContainer.fakeAuthProfile.copy(
                 username = PROFILE_USERNAME
             ),
-            isSignedIn = false
+            isSignedIn = false,
+            coroutineScope = coroutineRule.coroutineScope()
         )
 
         fakeUserRepositoryImpl = FakeUserRepositoryImpl(
@@ -48,47 +49,41 @@ class GetUserAuthStateUseCaseTest {
     }
 
     @Test
-    fun `test user signed out`() = runBlocking {
+    fun `test user signed out`() = coroutineRule.runBlockingTest {
         fakeAuthRepositoryImpl.setUserSignedIn(false)
         fakeUserRepositoryImpl.setNetworkError(false)
 
         val getUserAuthStateUseCase = buildGetUserAuthStateUseCase()
-        val results = getUserAuthStateUseCase(Unit).toListUntil { it is AuthState.Unauthenticated }
+        val result = getUserAuthStateUseCase(Unit).toListUntil { it is AuthState.Unauthenticated }.last()
 
-        assert(results.last() is AuthState.Unauthenticated)
+        assert(result is AuthState.Unauthenticated)
     }
 
     @Test
-    fun `test network available, user signed in, use user detail`() = runBlocking {
+    fun `test network available, user signed in, use user detail`() = coroutineRule.runBlockingTest {
         fakeAuthRepositoryImpl.setUserSignedIn(true)
         fakeUserRepositoryImpl.setNetworkError(false)
 
         val getUserAuthStateUseCase = buildGetUserAuthStateUseCase()
-        val results = getUserAuthStateUseCase(Unit).toListUntil { it is AuthState.Authenticated }
+        val result = getUserAuthStateUseCase(Unit).toListUntil { it is AuthState.Authenticated }.last()
 
-        assert(results[0] is AuthState.Loading)
-
-        val authenticated = results[1]
         assert(
-            authenticated is AuthState.Authenticated &&
-            authenticated.data.username == DETAIL_USERNAME
+            result is AuthState.Authenticated &&
+            result.data.username == DETAIL_USERNAME
         )
     }
 
     @Test
-    fun `test network unavailable, user signed in, use auth profile`() = runBlocking {
+    fun `test network unavailable, user signed in, use auth profile`() = coroutineRule.runBlockingTest {
         fakeAuthRepositoryImpl.setUserSignedIn(true)
         fakeUserRepositoryImpl.setNetworkError(true)
 
         val getUserAuthStateUseCase = buildGetUserAuthStateUseCase()
-        val results = getUserAuthStateUseCase(Unit).toListUntil { it is AuthState.Authenticated }
+        val result = getUserAuthStateUseCase(Unit).toListUntil { it is AuthState.Authenticated }.last()
 
-        assert(results[0] is AuthState.Loading)
-
-        val authenticated = results[1]
         assert(
-            authenticated is AuthState.Authenticated &&
-            authenticated.data.username == PROFILE_USERNAME
+            result is AuthState.Authenticated &&
+            result.data.username == PROFILE_USERNAME
         )
     }
 

@@ -3,15 +3,15 @@ plugins {
     id(Plugins.KOTLIN)
     id(Plugins.KOTLIN_KAPT)
     id(Plugins.CHECK_DEPENDENCY_UPDATES) version Versions.CHECK_DEPENDENCY_UPDATES
-    kotlin(Plugins.KOTLIN_SERIALIZATION) version Versions.SERIALIZATION
+    id(Plugins.KOTLIN_SERIALIZATION) version Versions.SERIALIZATION
     id(Plugins.LICENSE)
 }
 
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
+    testImplementation(project(":test-shared"))
 
     implementation(Dependencies.KOTLIN_STDLIB)
-    implementation(Dependencies.KOTLIN_SERIALIZATION)
     implementation(Dependencies.COROUTINE_CORE)
     implementation(Dependencies.DAGGER)
     implementation(Dependencies.PAGING_COMMON)
@@ -19,7 +19,7 @@ dependencies {
     kapt(Annotation.DAGGER_COMPILER)
 
     testImplementation(Dependencies.JUNIT)
-    testImplementation(Dependencies.COROUTINE_TEST)
+    testImplementation(Dependencies.KOTLIN_SERIALIZATION)
 }
 
 java {
@@ -37,4 +37,3 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         )
     }
 }
-

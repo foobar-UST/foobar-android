@@ -84,6 +84,7 @@ dependencies {
     implementation(Dependencies.OKHTTP_LOGGING_INTERCEPTOR)
     implementation(Dependencies.PLAY_SERVICES_MAP)
     implementation(Dependencies.MAPS_UTILS)
+
     api(Dependencies.FIREBASE_AUTH)
     api(Dependencies.FIREBASE_FIRESTORE)
     api(Dependencies.FIREBASE_STORAGE)
@@ -94,21 +95,4 @@ dependencies {
     // Annotation Processors
     kapt(Annotation.ROOM_COMPILER)
     kapt(Annotation.HILT_ANDROID_COMPILER)
-
-    // Unit Test
-    testImplementation(Dependencies.ARCH_CORE_TESTING)
-    testImplementation(Dependencies.COROUTINE_TEST)
-    testImplementation(Dependencies.JUNIT)
-    testImplementation(Dependencies.MOCKITO_CORE)
-
-    // Android Test
-    //androidTestImplementation(Dependencies.TEST_CORE)
-    //androidTestImplementation(Dependencies.TEST_RUNNER)
-    //androidTestImplementation(Dependencies.TEST_RULES)
-    androidTestImplementation(Dependencies.TEST_EXT_JUNIT_KTX)
-    androidTestImplementation(Dependencies.TEST_ESPRESSO_CORE)
-    androidTestImplementation(Dependencies.HILT_TESTING)
-
-    // Android Test Annotation Processors
-    androidTestAnnotationProcessor(Annotation.HILT_ANDROID_COMPILER)
 }

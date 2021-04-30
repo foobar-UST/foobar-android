@@ -2,10 +2,10 @@ package com.foobarust.domain.usecases.maps
 
 import com.foobarust.domain.models.common.GeolocationPoint
 import com.foobarust.domain.models.map.TravelMode
-import com.foobarust.domain.repository.FakeMapRepositoryImpl
 import com.foobarust.domain.states.Resource
-import com.foobarust.domain.utils.TestCoroutineRule
-import com.foobarust.domain.utils.runBlockingTest
+import com.foobarust.testshared.repositories.FakeMapRepositoryImpl
+import com.foobarust.testshared.utils.TestCoroutineRule
+import com.foobarust.testshared.utils.runBlockingTest
 import kotlinx.coroutines.flow.toList
 import org.junit.Before
 import org.junit.Rule

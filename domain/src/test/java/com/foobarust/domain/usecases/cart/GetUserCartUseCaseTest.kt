@@ -1,12 +1,13 @@
 package com.foobarust.domain.usecases.cart
 
-import com.foobarust.domain.di.DependencyContainer
-import com.foobarust.domain.repository.FakeAuthRepositoryImpl
-import com.foobarust.domain.repository.FakeCartRepositoryImpl
 import com.foobarust.domain.states.Resource
-import com.foobarust.domain.utils.TestCoroutineRule
 import com.foobarust.domain.utils.toListUntil
-import kotlinx.coroutines.runBlocking
+import com.foobarust.testshared.di.DependencyContainer
+import com.foobarust.testshared.repositories.FakeAuthRepositoryImpl
+import com.foobarust.testshared.repositories.FakeCartRepositoryImpl
+import com.foobarust.testshared.utils.TestCoroutineRule
+import com.foobarust.testshared.utils.coroutineScope
+import com.foobarust.testshared.utils.runBlockingTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -31,7 +32,8 @@ class GetUserCartUseCaseTest {
         fakeAuthRepositoryImpl = FakeAuthRepositoryImpl(
             idToken = dependencyContainer.fakeIdToken,
             defaultAuthProfile = dependencyContainer.fakeAuthProfile,
-            isSignedIn = true
+            isSignedIn = true,
+            coroutineScope = coroutineRule.coroutineScope()
         )
 
         fakeCartRepositoryImpl = FakeCartRepositoryImpl(
@@ -42,7 +44,7 @@ class GetUserCartUseCaseTest {
     }
 
     @Test
-    fun `test user signed out`() = runBlocking {
+    fun `test user signed out`() = coroutineRule.runBlockingTest {
         fakeAuthRepositoryImpl.setUserSignedIn(false)
         fakeCartRepositoryImpl.setNetworkError(false)
 
@@ -53,7 +55,7 @@ class GetUserCartUseCaseTest {
     }
 
     @Test
-    fun `test get cart success`() = runBlocking {
+    fun `test get cart success`() = coroutineRule.runBlockingTest {
         fakeAuthRepositoryImpl.setUserSignedIn(true)
         fakeCartRepositoryImpl.setNetworkError(false)
 
@@ -64,7 +66,7 @@ class GetUserCartUseCaseTest {
     }
 
     @Test
-    fun `test network unavailable, get cart error`() = runBlocking {
+    fun `test network unavailable, get cart error`() = coroutineRule.runBlockingTest {
         fakeAuthRepositoryImpl.setUserSignedIn(true)
         fakeCartRepositoryImpl.setNetworkError(true)
 
@@ -75,7 +77,7 @@ class GetUserCartUseCaseTest {
     }
 
     @Test
-    fun `test user signed out, get cart error`() = runBlocking {
+    fun `test user signed out, get cart error`() = coroutineRule.runBlockingTest {
         fakeAuthRepositoryImpl.setUserSignedIn(false)
         fakeCartRepositoryImpl.setNetworkError(false)
 

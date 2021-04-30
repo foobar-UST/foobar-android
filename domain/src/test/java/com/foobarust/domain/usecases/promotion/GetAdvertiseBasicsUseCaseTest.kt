@@ -1,10 +1,10 @@
 package com.foobarust.domain.usecases.promotion
 
 import com.foobarust.domain.models.seller.SellerType
-import com.foobarust.domain.repository.FakePromotionRepositoryImpl
 import com.foobarust.domain.states.Resource
-import com.foobarust.domain.utils.TestCoroutineRule
-import com.foobarust.domain.utils.runBlockingTest
+import com.foobarust.testshared.repositories.FakePromotionRepositoryImpl
+import com.foobarust.testshared.utils.TestCoroutineRule
+import com.foobarust.testshared.utils.runBlockingTest
 import kotlinx.coroutines.flow.toList
 import org.junit.Before
 import org.junit.Rule

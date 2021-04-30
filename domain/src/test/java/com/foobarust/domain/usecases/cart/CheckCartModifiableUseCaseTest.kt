@@ -1,9 +1,9 @@
 package com.foobarust.domain.usecases.cart
 
-import com.foobarust.domain.di.DependencyContainer
 import com.foobarust.domain.models.cart.UserCartItem
-import com.foobarust.domain.repository.FakeSellerRepositoryImpl
-import com.foobarust.domain.serialize.toSellerDetail
+import com.foobarust.testshared.di.DependencyContainer
+import com.foobarust.testshared.repositories.FakeSellerRepositoryImpl
+import com.foobarust.testshared.serialize.toSellerDetail
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before

@@ -11,7 +11,6 @@ plugins {
     id(Plugins.NAVIGATION_SAFEARGS)
     id(Plugins.CHECK_DEPENDENCY_UPDATES) version Versions.CHECK_DEPENDENCY_UPDATES
     id(Plugins.FIREBASE_CRASHLYTICS)
-    kotlin(Plugins.KOTLIN_SERIALIZATION) version Versions.SERIALIZATION
     id(Plugins.LICENSE)
 }
 
@@ -91,9 +90,9 @@ dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     implementation(project(":data"))
     implementation(project(":domain"))
+    testImplementation(project(":test-shared"))
 
     implementation(Dependencies.KOTLIN_STDLIB)
-    implementation(Dependencies.KOTLIN_SERIALIZATION)
     implementation(Dependencies.COROUTINE_CORE)
     implementation(Dependencies.COROUTINE_ANDROID)
     implementation(Dependencies.COROUTINE_PLAY_SERVICES)
@@ -137,16 +136,10 @@ dependencies {
 
     // Unit Test
     testImplementation(Dependencies.ARCH_CORE_TESTING)
-    //testImplementation(Dependencies.COROUTINE_TEST)
     testImplementation(Dependencies.JUNIT)
-    testImplementation(Dependencies.MOCKITO_CORE)
+    testImplementation(Dependencies.MOCKK)
 
     // Android Test
-    //androidTestImplementation(Dependencies.TEST_CORE)
-    //androidTestImplementation(Dependencies.TEST_RUNNER)
-    //androidTestImplementation(Dependencies.TEST_RULES)
-    androidTestImplementation(Dependencies.TEST_EXT_JUNIT_KTX)
-    androidTestImplementation(Dependencies.TEST_ESPRESSO_CORE)
     androidTestImplementation(Dependencies.HILT_TESTING)
 
     debugImplementation(Dependencies.FRAGMENT_TESTING)

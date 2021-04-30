@@ -58,6 +58,7 @@ object Dependencies {
     // Others
     const val BANNER_VIEW_PAGER = "com.github.zhpanvip:BannerViewPager:${Versions.BANNER_VIEW_PAGER}"
     const val DAGGER = "com.google.dagger:dagger:${Versions.DAGGER}"
+    const val GSON = "com.google.code.gson:gson:${Versions.GSON}"
     const val SPINKIT = "com.github.ybq:Android-SpinKit:${Versions.SPINKIT}"
     const val MAPS_KTX = "com.google.maps.android:maps-ktx:${Versions.MAPS_KTX}"
     const val MAPS_UTILS = "com.google.maps.android:android-maps-utils:${Versions.MAPS_UTILS}"
@@ -75,6 +76,7 @@ object Dependencies {
     const val JUNIT = "junit:junit:${Versions.JUNIT}"
     const val KOTLIN_TEST = "org.jetbrains.kotlin:kotlin-test-junit:${Versions.KOTLIN}"
     const val MOCKITO_CORE = "org.mockito:mockito-core:${Versions.MOCKITO_CORE}"
+    const val MOCKK = "io.mockk:mockk:${Versions.MOCKK}"
 
     // Android Test
     const val TEST_CORE = "androidx.test:core:${Versions.TEST_CORE}"

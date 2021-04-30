@@ -1,5 +1,6 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
+    val kotlin_version by extra("1.4.21")
     repositories {
         google()
         jcenter()
@@ -13,6 +14,7 @@ buildscript {
         classpath(Dependencies.GOOGLE_SERVICES)
         classpath(Dependencies.FIREBASE_CRASHLYTICS_PLUGIN)
         classpath("com.jaredsburrows:gradle-license-plugin:0.8.90")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
     }
 }
 

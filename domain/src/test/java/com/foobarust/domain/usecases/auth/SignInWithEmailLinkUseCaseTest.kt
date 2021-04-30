@@ -1,11 +1,12 @@
 package com.foobarust.domain.usecases.auth
 
-import com.foobarust.domain.di.DependencyContainer
-import com.foobarust.domain.repository.FakeAuthRepositoryImpl
-import com.foobarust.domain.repository.FakeMessagingRepositoryImpl
 import com.foobarust.domain.states.Resource
-import com.foobarust.domain.utils.TestCoroutineRule
-import com.foobarust.domain.utils.runBlockingTest
+import com.foobarust.testshared.di.DependencyContainer
+import com.foobarust.testshared.repositories.FakeAuthRepositoryImpl
+import com.foobarust.testshared.repositories.FakeMessagingRepositoryImpl
+import com.foobarust.testshared.utils.TestCoroutineRule
+import com.foobarust.testshared.utils.coroutineScope
+import com.foobarust.testshared.utils.runBlockingTest
 import kotlinx.coroutines.flow.toList
 import org.junit.Before
 import org.junit.Rule
@@ -34,7 +35,8 @@ class SignInWithEmailLinkUseCaseTest {
         fakeAuthRepositoryImpl = FakeAuthRepositoryImpl(
             idToken = dependencyContainer.fakeIdToken,
             defaultAuthProfile = dependencyContainer.fakeAuthProfile,
-            isSignedIn = false
+            isSignedIn = false,
+            coroutineScope = coroutineRule.coroutineScope()
         )
 
         fakeMessagingRepositoryImpl = FakeMessagingRepositoryImpl(

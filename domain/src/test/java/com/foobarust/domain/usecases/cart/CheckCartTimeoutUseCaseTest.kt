@@ -1,9 +1,9 @@
 package com.foobarust.domain.usecases.cart
 
-import com.foobarust.domain.di.DependencyContainer
 import com.foobarust.domain.states.Resource
-import com.foobarust.domain.utils.TestCoroutineRule
-import com.foobarust.domain.utils.runBlockingTest
+import com.foobarust.testshared.di.DependencyContainer
+import com.foobarust.testshared.utils.TestCoroutineRule
+import com.foobarust.testshared.utils.runBlockingTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test

@@ -1,8 +1,8 @@
 package com.foobarust.domain.usecases.auth
 
-import com.foobarust.domain.utils.TestCoroutineRule
-import com.foobarust.domain.utils.launch
-import com.foobarust.domain.utils.runBlockingTest
+import com.foobarust.testshared.utils.TestCoroutineRule
+import com.foobarust.testshared.utils.launch
+import com.foobarust.testshared.utils.runBlockingTest
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.toList
