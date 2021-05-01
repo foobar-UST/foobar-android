@@ -4,23 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.updatePadding
+import androidx.core.view.doOnLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentSellerItemsBinding
-import com.foobarust.android.main.MainViewModel
 import com.foobarust.android.sellerdetail.SellerDetailViewModel
 import com.foobarust.android.shared.PagingLoadStateAdapter
-import com.foobarust.android.utils.AutoClearedValue
-import com.foobarust.android.utils.anyError
-import com.foobarust.android.utils.parentViewModels
-import com.foobarust.android.utils.showShortToast
-import com.foobarust.domain.models.cart.hasItems
+import com.foobarust.android.utils.*
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -32,7 +24,6 @@ import kotlinx.coroutines.launch
 class SellerItemsFragment : Fragment(), SellerItemsAdapter.SellerItemsAdapterListener {
 
     private var binding: FragmentSellerItemsBinding by AutoClearedValue(this)
-    private val mainViewModel: MainViewModel by activityViewModels()
     private val sellerDetailViewModel: SellerDetailViewModel by parentViewModels()
     private val sellerItemsViewModel: SellerItemsViewModel by viewModels()
 
@@ -55,10 +46,15 @@ class SellerItemsFragment : Fragment(), SellerItemsAdapter.SellerItemsAdapterLis
 
         // Setup recycler view
         val sellerItemsAdapter = SellerItemsAdapter(this)
-        binding.recyclerView.run {
+
+        with(binding.recyclerView) {
             adapter = sellerItemsAdapter.withLoadStateFooter(
                 footer = PagingLoadStateAdapter { sellerItemsAdapter.retry() }
             )
+
+            doOnLayout {
+                it.applySystemWindowInsetsPadding(applyBottom = true)
+            }
         }
 
         // Submit paging data to adapter
@@ -74,19 +70,6 @@ class SellerItemsFragment : Fragment(), SellerItemsAdapter.SellerItemsAdapterLis
                 anyError()?.let {
                     showShortToast(it.error.message)
                 }
-            }
-        }
-
-        // Setup recyclerview bottom padding correspond to cart bottom bar
-        viewLifecycleOwner.lifecycleScope.launch {
-            mainViewModel.userCart.collect { userCart ->
-                val showCartBottomBar = userCart != null && userCart.hasItems()
-                val bottomPadding = if (showCartBottomBar) {
-                    requireContext().resources.getDimension(R.dimen.cart_bottom_bar_height)
-                } else {
-                    0f
-                }
-                binding.recyclerView.updatePadding(bottom = bottomPadding.toInt())
             }
         }
 

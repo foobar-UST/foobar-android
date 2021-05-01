@@ -1,6 +1,7 @@
 [
   {
     "id": "10f21c9f-0e4f-4c88-9b58-5c5b70b0af2a",
+    "user_id": "4b9def32-86ee-4d25-918b-1ac4af072ce4",
     "username": "user 1",
     "user_photo_url": "about:blank",
     "seller_id": "5f71cda284299999cbbdf6e8",
@@ -11,6 +12,7 @@
   },
   {
     "id": "02eb15a9-0b7a-4e67-9430-af2a17f64a1d",
+    "user_id": "4b9def32-86ee-4d25-918b-1ac4af072ce4",
     "username": "user 2",
     "user_photo_url": "about:blank",
     "seller_id": "5f71cda284299999cbbdf6e8",
@@ -21,6 +23,7 @@
   },
   {
     "id": "5d9022c7-bbac-4449-89ba-58eba601b2b6",
+    "user_id": "4b9def32-86ee-4d25-918b-1ac4af072ce4",
     "username": "user 3",
     "user_photo_url": "about:blank",
     "seller_id": "5f71cda284299999cbbdf6e8",
@@ -31,6 +34,7 @@
   },
   {
     "id": "a2ae2048-76d0-4bce-82d8-6d29d512a719",
+    "user_id": "4b9def32-86ee-4d25-918b-1ac4af072ce4",
     "username": "user 4",
     "user_photo_url": "about:blank",
     "seller_id": "5f71cda235eada3204009966",
@@ -41,6 +45,7 @@
   },
   {
     "id": "6e1772a6-0480-44bb-bec4-1eb3a1660bcf",
+    "user_id": "4b9def32-86ee-4d25-918b-1ac4af072ce4",
     "username": "user 5",
     "user_photo_url": "about:blank",
     "seller_id": "5f71cda284299999cbbdf6e8",
@@ -51,6 +56,7 @@
   },
   {
     "id": "10192cb6-cd1d-4a2b-b13e-0acc8c35ea95",
+    "user_id": "4b9def32-86ee-4d25-918b-1ac4af072ce4",
     "username": "user 6",
     "user_photo_url": "about:blank",
     "seller_id": "5f71cda23827f5d483374c96",

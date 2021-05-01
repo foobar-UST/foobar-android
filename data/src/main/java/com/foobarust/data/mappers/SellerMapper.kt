@@ -162,6 +162,7 @@ class SellerMapper @Inject constructor() {
     fun toSellerRatingBasic(dto: SellerRatingBasicDto): SellerRatingBasic {
         return SellerRatingBasic(
             id = dto.id!!,
+            userId = dto.userId!!,
             username = dto.username!!,
             userPhotoUrl = dto.userPhotoUrl,
             orderRating = dto.orderRating!!,

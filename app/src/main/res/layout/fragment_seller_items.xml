@@ -6,6 +6,7 @@
     android:id="@+id/recycler_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="@dimen/cart_bottom_bar_height"
     android:scrollbars="none"
     android:clipToPadding="false"
     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

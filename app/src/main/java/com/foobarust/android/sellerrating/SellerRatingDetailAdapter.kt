@@ -182,7 +182,7 @@ class SellerRatingDetailAdapter(
         } else {
             val percent = (ratingCount.toDouble() / totalRatingCount * 100).roundToInt()
             progressIndicator.progress = percent
-            percentTextView.text = percent.toString()
+            percentTextView.text = "$percent%"
         }
     }
 

@@ -301,7 +301,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?attr/textAppearanceButton"
         android:textColor="@color/material_on_surface_emphasis_medium"
-        android:textSize="13sp"
+        android:textSize="12sp"
         app:icon="@drawable/ic_expand_more"
         app:iconTint="@color/material_on_surface_emphasis_medium"
         app:iconSize="18dp"

@@ -11,6 +11,7 @@ import java.util.*
 @Serializable
 data class SellerRatingSerialized(
     val id: String,
+    val user_id: String,
     val username: String,
     val user_photo_url: String,
     val seller_id: String,
@@ -22,7 +23,8 @@ data class SellerRatingSerialized(
 
 fun SellerRatingSerialized.toSellerRatingBasic(): SellerRatingBasic {
     return SellerRatingBasic(
-        id = id, username = username, userPhotoUrl = user_photo_url, orderRating = order_rating,
+        id = id, userId = user_id,
+        username = username, userPhotoUrl = user_photo_url, orderRating = order_rating,
         deliveryRating = delivery_rating, createdAt = Date(), comment = comment
     )
 }

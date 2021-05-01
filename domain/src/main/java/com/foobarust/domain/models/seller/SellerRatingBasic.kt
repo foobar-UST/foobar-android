@@ -8,6 +8,7 @@ import java.util.*
 
 data class SellerRatingBasic(
     val id: String,
+    val userId: String,
     val username: String,
     val userPhotoUrl: String?,
     val orderRating: Double,

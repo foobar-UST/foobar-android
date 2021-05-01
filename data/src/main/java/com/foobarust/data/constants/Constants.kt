@@ -146,6 +146,7 @@ object Constants {
     const val SELLER_RATINGS_BASIC_SUB_COLLECTION = "ratings_basic"
 
     const val SELLER_RATING_ID_FIELD = "id"
+    const val SELLER_RATING_USER_ID_FIELD = "user_id"
     const val SELLER_RATING_USERNAME_FIELD = "username"
     const val SELLER_RATING_USER_PHOTO_URL_FIELD = "user_photo_url"
     const val SELLER_RATING_ORDER_ID_FIELD = "order_id"
