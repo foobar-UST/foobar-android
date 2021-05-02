@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.annotation.ColorInt
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.view.doOnLayout
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
@@ -69,7 +70,13 @@ class OrderDetailFragment : FullScreenDialogFragment(),
 
         binding = FragmentOrderDetailBinding.inflate(inflater, container, false).apply {
             toolbar.applySystemWindowInsetsPadding(applyTop = true)
-            loadingProgressBar.setVisibilityAfterHide(View.GONE)
+
+            // Set bottom margin for root layout
+            root.doOnLayout {
+                it.applySystemWindowInsetsMargin(applyBottom = true)
+            }
+
+            loadingProgressBar.setVisibilityAfterHide(View.INVISIBLE)
 
             // Attach bottom sheet behavior
             bottomSheetBehavior = BottomSheetBehavior<FrameLayout>().also {

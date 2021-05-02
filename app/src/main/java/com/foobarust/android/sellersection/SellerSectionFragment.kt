@@ -39,6 +39,7 @@ class SellerSectionFragment : FullScreenDialogFragment() {
 
         binding = FragmentSellerSectionBinding.inflate(inflater, container, false).apply {
             appBarLayout.applySystemWindowInsetsPadding(applyTop = true)
+            fragmentContainer.applySystemWindowInsetsMargin(applyBottom = true)
         }
 
         // Setup navigation
