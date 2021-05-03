@@ -15,7 +15,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/search_edit_text"/>
+        app:layout_constraintBottom_toBottomOf="@id/loading_progress_bar"/>
 
     <EditText
         android:id="@+id/search_edit_text"
@@ -34,6 +34,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/clear_text_button"
         tools:text="@string/seller_search_hint_input"/>
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/loading_progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        app:hideAnimationBehavior="inward"
+        app:trackColor="?attr/colorSurface"
+        app:layout_constraintTop_toBottomOf="@id/search_edit_text"/>
 
     <ImageButton
         android:id="@+id/clear_text_button"
@@ -55,7 +64,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toBottomOf="@id/search_edit_text"
+        app:layout_constraintTop_toBottomOf="@id/loading_progress_bar"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:listitem="@layout/seller_search_item"
         tools:itemCount="4"/>

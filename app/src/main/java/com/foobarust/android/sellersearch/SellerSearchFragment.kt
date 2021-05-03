@@ -36,12 +36,15 @@ class SellerSearchFragment : DialogFragment(R.layout.fragment_seller_search),
 
         binding.clearTextButton.applySystemWindowInsetsMargin(applyTop = true)
 
+        binding.loadingProgressBar.setVisibilityAfterHide(View.INVISIBLE)
+
         // Request edit text focus to show keyboard
         with(binding.searchEditText) {
             applySystemWindowInsetsMargin(applyTop = true)
             requestFocus()
         }
 
+        // Search results recycler view
         val sellerSearchAdapter = SellerSearchAdapter(this)
 
         binding.searchRecyclerView.run {
@@ -58,6 +61,7 @@ class SellerSearchFragment : DialogFragment(R.layout.fragment_seller_search),
         // Ui state
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.searchUiState.collect { uiState ->
+                binding.loadingProgressBar.hideIf(uiState !is SellerSearchUiState.Loading)
                 if (uiState is SellerSearchUiState.Error) {
                     showShortToast(uiState.message)
                 }
