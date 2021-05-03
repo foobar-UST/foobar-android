@@ -1,43 +1,29 @@
 package com.foobarust.android.settings
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentLicenseBinding
 import com.foobarust.android.shared.FullScreenDialogFragment
-import com.foobarust.android.utils.AutoClearedValue
-import com.foobarust.android.utils.applySystemWindowInsetsMargin
 import com.foobarust.android.utils.applySystemWindowInsetsPadding
 import com.foobarust.android.utils.setLayoutFullscreen
+import com.foobarust.android.utils.viewBinding
 
-class LicenseFragment : FullScreenDialogFragment() {
+class LicenseFragment : FullScreenDialogFragment(R.layout.fragment_license) {
 
-    private var binding: FragmentLicenseBinding by AutoClearedValue(this)
+    private val binding: FragmentLicenseBinding by viewBinding(FragmentLicenseBinding::bind)
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        setLayoutFullscreen()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setLayoutFullscreen(aboveNavBar = true)
 
-        binding = FragmentLicenseBinding.inflate(inflater, container, false).apply {
-            appBarLayout.applySystemWindowInsetsPadding(applyTop = true)
-            licenseWebView.applySystemWindowInsetsMargin(applyBottom = true)
-        }
+        binding.appBarLayout.applySystemWindowInsetsPadding(applyTop = true)
 
         // Dismiss dialog
         binding.toolbar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
-
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
         binding.licenseWebView.run {
             loadUrl("file:///android_asset/open_source_licenses.html")

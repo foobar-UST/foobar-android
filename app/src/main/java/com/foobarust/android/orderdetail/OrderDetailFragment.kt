@@ -1,13 +1,10 @@
 package com.foobarust.android.orderdetail
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.annotation.ColorInt
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.view.doOnLayout
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
@@ -41,10 +38,10 @@ import kotlinx.coroutines.launch
  */
 
 @AndroidEntryPoint
-class OrderDetailFragment : FullScreenDialogFragment(),
+class OrderDetailFragment : FullScreenDialogFragment(R.layout.fragment_order_detail),
     OrderDetailAdapter.OrderDetailAdapterListener {
 
-    private var binding: FragmentOrderDetailBinding by AutoClearedValue(this)
+    private val binding: FragmentOrderDetailBinding by viewBinding(FragmentOrderDetailBinding::bind)
     private val viewModel: OrderDetailViewModel by viewModels()
     private val navArgs: OrderDetailFragmentArgs by navArgs()
 
@@ -61,31 +58,21 @@ class OrderDetailFragment : FullScreenDialogFragment(),
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        setLayoutFullscreen()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setLayoutFullscreen(aboveNavBar = true)
 
-        binding = FragmentOrderDetailBinding.inflate(inflater, container, false).apply {
-            toolbar.applySystemWindowInsetsPadding(applyTop = true)
+        binding.toolbar.applySystemWindowInsetsPadding(applyTop = true)
 
-            // Set bottom margin for root layout
-            root.doOnLayout {
-                it.applySystemWindowInsetsMargin(applyBottom = true)
-            }
+        binding.loadingProgressBar.setVisibilityAfterHide(View.INVISIBLE)
 
-            loadingProgressBar.setVisibilityAfterHide(View.INVISIBLE)
-
-            // Attach bottom sheet behavior
-            bottomSheetBehavior = BottomSheetBehavior<FrameLayout>().also {
-                it.state = BottomSheetBehavior.STATE_HIDDEN         // Hide bottom sheet at start
-                with(bottomSheet) {
-                    (layoutParams as CoordinatorLayout.LayoutParams).behavior = it
-                    requestLayout()
-                    bottomSheet.isGone = true
-                }
+        // Attach bottom sheet behavior
+        bottomSheetBehavior = BottomSheetBehavior<FrameLayout>().also {
+            it.state = BottomSheetBehavior.STATE_HIDDEN         // Hide bottom sheet at start
+            with(binding.bottomSheetLayout) {
+                (layoutParams as CoordinatorLayout.LayoutParams).behavior = it
+                requestLayout()
+                isGone = true
             }
         }
 
@@ -118,17 +105,17 @@ class OrderDetailFragment : FullScreenDialogFragment(),
 
         // Ui state
         viewLifecycleOwner.lifecycleScope.launch {
-             viewModel.orderDetailUiState.collect { uiState ->
-                 with(binding) {
-                     loadingProgressBar.hideIf(uiState !is OrderDetailUiState.Loading)
-                     loadErrorLayout.root.isVisible = uiState is OrderDetailUiState.Error
-                     mapContainer.isGone = uiState is OrderDetailUiState.Error
-                 }
+            viewModel.orderDetailUiState.collect { uiState ->
+                with(binding) {
+                    loadingProgressBar.hideIf(uiState !is OrderDetailUiState.Loading)
+                    loadErrorLayout.root.isVisible = uiState is OrderDetailUiState.Error
+                    mapContainer.isGone = uiState is OrderDetailUiState.Error
+                }
 
-                 if (uiState is OrderDetailUiState.Error) {
-                     showShortToast(uiState.message)
-                 }
-             }
+                if (uiState is OrderDetailUiState.Error) {
+                    showShortToast(uiState.message)
+                }
+            }
         }
 
         // Show map fragment for selected order states
@@ -137,7 +124,7 @@ class OrderDetailFragment : FullScreenDialogFragment(),
                 showMap?.let {
                     with(binding) {
                         mapContainer.isVisible = it
-                        bottomSheet.isVisible = true
+                        bottomSheetLayout.isVisible = true
                     }
 
                     if (it) {
@@ -150,8 +137,6 @@ class OrderDetailFragment : FullScreenDialogFragment(),
                 }
             }
         }
-
-        return binding.root
     }
 
     override fun onNavigateToSellerMisc() {

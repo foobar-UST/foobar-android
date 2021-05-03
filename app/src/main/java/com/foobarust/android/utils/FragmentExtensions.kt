@@ -7,8 +7,12 @@ import androidx.fragment.app.DialogFragment
  * Created by kevin on 4/29/21
  */
  
-fun DialogFragment.setLayoutFullscreen() {
+fun DialogFragment.setLayoutFullscreen(aboveNavBar: Boolean = false) {
     dialog?.window?.let {
         WindowCompat.setDecorFitsSystemWindows(it, false)
+    }
+
+    if (aboveNavBar) {
+        view?.applySystemWindowInsetsMargin(applyBottom = true)
     }
 }

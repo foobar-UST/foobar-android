@@ -2,10 +2,14 @@ package com.foobarust.android.shared
 
 import android.app.Dialog
 import android.os.Bundle
+import androidx.annotation.LayoutRes
 import androidx.fragment.app.DialogFragment
 import com.foobarust.android.R
 
-open class FullScreenDialogFragment : DialogFragment() {
+open class FullScreenDialogFragment : DialogFragment {
+
+    constructor() : super()
+    constructor(@LayoutRes contentLayoutId: Int) : super(contentLayoutId)
 
     open var onBackPressed: (() -> Unit)? = null
 

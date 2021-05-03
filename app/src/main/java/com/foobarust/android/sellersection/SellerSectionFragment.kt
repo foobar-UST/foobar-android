@@ -1,9 +1,7 @@
 package com.foobarust.android.sellersection
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -21,26 +19,20 @@ import kotlinx.coroutines.launch
  */
 
 @AndroidEntryPoint
-class SellerSectionFragment : FullScreenDialogFragment() {
+class SellerSectionFragment : FullScreenDialogFragment(R.layout.fragment_seller_section) {
 
-    private var binding: FragmentSellerSectionBinding by AutoClearedValue(this)
+    private val binding: FragmentSellerSectionBinding by viewBinding(FragmentSellerSectionBinding::bind)
     private lateinit var navController: NavController
     private lateinit var viewModel: SellerSectionViewModel
     private val navArgs: SellerSectionFragmentArgs by navArgs()
 
     override var onBackPressed: (() -> Unit)? = { handleBackPressed() }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        setLayoutFullscreen()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setLayoutFullscreen(aboveNavBar = true)
 
-        binding = FragmentSellerSectionBinding.inflate(inflater, container, false).apply {
-            appBarLayout.applySystemWindowInsetsPadding(applyTop = true)
-            fragmentContainer.applySystemWindowInsetsMargin(applyBottom = true)
-        }
+        binding.appBarLayout.applySystemWindowInsetsPadding(applyTop = true)
 
         // Setup navigation
         val navHostFragment = childFragmentManager.findFragmentById(R.id.fragment_container)
@@ -106,8 +98,6 @@ class SellerSectionFragment : FullScreenDialogFragment() {
                 )
             }
         }
-
-        return binding.root
     }
 
     private fun handleBackPressed() {

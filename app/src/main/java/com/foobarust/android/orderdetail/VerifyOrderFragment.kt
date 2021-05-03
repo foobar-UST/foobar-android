@@ -4,19 +4,17 @@ import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentVerifyOrderBinding
 import com.foobarust.android.shared.FullScreenDialogFragment
-import com.foobarust.android.utils.AutoClearedValue
 import com.foobarust.android.utils.applySystemWindowInsetsPadding
 import com.foobarust.android.utils.findNavController
 import com.foobarust.android.utils.setLayoutFullscreen
+import com.foobarust.android.utils.viewBinding
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,9 +28,9 @@ import kotlinx.coroutines.launch
 private const val QRCODE_SIZE = 512
 
 @AndroidEntryPoint
-class VerifyOrderFragment : FullScreenDialogFragment() {
+class VerifyOrderFragment : FullScreenDialogFragment(R.layout.fragment_verify_order) {
 
-    private var binding: FragmentVerifyOrderBinding by AutoClearedValue(this)
+    private val binding: FragmentVerifyOrderBinding by viewBinding(FragmentVerifyOrderBinding::bind)
     private val viewModel: VerifyOrderViewModel by viewModels()
     private val navArgs: VerifyOrderFragmentArgs by navArgs()
 
@@ -44,17 +42,11 @@ class VerifyOrderFragment : FullScreenDialogFragment() {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        setLayoutFullscreen()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setLayoutFullscreen(aboveNavBar = true)
 
-        binding = FragmentVerifyOrderBinding.inflate(inflater, container, false).apply {
-            appBarLayout.applySystemWindowInsetsPadding(applyTop = true)
-            constraintLayout.applySystemWindowInsetsPadding(applyBottom = true)
-        }
+        binding.appBarLayout.applySystemWindowInsetsPadding(applyTop = true)
 
         binding.toolbar.setNavigationOnClickListener {
             findNavController(R.id.verifyOrderFragment)?.navigateUp()
@@ -73,7 +65,6 @@ class VerifyOrderFragment : FullScreenDialogFragment() {
             }
         }
 
-        return binding.root
     }
 
     override fun onResume() {

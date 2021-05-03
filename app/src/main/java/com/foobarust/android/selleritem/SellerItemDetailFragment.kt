@@ -1,9 +1,7 @@
 package com.foobarust.android.selleritem
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
@@ -30,10 +28,10 @@ import kotlinx.coroutines.launch
  */
 
 @AndroidEntryPoint
-class SellerItemDetailFragment : FullScreenDialogFragment(),
+class SellerItemDetailFragment : FullScreenDialogFragment(R.layout.fragment_seller_item_detail),
     SellerItemDetailAdapter.SellerItemDetailAdapterListener {
 
-    private var binding: FragmentSellerItemDetailBinding by AutoClearedValue(this)
+    private val binding: FragmentSellerItemDetailBinding by viewBinding(FragmentSellerItemDetailBinding::bind)
     private val mainViewModel: MainViewModel by activityViewModels()
     private val itemDetailViewModel: SellerItemDetailViewModel by viewModels()
     private val navArgs: SellerItemDetailFragmentArgs by navArgs()
@@ -48,17 +46,11 @@ class SellerItemDetailFragment : FullScreenDialogFragment(),
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        setLayoutFullscreen()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setLayoutFullscreen(aboveNavBar = true)
 
-        binding = FragmentSellerItemDetailBinding.inflate(inflater, container, false).apply {
-            toolbar.applySystemWindowInsetsPadding(applyTop = true)
-            itemSubmitLayout.applySystemWindowInsetsMargin(applyBottom = true)
-        }
+        binding.toolbar.applySystemWindowInsetsPadding(applyTop = true)
 
         // Remove listener on CollapsingToolbarLayout, so that toolbar top padding can work properly
         ViewCompat.setOnApplyWindowInsetsListener(binding.collapsingToolbarLayout, null)
@@ -209,8 +201,6 @@ class SellerItemDetailFragment : FullScreenDialogFragment(),
                 showProfileIncompleteSnackbar(isShow = !isCompleted)
             }
         }
-
-        return binding.root
     }
 
     override fun onDestroyView() {

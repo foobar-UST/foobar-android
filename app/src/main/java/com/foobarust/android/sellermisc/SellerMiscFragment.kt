@@ -2,9 +2,7 @@ package com.foobarust.android.sellermisc
 
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
@@ -35,9 +33,9 @@ import kotlinx.coroutines.launch
  */
 
 @AndroidEntryPoint
-class SellerMiscFragment : FullScreenDialogFragment() {
+class SellerMiscFragment : FullScreenDialogFragment(R.layout.fragment_seller_misc) {
 
-    private var binding: FragmentSellerMiscBinding by AutoClearedValue(this)
+    private val binding: FragmentSellerMiscBinding by viewBinding(FragmentSellerMiscBinding::bind)
     private val viewModel: SellerMiscViewModel by viewModels()
     private val navArgs: SellerMiscFragmentArgs by navArgs()
     private var bottomSheetBehavior: BottomSheetBehavior<*> by AutoClearedValue(this)
@@ -50,77 +48,19 @@ class SellerMiscFragment : FullScreenDialogFragment() {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        setLayoutFullscreen()
-
-        binding = FragmentSellerMiscBinding.inflate(inflater, container, false).apply {
-            toolbarLayout.applySystemWindowInsetsPadding(applyTop = true)
-            bottomSheet.applySystemWindowInsetsMargin(applyTop = true)
-            miscLayout.applySystemWindowInsetsPadding(applyBottom = true)
-            phoneNumTextView.drawableFitVertical()
-            websiteTextView.drawableFitVertical()
-        }
-
-        // Setup toolbar
-        binding.toolbar.setNavigationOnClickListener {
-            findNavController().navigateUp()
-        }
-
-        // Setup bottom sheet
-        bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
-
-        with(binding.bottomSheet) {
-            background = MaterialShapeDrawable(context, null,
-                R.attr.bottomSheetStyle, 0
-            ).apply {
-                fillColor = ColorStateList.valueOf(
-                    context.themeColor(R.attr.colorSurface)
-                )
-                elevation = resources.getDimension(R.dimen.elevation_xmedium)
-                initializeElevationOverlay(context)
-            }
-        }
-
-        // Set bottom sheet peek height
-        viewLifecycleOwner.lifecycleScope.launch {
-            bottomSheetPeekTo(
-                bottomSheet = binding.bottomSheet,
-                toView = binding.headerGroup
-            )
-        }
-
-        // Ui state
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.sellerMiscUiState.collect { uiState ->
-                bottomSheetBehavior.hideIf(uiState !is SellerMiscUiState.Success)
-
-                with(binding) {
-                    loadingProgressBar.hideIf(uiState !is SellerMiscUiState.Loading)
-                    retryButton.isVisible = uiState is SellerMiscUiState.Error
-                }
-
-                when (uiState) {
-                    is SellerMiscUiState.Success -> setupSellerMiscLayout(uiState.sellerDetail)
-                    is SellerMiscUiState.Error -> showShortToast(uiState.message)
-                    SellerMiscUiState.Loading -> Unit
-                }
-            }
-        }
-
-        // Retry button
-        binding.retryButton.setOnClickListener {
-            viewModel.onFetchSellerMisc(navArgs.sellerId)
-        }
-
-        return binding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setLayoutFullscreen(aboveNavBar = true)
+
+        with(binding) {
+            toolbarLayout.applySystemWindowInsetsPadding(applyTop = true)
+            bottomSheetLayout.applySystemWindowInsetsMargin(applyTop = true)
+
+            phoneNumTextView.drawableFitVertical()
+            websiteTextView.drawableFitVertical()
+
+            bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
+        }
 
         // Attach map fragment
         childFragmentManager.beginTransaction()
@@ -147,6 +87,54 @@ class SellerMiscFragment : FullScreenDialogFragment() {
                         addMarker { position(latLng) }
                         moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, MAP_ZOOM_LEVEL))
                     }
+                }
+            }
+        }
+
+        // Setup toolbar
+        binding.toolbar.setNavigationOnClickListener {
+            findNavController().navigateUp()
+        }
+
+        // Retry button
+        binding.retryButton.setOnClickListener {
+            viewModel.onFetchSellerMisc(navArgs.sellerId)
+        }
+
+        with(binding.bottomSheetLayout) {
+            background = MaterialShapeDrawable(context, null,
+                R.attr.bottomSheetStyle, 0
+            ).apply {
+                fillColor = ColorStateList.valueOf(
+                    context.themeColor(R.attr.colorSurface)
+                )
+                elevation = resources.getDimension(R.dimen.elevation_xmedium)
+                initializeElevationOverlay(context)
+            }
+        }
+
+        // Set bottom sheet peek height
+        viewLifecycleOwner.lifecycleScope.launch {
+            bottomSheetPeekTo(
+                bottomSheet = binding.bottomSheetLayout,
+                toView = binding.headerGroup
+            )
+        }
+
+        // Ui state
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.sellerMiscUiState.collect { uiState ->
+                bottomSheetBehavior.hideIf(uiState !is SellerMiscUiState.Success)
+
+                with(binding) {
+                    loadingProgressBar.hideIf(uiState !is SellerMiscUiState.Loading)
+                    retryButton.isVisible = uiState is SellerMiscUiState.Error
+                }
+
+                when (uiState) {
+                    is SellerMiscUiState.Success -> setupSellerMiscLayout(uiState.sellerDetail)
+                    is SellerMiscUiState.Error -> showShortToast(uiState.message)
+                    SellerMiscUiState.Loading -> Unit
                 }
             }
         }

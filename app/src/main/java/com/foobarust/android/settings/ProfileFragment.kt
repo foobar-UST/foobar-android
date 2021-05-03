@@ -1,9 +1,7 @@
 package com.foobarust.android.settings
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -23,24 +21,19 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class ProfileFragment : FullScreenDialogFragment(), ProfileAdapter.ProfileAdapterListener {
+class ProfileFragment : FullScreenDialogFragment(R.layout.fragment_profile),
+    ProfileAdapter.ProfileAdapterListener {
 
-    private var binding: FragmentProfileBinding by AutoClearedValue(this)
+    private val binding: FragmentProfileBinding by viewBinding(FragmentProfileBinding::bind)
     private val mainViewModel: MainViewModel by activityViewModels()
     private val profileViewModel: ProfileViewModel by viewModels()
     private var textInputResultObserver: LifecycleEventObserver? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        setLayoutFullscreen()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setLayoutFullscreen(aboveNavBar = true)
 
-        binding = FragmentProfileBinding.inflate(inflater, container, false).apply {
-            appBarLayout.applySystemWindowInsetsPadding(applyTop = true)
-            profileRecyclerView.applySystemWindowInsetsPadding(applyBottom = true)
-        }
+        binding.appBarLayout.applySystemWindowInsetsPadding(applyTop = true)
 
         // Setup recycler view
         val profileAdapter = ProfileAdapter(this)
@@ -89,12 +82,6 @@ class ProfileFragment : FullScreenDialogFragment(), ProfileAdapter.ProfileAdapte
         binding.toolbar.setNavigationOnClickListener {
             findNavController(R.id.profileFragment)?.navigateUp()
         }
-
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
         // Remove observer when the view is destroyed
         val navBackStackEntry = findNavController().getBackStackEntry(R.id.profileFragment)

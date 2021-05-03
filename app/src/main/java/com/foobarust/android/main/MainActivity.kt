@@ -42,7 +42,7 @@ private const val TAG = "MainActivity"
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
 
-    private lateinit var binding: ActivityMainBinding
+    private val binding: ActivityMainBinding by viewBinding(ActivityMainBinding::inflate)
     private val viewModel: MainViewModel by viewModels()
     private var currentNavController: LiveData<NavController>? = null
     private lateinit var getContentLauncher: ActivityResultLauncher<String>
@@ -50,13 +50,9 @@ class MainActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.Theme_Foobar_DayNight)
         super.onCreate(savedInstanceState)
+        setContentView(binding.root)
 
-        setLayoutFullscreen()
-
-        binding = ActivityMainBinding.inflate(layoutInflater).apply {
-            setContentView(root)
-            appBarLayout.applySystemWindowInsetsPadding(applyTop = true)
-        }
+        binding.appBarLayout.applySystemWindowInsetsPadding(applyTop = true)
 
         // Setup bottom navigation
         if (savedInstanceState == null) {

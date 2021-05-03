@@ -1,9 +1,7 @@
 package com.foobarust.android.sellersearch
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
@@ -18,10 +16,10 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class SellerSearchFragment : DialogFragment(),
+class SellerSearchFragment : DialogFragment(R.layout.fragment_seller_search),
     SellerSearchAdapter.SellerSearchAdapterListener {
 
-    private var binding: FragmentSellerSearchBinding by AutoClearedValue(this)
+    private val binding: FragmentSellerSearchBinding by viewBinding(FragmentSellerSearchBinding::bind)
     private val viewModel: SellerSearchViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,20 +30,16 @@ class SellerSearchFragment : DialogFragment(),
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        setLayoutFullscreen()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setLayoutFullscreen(aboveNavBar = true)
 
-        binding = FragmentSellerSearchBinding.inflate(inflater, container, false).apply {
-            with(searchEditText) {
-                applySystemWindowInsetsMargin(applyTop = true)
-                requestFocus()
-            }
+        binding.clearTextButton.applySystemWindowInsetsMargin(applyTop = true)
 
-            clearTextButton.applySystemWindowInsetsMargin(applyTop = true)
+        // Request edit text focus to show keyboard
+        with(binding.searchEditText) {
+            applySystemWindowInsetsMargin(applyTop = true)
+            requestFocus()
         }
 
         val sellerSearchAdapter = SellerSearchAdapter(this)
@@ -92,8 +86,6 @@ class SellerSearchFragment : DialogFragment(),
                 }
             }
         }
-
-        return binding.root
     }
 
     override fun onSellerItemClicked(sellerId: String, sellerType: SellerType) {
@@ -106,6 +98,7 @@ class SellerSearchFragment : DialogFragment(),
                 sellerId = sellerId
             )
         }
+
         findNavController(R.id.sellerSearchFragment)?.navigate(directions)
     }
 }

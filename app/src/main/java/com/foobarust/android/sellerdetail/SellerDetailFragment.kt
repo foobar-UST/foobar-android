@@ -2,9 +2,7 @@ package com.foobarust.android.sellerdetail
 
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
@@ -35,9 +33,9 @@ import java.util.*
  */
 
 @AndroidEntryPoint
-class SellerDetailFragment : FullScreenDialogFragment() {
+class SellerDetailFragment : FullScreenDialogFragment(R.layout.fragment_seller_detail) {
 
-    private var binding: FragmentSellerDetailBinding by AutoClearedValue(this)
+    private val binding: FragmentSellerDetailBinding by viewBinding(FragmentSellerDetailBinding::bind)
     private val mainViewModel: MainViewModel by activityViewModels()
     private val sellerDetailViewModel: SellerDetailViewModel by viewModels()
     private val navArgs: SellerDetailFragmentArgs by navArgs()
@@ -50,27 +48,21 @@ class SellerDetailFragment : FullScreenDialogFragment() {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        setLayoutFullscreen()
-
-        binding = FragmentSellerDetailBinding.inflate(inflater, container, false).apply {
-            toolbar.applySystemWindowInsetsPadding(applyTop = true)
-            cartBottomBar.root.applySystemWindowInsetsMargin(applyBottom = true)
-        }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setLayoutFullscreen(aboveNavBar = true)
 
         // Remove listener on CollapsingToolbarLayout, so that toolbar top padding can work properly
         // Issue: https://github.com/material-components/material-components-android/issues/1310
         ViewCompat.setOnApplyWindowInsetsListener(binding.collapsingToolbarLayout, null)
 
-        // Navigation back arrow button
-        binding.toolbar.setNavigationOnClickListener {
-            findNavController(R.id.sellerDetailFragment)?.navigateUp()
+        // Setup toolbar
+        with(binding.toolbar) {
+            applySystemWindowInsetsPadding(applyTop = true)
+            setNavigationOnClickListener {
+                findNavController(R.id.sellerDetailFragment)?.navigateUp()
+            }
         }
-
         // Navigate to seller misc
         binding.showMiscButton.setOnClickListener {
             findNavController(R.id.sellerDetailFragment)?.navigate(
@@ -102,16 +94,16 @@ class SellerDetailFragment : FullScreenDialogFragment() {
         binding.loadErrorLayout.retryButton.setOnClickListener {
             sellerDetailViewModel.onFetchSellerDetail(navArgs.property)
         }
-        
+
         // Setup seller detail
-        viewLifecycleOwner.lifecycleScope.launch { 
+        viewLifecycleOwner.lifecycleScope.launch {
             sellerDetailViewModel.sellerDetail.collect { sellerDetail ->
                 if (sellerDetail == null) return@collect
-                
+
                 with(binding) {
                     nameTextView.text = sellerDetail.getNormalizedName()
                     sectionInfoTextView.isVisible = sellerDetail.type == SellerType.OFF_CAMPUS
-                    
+
                     sellerImageView.loadGlideUrl(
                         imageUrl = sellerDetail.imageUrl,
                         centerCrop = true,
@@ -123,12 +115,12 @@ class SellerDetailFragment : FullScreenDialogFragment() {
                 setupNoticeBanner(sellerDetail)
             }
         }
-        
+
         // Setup section detail
         viewLifecycleOwner.lifecycleScope.launch {
             sellerDetailViewModel.sectionDetail.collect { sectionDetail ->
                 if (sectionDetail == null) return@collect
-                
+
                 with(binding) {
                     sectionInfoTextView.text = getString(
                         R.string.seller_detail_format_section_info,
@@ -138,10 +130,10 @@ class SellerDetailFragment : FullScreenDialogFragment() {
                 }
             }
         }
-        
+
         // Setup seller info
-        viewLifecycleOwner.lifecycleScope.launch { 
-            sellerDetailViewModel.sellerInfo.collect { 
+        viewLifecycleOwner.lifecycleScope.launch {
+            sellerDetailViewModel.sellerInfo.collect {
                 binding.sellerInfoTextView.text = it
             }
         }
@@ -171,8 +163,8 @@ class SellerDetailFragment : FullScreenDialogFragment() {
         }
 
         // Show toolbar title when the toolbar is collapsed
-        viewLifecycleOwner.lifecycleScope.launch { 
-            sellerDetailViewModel.toolbarTitle.collect { 
+        viewLifecycleOwner.lifecycleScope.launch {
+            sellerDetailViewModel.toolbarTitle.collect {
                 binding.toolbar.title = it
             }
         }
@@ -204,7 +196,7 @@ class SellerDetailFragment : FullScreenDialogFragment() {
                 binding.cartBottomBar.root.isVisible = userCart != null && userCart.hasItems()
 
                 if (userCart != null) {
-                     with(binding.cartBottomBar) {
+                    with(binding.cartBottomBar) {
                         cartItemsCountTextView.text = getString(
                             R.string.cart_bottom_bar_format_items_count,
                             userCart.itemsCount
@@ -255,8 +247,6 @@ class SellerDetailFragment : FullScreenDialogFragment() {
                 showMessageSnackBar(it)
             }
         }
-
-        return binding.root
     }
 
     private fun setupCatalogsViewPager(catalogs: List<SellerCatalog>) {

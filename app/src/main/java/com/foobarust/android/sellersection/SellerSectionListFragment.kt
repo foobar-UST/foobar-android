@@ -1,9 +1,7 @@
 package com.foobarust.android.sellersection
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
@@ -24,10 +22,10 @@ import kotlinx.coroutines.launch
  */
 
 @AndroidEntryPoint
-class SellerSectionListFragment : FullScreenDialogFragment(),
+class SellerSectionListFragment : FullScreenDialogFragment(R.layout.fragment_seller_section_list),
     SellerSectionsAdapter.SellerSectionsAdapterListener {
 
-    private var binding: FragmentSellerSectionListBinding by AutoClearedValue(this)
+    private val binding: FragmentSellerSectionListBinding by viewBinding(FragmentSellerSectionListBinding::bind)
     private val viewModel: SellerSectionListViewModel by viewModels()
     private val navArgs: SellerSectionListFragmentArgs by navArgs()
 
@@ -39,18 +37,11 @@ class SellerSectionListFragment : FullScreenDialogFragment(),
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        setLayoutFullscreen()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setLayoutFullscreen(aboveNavBar = true)
 
-        binding = FragmentSellerSectionListBinding.inflate(
-            inflater, container, false
-        ).apply {
-            appBarLayout.applySystemWindowInsetsPadding(applyTop = true)
-        }
+        binding.appBarLayout.applySystemWindowInsetsPadding(applyTop = true)
 
         // Navigation back arrow button
         binding.toolbar.setNavigationOnClickListener {
@@ -103,8 +94,6 @@ class SellerSectionListFragment : FullScreenDialogFragment(),
                 }
             }
         }
-
-        return binding.root
     }
 
     override fun onSellerSectionItemClicked(sectionBasic: SellerSectionBasic) {

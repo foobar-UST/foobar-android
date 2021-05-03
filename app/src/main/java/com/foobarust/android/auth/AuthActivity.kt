@@ -9,27 +9,21 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.foobarust.android.R
 import com.foobarust.android.databinding.ActivityAuthBinding
-import com.foobarust.android.utils.applySystemWindowInsetsPadding
-import com.foobarust.android.utils.setLayoutFullscreen
 import com.foobarust.android.utils.showShortToast
+import com.foobarust.android.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class AuthActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityAuthBinding
+    private val binding: ActivityAuthBinding by viewBinding(ActivityAuthBinding::inflate)
     private lateinit var navController: NavController
     private val viewModel: AuthViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setLayoutFullscreen()
-
-        binding = ActivityAuthBinding.inflate(layoutInflater).apply {
-            setContentView(root)
-            fragmentContainer.applySystemWindowInsetsPadding(applyBottom = true)
-        }
+        setContentView(binding.root)
 
         // Setup Navigation
         val navHostFragment = supportFragmentManager.findFragmentById(
