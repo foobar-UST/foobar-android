@@ -1,39 +1,33 @@
 package com.foobarust.android.tutorial
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView.OVER_SCROLL_NEVER
 import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentTutorialBinding
 import com.foobarust.android.shared.FullScreenDialogFragment
-import com.foobarust.android.utils.AutoClearedValue
 import com.foobarust.android.utils.getColorCompat
 import com.foobarust.android.utils.themeColor
+import com.foobarust.android.utils.viewBinding
 import com.zhpan.indicator.enums.IndicatorSlideMode
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class TutorialFragment : FullScreenDialogFragment() {
+class TutorialFragment : FullScreenDialogFragment(R.layout.fragment_tutorial) {
 
-    private var binding: FragmentTutorialBinding by AutoClearedValue(this)
+    private val binding: FragmentTutorialBinding by viewBinding(FragmentTutorialBinding::bind)
     private val tutorialViewModel: TutorialViewModel by viewModels()
 
     override var onBackPressed: (() -> Unit)? = {
         tutorialViewModel.onCompleteTutorial()
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentTutorialBinding.inflate(inflater, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         // Setup ViewPager
         val pagerAdapter = TutorialPagerAdapter(
@@ -63,8 +57,6 @@ class TutorialFragment : FullScreenDialogFragment() {
                 dismiss()
             }
         }
-
-        return binding.root
     }
 
     companion object {

@@ -32,23 +32,25 @@ class SellerSectionListViewModel @Inject constructor(
     getSellerSectionsUseCase: GetSellerSectionsUseCase
 ) : ViewModel() {
 
-    private val _sellerId = ConflatedBroadcastChannel<String?>(null)
+    private val _sellerId = ConflatedBroadcastChannel<String?>()
 
     val sectionsListModels: Flow<PagingData<SellerSectionsListModel>> = _sellerId
         .asFlow()
         .filterNotNull()
         .flatMapLatest {
-            getSellerSectionsUseCase(GetSellerSectionsParameters(it))
+            getSellerSectionsUseCase(GetSellerSectionsParameters(sellerId = it))
         }
         .map { pagingData ->
             pagingData.map {
                 SellerSectionsItemModel(it)
             }
-        }.map { pagingData ->
+        }
+        .map { pagingData ->
             pagingData.insertSeparators { before, after ->
                 insertSeparators(before, after)
             }
-        }.cachedIn(viewModelScope)
+        }
+        .cachedIn(viewModelScope)
 
     val sellerDetail: StateFlow<SellerDetail?> = _sellerId
         .asFlow()
@@ -69,25 +71,18 @@ class SellerSectionListViewModel @Inject constructor(
         before: SellerSectionsItemModel?,
         after: SellerSectionsItemModel?
     ): SellerSectionsListModel? {
-        return if (before == null && after == null) {
-            SellerSectionsEmptyModel
-        } else if (
+        return when {
+            before == null && after == null -> SellerSectionsEmptyModel
             before == null &&
-            after?.sellerSectionBasic?.isRecentSection() == true
-        ) {
-            SellerSectionsSubtitleModel(
+            after?.sellerSectionBasic?.isRecentSection() == true -> SellerSectionsSubtitleModel(
                 subtitle = context.getString(R.string.seller_section_subtitle_recent)
             )
-        } else if (
             after?.sellerSectionBasic?.isRecentSection() == false && (
                 before == null || before.sellerSectionBasic.isRecentSection()
-                )
-        ) {
-            SellerSectionsSubtitleModel(
+            ) -> SellerSectionsSubtitleModel(
                 subtitle = context.getString(R.string.seller_section_subtitle_upcoming)
             )
-        } else {
-            null
+            else -> null
         }
     }
 }

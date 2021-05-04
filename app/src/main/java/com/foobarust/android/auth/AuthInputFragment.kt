@@ -1,9 +1,7 @@
 package com.foobarust.android.auth
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
@@ -12,24 +10,20 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentAuthInputBinding
-import com.foobarust.android.utils.AutoClearedValue
 import com.foobarust.android.utils.findNavController
+import com.foobarust.android.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class AuthInputFragment : Fragment() {
+class AuthInputFragment : Fragment(R.layout.fragment_auth_input) {
 
-    private var binding: FragmentAuthInputBinding by AutoClearedValue(this)
+    private val binding: FragmentAuthInputBinding by viewBinding(FragmentAuthInputBinding::bind)
     private val authViewModel: AuthViewModel by activityViewModels()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentAuthInputBinding.inflate(inflater, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         // Pass username input to view model
         binding.usernameEditText.doOnTextChanged { text, _, _, _ ->
@@ -89,7 +83,5 @@ class AuthInputFragment : Fragment() {
                 }
             }
         }
-
-        return binding.root
     }
 }

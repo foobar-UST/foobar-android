@@ -36,10 +36,10 @@ class SellerSectionsBasicPagingSource(
                 .whereGreaterThan(SELLER_SECTION_CUTOFF_TIME_FIELD, Date())
 
             if (sellerId != null) {
-                initialPageQuery!!.whereEqualTo(SELLER_SECTION_SELLER_ID_FIELD, sellerId)
+                initialPageQuery = initialPageQuery!!.whereEqualTo(SELLER_SECTION_SELLER_ID_FIELD, sellerId)
             }
 
-            initialPageQuery!!.orderBy(SELLER_SECTION_CUTOFF_TIME_FIELD, Query.Direction.ASCENDING)
+            initialPageQuery = initialPageQuery!!.orderBy(SELLER_SECTION_CUTOFF_TIME_FIELD, Query.Direction.ASCENDING)
                 .orderBy(SELLER_SECTION_SELLER_NAME_FIELD, Query.Direction.ASCENDING)
                 .limit(params.loadSize.toLong())
 

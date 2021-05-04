@@ -9,6 +9,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.foobarust.android.R
 import com.foobarust.android.databinding.ActivityAuthBinding
+import com.foobarust.android.utils.setLayoutFullscreen
 import com.foobarust.android.utils.showShortToast
 import com.foobarust.android.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,6 +25,7 @@ class AuthActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        setLayoutFullscreen(aboveNavBar = true)
 
         // Setup Navigation
         val navHostFragment = supportFragmentManager.findFragmentById(

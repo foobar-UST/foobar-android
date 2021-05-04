@@ -64,9 +64,7 @@ class OrderDetailViewModel @Inject constructor(
         .filter { it.type == OrderType.OFF_CAMPUS }
         .mapLatest { it.delivererLocation }
         .filterNotNull()
-        .combine(_delivererProfile.filterNotNull()) { location, profile ->
-            DelivererMarkerInfo(location, profile)
-        }
+        .combine(_delivererProfile.filterNotNull(), ::DelivererMarkerInfo)
 
     // Show map and collapse bottom sheet
     val showMap: Flow<Boolean?> = _orderDetail

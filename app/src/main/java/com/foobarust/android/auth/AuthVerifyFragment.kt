@@ -6,9 +6,7 @@ import android.text.SpannableStringBuilder
 import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
@@ -16,17 +14,17 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentAuthVerifyBinding
-import com.foobarust.android.utils.AutoClearedValue
 import com.foobarust.android.utils.findNavController
 import com.foobarust.android.utils.themeColor
+import com.foobarust.android.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class AuthVerifyFragment : Fragment() {
+class AuthVerifyFragment : Fragment(R.layout.fragment_auth_verify) {
 
-    private var binding: FragmentAuthVerifyBinding by AutoClearedValue(this)
+    private val binding: FragmentAuthVerifyBinding by viewBinding(FragmentAuthVerifyBinding::bind)
     private val authViewModel: AuthViewModel by activityViewModels()
 
     private val backPressedCallback = object : OnBackPressedCallback(true) {
@@ -42,12 +40,8 @@ class AuthVerifyFragment : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(this, backPressedCallback)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentAuthVerifyBinding.inflate(inflater, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         viewLifecycleOwner.lifecycleScope.launch {
             authViewModel.authUiState.collect { uiState ->
@@ -69,8 +63,6 @@ class AuthVerifyFragment : Fragment() {
         }
 
         setupResendEmailClickSpan(binding.resendEmailTextView)
-
-        return binding.root
     }
 
     override fun onDestroy() {

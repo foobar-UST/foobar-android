@@ -1,23 +1,22 @@
 package com.foobarust.android.tutorial
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
+import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentTutorialPageBinding
-import com.foobarust.android.utils.AutoClearedValue
 import com.foobarust.android.utils.parentViewModels
 import com.foobarust.android.utils.setSrc
+import com.foobarust.android.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 private const val ARG_TUTORIAL_PAGE = "tutorial_page"
 
 @AndroidEntryPoint
-class TutorialPageFragment : Fragment() {
+class TutorialPageFragment : Fragment(R.layout.fragment_tutorial_page) {
 
-    private var binding: FragmentTutorialPageBinding by AutoClearedValue(this)
+    private val binding: FragmentTutorialPageBinding by viewBinding(FragmentTutorialPageBinding::bind)
     private val viewModel: TutorialViewModel by parentViewModels()
 
     private val tutorialPage: TutorialPage by lazy {
@@ -25,12 +24,10 @@ class TutorialPageFragment : Fragment() {
             throw IllegalArgumentException("Tutorial property not found.")
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentTutorialPageBinding.inflate(inflater, container, false).apply {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        with(binding) {
             iconImageView.setSrc(tutorialPage.drawableRes)
             titleTextView.text = tutorialPage.title
             descriptionTextView.text = tutorialPage.description
@@ -43,8 +40,6 @@ class TutorialPageFragment : Fragment() {
                 viewModel.onCompleteTutorial()
             }
         }
-
-        return binding.root
     }
 
     companion object {
