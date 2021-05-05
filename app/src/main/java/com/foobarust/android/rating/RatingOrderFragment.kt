@@ -1,17 +1,15 @@
 package com.foobarust.android.rating
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.lifecycleScope
 import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentRatingOrderBinding
-import com.foobarust.android.utils.AutoClearedValue
 import com.foobarust.android.utils.findNavController
 import com.foobarust.android.utils.loadGlideUrl
+import com.foobarust.android.utils.viewBinding
 import com.foobarust.domain.models.order.OrderType
 import com.foobarust.domain.models.order.getNormalizedSellerName
 import com.google.android.material.transition.MaterialSharedAxis
@@ -24,9 +22,9 @@ import kotlinx.coroutines.launch
  */
 
 @AndroidEntryPoint
-class RatingOrderFragment : Fragment() {
+class RatingOrderFragment : Fragment(R.layout.fragment_rating_order) {
 
-    private var binding: FragmentRatingOrderBinding by AutoClearedValue(this)
+    private val binding: FragmentRatingOrderBinding by viewBinding(FragmentRatingOrderBinding::bind)
     private val ratingViewModel: RatingViewModel by hiltNavGraphViewModels(R.id.navigation_rating)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,12 +36,8 @@ class RatingOrderFragment : Fragment() {
         reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X,false)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentRatingOrderBinding.inflate(inflater, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         // Restore saved rating
         ratingViewModel.orderRatingInput?.let {
@@ -84,7 +78,5 @@ class RatingOrderFragment : Fragment() {
                 }
             }
         }
-
-        return binding.root
     }
 }

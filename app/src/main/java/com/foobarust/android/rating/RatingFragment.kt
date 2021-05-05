@@ -1,10 +1,8 @@
 package com.foobarust.android.rating
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
@@ -25,22 +23,17 @@ import kotlinx.coroutines.launch
  */
 
 @AndroidEntryPoint
-class RatingFragment : FullScreenDialogFragment(),
-    Toolbar.OnMenuItemClickListener {
+class RatingFragment : FullScreenDialogFragment(R.layout.fragment_rating), Toolbar.OnMenuItemClickListener {
 
-    private var binding: FragmentRatingBinding by AutoClearedValue(this)
+    private val binding: FragmentRatingBinding by viewBinding(FragmentRatingBinding::bind)
     private lateinit var navController: NavController
     private lateinit var viewModel: RatingViewModel
     private val navArgs: RatingFragmentArgs by navArgs()
 
     override var onBackPressed: (() -> Unit)? = { handleBackPressed() }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentRatingBinding.inflate(inflater, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         // Setup navigation
         val navHostFragment = childFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
@@ -122,8 +115,6 @@ class RatingFragment : FullScreenDialogFragment(),
                 }
             }
         }
-
-        return binding.root
     }
 
     override fun onMenuItemClick(item: MenuItem?): Boolean {
