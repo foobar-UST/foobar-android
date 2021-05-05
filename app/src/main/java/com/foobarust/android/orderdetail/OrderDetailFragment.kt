@@ -1,7 +1,6 @@
 package com.foobarust.android.orderdetail
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import androidx.annotation.ColorInt
@@ -141,15 +140,10 @@ class OrderDetailFragment : FullScreenDialogFragment(R.layout.fragment_order_det
     }
 
     override fun onNavigateToSellerMisc() {
-        val orderDetail = viewModel.orderDetail.value ?: return
-
-        if (orderDetail.type != OrderType.OFF_CAMPUS) {
-            findNavController(R.id.orderDetailFragment)?.navigate(
-                OrderDetailFragmentDirections.actionOrderDetailFragmentToSellerMiscFragment(
-                    orderDetail.sellerId
-                )
-            )
-        }
+        val sellerId = viewModel.orderDetail.value?.sellerId ?: return
+        findNavController(R.id.orderDetailFragment)?.navigate(
+            OrderDetailFragmentDirections.actionOrderDetailFragmentToSellerMiscFragment(sellerId)
+        )
     }
 
     override fun onPickupVerifyOrder() {
@@ -184,9 +178,17 @@ class OrderDetailFragment : FullScreenDialogFragment(R.layout.fragment_order_det
             // Attach marker listener
             mapInstance.setOnMarkerClickListener { clickedMarker ->
                 when (clickedMarker) {
-                    pickupMarker -> onNavigateToSellerMisc()
+                    pickupMarker -> {
+                        val orderType = viewModel.orderDetail.value?.type ?:
+                            return@setOnMarkerClickListener true
+
+                        if (orderType == OrderType.ON_CAMPUS) {
+                            onNavigateToSellerMisc()
+                        }
+                    }
                     delivererMarker -> navigateToDelivererInfo()
                 }
+
                 true
             }
         }
@@ -244,8 +246,6 @@ class OrderDetailFragment : FullScreenDialogFragment(R.layout.fragment_order_det
                     )
                 )
             }
-
-            Log.d("OrderDetailFragment", "moved to marker")
         }
 
         // Add deliverer route
