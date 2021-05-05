@@ -35,11 +35,15 @@ class SellerSectionsBasicPagingSource(
                 .whereEqualTo(SELLER_SECTION_STATE_FIELD, SELLER_SECTION_STATE_AVAILABLE)
                 .whereGreaterThan(SELLER_SECTION_CUTOFF_TIME_FIELD, Date())
 
+            // Get sections from one seller
             if (sellerId != null) {
                 initialPageQuery = initialPageQuery!!.whereEqualTo(SELLER_SECTION_SELLER_ID_FIELD, sellerId)
             }
 
-            initialPageQuery = initialPageQuery!!.orderBy(SELLER_SECTION_CUTOFF_TIME_FIELD, Query.Direction.ASCENDING)
+            // Get all sections
+            initialPageQuery = initialPageQuery!!.orderBy(
+                SELLER_SECTION_CUTOFF_TIME_FIELD, Query.Direction.ASCENDING
+            )
                 .orderBy(SELLER_SECTION_SELLER_NAME_FIELD, Query.Direction.ASCENDING)
                 .limit(params.loadSize.toLong())
 

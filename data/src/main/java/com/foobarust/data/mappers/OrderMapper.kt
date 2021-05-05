@@ -104,7 +104,9 @@ class OrderMapper @Inject constructor() {
             sectionTitleZh = networkDto.sectionTitleZh,
             delivererId = networkDto.delivererId,
             delivererLocation = networkDto.delivererLocation?.toGeolocationPoint(),
-            delivererTravelMode = networkDto.delivererTravelMode?.let { toTravelMode(it) },
+            delivererTravelMode = networkDto.delivererTravelMode?.let {
+                toTravelMode(it)
+            },
             identifier = networkDto.identifier!!,
             imageUrl = networkDto.imageUrl,
             type = OrderType.values()[networkDto.type!!],

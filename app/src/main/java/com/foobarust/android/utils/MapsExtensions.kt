@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.Drawable
 import androidx.annotation.DrawableRes
+import androidx.core.graphics.drawable.toBitmap
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
@@ -20,11 +21,38 @@ import kotlin.coroutines.resume
  * Created by kevin on 4/6/21
  */
 
+fun GoogleMap.addMarker(
+    context: Context,
+    latLng: LatLng,
+    @DrawableRes drawableRes: Int,
+    hasBorder: Boolean = false
+): Marker {
+    val drawable = context.getDrawableOrNull(drawableRes) ?:
+        throw IllegalStateException("Drawable not found.")
+
+    val pixels = computeMarkerPixels(context.resources.displayMetrics.density)
+    var bitmap = Bitmap.createScaledBitmap(drawable.toBitmap(), pixels, pixels, true)
+
+    if (hasBorder) {
+        bitmap = bitmap.createBitmapWithBorder(
+            borderSize = 10f,
+            borderColor = context.getColorCompat(R.color.white)
+        )
+    }
+
+    return addMarker {
+        position(latLng)
+    }.apply {
+        setIcon(BitmapDescriptorFactory.fromBitmap(bitmap))
+    }
+}
+
 suspend fun GoogleMap.loadMarker(
     context: Context,
     latLng: LatLng,
     imageUrl: String?,
     @DrawableRes placeholder: Int,
+    hasBorder: Boolean = false
 ): Marker = suspendCancellableCoroutine { continuation ->
     val request = Glide.with(context)
         .asBitmap()
@@ -34,13 +62,15 @@ suspend fun GoogleMap.loadMarker(
 
     val customTarget = object : CustomTarget<Bitmap>() {
         override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-            val scale = context.resources.displayMetrics.density
-            val pixels = (50f * scale + 0.5f).toInt()
-            val bitmap = Bitmap.createScaledBitmap(resource, pixels, pixels, true)
-                .createBitmapWithBorder(
+            val pixels = computeMarkerPixels(context.resources.displayMetrics.density)
+            var bitmap = Bitmap.createScaledBitmap(resource, pixels, pixels, true)
+
+            if (hasBorder) {
+                bitmap = bitmap.createBitmapWithBorder(
                     borderSize = 10f,
                     borderColor = context.getColorCompat(R.color.white)
                 )
+            }
 
             addMarker {
                 position(latLng)
@@ -58,6 +88,10 @@ suspend fun GoogleMap.loadMarker(
     continuation.invokeOnCancellation {
         Glide.with(context).clear(customTarget)
     }
+}
+
+private fun computeMarkerPixels(density: Float): Int {
+    return (50f * density + 0.5f).toInt()
 }
 
 private fun Bitmap.createBitmapWithBorder(borderSize: Float, borderColor: Int): Bitmap {

@@ -1,6 +1,7 @@
 package com.foobarust.android.orderdetail
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import androidx.annotation.ColorInt
@@ -18,6 +19,7 @@ import com.foobarust.android.shared.AppConfig.MAP_ROUTE_WIDTH
 import com.foobarust.android.shared.AppConfig.MAP_ZOOM_LEVEL
 import com.foobarust.android.shared.FullScreenDialogFragment
 import com.foobarust.android.utils.*
+import com.foobarust.domain.models.order.OrderType
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
@@ -25,12 +27,12 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.Marker
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.maps.android.ktx.addMarker
 import com.google.maps.android.ktx.addPolyline
 import com.google.maps.android.ktx.awaitMap
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 /**
@@ -46,8 +48,7 @@ class OrderDetailFragment : FullScreenDialogFragment(R.layout.fragment_order_det
     private val navArgs: OrderDetailFragmentArgs by navArgs()
 
     private var bottomSheetBehavior: BottomSheetBehavior<*> by AutoClearedValue(this)
-
-    private var sellerMarker: Marker? = null
+    private var pickupMarker: Marker? = null
     private var delivererMarker: Marker? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -141,11 +142,14 @@ class OrderDetailFragment : FullScreenDialogFragment(R.layout.fragment_order_det
 
     override fun onNavigateToSellerMisc() {
         val orderDetail = viewModel.orderDetail.value ?: return
-        findNavController(R.id.orderDetailFragment)?.navigate(
-            OrderDetailFragmentDirections.actionOrderDetailFragmentToSellerMiscFragment(
-                orderDetail.sellerId
+
+        if (orderDetail.type != OrderType.OFF_CAMPUS) {
+            findNavController(R.id.orderDetailFragment)?.navigate(
+                OrderDetailFragmentDirections.actionOrderDetailFragmentToSellerMiscFragment(
+                    orderDetail.sellerId
+                )
             )
-        )
+        }
     }
 
     override fun onPickupVerifyOrder() {
@@ -180,29 +184,40 @@ class OrderDetailFragment : FullScreenDialogFragment(R.layout.fragment_order_det
             // Attach marker listener
             mapInstance.setOnMarkerClickListener { clickedMarker ->
                 when (clickedMarker) {
-                    sellerMarker -> onNavigateToSellerMisc()
+                    pickupMarker -> onNavigateToSellerMisc()
                     delivererMarker -> navigateToDelivererInfo()
                 }
                 true
             }
         }
 
-        // Add seller marker (on-campus)
+        // Pickup marker
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.deliveryLocation.collect {
+            viewModel.pickupMarkerInfo.collect { markerInfo ->
                 getMapInstance().run {
-                    val latLng = LatLng(it.latitude, it.longitude)
-                    sellerMarker?.remove()
-                    sellerMarker = addMarker { position(latLng) }
-                    moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, MAP_ZOOM_LEVEL))
+                    val latLng = LatLng(
+                        markerInfo.locationPoint.latitude,
+                        markerInfo.locationPoint.longitude
+                    )
+
+                    pickupMarker?.remove()
+                    pickupMarker = addMarker(
+                        context = requireContext(),
+                        latLng = latLng,
+                        drawableRes = R.drawable.ic_lunch_bag
+                    )
+
+                    if (markerInfo.orderType == OrderType.ON_CAMPUS) {
+                        moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, MAP_ZOOM_LEVEL))
+                    }
                 }
             }
         }
 
         // Add deliverer marker (off-campus)
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.delivererMarkerInfo.collect { marker ->
-                marker?.let {
+            viewModel.delivererMarkerInfo.collect { markerInfo ->
+                markerInfo?.let {
                     delivererMarker?.remove()
                     delivererMarker = getMapInstance().loadMarker(
                         context = requireContext(),
@@ -211,7 +226,8 @@ class OrderDetailFragment : FullScreenDialogFragment(R.layout.fragment_order_det
                             it.locationPoint.longitude
                         ),
                         imageUrl = it.userDelivery.photoUrl,
-                        placeholder = R.drawable.ic_user
+                        placeholder = R.drawable.ic_user,
+                        hasBorder = true
                     )
                 }
             }
@@ -219,13 +235,17 @@ class OrderDetailFragment : FullScreenDialogFragment(R.layout.fragment_order_det
 
         // Zoom to deliverer
         viewLifecycleOwner.lifecycleScope.launch {
-            val location = viewModel.delivererMarkerInfo.firstNotNull().locationPoint
-            getMapInstance().moveCamera(
-                CameraUpdateFactory.newLatLngZoom(
-                    LatLng(location.latitude, location.longitude),
-                    MAP_ZOOM_LEVEL
+            val locationPoint = viewModel.delivererMarkerInfo.first()?.locationPoint
+            locationPoint?.let {
+                getMapInstance().moveCamera(
+                    CameraUpdateFactory.newLatLngZoom(
+                        LatLng(it.latitude, it.longitude),
+                        MAP_ZOOM_LEVEL
+                    )
                 )
-            )
+            }
+
+            Log.d("OrderDetailFragment", "moved to marker")
         }
 
         // Add deliverer route
@@ -243,7 +263,7 @@ class OrderDetailFragment : FullScreenDialogFragment(R.layout.fragment_order_det
     }
 
     override fun onDestroyView() {
-        sellerMarker = null
+        pickupMarker = null
         delivererMarker = null
         super.onDestroyView()
     }
@@ -281,6 +301,7 @@ class OrderDetailFragment : FullScreenDialogFragment(R.layout.fragment_order_det
                 val lastStateItemPosition = viewModel.getLastOrderStateItemPosition()
                 val lastStateItemView = binding.orderDetailRecyclerView
                     .findViewHolderForAdapterPosition(lastStateItemPosition)?.itemView
+
                 if (lastStateItemPosition > 0 && lastStateItemView != null) {
                     bottomSheetBehavior.setPeekHeight(lastStateItemView.bottom, true)
                 }

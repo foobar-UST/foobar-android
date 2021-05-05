@@ -54,10 +54,14 @@ class OrderDetailViewModel @Inject constructor(
     private val _delivererRoute = MutableStateFlow<List<GeolocationPoint>>(emptyList())
     val delivererRoute: StateFlow<List<GeolocationPoint>> = _delivererRoute.asStateFlow()
 
-    val deliveryLocation: Flow<GeolocationPoint> = _orderDetail
+    val pickupMarkerInfo: Flow<PickupMarkerInfo> = _orderDetail
         .filterNotNull()
-        .filter { it.type == OrderType.ON_CAMPUS }
-        .mapLatest { it.deliveryLocation.locationPoint }
+        .mapLatest {
+            PickupMarkerInfo(
+                locationPoint = it.deliveryLocation.locationPoint,
+                orderType = it.type
+            )
+        }
 
     val delivererMarkerInfo: Flow<DelivererMarkerInfo?> = _orderDetail
         .filterNotNull()
@@ -69,13 +73,12 @@ class OrderDetailViewModel @Inject constructor(
     // Show map and collapse bottom sheet
     val showMap: Flow<Boolean?> = _orderDetail
         .filterNotNull()
-        .mapLatest { orderDetail ->
-            orderDetail.state !in orderCompletedStates
-        }
+        .mapLatest { orderDetail -> orderDetail.state !in orderCompleteStates }
+        .distinctUntilChanged()
 
     private var lastOrderStateItemPosition = 0
 
-    private val orderCompletedStates = listOf(
+    private val orderCompleteStates = listOf(
         OrderState.DELIVERED,
         OrderState.ARCHIVED,
         OrderState.CANCELLED
@@ -191,7 +194,7 @@ class OrderDetailViewModel @Inject constructor(
                 ))
 
                 // Elapsed state
-                if (currentOrderState !in orderCompletedStates) {
+                if (currentOrderState !in orderCompleteStates) {
                     addAll(getElapsedOrderStateListModels(currentOrderState))
                 }
             }
@@ -255,6 +258,11 @@ sealed class OrderDetailUiState {
     data class Error(val message: String?) : OrderDetailUiState()
     object Loading : OrderDetailUiState()
 }
+
+data class PickupMarkerInfo(
+    val locationPoint: GeolocationPoint,
+    val orderType: OrderType
+)
 
 data class DelivererMarkerInfo(
     val locationPoint: GeolocationPoint,

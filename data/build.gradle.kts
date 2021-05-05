@@ -23,10 +23,10 @@ android {
         consumerProguardFiles("consumer-proguard-rules.pro")
 
         // Read local properties
-        val localProperties = Properties().apply {
-            load(rootProject.file("local.properties").inputStream())
-        }
-        val mapsApiKey = localProperties.getProperty("MAPS_API_KEY", null)
+        val properties = Properties()
+        properties.load(rootProject.file("local.properties").inputStream())
+        
+        val mapsApiKey = properties.getProperty("MAPS_API_KEY", null)
 
         buildConfigField("Boolean", "USE_FIREBASE_EMULATOR", "false")
         buildConfigField("String", "EMULATOR_HOST", "\"192.168.128.66\"")

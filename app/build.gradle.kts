@@ -26,11 +26,10 @@ android {
         testInstrumentationRunner = Dependencies.HILT_TEST_RUNNER
 
         // Read local properties
-        val localProperties = Properties().apply {
-            load(rootProject.file("local.properties").inputStream())
-        }
-        val mapsApiKey = localProperties.getProperty("MAPS_API_KEY", null)
+        val properties = Properties()
+        properties.load(rootProject.file("local.properties").inputStream())
 
+        val mapsApiKey = properties.getProperty("MAPS_API_KEY", null)
         addManifestPlaceholders(mapOf("mapsApiKey" to mapsApiKey))
     }
 

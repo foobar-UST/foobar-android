@@ -13,6 +13,6 @@ fun DialogFragment.setLayoutFullscreen(aboveNavBar: Boolean = false) {
     }
 
     if (aboveNavBar) {
-        view?.applySystemWindowInsetsMargin(applyBottom = true)
+        requireView().applySystemWindowInsetsMargin(applyBottom = true)
     }
 }
