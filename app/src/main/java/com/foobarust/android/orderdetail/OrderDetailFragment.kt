@@ -14,7 +14,6 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.foobarust.android.R
 import com.foobarust.android.databinding.FragmentOrderDetailBinding
-import com.foobarust.android.shared.AppConfig.MAP_ROUTE_WIDTH
 import com.foobarust.android.shared.AppConfig.MAP_ZOOM_LEVEL
 import com.foobarust.android.shared.FullScreenDialogFragment
 import com.foobarust.android.utils.*
@@ -26,7 +25,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.Marker
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.maps.android.ktx.addPolyline
 import com.google.maps.android.ktx.awaitMap
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -248,6 +246,7 @@ class OrderDetailFragment : FullScreenDialogFragment(R.layout.fragment_order_det
             }
         }
 
+        /*
         // Add deliverer route
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.delivererRoute.collect { route ->
@@ -260,6 +259,8 @@ class OrderDetailFragment : FullScreenDialogFragment(R.layout.fragment_order_det
                 }
             }
         }
+
+         */
     }
 
     override fun onDestroyView() {

@@ -8,10 +8,13 @@ import com.foobarust.android.R
 
 open class FullScreenDialogFragment : DialogFragment {
 
-    constructor() : super()
-    constructor(@LayoutRes contentLayoutId: Int) : super(contentLayoutId)
-
     open var onBackPressed: (() -> Unit)? = null
+
+    private var disableTransition: Boolean = false
+
+    constructor() : super()
+
+    constructor(@LayoutRes contentLayoutId: Int) : super(contentLayoutId)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,9 +25,9 @@ open class FullScreenDialogFragment : DialogFragment {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = object : Dialog(requireContext(), theme) {
+        return object : Dialog(requireContext(), theme) {
             override fun onBackPressed() {
-                val handler = this@FullScreenDialogFragment.onBackPressed
+                val handler = onBackPressed
                 if (handler != null) {
                     handler()
                 } else {
@@ -32,22 +35,29 @@ open class FullScreenDialogFragment : DialogFragment {
                 }
             }
         }
+    }
 
-        if (savedInstanceState == null) {
-            dialog.window?.setWindowAnimations(
-                R.style.Animation_Foobar_FullScreenDialogFragment
+    override fun onStart() {
+        if (disableTransition) {
+            dialog?.window?.setWindowAnimations(
+                R.style.Animation_Foobar_FullScreenDialogFragment_Restore
             )
         } else {
-            dialog.window?.setWindowAnimations(
-                R.style.Animation_Foobar_FullScreenDialogFragment_Restore
+            dialog?.window?.setWindowAnimations(
+                R.style.Animation_Foobar_FullScreenDialogFragment
             )
         }
 
-        return dialog
+        super.onStart()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        disableTransition = true
     }
 
     override fun onDestroyView() {
-        onBackPressed = null
         super.onDestroyView()
+        onBackPressed = null
     }
 }

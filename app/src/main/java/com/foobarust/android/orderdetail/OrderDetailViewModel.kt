@@ -5,14 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.foobarust.android.checkout.PaymentMethodUtil
 import com.foobarust.android.order.OrderStateUtil
 import com.foobarust.android.orderdetail.OrderDetailListModel.*
-import com.foobarust.android.shared.AppConfig.HKUST_LOCATION
 import com.foobarust.domain.models.common.GeolocationPoint
-import com.foobarust.domain.models.map.TravelMode
 import com.foobarust.domain.models.order.*
 import com.foobarust.domain.models.user.UserDelivery
 import com.foobarust.domain.states.Resource
-import com.foobarust.domain.usecases.maps.GetDirectionsParameters
-import com.foobarust.domain.usecases.maps.GetDirectionsUseCase
 import com.foobarust.domain.usecases.order.GetOrderDetailUseCase
 import com.foobarust.domain.usecases.user.GetDelivererProfileUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,7 +26,7 @@ private const val ORDER_STATE_LIST_VISIBLE_INDEX = 1
 @HiltViewModel
 class OrderDetailViewModel @Inject constructor(
     private val getOrderDetailUseCase: GetOrderDetailUseCase,
-    private val getDirectionsUseCase: GetDirectionsUseCase,
+    //private val getDirectionsUseCase: GetDirectionsUseCase,
     private val getDelivererProfileUseCase: GetDelivererProfileUseCase,
     private val orderStateUtil: OrderStateUtil,
     private val paymentMethodUtil: PaymentMethodUtil
@@ -51,8 +47,8 @@ class OrderDetailViewModel @Inject constructor(
     private val _delivererProfile = MutableStateFlow<UserDelivery?>(null)
     val delivererProfile: StateFlow<UserDelivery?> = _delivererProfile.asStateFlow()
 
-    private val _delivererRoute = MutableStateFlow<List<GeolocationPoint>>(emptyList())
-    val delivererRoute: StateFlow<List<GeolocationPoint>> = _delivererRoute.asStateFlow()
+    //private val _delivererRoute = MutableStateFlow<List<GeolocationPoint>>(emptyList())
+    //val delivererRoute: StateFlow<List<GeolocationPoint>> = _delivererRoute.asStateFlow()
 
     val pickupMarkerInfo: Flow<PickupMarkerInfo> = _orderDetail
         .filterNotNull()
@@ -117,6 +113,7 @@ class OrderDetailViewModel @Inject constructor(
             }
         }
 
+        /*
         // Fetch deliverer route
         viewModelScope.launch {
             _orderDetail.filterNotNull()
@@ -142,6 +139,8 @@ class OrderDetailViewModel @Inject constructor(
                     }
                 }
         }
+
+         */
 
         // Fetch deliverer profile
         viewModelScope.launch {
