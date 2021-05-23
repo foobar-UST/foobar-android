@@ -33,7 +33,8 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         freeCompilerArgs = listOf(
             "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi",
             "-Xuse-experimental=kotlinx.coroutines.FlowPreview",
-            "-Xuse-experimental=kotlin.ExperimentalStdlibApi"
+            "-Xuse-experimental=kotlin.ExperimentalStdlibApi",
+            "-Xopt-in=kotlin.time.ExperimentalTime"
         )
     }
 }
