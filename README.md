@@ -63,7 +63,7 @@ git clone https://github.com/foobar-UST/foobar-android.git
 ```
 
 ## Screenshots
- <div>
+<div>
     <img src="./screenshots/cust_login.png" alt="drawing" width="200"/>
     <img src="./screenshots/cust_on_campus.png" alt="drawing" width="200"/>
     <img src="./screenshots/cust_off_campus.png" alt="drawing" width="200"/>
