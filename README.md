@@ -63,15 +63,26 @@ git clone https://github.com/foobar-UST/foobar-android.git
 ```
 
 ## Screenshots
-<img src="./screenshots/cust_login.png" alt="drawing" width="200"/>
-<img src="./screenshots/cust_on_campus.png" alt="drawing" width="200"/>
-<img src="./screenshots/cust_off_campus.png" alt="drawing" width="200"/>
-<img src="./screenshots/cust_categories.png" alt="drawing" width="200"/>
-<img src="./screenshots/cust_order.png" alt="drawing" width="200"/>
-<img src="./screenshots/cust_group_section.png" alt="drawing" width="200"/>
-<img src="./screenshots/cust_cart.png" alt="drawing" width="200"/>
-<img src="./screenshots/cust_cart_2.png" alt="drawing" width="200"/>
-<img src="./screenshots/cust_tracking.png" alt="drawing" width="200"/>
-<img src="./screenshots/cust_tracking_2.png" alt="drawing" width="200"/>
-<img src="./screenshots/cust_rating.png" alt="drawing" width="200"/>
-<img src="./screenshots/cust_qr.png" alt="drawing" width="200"/>
+ <div>
+    <img src="./screenshots/cust_login.png" alt="drawing" width="200"/>
+    <img src="./screenshots/cust_on_campus.png" alt="drawing" width="200"/>
+    <img src="./screenshots/cust_off_campus.png" alt="drawing" width="200"/>
+</div> 
+<div>
+    <img src="./screenshots/cust_categories.png" alt="drawing" width="200"/>
+    <img src="./screenshots/cust_order.png" alt="drawing" width="200"/>
+    <img src="./screenshots/cust_group_section.png" alt="drawing" width="200"/>
+</div>
+<div>
+    <img src="./screenshots/cust_cart.png" alt="drawing" width="200"/>
+    <img src="./screenshots/cust_cart_2.png" alt="drawing" width="200"/>
+    <img src="./screenshots/cust_tracking.png" alt="drawing" width="200"/>
+</div>
+<div>
+    <img src="./screenshots/cust_tracking_2.png" alt="drawing" width="200"/>
+    <img src="./screenshots/cust_rating.png" alt="drawing" width="200"/>
+    <img src="./screenshots/cust_qr.png" alt="drawing" width="200"/>
+</div>
+
+
+
